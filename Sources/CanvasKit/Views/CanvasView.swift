@@ -145,7 +145,7 @@ extension CanvasView {
     return items.map { item in
       return InfoBarItem(
         section: CanvasInfoItem.sectionTitle,
-        label: QuickLabel(item.title, item.icon),
+        label: QuickLabel(item.title, icon: item.icon),
         content: item.content(
           canvasHandler,
           modifierKeys: modifierKeys
