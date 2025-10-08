@@ -5,10 +5,9 @@
 //  Created by Dave Coleman on 24/6/2025.
 //
 
-import BaseHelpers
-
-
-import InfoBar
+import SharedHelpers
+import BaseUI
+import GestureKit
 import SwiftUI
 
 public struct CanvasView<Content: View>: View {
