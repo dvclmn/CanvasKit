@@ -7,6 +7,7 @@
 
 // import BaseHelpers
 import SwiftUI
+import SharedHelpers
 
 /// Unless I otherwise specify an alignment below, this helper
 /// assumes the Canvas has a default `center` alignment

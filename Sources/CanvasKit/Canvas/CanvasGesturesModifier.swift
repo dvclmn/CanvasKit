@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import GestureKit
 
 public struct CanvasGesturesModifier: ViewModifier {
   

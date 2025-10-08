@@ -7,9 +7,10 @@
 
 // import BaseHelpers
 
-
 import Sharing
 import SwiftUI
+import GestureKit
+import SharedHelpers
 
 public struct CanvasGeometry: Sendable, Equatable {
   public var viewportSize: CGSize?
@@ -32,15 +33,15 @@ public struct CanvasHandler {
 
   /// Expected to be updated *outside* of `CanvasView`,
   /// by the consuming app.
-//  public var viewportSize: CGSize?
+  //  public var viewportSize: CGSize?
 
   @Shared(.canvasGeometry) public var geometry
-  
+
   /// Expected to be updated from outside `CanvasView`, (i.e. from the caller), when canvas size changes. This View/Handler does not watch or update canvas dimensions itself.
   ///
   /// Note: This is the source of truth for the ResizeHandler,
   /// to obtain the latest Canvas Size from the Domain View
-//  public var canvasSize: CGSize?
+  //  public var canvasSize: CGSize?
 
   public var hoverLocation: CGPoint?
   public var tapDragPhase: TapDragPhase?
@@ -56,11 +57,11 @@ public struct CanvasHandler {
 }
 
 extension CanvasHandler {
-  
+
   public mutating func updateViewportSize(_ size: CGSize) {
     $geometry.withLock { $0.viewportSize = size }
   }
-  
+
   public mutating func updateCanvasSize(_ size: CGSize) {
     $geometry.withLock { $0.canvasSize = size }
   }
@@ -107,8 +108,6 @@ extension CanvasHandler {
       rotation: rotationHandler.rotation
     )
   }
-
- 
 
   public mutating func resetTransforms(_ transforms: TransformTypes) {
     if transforms.contains(.zoom) {
@@ -175,11 +174,11 @@ extension CanvasHandler {
     hoverLocation = nil
     //    print("Handling a Tap/Drag: \(phase)")
   }
-//#if canImport(AppKit)
+  //#if canImport(AppKit)
   mutating func handleKeysHeld(_ keysHeld: Set<KeyEquivalent>) {
     self.interactions.keysHeld = keysHeld
   }
-//#endif
+  //#endif
 
   //  public var pointerStyle: PointerStyleCompatible? {
   //    return switch (interactions.isDragging, interactions.keysHeld.isHoldingSpace) {

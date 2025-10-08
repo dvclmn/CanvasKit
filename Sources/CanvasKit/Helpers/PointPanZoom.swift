@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SharedHelpers
 
 extension CGPoint {
   public func removingZoom(_ zoom: CGFloat) -> CGPoint {

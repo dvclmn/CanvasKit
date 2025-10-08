@@ -6,6 +6,7 @@
 //
 
 // import BaseHelpers
+import SharedHelpers
 import SwiftUI
 
 struct ResizeDragModifier: ViewModifier {

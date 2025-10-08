@@ -5,9 +5,7 @@
 //  Created by Dave Coleman on 9/7/2025.
 //
 
-// import BaseHelpers
-
-
+import StringShared
 import SwiftUI
 
 enum CanvasInfoItem: CaseIterable, Identifiable {
@@ -40,24 +38,24 @@ enum CanvasInfoItem: CaseIterable, Identifiable {
       case .modifiers: .symbol("keyboard")
     }
   }
-  
 
   func content(_ canvasHandler: CanvasHandler, modifierKeys: Modifiers) -> AttributedString {
-      return switch self {
-        case .pan:
-          canvasHandler.panHandler.pan.displayStringStyled(.fractionLength(0))
-          
-        case .zoomPercent:
-          AttributedString(canvasHandler.zoomHandler.percentString)
-          
-        case .canvasSize:
-          canvasHandler.geometry.canvasSize?.displayStringStyled(.fractionLength(0)) ?? "nil"
-          
-        case .interaction:
-          AttributedString(canvasHandler.interactions.interaction.name)
-          
-        case .modifiers:
-          AttributedString(modifierKeys.displayName(elements: .icon, separator: "", emptyText: ""))
-      }
+    return switch self {
+      case .pan:
+        canvasHandler.panHandler.pan.displayString(places: 0).toAttributed
+
+      case .zoomPercent:
+        AttributedString(canvasHandler.zoomHandler.percentString)
+
+      case .canvasSize:
+        canvasHandler.geometry.canvasSize?.displayString(places: 0).toAttributed ?? "nil"
+//        canvasHandler.geometry.canvasSize?.displayStringStyled(.fractionLength(0)) ?? "nil"
+
+      case .interaction:
+        AttributedString(canvasHandler.interactions.interaction.name)
+
+      case .modifiers:
+        AttributedString(modifierKeys.displayName(elements: .icon, separator: "", emptyText: ""))
     }
+  }
 }
