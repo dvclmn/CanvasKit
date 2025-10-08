@@ -17,4 +17,12 @@ extension CGPoint {
     let adjustedY = self.y.removingZoomPercent(zoomPercent)
     return CGPoint(x: adjustedX, y: adjustedY)
   }
+  
+  
+  public func removingPanAndZoom(pan: CGSize, zoom: CGFloat) -> CGPoint {
+    let unPanned: CGPoint = self - pan
+    let unZoomed: CGPoint = unPanned / zoom
+    return unZoomed
+  }
+
 }
