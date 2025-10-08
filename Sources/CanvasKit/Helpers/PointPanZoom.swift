@@ -24,5 +24,15 @@ extension CGPoint {
     let unZoomed: CGPoint = unPanned / zoom
     return unZoomed
   }
-
+  public func applyPanAndZoom(pan: CGSize, zoom: CGFloat) -> CGPoint {
+    let scaled = CGPoint(
+      x: x * zoom,
+      y: y * zoom
+    )
+    let translated = CGPoint(
+      x: scaled.x + pan.width,
+      y: scaled.y + pan.height
+    )
+    return translated
+  }
 }
