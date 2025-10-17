@@ -50,7 +50,7 @@ struct ControlPointView<S: Shape>: View {
         isHovered ? .cyan : .blue,
         lineWidth: strokeWidth
       )
-      .frameFromLength(length)
+      .frameFromLength(length, axis: [.horizontal, .vertical])
       //      .padding(store.controlHitArea)
       //      .border(Color.green.opacity(0.3))
       //      .contentShape(.rect)
