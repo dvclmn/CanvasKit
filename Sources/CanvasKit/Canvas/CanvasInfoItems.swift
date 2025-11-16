@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 9/7/2025.
 //
 
-import BaseUtilities
+import CoreTools
 import SwiftUI
 
 enum CanvasInfoItem: CaseIterable, Identifiable {
