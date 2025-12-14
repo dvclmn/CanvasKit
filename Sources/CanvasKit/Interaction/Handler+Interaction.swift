@@ -9,7 +9,7 @@
 import SharedHelpers
 import SwiftUI
 
-
+@available(macOS 14.0, *)
 public struct InteractionHandler {
   
   /// Important: There is a difference between handling the

@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(macOS 14.0, *)
 struct CanvasExampleView: View {
 
   @State private var canvasHandler = CanvasHandler()

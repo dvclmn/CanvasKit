@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(macOS 14.0, *)
 public struct CanvasOutlineModifier: ViewModifier {
   let canvasHandler: CanvasHandler
   public func body(content: Content) -> some View {
@@ -19,6 +20,7 @@ public struct CanvasOutlineModifier: ViewModifier {
       }
   }
 }
+@available(macOS 14.0, *)
 extension CanvasOutlineModifier {
   var canvasOutlineThickness: CGFloat {
     return Double(1).removingZoom(canvasHandler.zoomHandler.zoom)

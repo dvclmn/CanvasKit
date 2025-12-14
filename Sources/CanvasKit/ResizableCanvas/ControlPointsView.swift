@@ -46,6 +46,8 @@ struct ControlPointView<S: Shape>: View {
 
     shape
       .fill(isHovered ? .blue : .white)
+    
+    shape
       .stroke(
         isHovered ? .cyan : .blue,
         lineWidth: strokeWidth

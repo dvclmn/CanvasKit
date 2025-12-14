@@ -12,6 +12,7 @@ import SwiftUI
 import GestureKit
 import SharedHelpers
 
+
 public struct CanvasGeometry: Sendable, Equatable {
   public var viewportSize: CGSize?
   public var canvasSize: CGSize?
@@ -25,6 +26,7 @@ public struct CanvasGeometry: Sendable, Equatable {
   }
 }
 
+@available(macOS 14.0, *)
 public struct CanvasHandler {
 
   public var zoomHandler = ZoomHandler()
@@ -56,6 +58,7 @@ public struct CanvasHandler {
 
 }
 
+@available(macOS 14.0, *)
 extension CanvasHandler {
 
   public mutating func updateViewportSize(_ size: CGSize) {
@@ -193,6 +196,7 @@ extension CanvasHandler {
   }
 }
 
+@available(macOS 14.0, *)
 extension CanvasHandler: CustomStringConvertible {
   public var description: String {
     return """

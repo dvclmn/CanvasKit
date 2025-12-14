@@ -28,6 +28,7 @@ public struct CanvasResizeView: View {
       ZStack {
         RoundedRectangle(cornerRadius: Styles.sizeTiny)
           .fill(.clear)
+        RoundedRectangle(cornerRadius: Styles.sizeTiny)
           .stroke(
             .blue, lineWidth: CGFloat(1).removingZoom(canvasZoom, clampedTo: canvasZoomRange)
           )

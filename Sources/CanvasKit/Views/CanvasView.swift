@@ -10,6 +10,7 @@ import BaseUI
 import GestureKit
 import SwiftUI
 
+@available(macOS 14.0, *)
 public struct CanvasView<Content: View>: View {
   @Environment(\.isDebugMode) private var isDebugMode
 //#if canImport(AppKit)
@@ -137,6 +138,7 @@ public struct CanvasView<Content: View>: View {
   }
 }
 
+@available(macOS 14.0, *)
 extension CanvasView {
   var infobarItems: [InfoBarItem] {
 

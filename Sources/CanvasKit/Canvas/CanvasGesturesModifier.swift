@@ -8,6 +8,7 @@
 import SwiftUI
 import GestureKit
 
+@available(macOS 14.0, *)
 public struct CanvasGesturesModifier: ViewModifier {
   
   @Binding var canvasHandler: CanvasHandler

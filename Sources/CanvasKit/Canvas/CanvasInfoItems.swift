@@ -39,6 +39,7 @@ enum CanvasInfoItem: CaseIterable, Identifiable {
     }
   }
 
+  @available(macOS 14.0, *)
   func content(_ canvasHandler: CanvasHandler, modifierKeys: Modifiers) -> AttributedString {
     return switch self {
       case .pan:
