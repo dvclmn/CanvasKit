@@ -5,13 +5,10 @@
 //  Created by Dave Coleman on 24/6/2025.
 //
 
-
-
-import Sharing
-import SwiftUI
 import GestureKit
 import SharedHelpers
-
+import Sharing
+import SwiftUI
 
 public struct CanvasGeometry: Sendable, Equatable {
   public var viewportSize: CGSize?
@@ -53,7 +50,9 @@ public struct CanvasHandler {
   let dragTolerance: CGFloat = 5
 
   public init() {
-    print("Initialised `CanvasHandler` at \(Date.now.formatted(date: .omitted, time: .complete))")
+    print(
+      "Initialised `CanvasHandler` at \(Date.now.formatted(date: .omitted, time: .complete))"
+    )
   }
 
 }
