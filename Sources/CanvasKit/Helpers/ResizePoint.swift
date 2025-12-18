@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 8/10/2025.
 //
 
-import SwiftUI
 import SharedHelpers
+import SwiftUI
 
 public enum ResizePoint: String, CaseIterable, Identifiable {
   case topLeading
@@ -76,7 +76,6 @@ extension ResizePoint {
     }
   }
 
-  //#if canImport(AppKit)
   public var toCompatPointerStyle: PointerStyleCompatible {
     let style = PointerStyleCompatible.frameResize(
       position: self.toCompatFrameResizePosition,
@@ -99,3 +98,4 @@ extension ResizePoint {
   }
   //  #endif
 }
+
