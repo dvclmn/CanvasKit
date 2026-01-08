@@ -76,7 +76,7 @@ extension CanvasHandler {
 
   public mutating func addDebugResize(
     size: CGSize?,
-    boundaryPoint: ResizePoint?
+    boundaryPoint: GridBoundaryPoint?
   ) {
     let newSize = size ?? geometry.canvasSize
     resizeHandler.transientCanvasSize = newSize
@@ -87,7 +87,7 @@ extension CanvasHandler {
     return drag == interactions.allowedDragGesture
   }
 
-  public var draggedResizePoint: ResizePoint? {
+  public var draggedResizePoint: GridBoundaryPoint? {
     resizeHandler.draggedResizePoint
   }
 

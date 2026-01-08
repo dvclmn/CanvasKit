@@ -61,8 +61,8 @@ public struct HitAreaRectModifier: ViewModifier {
 }
 extension HitAreaRectModifier {
 
-  private var resizePoint: ResizePoint {
-    ResizePoint(fromUnitPoint: controlPoint)
+  private var resizePoint: GridBoundaryPoint {
+    GridBoundaryPoint(fromUnitPoint: controlPoint)
   }
 
   private var rectColour: Color {

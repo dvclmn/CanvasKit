@@ -18,8 +18,8 @@ public struct ResizeHandler {
   /// heavier work for when the resize event is complete
   var transientCanvasSize: CGSize?
 
-  var hoveredResizePoint: ResizePoint?
-  var draggedResizePoint: ResizePoint?
+  var hoveredResizePoint: GridBoundaryPoint?
+  var draggedResizePoint: GridBoundaryPoint?
   /// The Canvas anchor point, around which resizing is oriented
   var canvasAnchor: UnitPoint = .center
   var hitAreaThickness: CGFloat = 30
@@ -39,11 +39,11 @@ public struct ResizeHandler {
 }
 extension ResizeHandler {
   
-  mutating func triggerDidEndResize(_ point: ResizePoint, _ size: CGSize) {
+  mutating func triggerDidEndResize(_ point: GridBoundaryPoint, _ size: CGSize) {
     didEndResize?(point, size)
   }
 
-  mutating func triggerDidChangeResize(_ point: ResizePoint, _ size: CGSize) {
+  mutating func triggerDidChangeResize(_ point: GridBoundaryPoint, _ size: CGSize) {
     didChangeResize?(point, size)
   }
 

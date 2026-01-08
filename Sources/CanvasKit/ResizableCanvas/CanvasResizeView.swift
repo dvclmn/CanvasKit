@@ -9,7 +9,7 @@ import SharedHelpers
 import SwiftUI
 
 /// Note: The provided size here does *not* have zoom applied.
-public typealias ResizeOutput = (ResizePoint, CGSize) -> Void
+public typealias ResizeOutput = (GridBoundaryPoint, CGSize) -> Void
 
 public struct CanvasResizeView: View {
   @Environment(\.canvasPan) private var canvasPan
@@ -42,7 +42,7 @@ public struct CanvasResizeView: View {
         }
 
         //          ForEach([ResizePoint.bottomLeading]) { point in
-        ForEach(ResizePoint.allCases) { point in
+        ForEach(GridBoundaryPoint.allCases) { point in
           Rectangle()
             .fill(.clear)
             .modifier(

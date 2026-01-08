@@ -29,7 +29,7 @@ extension ResizeDragModifier {
         }
 
         if store.draggedResizePoint == nil {
-          store.draggedResizePoint = ResizePoint(
+          store.draggedResizePoint = GridBoundaryPoint(
             fromUnitPoint: draggedPoint
           )
         }
@@ -42,13 +42,13 @@ extension ResizeDragModifier {
           )
           store.transientCanvasSize = newSize
 
-          store.triggerDidChangeResize(ResizePoint(fromUnitPoint: draggedPoint), newSize)
+          store.triggerDidChangeResize(GridBoundaryPoint(fromUnitPoint: draggedPoint), newSize)
         }
       }
       .onEnded { _ in
 
         if let finalSize = store.transientCanvasSize {
-          store.triggerDidEndResize(ResizePoint(fromUnitPoint: draggedPoint), finalSize)
+          store.triggerDidEndResize(GridBoundaryPoint(fromUnitPoint: draggedPoint), finalSize)
         }
 
         /// Transient size is only required *during* an active drag event
