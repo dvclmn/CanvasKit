@@ -7,6 +7,7 @@
 
 
 import SwiftUI
+import GestureKit
 
 public struct TransformTypes: OptionSet, Sendable {
   public init(rawValue: Int) {
@@ -18,6 +19,33 @@ public struct TransformTypes: OptionSet, Sendable {
   public static let zoom = Self(rawValue: 1 << 1)
   public static let rotation = Self(rawValue: 1 << 2)
   public static let all: Self = [.pan, .zoom, .rotation]
+}
+
+
+extension GestureKind.Meta {
+  public init(from transformTypes: TransformTypes) {
+    
+//    self = switch transformTypes {
+//      case .zoom: .zoom
+//      case .pan: .zoom
+//      case .rotation: .zoom
+//      case .all: .zoom
+//    }
+    if transformTypes.contains(.zoom) {
+      self = .zoom
+////      zoomHandler.reset()
+    }
+    if transformTypes.contains(.pan) {
+      self = .pan
+////      panHandler.reset()
+    }
+    if transformTypes.contains(.rotation) {
+      self = .rotate
+////      rotationHandler.reset()
+    } else {
+      self = .none
+    }
+  }
 }
 
 

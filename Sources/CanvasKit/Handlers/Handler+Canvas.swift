@@ -21,8 +21,8 @@ public struct CanvasHandler {
   /// by the consuming app.
   //  public var viewportSize: CGSize?
 
-  var geometry: CanvasGeometry?
-//  @Shared(.canvasGeometry) public var geometry
+  public var geometry: CanvasGeometry?
+  //  @Shared(.canvasGeometry) public var geometry
 
   /// Expected to be updated from outside `CanvasView`, (i.e. from the caller), when canvas size changes. This View/Handler does not watch or update canvas dimensions itself.
   ///
@@ -32,7 +32,7 @@ public struct CanvasHandler {
 
   public var hoverLocation: CGPoint?
   public var tapDragPhase: TapDragPhase?
-//  public var interactions = InteractionHandler()
+  //  public var interactions = InteractionHandler()
   public var resizeHandler = ResizeHandler()
 
   let dragTolerance: CGFloat = 5
@@ -47,21 +47,40 @@ extension CanvasHandler {
 
   public var viewportSize: CGSize? { geometry?.viewportSize }
   public var canvasSize: CGSize? { geometry?.canvasSize }
-  
+
   public var zoomLevel: CGFloat { gestureHandler.zoomLevel }
   public var zoomPercent: CGFloat { gestureHandler.zoomPercent }
   public var zoomRange: ClosedRange<CGFloat> { gestureHandler.zoomRange }
   public var panOffset: CGSize { gestureHandler.panOffset }
   public var rotation: Angle { gestureHandler.rotation }
+
+  public mutating func resetGesture(_ transforms: TransformTypes) {
+//  public mutating func resetGesture(_ kind: GestureKind.Meta) {
+    let kind = GestureKind.Meta(from: transforms)
+    
+    gestureHandler.reset(kind)
+    
+    //  public mutating func resetTransforms(_ transforms: TransformTypes) {
+
+    //  }
+
+  }
   
+  public mutating func updateGesture(
+    _ kind: GestureKind,
+    //    geometry: CanvasGeometry
+  ) {
+    guard let geometry else { return }
+    gestureHandler.update(kind, geometry: geometry)
+  }
   public mutating func updateViewportSize(_ size: CGSize) {
     geometry?.viewportSize = size
-//    $geometry.withLock { $0.viewportSize = size }
+    //    $geometry.withLock { $0.viewportSize = size }
   }
 
   public mutating func updateCanvasSize(_ size: CGSize) {
     geometry?.viewportSize = size
-//    $geometry.withLock { $0.canvasSize = size }
+    //    $geometry.withLock { $0.canvasSize = size }
   }
 
   public var transientCanvasSize: CGSize? {
@@ -70,14 +89,14 @@ extension CanvasHandler {
 
   public var canvasAnchor: UnitPoint { resizeHandler.canvasAnchor }
 
-//  public mutating func addDebugResize(
-//    size: CGSize?,
-//    boundaryPoint: GridBoundaryPoint?
-//  ) {
-//    let newSize = size ?? geometry.canvasSize
-//    resizeHandler.transientCanvasSize = newSize
-//    resizeHandler.draggedResizePoint = boundaryPoint
-//  }
+  //  public mutating func addDebugResize(
+  //    size: CGSize?,
+  //    boundaryPoint: GridBoundaryPoint?
+  //  ) {
+  //    let newSize = size ?? geometry.canvasSize
+  //    resizeHandler.transientCanvasSize = newSize
+  //    resizeHandler.draggedResizePoint = boundaryPoint
+  //  }
 
   func isDragAllowed(_ drag: GestureKind.Meta) -> Bool {
     return drag == gestureHandler.interactions.allowedDragGesture
@@ -104,23 +123,12 @@ extension CanvasHandler {
       zoom: gestureHandler.zoomLevel,
       pan: gestureHandler.panOffset,
       rotation: gestureHandler.rotation
-//      zoom: zoomHandler.zoom,
-//      pan: panHandler.pan,
-//      rotation: rotationHandler.rotation
+        //      zoom: zoomHandler.zoom,
+        //      pan: panHandler.pan,
+        //      rotation: rotationHandler.rotation
     )
   }
 
-//  public mutating func resetTransforms(_ transforms: TransformTypes) {
-//    if transforms.contains(.zoom) {
-//      zoomHandler.reset()
-//    }
-//    if transforms.contains(.pan) {
-//      panHandler.reset()
-//    }
-//    if transforms.contains(.rotation) {
-//      rotationHandler.reset()
-//    }
-//  }
 
   public mutating func handleHover(_ phase: HoverPhase) {
 
@@ -138,34 +146,34 @@ extension CanvasHandler {
     }
   }
 
-//  public mutating func handleGesturePanPhase(_ phase: PanPhase) {
-//    fatalError("Temporarily switched off")
-//    //    switch phase {
-//    //      case .active(let delta):
-//    //        interactions.interaction = .gesturePan
-//    //        panHandler.applyPanDelta(delta)
-//    //
-//    //      case .ended, .inactive, .cancelled:
-//    //        interactions.interaction = .none
-//    //
-//    //    }
-//  }
+  //  public mutating func handleGesturePanPhase(_ phase: PanPhase) {
+  //    fatalError("Temporarily switched off")
+  //    //    switch phase {
+  //    //      case .active(let delta):
+  //    //        interactions.interaction = .gesturePan
+  //    //        panHandler.applyPanDelta(delta)
+  //    //
+  //    //      case .ended, .inactive, .cancelled:
+  //    //        interactions.interaction = .none
+  //    //
+  //    //    }
+  //  }
 
   // MARK: - Handle Zoom
-//  public mutating func handleZoom(_ phase: ZoomPhase) {
-//    switch phase {
-//      case .active(_):
-//        interactions.interaction = .gestureZoom
-//
-//      case .ended, .inactive:
-//        interactions.interaction = .none
-//
-//    }
-//  }
+  //  public mutating func handleZoom(_ phase: ZoomPhase) {
+  //    switch phase {
+  //      case .active(_):
+  //        interactions.interaction = .gestureZoom
+  //
+  //      case .ended, .inactive:
+  //        interactions.interaction = .none
+  //
+  //    }
+  //  }
 
   public func removeZoom(from value: CGFloat) -> CGFloat {
     return value.removingZoom(gestureHandler.zoomLevel)
-//    return value.removingZoom(zoomHandler.zoom, clampedTo: zoomHandler.zoomRange)
+    //    return value.removingZoom(zoomHandler.zoom, clampedTo: zoomHandler.zoomRange)
   }
 
   public mutating func handleDrag(
@@ -180,7 +188,7 @@ extension CanvasHandler {
   //#if canImport(AppKit)
   mutating func handleKeysHeld(_ keysHeld: Set<KeyEquivalent>) {
     gestureHandler.interactions.keysHeld = keysHeld
-//    self.interactions.keysHeld = keysHeld
+    //    self.interactions.keysHeld = keysHeld
   }
   //#endif
 
@@ -194,7 +202,7 @@ extension CanvasHandler {
 
   public var cornerRounding: CGFloat {
     removeZoom(from: Styles.sizeTiny)
-//    Styles.sizeTiny.removingZoom(zoomHandler.zoom)
+    //    Styles.sizeTiny.removingZoom(zoomHandler.zoom)
   }
 }
 

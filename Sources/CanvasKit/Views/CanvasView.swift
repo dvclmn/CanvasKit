@@ -91,6 +91,8 @@ public struct CanvasView<Content: View>: View {
 //        }
 
         // MARK: - Gestures
+      
+        .panAndZoom(geometry: canvasHandler.geometry)
 //        .modifier(
 //          CanvasGesturesModifier(
 //            canvasHandler: $canvasHandler
