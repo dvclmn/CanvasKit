@@ -7,7 +7,7 @@
 
 import GestureKit
 import SharedHelpers
-import Sharing
+//import Sharing
 import SwiftUI
 
 public struct CanvasHandler {
@@ -21,7 +21,8 @@ public struct CanvasHandler {
   /// by the consuming app.
   //  public var viewportSize: CGSize?
 
-  @Shared(.canvasGeometry) public var geometry
+  var geometry: CanvasGeometry?
+//  @Shared(.canvasGeometry) public var geometry
 
   /// Expected to be updated from outside `CanvasView`, (i.e. from the caller), when canvas size changes. This View/Handler does not watch or update canvas dimensions itself.
   ///
@@ -45,11 +46,13 @@ public struct CanvasHandler {
 extension CanvasHandler {
 
   public mutating func updateViewportSize(_ size: CGSize) {
-    $geometry.withLock { $0.viewportSize = size }
+    geometry?.viewportSize = size
+//    $geometry.withLock { $0.viewportSize = size }
   }
 
   public mutating func updateCanvasSize(_ size: CGSize) {
-    $geometry.withLock { $0.canvasSize = size }
+    geometry?.viewportSize = size
+//    $geometry.withLock { $0.canvasSize = size }
   }
 
   public var transientCanvasSize: CGSize? {
@@ -58,14 +61,14 @@ extension CanvasHandler {
 
   public var canvasAnchor: UnitPoint { resizeHandler.canvasAnchor }
 
-  public mutating func addDebugResize(
-    size: CGSize?,
-    boundaryPoint: GridBoundaryPoint?
-  ) {
-    let newSize = size ?? geometry.canvasSize
-    resizeHandler.transientCanvasSize = newSize
-    resizeHandler.draggedResizePoint = boundaryPoint
-  }
+//  public mutating func addDebugResize(
+//    size: CGSize?,
+//    boundaryPoint: GridBoundaryPoint?
+//  ) {
+//    let newSize = size ?? geometry.canvasSize
+//    resizeHandler.transientCanvasSize = newSize
+//    resizeHandler.draggedResizePoint = boundaryPoint
+//  }
 
   func isDragAllowed(_ drag: GestureKind.Meta) -> Bool {
     return drag == interactions.allowedDragGesture
@@ -87,25 +90,28 @@ extension CanvasHandler {
 
   public var canvasContext: CanvasTransformContext? {
     return CanvasTransformContext(
-      viewportSize: geometry.viewportSize,
-      canvasSize: geometry.canvasSize,
-      zoom: zoomHandler.zoom,
-      pan: panHandler.pan,
-      rotation: rotationHandler.rotation
+      viewportSize: geometry?.viewportSize,
+      canvasSize: geometry?.canvasSize,
+      zoom: gestureHandler.zoomLevel,
+      pan: gestureHandler.panOffset,
+      rotation: gestureHandler.rotation
+//      zoom: zoomHandler.zoom,
+//      pan: panHandler.pan,
+//      rotation: rotationHandler.rotation
     )
   }
 
-  public mutating func resetTransforms(_ transforms: TransformTypes) {
-    if transforms.contains(.zoom) {
-      zoomHandler.reset()
-    }
-    if transforms.contains(.pan) {
-      panHandler.reset()
-    }
-    if transforms.contains(.rotation) {
-      rotationHandler.reset()
-    }
-  }
+//  public mutating func resetTransforms(_ transforms: TransformTypes) {
+//    if transforms.contains(.zoom) {
+//      zoomHandler.reset()
+//    }
+//    if transforms.contains(.pan) {
+//      panHandler.reset()
+//    }
+//    if transforms.contains(.rotation) {
+//      rotationHandler.reset()
+//    }
+//  }
 
   public mutating func handleHover(_ phase: HoverPhase) {
 
@@ -123,18 +129,18 @@ extension CanvasHandler {
     }
   }
 
-  public mutating func handleGesturePanPhase(_ phase: PanPhase) {
-    fatalError("Temporarily switched off")
-    //    switch phase {
-    //      case .active(let delta):
-    //        interactions.interaction = .gesturePan
-    //        panHandler.applyPanDelta(delta)
-    //
-    //      case .ended, .inactive, .cancelled:
-    //        interactions.interaction = .none
-    //
-    //    }
-  }
+//  public mutating func handleGesturePanPhase(_ phase: PanPhase) {
+//    fatalError("Temporarily switched off")
+//    //    switch phase {
+//    //      case .active(let delta):
+//    //        interactions.interaction = .gesturePan
+//    //        panHandler.applyPanDelta(delta)
+//    //
+//    //      case .ended, .inactive, .cancelled:
+//    //        interactions.interaction = .none
+//    //
+//    //    }
+//  }
 
   // MARK: - Handle Zoom
   public mutating func handleZoom(_ phase: ZoomPhase) {
