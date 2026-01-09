@@ -38,14 +38,14 @@ public struct CanvasView<Content: View>: View {
     ZStack {
       content
         .frame(
-          width: canvasHandler.geometry.canvasSize?.width,
-          height: canvasHandler.geometry.canvasSize?.height
+          width: canvasHandler.geometry?.canvasSize.width,
+          height: canvasHandler.geometry?.canvasSize.height
         )
         .clipShape(.rect(cornerRadius: canvasHandler.cornerRounding))
         .modifier(CanvasOutlineModifier(canvasHandler: canvasHandler))
-        .scaleEffect(canvasHandler.zoomHandler.zoom)
-        .rotationEffect(canvasHandler.rotationHandler.rotation)
-        .offset(canvasHandler.panHandler.pan)
+        .scaleEffect(canvasHandler.gestureHandler.zoomLevel)
+        .rotationEffect(canvasHandler.gestureHandler.rotation)
+        .offset(canvasHandler.gestureHandler.panOffset)
 
         /// This `.frame()` is important to make sure the area *containing*
         /// the Canvas is spread out to the edges
@@ -75,7 +75,7 @@ public struct CanvasView<Content: View>: View {
         /// Send modifiers to interacitons handler
 
         .task(id: modifierKeys) {
-          canvasHandler.interactions.modifiersHeld = modifierKeys
+          canvasHandler.gestureHandler.interactions.modifiersHeld = modifierKeys
         }
 
         /// This drives the resizing callbacks, and means I don't have to pass

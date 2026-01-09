@@ -22,6 +22,7 @@ public struct CanvasOutlineModifier: ViewModifier {
 
 extension CanvasOutlineModifier {
   var canvasOutlineThickness: CGFloat {
-    return Double(1).removingZoom(canvasHandler.zoomHandler.zoom)
+    return canvasHandler.removeZoom(from: Double(1))
+//    return Double(1).removingZoom(canvasHandler.zoomHandler.zoom)
   }
 }

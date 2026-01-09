@@ -32,7 +32,7 @@ public struct CanvasHandler {
 
   public var hoverLocation: CGPoint?
   public var tapDragPhase: TapDragPhase?
-  public var interactions = InteractionHandler()
+//  public var interactions = InteractionHandler()
   public var resizeHandler = ResizeHandler()
 
   let dragTolerance: CGFloat = 5
@@ -45,6 +45,15 @@ public struct CanvasHandler {
 
 extension CanvasHandler {
 
+  public var viewportSize: CGSize? { geometry?.viewportSize }
+  public var canvasSize: CGSize? { geometry?.canvasSize }
+  
+  public var zoomLevel: CGFloat { gestureHandler.zoomLevel }
+  public var zoomPercent: CGFloat { gestureHandler.zoomPercent }
+  public var zoomRange: ClosedRange<CGFloat> { gestureHandler.zoomRange }
+  public var panOffset: CGSize { gestureHandler.panOffset }
+  public var rotation: Angle { gestureHandler.rotation }
+  
   public mutating func updateViewportSize(_ size: CGSize) {
     geometry?.viewportSize = size
 //    $geometry.withLock { $0.viewportSize = size }
@@ -71,7 +80,7 @@ extension CanvasHandler {
 //  }
 
   func isDragAllowed(_ drag: GestureKind.Meta) -> Bool {
-    return drag == interactions.allowedDragGesture
+    return drag == gestureHandler.interactions.allowedDragGesture
   }
 
   public var draggedResizePoint: GridBoundaryPoint? {
@@ -143,19 +152,20 @@ extension CanvasHandler {
 //  }
 
   // MARK: - Handle Zoom
-  public mutating func handleZoom(_ phase: ZoomPhase) {
-    switch phase {
-      case .active(_):
-        interactions.interaction = .gestureZoom
-
-      case .ended, .inactive:
-        interactions.interaction = .none
-
-    }
-  }
+//  public mutating func handleZoom(_ phase: ZoomPhase) {
+//    switch phase {
+//      case .active(_):
+//        interactions.interaction = .gestureZoom
+//
+//      case .ended, .inactive:
+//        interactions.interaction = .none
+//
+//    }
+//  }
 
   public func removeZoom(from value: CGFloat) -> CGFloat {
-    return value.removingZoom(zoomHandler.zoom, clampedTo: zoomHandler.zoomRange)
+    return value.removingZoom(gestureHandler.zoomLevel)
+//    return value.removingZoom(zoomHandler.zoom, clampedTo: zoomHandler.zoomRange)
   }
 
   public mutating func handleDrag(
@@ -169,7 +179,8 @@ extension CanvasHandler {
   }
   //#if canImport(AppKit)
   mutating func handleKeysHeld(_ keysHeld: Set<KeyEquivalent>) {
-    self.interactions.keysHeld = keysHeld
+    gestureHandler.interactions.keysHeld = keysHeld
+//    self.interactions.keysHeld = keysHeld
   }
   //#endif
 
@@ -182,7 +193,8 @@ extension CanvasHandler {
   //  }
 
   public var cornerRounding: CGFloat {
-    Styles.sizeTiny.removingZoom(zoomHandler.zoom)
+    removeZoom(from: Styles.sizeTiny)
+//    Styles.sizeTiny.removingZoom(zoomHandler.zoom)
   }
 }
 
@@ -191,22 +203,22 @@ extension CanvasHandler: CustomStringConvertible {
     return """
 
       /// CanvasTransform ///
-        - Zoom: \(zoomHandler.zoom.displayString)
-        - Pan: \(panHandler.pan.displayString)
-        - Rotation (degrees): \(rotationHandler.rotation.degrees.displayString)
-        - Viewport size: \(geometry.viewportSize?.displayString ?? "nil")
-        - Canvas size: \(geometry.canvasSize?.displayString ?? "nil")
+        - Zoom: \(gestureHandler.zoomLevel.displayString)
+        - Pan: \(gestureHandler.panOffset.displayString)
+        - Rotation (degrees): \(gestureHandler.rotation.degrees.displayString)
+        - Viewport size: \(geometry?.viewportSize.displayString ?? "nil")
+        - Canvas size: \(geometry?.canvasSize.displayString ?? "nil")
 
 
       """
   }
 }
 
-extension SharedKey where Self == InMemoryKey<CanvasGeometry>.Default {
-  static var canvasGeometry: Self {
-    Self[
-      .inMemory("canvasGeometry"),
-      default: CanvasGeometry(viewportSize: nil, canvasSize: nil)
-    ]
-  }
-}
+//extension SharedKey where Self == InMemoryKey<CanvasGeometry>.Default {
+//  static var canvasGeometry: Self {
+//    Self[
+//      .inMemory("canvasGeometry"),
+//      default: CanvasGeometry(viewportSize: nil, canvasSize: nil)
+//    ]
+//  }
+//}
