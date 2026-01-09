@@ -5,9 +5,8 @@
 //  Created by Dave Coleman on 28/7/2025.
 //
 
-
-import SwiftUI
 import SharedHelpers
+import SwiftUI
 
 /// Unless I otherwise specify an alignment below, this helper
 /// assumes the Canvas has a default `center` alignment
@@ -26,12 +25,8 @@ public struct CanvasTransformContext: Equatable, Sendable {
     pan: CGSize,
     rotation: Angle,
   ) {
-    guard let viewportSize else {
-//      print("No value for viewportSize, unable to create CanvasTransformContext")
-      return nil
-    }
-    guard let canvasSize else {
-//      print("No value for canvasSize, unable to create CanvasTransformContext")
+    guard let viewportSize, let canvasSize else {
+      //      print("No value for canvasSize, unable to create CanvasTransformContext")
       return nil
     }
     self.viewportSize = viewportSize
@@ -43,11 +38,11 @@ public struct CanvasTransformContext: Equatable, Sendable {
 }
 
 extension CanvasTransformContext {
-  
+
   public func dragRect(for rect: CGRect) -> CGRect? {
     return mapToCanvas(viewportRect: rect)
   }
-  
+
   public func tapLocation(for location: CGPoint) -> CGPoint? {
     return mapToCanvas(viewportPoint: location)
   }

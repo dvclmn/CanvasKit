@@ -5,6 +5,8 @@
 //  Created by Dave Coleman on 9/1/2026.
 //
 
+import Foundation
+
 public struct CanvasGeometry: Sendable, Equatable {
   public var viewportSize: CGSize
   public var canvasSize: CGSize

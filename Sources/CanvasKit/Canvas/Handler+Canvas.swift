@@ -10,11 +10,11 @@ import SharedHelpers
 import Sharing
 import SwiftUI
 
-
 public struct CanvasHandler {
 
-  public var zoomHandler = ZoomHandler()
-  public var panHandler = PanHandler()
+  var gestureHandler: GestureHandler = .init()
+//  public var zoomHandler = ZoomHandler()
+//  public var panHandler = PanHandler()
   public var rotationHandler = RotationHandler()
 
   /// Expected to be updated *outside* of `CanvasView`,
@@ -69,7 +69,7 @@ extension CanvasHandler {
     resizeHandler.draggedResizePoint = boundaryPoint
   }
 
-  func isDragAllowed(_ drag: DragGestureKind) -> Bool {
+  func isDragAllowed(_ drag: GestureKind) -> Bool {
     return drag == interactions.allowedDragGesture
   }
 
@@ -155,7 +155,7 @@ extension CanvasHandler {
   }
 
   public mutating func handleDrag(
-    type: DragGestureKind,
+    type: GestureKind,
     _ phase: TapDragPhase
   ) {
     tapDragPhase = phase
