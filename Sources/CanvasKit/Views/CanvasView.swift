@@ -14,23 +14,23 @@ public struct CanvasView<Content: View>: View {
   @Environment(\.isDebugMode) private var isDebugMode
   @Environment(\.modifierKeys) var modifierKeys
 
-  @State private var hasZoomedToFit: Bool = false
+  //  @State private var hasZoomedToFit: Bool = false
 
   @Binding var canvasHandler: CanvasHandler
   let content: Content
-//  let didChangeResize: ResizeOutput
-//  let didEndResize: ResizeOutput
+  //  let didChangeResize: ResizeOutput
+  //  let didEndResize: ResizeOutput
 
   public init(
     handler: Binding<CanvasHandler>,
     @ViewBuilder content: @escaping () -> Content,
-//    didChangeResize: @escaping ResizeOutput = { _, _ in },
-//    didEndResize: @escaping ResizeOutput = { _, _ in },
+    //    didChangeResize: @escaping ResizeOutput = { _, _ in },
+    //    didEndResize: @escaping ResizeOutput = { _, _ in },
   ) {
     self._canvasHandler = handler
     self.content = content()
-//    self.didChangeResize = didChangeResize
-//    self.didEndResize = didEndResize
+    //    self.didChangeResize = didChangeResize
+    //    self.didEndResize = didEndResize
   }
 
   public var body: some View {
@@ -81,30 +81,30 @@ public struct CanvasView<Content: View>: View {
         /// This drives the resizing callbacks, and means I don't have to pass
         /// them through multiple View inits. Can just keep them in the
         /// `ResizeHandler`, and make sure they're 'activated'(?) here.
-//        .onAppear {
-//          if canvasHandler.resizeHandler.didEndResize == nil {
-//            canvasHandler.resizeHandler.didEndResize = didEndResize
-//          }
-//          if canvasHandler.resizeHandler.didChangeResize == nil {
-//            canvasHandler.resizeHandler.didChangeResize = didChangeResize
-//          }
-//        }
+        //        .onAppear {
+        //          if canvasHandler.resizeHandler.didEndResize == nil {
+        //            canvasHandler.resizeHandler.didEndResize = didEndResize
+        //          }
+        //          if canvasHandler.resizeHandler.didChangeResize == nil {
+        //            canvasHandler.resizeHandler.didChangeResize = didChangeResize
+        //          }
+        //        }
 
         // MARK: - Gestures
-      
+
         .panAndZoom(geometry: canvasHandler.geometry)
-//        .modifier(
-//          CanvasGesturesModifier(
-//            canvasHandler: $canvasHandler
-//          )
-//        )
+        //        .modifier(
+        //          CanvasGesturesModifier(
+        //            canvasHandler: $canvasHandler
+        //          )
+        //        )
 
         // MARK: - Drag Types
-//        .cumulativeDrag(
-//          $canvasHandler.panHandler.pan,
-//          isEnabled: canvasHandler.isDragAllowed(.pan),
-//          minDragDistance: canvasHandler.dragTolerance
-//        )
+        //        .cumulativeDrag(
+        //          $canvasHandler.panHandler.pan,
+        //          isEnabled: canvasHandler.isDragAllowed(.pan),
+        //          minDragDistance: canvasHandler.dragTolerance
+        //        )
 
         .marqueeDrag(
           isEnabled: canvasHandler.isDragAllowed(.select),
@@ -114,12 +114,12 @@ public struct CanvasView<Content: View>: View {
         }
 
         // MARK: - Resize
-//        .overlay {
-//          CanvasResizeView(
-//            store: $canvasHandler.resizeHandler,
-//            isEnabled: canvasHandler.isDragAllowed(.resize),
-//          )
-//        }
+        //        .overlay {
+        //          CanvasResizeView(
+        //            store: $canvasHandler.resizeHandler,
+        //            isEnabled: canvasHandler.isDragAllowed(.resize),
+        //          )
+        //        }
 
         // MARK: - Hover
         .onContinuousHover { phase in
@@ -138,20 +138,25 @@ public struct CanvasView<Content: View>: View {
 }
 
 extension CanvasView {
-  var infobarItems: [InfoBarItem] {
 
-    let items: [CanvasInfoItem] = [.pan, .zoomPercent, .interaction]
-    //    let items = CanvasInfoItem.allCases
-    return items.map { item in
-      return InfoBarItem(
-        section: CanvasInfoItem.sectionTitle,
-        label: QuickLabel(item.title, icon: item.icon),
-        content: item.content(
-          canvasHandler,
-          modifierKeys: modifierKeys
-        )
-        //        content: content(item)
-      )
-    }
+  var infobarItems: [InfoBarItem] {
+    CanvasInfoItem.buildItems(from: canvasHandler)
   }
+
+  //  var infobarItems: [InfoBarItem] {
+  //
+  //    //    let items: [CanvasInfoItem] = [.pan, .zoomPercent, .interaction]
+  //    let items = CanvasInfoItem.allCases
+  //    return items.map { item in
+  //      return InfoBarItem(
+  //        section: CanvasInfoItem.sectionTitle,
+  //        label: QuickLabel(item.title, icon: item.icon),
+  //        content: item.content(
+  //          canvasHandler,
+  //          modifiers: modifierKeys
+  //        )
+  //        //        content: content(item)
+  //      )
+  //    }
+  //  }
 }

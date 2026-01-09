@@ -5,15 +5,16 @@
 //  Created by Dave Coleman on 9/7/2025.
 //
 
+import BaseUI
 import CoreTools
 import SwiftUI
 
-enum CanvasInfoItem: CaseIterable, Identifiable {
+enum CanvasInfoItem: CaseIterable, Identifiable, InfoBarSection {
   case pan
   case zoomPercent
   case canvasSize
   case interaction
-  case modifiers
+  //  case modifiers
 
   static var sectionTitle: String { "Canvas" }
 
@@ -25,7 +26,7 @@ enum CanvasInfoItem: CaseIterable, Identifiable {
       case .zoomPercent: "Zoom"
       case .canvasSize: "Canvas Size"
       case .interaction: "Interaction"
-      case .modifiers: "Modifiers"
+    //      case .modifiers: "Modifiers"
     }
   }
 
@@ -35,29 +36,28 @@ enum CanvasInfoItem: CaseIterable, Identifiable {
       case .zoomPercent: .customSymbol(.zoom)
       case .canvasSize: .symbol(Icons.dimensions.icon)
       case .interaction: .symbol(Icons.library.icon)
-      case .modifiers: .symbol("keyboard")
+    //      case .modifiers: .symbol("keyboard")
     }
   }
 
-  
-  func content(_ canvasHandler: CanvasHandler, modifierKeys: Modifiers) -> AttributedString {
-//    print("Need to fix this")
-//    return AttributedString("?")
+  static func buildItems(from source: CanvasHandler) -> [InfoBarItem] {
+    allCases.map { item in
+      InfoBarItem(
+        //        section: sectionTitle,
+        label: QuickLabel(item.title, icon: item.icon),
+        content: item.content(source)
+      )
+    }
+  }
+
+  func content(_ handler: CanvasHandler) -> String {
+    //  func content(_ handler: CanvasHandler, modifiers: Modifiers) -> AttributedString {
     return switch self {
-      case .pan: canvasHandler.panOffset.displayString.toAttributed
-//        canvasHandler.panHandler.pan.displayString(places: 0).toAttributed
-
-      case .zoomPercent: canvasHandler.zoomPercent.displayString.toAttributed
-//        AttributedString(canvasHandler.zoomHandler.percentString)
-
-      case .canvasSize: canvasHandler.canvasSize?.displayString.toAttributed ?? "nil"
-//        canvasHandler.geometry.canvasSize?.displayString(places: 0).toAttributed ?? "nil"
-//        canvasHandler.geometry.canvasSize?.displayStringStyled(.fractionLength(0)) ?? "nil"
-
-      case .interaction: canvasHandler.gestureHandler.interactions.interaction.name.toAttributed
-
-      case .modifiers: modifierKeys.displayName(elements: .icon, separator: "", emptyText: "").toAttributed
-//        AttributedString(modifierKeys.displayName(elements: .icon, separator: "", emptyText: ""))
+      case .pan: handler.panOffset.displayString
+      case .zoomPercent: handler.zoomPercent.displayString
+      case .canvasSize: handler.canvasSize?.displayString ?? "nil"
+      case .interaction: handler.gestureHandler.interactions.interaction.name
+    //      case .modifiers: modifiers.displayName(elements: .icon, separator: "", emptyText: "")
     }
   }
 }

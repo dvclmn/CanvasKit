@@ -7,7 +7,7 @@
 
 import SwiftUI
 import CanvasKit
-internal import SharedHelpers
+import ToolKit
 
 struct ContentView: View {
   @State private var canvasHandler = CanvasHandler()
@@ -21,6 +21,7 @@ struct ContentView: View {
       }
     }
 
+    .infoBarView()
     .background(.blue.quinary)
   }
 }
