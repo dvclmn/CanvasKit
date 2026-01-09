@@ -18,19 +18,19 @@ public struct CanvasView<Content: View>: View {
 
   @Binding var canvasHandler: CanvasHandler
   let content: Content
-  let didChangeResize: ResizeOutput
-  let didEndResize: ResizeOutput
+//  let didChangeResize: ResizeOutput
+//  let didEndResize: ResizeOutput
 
   public init(
     handler: Binding<CanvasHandler>,
     @ViewBuilder content: @escaping () -> Content,
-    didChangeResize: @escaping ResizeOutput = { _, _ in },
-    didEndResize: @escaping ResizeOutput = { _, _ in },
+//    didChangeResize: @escaping ResizeOutput = { _, _ in },
+//    didEndResize: @escaping ResizeOutput = { _, _ in },
   ) {
     self._canvasHandler = handler
     self.content = content()
-    self.didChangeResize = didChangeResize
-    self.didEndResize = didEndResize
+//    self.didChangeResize = didChangeResize
+//    self.didEndResize = didEndResize
   }
 
   public var body: some View {
@@ -81,28 +81,28 @@ public struct CanvasView<Content: View>: View {
         /// This drives the resizing callbacks, and means I don't have to pass
         /// them through multiple View inits. Can just keep them in the
         /// `ResizeHandler`, and make sure they're 'activated'(?) here.
-        .onAppear {
-          if canvasHandler.resizeHandler.didEndResize == nil {
-            canvasHandler.resizeHandler.didEndResize = didEndResize
-          }
-          if canvasHandler.resizeHandler.didChangeResize == nil {
-            canvasHandler.resizeHandler.didChangeResize = didChangeResize
-          }
-        }
+//        .onAppear {
+//          if canvasHandler.resizeHandler.didEndResize == nil {
+//            canvasHandler.resizeHandler.didEndResize = didEndResize
+//          }
+//          if canvasHandler.resizeHandler.didChangeResize == nil {
+//            canvasHandler.resizeHandler.didChangeResize = didChangeResize
+//          }
+//        }
 
         // MARK: - Gestures
-        .modifier(
-          CanvasGesturesModifier(
-            canvasHandler: $canvasHandler
-          )
-        )
+//        .modifier(
+//          CanvasGesturesModifier(
+//            canvasHandler: $canvasHandler
+//          )
+//        )
 
         // MARK: - Drag Types
-        .cumulativeDrag(
-          $canvasHandler.panHandler.pan,
-          isEnabled: canvasHandler.isDragAllowed(.pan),
-          minDragDistance: canvasHandler.dragTolerance
-        )
+//        .cumulativeDrag(
+//          $canvasHandler.panHandler.pan,
+//          isEnabled: canvasHandler.isDragAllowed(.pan),
+//          minDragDistance: canvasHandler.dragTolerance
+//        )
 
         .marqueeDrag(
           isEnabled: canvasHandler.isDragAllowed(.select),
@@ -112,12 +112,12 @@ public struct CanvasView<Content: View>: View {
         }
 
         // MARK: - Resize
-        .overlay {
-          CanvasResizeView(
-            store: $canvasHandler.resizeHandler,
-            isEnabled: canvasHandler.isDragAllowed(.resize),
-          )
-        }
+//        .overlay {
+//          CanvasResizeView(
+//            store: $canvasHandler.resizeHandler,
+//            isEnabled: canvasHandler.isDragAllowed(.resize),
+//          )
+//        }
 
         // MARK: - Hover
         .onContinuousHover { phase in

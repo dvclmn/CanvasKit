@@ -15,7 +15,7 @@ public struct CanvasHandler {
   var gestureHandler: GestureHandler = .init()
 //  public var zoomHandler = ZoomHandler()
 //  public var panHandler = PanHandler()
-  public var rotationHandler = RotationHandler()
+//  public var rotationHandler = RotationHandler()
 
   /// Expected to be updated *outside* of `CanvasView`,
   /// by the consuming app.
