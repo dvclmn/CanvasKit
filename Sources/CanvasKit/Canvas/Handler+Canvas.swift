@@ -10,18 +10,6 @@ import SharedHelpers
 import Sharing
 import SwiftUI
 
-public struct CanvasGeometry: Sendable, Equatable {
-  public var viewportSize: CGSize?
-  public var canvasSize: CGSize?
-
-  public init(
-    viewportSize: CGSize?,
-    canvasSize: CGSize?,
-  ) {
-    self.viewportSize = viewportSize
-    self.canvasSize = canvasSize
-  }
-}
 
 public struct CanvasHandler {
 

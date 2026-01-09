@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 public struct CanvasOutlineModifier: ViewModifier {
   let canvasHandler: CanvasHandler
   public func body(content: Content) -> some View {
