@@ -1,26 +1,35 @@
 // swift-tools-version: 6.2
-// The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
-    name: "CanvasKit",
-    products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
-        .library(
-            name: "CanvasKit",
-            targets: ["CanvasKit"]
-        ),
-    ],
-    targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
-        .target(
-            name: "CanvasKit"
-        ),
-        .testTarget(
-            name: "CanvasKitTests",
-            dependencies: ["CanvasKit"]
-        ),
-    ]
+  name: "CanvasKit",
+  platforms: [
+    .macOS("14.0"),
+  ],
+  products: [
+    .library(
+      name: "CanvasKit",
+      targets: ["CanvasKit"]
+    )
+  ],
+  dependencies: [
+    .package(url: "https://github.com/dvclmn/BaseHelpers", branch: "main")
+  ],
+  targets: [
+    .target(
+      name: "CanvasKit",
+      dependencies: [
+        .product(name: "SharedHelpers", package: "BaseHelpers"),
+        .product(name: "BaseMacros", package: "BaseHelpers"),
+        .product(name: "GestureKit", package: "BaseHelpers"),
+        .product(name: "BaseUI", package: "BaseHelpers"),
+
+      ]
+    ),
+    .testTarget(
+      name: "CanvasKitTests",
+      dependencies: ["CanvasKit"]
+    ),
+  ]
 )
