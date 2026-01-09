@@ -23,7 +23,6 @@ public struct CanvasGeometry: Sendable, Equatable {
   }
 }
 
-
 public struct CanvasHandler {
 
   public var zoomHandler = ZoomHandler()
@@ -56,7 +55,6 @@ public struct CanvasHandler {
   }
 
 }
-
 
 extension CanvasHandler {
 
@@ -140,15 +138,16 @@ extension CanvasHandler {
   }
 
   public mutating func handleGesturePanPhase(_ phase: PanPhase) {
-    switch phase {
-      case .active(let delta):
-        interactions.interaction = .gesturePan
-        panHandler.applyPanDelta(delta)
-
-      case .ended, .inactive, .cancelled:
-        interactions.interaction = .none
-
-    }
+    fatalError("Temporarily switched off")
+    //    switch phase {
+    //      case .active(let delta):
+    //        interactions.interaction = .gesturePan
+    //        panHandler.applyPanDelta(delta)
+    //
+    //      case .ended, .inactive, .cancelled:
+    //        interactions.interaction = .none
+    //
+    //    }
   }
 
   // MARK: - Handle Zoom
@@ -194,7 +193,6 @@ extension CanvasHandler {
     Styles.sizeTiny.removingZoom(zoomHandler.zoom)
   }
 }
-
 
 extension CanvasHandler: CustomStringConvertible {
   public var description: String {

@@ -10,7 +10,6 @@ import CanvasKit
 
 struct ContentView: View {
   @State private var canvasHandler = CanvasHandler()
-//  @Binding var document: CanvasDemoDocument
 
   var body: some View {
     CanvasView(handler: $canvasHandler) {
@@ -24,5 +23,6 @@ struct ContentView: View {
 #if DEBUG
 #Preview {
   ContentView()
+    .frame(minWidth: 660, minHeight: 700)
 }
 #endif
