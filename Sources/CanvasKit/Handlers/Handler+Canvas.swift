@@ -13,9 +13,9 @@ import SwiftUI
 public struct CanvasHandler {
 
   var gestureHandler: GestureHandler = .init()
-//  public var zoomHandler = ZoomHandler()
-//  public var panHandler = PanHandler()
-//  public var rotationHandler = RotationHandler()
+  //  public var zoomHandler = ZoomHandler()
+  //  public var panHandler = PanHandler()
+  //  public var rotationHandler = RotationHandler()
 
   /// Expected to be updated *outside* of `CanvasView`,
   /// by the consuming app.
@@ -37,9 +37,7 @@ public struct CanvasHandler {
   let dragTolerance: CGFloat = 5
 
   public init() {
-    print(
-      "Initialised `CanvasHandler` at \(Date.now.formatted(date: .omitted, time: .complete))"
-    )
+    print("Initialised `CanvasHandler` at \(Date.debug)")
   }
 
 }
@@ -69,7 +67,7 @@ extension CanvasHandler {
     resizeHandler.draggedResizePoint = boundaryPoint
   }
 
-  func isDragAllowed(_ drag: GestureKind) -> Bool {
+  func isDragAllowed(_ drag: GestureKind.Meta) -> Bool {
     return drag == interactions.allowedDragGesture
   }
 
