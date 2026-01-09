@@ -41,24 +41,23 @@ enum CanvasInfoItem: CaseIterable, Identifiable {
 
   
   func content(_ canvasHandler: CanvasHandler, modifierKeys: Modifiers) -> AttributedString {
-    print("Need to fix this")
-    return AttributedString("?")
-//    return switch self {
-//      case .pan:
+//    print("Need to fix this")
+//    return AttributedString("?")
+    return switch self {
+      case .pan: canvasHandler.panOffset.displayString.toAttributed
 //        canvasHandler.panHandler.pan.displayString(places: 0).toAttributed
-//
-//      case .zoomPercent:
+
+      case .zoomPercent: canvasHandler.zoomPercent.displayString.toAttributed
 //        AttributedString(canvasHandler.zoomHandler.percentString)
-//
-//      case .canvasSize:
+
+      case .canvasSize: canvasHandler.canvasSize?.displayString.toAttributed ?? "nil"
 //        canvasHandler.geometry.canvasSize?.displayString(places: 0).toAttributed ?? "nil"
-////        canvasHandler.geometry.canvasSize?.displayStringStyled(.fractionLength(0)) ?? "nil"
-//
-//      case .interaction:
-//        AttributedString(canvasHandler.interactions.interaction.name)
-//
-//      case .modifiers:
+//        canvasHandler.geometry.canvasSize?.displayStringStyled(.fractionLength(0)) ?? "nil"
+
+      case .interaction: canvasHandler.gestureHandler.interactions.interaction.name.toAttributed
+
+      case .modifiers: modifierKeys.displayName(elements: .icon, separator: "", emptyText: "").toAttributed
 //        AttributedString(modifierKeys.displayName(elements: .icon, separator: "", emptyText: ""))
-//    }
+    }
   }
 }

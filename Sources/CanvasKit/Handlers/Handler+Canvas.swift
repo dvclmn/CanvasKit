@@ -66,6 +66,10 @@ extension CanvasHandler {
 
   }
   
+  public mutating func updateAllowedGesture(_ kind: GestureKind.Meta) {
+    gestureHandler.interactions.allowedDragGesture = kind
+  }
+  
   public mutating func updateGesture(
     _ kind: GestureKind,
     //    geometry: CanvasGeometry

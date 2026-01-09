@@ -7,13 +7,18 @@
 
 import SwiftUI
 import CanvasKit
+internal import SharedHelpers
 
 struct ContentView: View {
   @State private var canvasHandler = CanvasHandler()
 
   var body: some View {
     CanvasView(handler: $canvasHandler) {
-      Text("Hello")
+      ZStack {
+        Circle().fill(.brown.tertiary)
+          .padding()
+        Text("Hello")
+      }
     }
 
     .background(.blue.quinary)
@@ -23,6 +28,6 @@ struct ContentView: View {
 #if DEBUG
 #Preview {
   ContentView()
-    .frame(minWidth: 660, minHeight: 700)
+    .frame(minWidth: 660, minHeight: 500)
 }
 #endif
