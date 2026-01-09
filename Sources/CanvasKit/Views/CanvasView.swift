@@ -12,9 +12,7 @@ import SwiftUI
 
 public struct CanvasView<Content: View>: View {
   @Environment(\.isDebugMode) private var isDebugMode
-  //#if canImport(AppKit)
   @Environment(\.modifierKeys) var modifierKeys
-  //#endif
 
   @State private var hasZoomedToFit: Bool = false
 
