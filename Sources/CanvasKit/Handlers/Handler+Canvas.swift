@@ -98,15 +98,15 @@ extension CanvasHandler {
     return canvasContext?.tapLocation(for: unmapped)
   }
 
-  public var canvasContext: CanvasTransformContext? {
-    return CanvasTransformContext(
-      viewportSize: geometry.viewportSize,
-      canvasSize: geometry.canvasSize,
-      zoom: gestureHandler.zoomLevel,
-      pan: gestureHandler.panOffset,
-      rotation: gestureHandler.rotation
-    )
-  }
+//  public var canvasContext: CanvasTransformContext? {
+//    return CanvasTransformContext(
+//      viewportSize: geometry.viewportSize,
+//      canvasSize: geometry.canvasSize,
+//      zoom: gestureHandler.zoomLevel,
+//      pan: gestureHandler.panOffset,
+//      rotation: gestureHandler.rotation
+//    )
+//  }
 
   public mutating func handleHover(_ phase: HoverPhase) {
 

@@ -39,7 +39,7 @@ public struct CanvasView<Content: View>: View {
   public var body: some View {
 
     Rectangle()
-      .viewSize(mode: .debounce(0.3)) { size in
+      .viewSize(mode: .debounce(0.1)) { size in
         canvasHandler.updateViewportSize(size)
       }
       .overlay {
@@ -144,6 +144,13 @@ public struct CanvasView<Content: View>: View {
 
       .infoBarView(isEnabled: showsInfoBar)
     
+      .environment(\.canvasPan, canvasHandler.panOffset)
+      .environment(\.canvasZoom, canvasHandler.zoomLevel)
+      .environment(\.canvasZoomRange, canvasHandler.zoomRange)
+      
+      .environment(\.isResizingCanvas, store.canvasHandler.resizeHandler.isDragging)
+      .environment(\.tapDragPhase, canvasHandler.tapDragPhase)
+    
       .task(id: modifierKeys) {
         canvasHandler.gestureHandler.interactions.modifiersHeld = modifierKeys
       }
@@ -154,4 +161,8 @@ public struct CanvasView<Content: View>: View {
       .disabled(!canvasHandler.geometry.isEitherZero)
 
   }
+}
+
+extension CanvasView {
+  
 }
