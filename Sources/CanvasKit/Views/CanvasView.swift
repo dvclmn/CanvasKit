@@ -148,7 +148,7 @@ public struct CanvasView<Content: View>: View {
       .environment(\.canvasZoom, canvasHandler.zoomLevel)
       .environment(\.canvasZoomRange, canvasHandler.zoomRange)
       
-      .environment(\.isResizingCanvas, store.canvasHandler.resizeHandler.isDragging)
+      .environment(\.isRe/*sizingCanvas, store.canvasHandler.re*/sizeHandler.isDragging)
       .environment(\.pointerPhase, canvasHandler.pointerPhase)
     
       .task(id: modifierKeys) {
