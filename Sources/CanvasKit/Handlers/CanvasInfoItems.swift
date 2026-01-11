@@ -36,14 +36,13 @@ enum CanvasInfoItem: CaseIterable, Identifiable, InfoBarSection {
       case .zoomPercent: .customSymbol(.zoom)
       case .canvasSize: .symbol(Icons.dimensions.icon)
       case .interaction: .symbol(Icons.library.icon)
-    //      case .modifiers: .symbol("keyboard")
     }
   }
 
   static func buildItems(from source: CanvasHandler) -> [InfoBarItem] {
     allCases.map { item in
       InfoBarItem(
-        //        section: sectionTitle,
+        sectionKey: sectionTitle,
         label: QuickLabel(item.title, icon: item.icon),
         content: item.content(source)
       )
@@ -51,13 +50,11 @@ enum CanvasInfoItem: CaseIterable, Identifiable, InfoBarSection {
   }
 
   func content(_ handler: CanvasHandler) -> String {
-    //  func content(_ handler: CanvasHandler, modifiers: Modifiers) -> AttributedString {
     return switch self {
       case .pan: handler.panOffset.displayString
       case .zoomPercent: handler.zoomPercent.displayString
       case .canvasSize: handler.canvasSize?.displayString ?? "nil"
       case .interaction: handler.gestureHandler.interactions.interaction.name
-    //      case .modifiers: modifiers.displayName(elements: .icon, separator: "", emptyText: "")
     }
   }
 }

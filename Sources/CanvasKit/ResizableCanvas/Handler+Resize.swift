@@ -6,7 +6,7 @@
 //
 
 
-import SharedHelpers
+import BasePrimitives
 import SwiftUI
 
 public struct ResizeHandler {
@@ -34,7 +34,7 @@ public struct ResizeHandler {
   var didChangeResize: ResizeOutput?
 
   public init() {
-    print("Initialised `ResizeHandler` at \(Date.now.formatted(date: .omitted, time: .complete))")
+//    print("Initialised `ResizeHandler` at \(Date.now.formatted(date: .omitted, time: .complete))")
   }
 }
 extension ResizeHandler {

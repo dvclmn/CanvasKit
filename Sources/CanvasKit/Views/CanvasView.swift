@@ -7,7 +7,7 @@
 
 import BaseUI
 import GestureKit
-import SharedHelpers
+import BasePrimitives
 import SwiftUI
 
 public struct CanvasView<Content: View>: View {
@@ -77,6 +77,17 @@ public struct CanvasView<Content: View>: View {
         .task(id: modifierKeys) {
           canvasHandler.gestureHandler.interactions.modifiersHeld = modifierKeys
         }
+
+        .debugTextOverlay {
+          "No geometry"
+        }
+        .disabled(canvasHandler.geometry != nil)
+
+        //        .overlay {
+        //          Circle()
+        //            .fill(.red)
+        //            .frame(width: 30, height: 30)
+        //        }
 
         /// This drives the resizing callbacks, and means I don't have to pass
         /// them through multiple View inits. Can just keep them in the

@@ -6,7 +6,7 @@
 //
 
 import GestureKit
-import SharedHelpers
+import BasePrimitives
 //import Sharing
 import SwiftUI
 
@@ -38,7 +38,7 @@ public struct CanvasHandler {
   let dragTolerance: CGFloat = 5
 
   public init() {
-    print("Initialised `CanvasHandler` at \(Date.debug)")
+//    print("Initialised `CanvasHandler` at \(Date.debug)")
   }
 
 }
