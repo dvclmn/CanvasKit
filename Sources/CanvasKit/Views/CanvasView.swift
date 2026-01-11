@@ -54,9 +54,10 @@ public struct CanvasView<Content: View>: View {
         )
         .clipShape(.rect(cornerRadius: canvasHandler.cornerRounding))
         .modifier(CanvasOutlineModifier(canvasHandler: canvasHandler))
-        .scaleEffect(canvasHandler.gestureHandler.zoomLevel)
-        .rotationEffect(canvasHandler.gestureHandler.rotation)
-        .offset(canvasHandler.gestureHandler.panOffset)
+        .scaleEffect(canvasHandler.zoom)
+        .rotationEffect(canvasHandler.rotation)
+        .offset(canvasHandler.pan)
+//        .offset(canvasHandler.gestureHandler.panOffset)
 
         /// This `.frame()` is important to make sure the area *containing*
         /// the Canvas is spread out to the edges
