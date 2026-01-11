@@ -40,30 +40,27 @@ public struct CanvasTransformContext: Equatable, Sendable {
 extension CanvasTransformContext {
 
   public func dragRect(for rect: CGRect) -> CGRect? {
-    return mapToCanvas(viewportRect: rect)
+    mapToCanvas(viewportRect: rect)
   }
 
   public func tapLocation(for location: CGPoint) -> CGPoint? {
-    return mapToCanvas(viewportPoint: location)
+    mapToCanvas(viewportPoint: location)
   }
 
   private var dimensionsAreValid: Bool {
-    return viewportSize.areBothDimensionsGreaterThan(.zero) && canvasSize.areBothDimensionsGreaterThan(.zero)
+    viewportSize.isGreaterThanZero && canvasSize.isGreaterThanZero
   }
 
   private var canvasOriginInViewport: CGPoint {
-
     let centredOffset = viewportSize.centeringOffset(forChild: zoomedCanvasSize)
     let pannedOffset: CGSize = centredOffset + pan
     return pannedOffset.toCGPoint
   }
 
-  private var zoomedCanvasSize: CGSize {
-    canvasSize * zoom
-  }
+  private var zoomedCanvasSize: CGSize { canvasSize * zoom }
 
   public var canvasFrameInViewport: CGRect {
-    precondition(dimensionsAreValid, "Viewport and Canvas sizes cannot be zero along any dimension.")
+    precondition(dimensionsAreValid, "Viewport and Canvas sizes cannot be zero along either dimension.")
     let origin = canvasOriginInViewport
     let size = zoomedCanvasSize
     return CGRect(origin: origin, size: size)

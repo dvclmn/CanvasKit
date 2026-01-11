@@ -7,16 +7,12 @@
 
 import GestureKit
 import BasePrimitives
-//import Sharing
 import SwiftUI
 
 @dynamicMemberLookup
 public struct CanvasHandler {
 
   var gestureHandler: GestureHandler = .init()
-  //  public var zoomHandler = ZoomHandler()
-  //  public var panHandler = PanHandler()
-  //  public var rotationHandler = RotationHandler()
 
   /// Expected to be updated *outside* of `CanvasView`,
   /// by the consuming app.
@@ -25,7 +21,8 @@ public struct CanvasHandler {
   public var geometry: CanvasGeometry?
   //  @Shared(.canvasGeometry) public var geometry
 
-  /// Expected to be updated from outside `CanvasView`, (i.e. from the caller), when canvas size changes. This View/Handler does not watch or update canvas dimensions itself.
+  /// Expected to be updated from outside `CanvasView`, (i.e. from the caller), when canvas size changes.
+  /// `CanvasHandler` does not watch or update canvas dimensions itself.
   ///
   /// Note: This is the source of truth for the ResizeHandler,
   /// to obtain the latest Canvas Size from the Domain View
@@ -111,12 +108,12 @@ extension CanvasHandler {
   }
 
   public var dragRect: CGRect? {
-    guard let unmapped = tapDragPhase?.unMappedDragRect else { return nil }
+    guard let unmapped = tapDragPhase?.dragValue else { return nil }
     return canvasContext?.dragRect(for: unmapped)
   }
 
   public var tapLocation: CGPoint? {
-    guard let unmapped = tapDragPhase?.unMappedTapLocation else { return nil }
+    guard let unmapped = tapDragPhase?.tapValue else { return nil }
     return canvasContext?.tapLocation(for: unmapped)
   }
 

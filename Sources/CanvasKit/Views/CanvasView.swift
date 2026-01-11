@@ -5,9 +5,9 @@
 //  Created by Dave Coleman on 24/6/2025.
 //
 
+import BasePrimitives
 import BaseUI
 import GestureKit
-import BasePrimitives
 import SwiftUI
 
 public struct CanvasView<Content: View>: View {
