@@ -13,20 +13,18 @@ struct ContentView: View {
   @State private var canvasHandler = CanvasHandler()
   let canvasSize: CGSize = CGSize(1200, 800)
   var body: some View {
-    ZStack {
-      CanvasView(handler: $canvasHandler) {
-        ZStack {
-          Circle().fill(.brown.tertiary)
-            .padding()
-          Text("Hello")
-        }
-      }
+    //    ZStack {
+    CanvasView(handler: $canvasHandler) {
+      //        ZStack {
+      Circle().fill(.brown.tertiary)
+        .padding()
+      Text("Hello")
+      //        }
     }
+    //    }
 
-    //    .infoBarView()
-    .viewSize(mode: .debounce(0.3)) { size in
-      canvasHandler.updateViewportSize(size)
-    }
+        .infoBarView()
+
     .task(id: canvasSize) {
       canvasHandler.updateCanvasSize(canvasSize)
     }

@@ -35,139 +35,111 @@ public struct CanvasView<Content: View>: View {
 
   public var body: some View {
 
+    //    ZStack {
+    /// Don't know why this extra zstack is neccesary? Layer order was wrong, when removed
     ZStack {
       content
-        .frame(
-          width: canvasHandler.geometry?.canvasSize.width,
-          height: canvasHandler.geometry?.canvasSize.height
-        )
-        .clipShape(.rect(cornerRadius: canvasHandler.cornerRounding))
-        .modifier(CanvasOutlineModifier(canvasHandler: canvasHandler))
-        .scaleEffect(canvasHandler.gestureHandler.zoomLevel)
-        .rotationEffect(canvasHandler.gestureHandler.rotation)
-        .offset(canvasHandler.gestureHandler.panOffset)
+    }
+    .frame(
+      width: canvasHandler.geometry.canvasSize.width,
+      height: canvasHandler.geometry.canvasSize.height
+    )
+    .clipShape(.rect(cornerRadius: canvasHandler.cornerRounding))
+    .modifier(CanvasOutlineModifier(canvasHandler: canvasHandler))
+    .scaleEffect(canvasHandler.gestureHandler.zoomLevel)
+    .rotationEffect(canvasHandler.gestureHandler.rotation)
+    .offset(canvasHandler.gestureHandler.panOffset)
 
-        /// This `.frame()` is important to make sure the area *containing*
-        /// the Canvas is spread out to the edges
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .allowsHitTesting(false)
-        .drawingGroup()
-        //        .shaderEffect(
-        //          .chromaticAberration(
-        //            .init(
-        //              red: 0.9,
-        //              blue: 0.3,
-        //              strength: 0.8
-        //            )
-        //          )
-        //        )
+    /// This `.frame()` is important to make sure the area *containing*
+    /// the Canvas is spread out to the edges
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .allowsHitTesting(false)
+    .drawingGroup()
+    //        .shaderEffect(
+    //          .chromaticAberration(
+    //            .init(
+    //              red: 0.9,
+    //              blue: 0.3,
+    //              strength: 0.8
+    //            )
+    //          )
+    //        )
 
-        .background(.black.opacity(0.8))
+    .background(.black.opacity(0.8))
 
-        .addInfoBarItems(infobarItems)
+    .addInfoBarItems(CanvasInfoItem.buildItems(from: canvasHandler))
 
-        // MARK: - Tasks / On-Appear actions
-        /// Make sure handler has latest Viewport size
-        //        .task(id: proxy.size) {
-        //          canvasHandler.updateViewportSize(proxy.size)
-        //        }
+    // MARK: - Tasks / On-Appear actions
+    /// Make sure handler has latest Viewport size
+    //        .task(id: proxy.size) {
+    //          canvasHandler.updateViewportSize(proxy.size)
+    //        }
 
-        /// Send modifiers to interacitons handler
+    /// Send modifiers to interacitons handler
 
-        .task(id: modifierKeys) {
-          canvasHandler.gestureHandler.interactions.modifiersHeld = modifierKeys
-        }
+    /// This drives the resizing callbacks, and means I don't have to pass
+    /// them through multiple View inits. Can just keep them in the
+    /// `ResizeHandler`, and make sure they're 'activated'(?) here.
+    //        .onAppear {
+    //          if canvasHandler.resizeHandler.didEndResize == nil {
+    //            canvasHandler.resizeHandler.didEndResize = didEndResize
+    //          }
+    //          if canvasHandler.resizeHandler.didChangeResize == nil {
+    //            canvasHandler.resizeHandler.didChangeResize = didChangeResize
+    //          }
+    //        }
 
-        .debugTextOverlay {
-          "No geometry"
-        }
-        .disabled(canvasHandler.geometry != nil)
+    // MARK: - Gestures
 
-        //        .overlay {
-        //          Circle()
-        //            .fill(.red)
-        //            .frame(width: 30, height: 30)
-        //        }
+    .panAndZoom(geometry: canvasHandler.geometry)
+    //        .modifier(
+    //          CanvasGesturesModifier(
+    //            canvasHandler: $canvasHandler
+    //          )
+    //        )
 
-        /// This drives the resizing callbacks, and means I don't have to pass
-        /// them through multiple View inits. Can just keep them in the
-        /// `ResizeHandler`, and make sure they're 'activated'(?) here.
-        //        .onAppear {
-        //          if canvasHandler.resizeHandler.didEndResize == nil {
-        //            canvasHandler.resizeHandler.didEndResize = didEndResize
-        //          }
-        //          if canvasHandler.resizeHandler.didChangeResize == nil {
-        //            canvasHandler.resizeHandler.didChangeResize = didChangeResize
-        //          }
-        //        }
+    // MARK: - Drag Types
+    //        .cumulativeDrag(
+    //          $canvasHandler.panHandler.pan,
+    //          isEnabled: canvasHandler.isDragAllowed(.pan),
+    //          minDragDistance: canvasHandler.dragTolerance
+    //        )
 
-        // MARK: - Gestures
+    //        .marqueeDrag(
+    //          isEnabled: canvasHandler.isDragAllowed(.select),
+    //          dragThreshold: canvasHandler.dragTolerance
+    //        ) { phase in
+    //          canvasHandler.handleDrag(type: .select, phase)
+    //        }
 
-        .panAndZoom(geometry: canvasHandler.geometry)
-        //        .modifier(
-        //          CanvasGesturesModifier(
-        //            canvasHandler: $canvasHandler
-        //          )
-        //        )
+    // MARK: - Resize
+    //        .overlay {
+    //          CanvasResizeView(
+    //            store: $canvasHandler.resizeHandler,
+    //            isEnabled: canvasHandler.isDragAllowed(.resize),
+    //          )
+    //        }
 
-        // MARK: - Drag Types
-        //        .cumulativeDrag(
-        //          $canvasHandler.panHandler.pan,
-        //          isEnabled: canvasHandler.isDragAllowed(.pan),
-        //          minDragDistance: canvasHandler.dragTolerance
-        //        )
+    // MARK: - Hover
+    //        .onContinuousHover { phase in
+    //          canvasHandler.handleHover(phase)
+    //        }
 
-        .marqueeDrag(
-          isEnabled: canvasHandler.isDragAllowed(.select),
-          dragThreshold: canvasHandler.dragTolerance
-        ) { phase in
-          canvasHandler.handleDrag(type: .select, phase)
-        }
+    // MARK: - Keyboard keys
+    // TODO: May need to bring this back
+    //        .keysHeld(canvasHandler.interactions.keysToWatch) { keys in
+    //          canvasHandler.handleKeysHeld(keys)
+    //        }
 
-        // MARK: - Resize
-        //        .overlay {
-        //          CanvasResizeView(
-        //            store: $canvasHandler.resizeHandler,
-        //            isEnabled: canvasHandler.isDragAllowed(.resize),
-        //          )
-        //        }
+    //    }  // END geo reader
+    .task(id: modifierKeys) {
+      canvasHandler.gestureHandler.interactions.modifiersHeld = modifierKeys
+    }
 
-        // MARK: - Hover
-        .onContinuousHover { phase in
-          canvasHandler.handleHover(phase)
-        }
-
-      // MARK: - Keyboard keys
-      // TODO: May need to bring this back
-      //        .keysHeld(canvasHandler.interactions.keysToWatch) { keys in
-      //          canvasHandler.handleKeysHeld(keys)
-      //        }
-
-    }  // END geo reader
+    .debugTextOverlay {
+      "Either Canvas or Viewport is Zero"
+    }
+    .disabled(!canvasHandler.geometry.isEitherZero)
 
   }
-}
-
-extension CanvasView {
-
-  var infobarItems: [InfoBarItem] {
-    CanvasInfoItem.buildItems(from: canvasHandler)
-  }
-
-  //  var infobarItems: [InfoBarItem] {
-  //
-  //    //    let items: [CanvasInfoItem] = [.pan, .zoomPercent, .interaction]
-  //    let items = CanvasInfoItem.allCases
-  //    return items.map { item in
-  //      return InfoBarItem(
-  //        section: CanvasInfoItem.sectionTitle,
-  //        label: QuickLabel(item.title, icon: item.icon),
-  //        content: item.content(
-  //          canvasHandler,
-  //          modifiers: modifierKeys
-  //        )
-  //        //        content: content(item)
-  //      )
-  //    }
-  //  }
 }
