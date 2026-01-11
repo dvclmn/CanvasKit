@@ -12,7 +12,7 @@ import SwiftUI
 @dynamicMemberLookup
 public struct CanvasHandler {
 
-  var gestureHandler: GestureHandler = .init()
+//  var gestureHandler: GestureHandler = .init()
 
   /// Expected to be updated *outside* of `CanvasView`,
   /// by the consuming app.
@@ -42,6 +42,18 @@ public struct CanvasHandler {
 }
 
 extension CanvasHandler {
+  
+  /// Clamped
+  public var zoomLevel: CGFloat { interactions.current?.gestureZoomValue }
+  public var zoomPercent: CGFloat { zoom.percentage }
+  public var panOffset: CGSize { pan.value }
+  public var rotation: Angle { rotate.value }
+//  public var zoomLevel: CGFloat { zoom.clamped(in: zoomRange).value }
+//  public var zoomPercent: CGFloat { zoom.percentage }
+//  public var panOffset: CGSize { pan.value }
+//  public var rotation: Angle { rotate.value }
+  
+  
   public subscript<T>(dynamicMember keyPath: KeyPath<GestureHandler, T>) -> T {
     gestureHandler[keyPath: keyPath]
   }
@@ -50,12 +62,12 @@ extension CanvasHandler {
   public var canvasSize: CGSize? { geometry.canvasSize }
 
   public mutating func resetGesture(_ transforms: TransformTypes) {
-    let kind = GestureKind.Meta(from: transforms)
+    let kind = InteractionKind.Meta(from: transforms)
     gestureHandler.reset(kind)
   }
 
-  public mutating func updateAllowedGesture(_ kind: GestureKind.Meta) {
-    interactions.allowed =
+  public mutating func updateAllowedGesture(_ kind: InteractionKind.Meta) {
+    interactions.allowed = kind
   }
 
 //  public mutating func updateGesture(

@@ -54,7 +54,7 @@ enum CanvasInfoItem: CaseIterable, Identifiable, InfoBarSection {
       case .pan: handler.panOffset.displayString
       case .zoomPercent: handler.zoomPercent.displayString
       case .canvasSize: handler.canvasSize?.displayString ?? "nil"
-      case .interaction: handler.gestureHandler.interactions.interaction.name
+      case .interaction: handler.interactions.current?.name ?? "none"
     }
   }
 }

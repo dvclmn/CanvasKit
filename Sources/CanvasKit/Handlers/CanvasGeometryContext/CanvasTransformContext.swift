@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 28/7/2025.
 //
 
-import BasePrimitives
+import CoreTools
 import GestureKit
 import SwiftUI
 
@@ -67,7 +67,7 @@ extension CanvasTransformContext {
   public func dragRect(for rect: CGRect) -> CGRect? {
     mapToCanvas(viewportRect: rect)
   }
-  public func dragRect(for phase: PointerPhase) -> CGRect? {
+  public func dragRect(for phase: InteractionKind) -> CGRect? {
     guard let rect = phase.dragValue else { return nil }
     return dragRect(for: rect)
   }

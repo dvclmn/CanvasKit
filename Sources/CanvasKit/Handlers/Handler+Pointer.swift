@@ -20,21 +20,21 @@ import GestureKit
 /// - relative motion matters
 ///
 
-struct PointerHandler {
-  let phase: PointerPhase? = nil
-}
-
-extension PointerHandler {
-  mutating func update(
-    for kind: PointerInteractionKind,
-    phase: PointerPhase?
-  ) {
-    
-  }
-}
-
-public enum PointerInteractionKind {
-  case tap
-  case drag
-  case hover
-}
+//struct PointerHandler {
+//  let phase: PointerPhase? = nil
+//}
+//
+//extension PointerHandler {
+//  mutating func update(
+//    for kind: PointerInteractionKind,
+//    phase: PointerPhase?
+//  ) {
+//    
+//  }
+//}
+//
+//public enum PointerInteractionKind {
+//  case tap
+//  case drag
+//  case hover
+//}

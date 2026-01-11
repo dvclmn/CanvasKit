@@ -18,11 +18,11 @@ public struct TransformTypes: Sendable {
   }
 }
 
-extension GestureKind.Meta {
+extension InteractionKind.Meta {
   public init(from transformTypes: TransformTypes) {
-    if transformTypes.contains(.zoom) { self = .zoom }
-    if transformTypes.contains(.pan) { self = .pan }
-    if transformTypes.contains(.rotation) { self = .rotate }
+    if transformTypes.contains(.zoom) { self = .gestureZoom }
+    if transformTypes.contains(.pan) { self = .gesturePan }
+    if transformTypes.contains(.rotation) { self = .gestureRotate }
     self = .none
   }
 }
