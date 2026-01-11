@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 24/6/2025.
 //
 
-import BasePrimitives
+import CoreTools
 import GestureKit
 import SwiftUI
 
@@ -28,9 +28,9 @@ public struct CanvasHandler {
   /// to obtain the latest Canvas Size from the Domain View
   //  public var canvasSize: CGSize?
 
-//  public var hoverLocation: CGPoint?
-  public var pointerPhase: PointerPhase?
-  //  public var interactions = InteractionHandler()
+  //  public var hoverLocation: CGPoint?
+  //  public var pointerPhase: PointerPhase?
+  public var interactions = InteractionHandler()
   public var resizeHandler = ResizeHandler()
 
   let dragTolerance: CGFloat = 5
@@ -55,15 +55,15 @@ extension CanvasHandler {
   }
 
   public mutating func updateAllowedGesture(_ kind: GestureKind.Meta) {
-    gestureHandler.interactions.allowedDragGesture = kind
+    interactions.allowed =
   }
 
-  public mutating func updateGesture(
-    _ kind: GestureKind,
-    //    geometry: CanvasGeometry
-  ) {
-    gestureHandler.update(kind, geometry: geometry)
-  }
+//  public mutating func updateGesture(
+//    _ kind: GestureKind,
+//    //    geometry: CanvasGeometry
+//  ) {
+//    gestureHandler.update(kind, phase:  geometry: geometry)
+//  }
   public mutating func updateViewportSize(_ size: CGSize) {
     geometry.viewportSize = size
   }
@@ -88,34 +88,34 @@ extension CanvasHandler {
     resizeHandler.draggedResizePoint
   }
 
-//  public var dragRect: CGRect? {
-//    guard let unmapped = pointerPhase?.dragValue else { return nil }
-//    return canvasContext?.dragRect(for: unmapped)
-//  }
-//
-//  public var tapLocation: CGPoint? {
-//    guard let unmapped = pointerPhase?.tapValue else { return nil }
-//    return canvasContext?.tapLocation(for: unmapped)
-//  }
+  //  public var dragRect: CGRect? {
+  //    guard let unmapped = pointerPhase?.dragValue else { return nil }
+  //    return canvasContext?.dragRect(for: unmapped)
+  //  }
+  //
+  //  public var tapLocation: CGPoint? {
+  //    guard let unmapped = pointerPhase?.tapValue else { return nil }
+  //    return canvasContext?.tapLocation(for: unmapped)
+  //  }
 
-//  public var canvasContext: CanvasTransformContext? {
-//    return CanvasTransformContext(
-//      viewportSize: geometry.viewportSize,
-//      canvasSize: geometry.canvasSize,
-//      zoom: gestureHandler.zoomLevel,
-//      pan: gestureHandler.panOffset,
-//      rotation: gestureHandler.rotation
-//    )
-//  }
+  //  public var canvasContext: CanvasTransformContext? {
+  //    return CanvasTransformContext(
+  //      viewportSize: geometry.viewportSize,
+  //      canvasSize: geometry.canvasSize,
+  //      zoom: gestureHandler.zoomLevel,
+  //      pan: gestureHandler.panOffset,
+  //      rotation: gestureHandler.rotation
+  //    )
+  //  }
 
   public mutating func handleHover(_ phase: HoverPhase) {
 
-//    guard let context = canvasContext else { return }
+    //    guard let context = canvasContext else { return }
 
     switch phase {
       case .active(let location):
-        
-//        let mapped = context.mapToCanvas(viewportPoint: location)
+
+        //        let mapped = context.mapToCanvas(viewportPoint: location)
         hoverLocation = mapped
 
       /// Note: This only triggers when the pointer exits the view.

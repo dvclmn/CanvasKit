@@ -148,11 +148,11 @@ public struct CanvasView<Content: View>: View {
       .environment(\.canvasZoom, canvasHandler.zoomLevel)
       .environment(\.canvasZoomRange, canvasHandler.zoomRange)
       
-      .environment(\.isRe/*sizingCanvas, store.canvasHandler.re*/sizeHandler.isDragging)
-      .environment(\.pointerPhase, canvasHandler.pointerPhase)
+//      .environment(\.isResizingCanvas, store.canvasHandler.resizeHandler.isDragging)
+//      .environment(\.pointerPhase, canvasHandler.pointerPhase)
     
       .task(id: modifierKeys) {
-        canvasHandler.gestureHandler.interactions.modifiersHeld = modifierKeys
+        canvasHandler.interactions.modifiersHeld = modifierKeys
       }
 
       .debugTextOverlay {
