@@ -18,6 +18,33 @@ public struct CanvasTransformContext: Equatable, Sendable {
   public let pan: CGSize
   public let rotation: Angle
 
+  public init(
+    viewportSize: CGSize,
+    canvasSize: CGSize,
+    zoom: CGFloat,
+    pan: CGSize,
+    rotation: Angle
+  ) {
+    self.viewportSize = viewportSize
+    self.canvasSize = canvasSize
+    self.zoom = zoom
+    self.pan = pan
+    self.rotation = rotation
+  }
+}
+
+extension CanvasTransformContext {
+
+  public static var zero: Self {
+    .init(
+      viewportSize: .zero,
+      canvasSize: .zero,
+      zoom: 1,
+      pan: .zero,
+      rotation: .zero
+    )
+  }
+
   public init?(
     viewportSize: CGSize?,
     canvasSize: CGSize?,
@@ -35,9 +62,6 @@ public struct CanvasTransformContext: Equatable, Sendable {
     self.pan = pan
     self.rotation = rotation
   }
-}
-
-extension CanvasTransformContext {
 
   public func dragRect(for rect: CGRect) -> CGRect? {
     mapToCanvas(viewportRect: rect)

@@ -16,6 +16,8 @@ extension EnvironmentValues {
   @Entry public var canvasZoomRange: ClosedRange<CGFloat>? = nil
   @Entry public var canvasRotation: Angle = .zero
   
+  @Entry public var canvasContext: CanvasTransformContext? = nil
+  
   @Entry public var isResizingCanvas: Bool = false
   
   @Entry public var tapDragPhase: TapDragPhase? = nil

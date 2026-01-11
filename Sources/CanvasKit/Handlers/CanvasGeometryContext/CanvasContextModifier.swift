@@ -13,20 +13,28 @@ public struct CanvasContextModifier: ViewModifier {
   @Environment(\.canvasRotation) private var canvasRotation
   @Environment(\.canvasSize) private var canvasSize
   @Environment(\.viewportSize) private var viewportSize
-  
-  
+
   public func body(content: Content) -> some View {
     content
+      .environment(\.canvasContext, canvasContext)
   }
 }
 
 extension CanvasContextModifier {
-  var canvasContext: CanvasTransformContext {
-    
+  
+  var canvasContext: CanvasTransformContext? {
+    CanvasTransformContext(
+      viewportSize: viewportSize,
+      canvasSize: canvasSize,
+      zoom: canvasZoom,
+      pan: canvasPan,
+      rotation: canvasRotation
+    )
+
   }
 }
 extension View {
-  public func example() -> some View {
-    self.modifier(ExampleModifier())
+  public func readCanvasContext() -> some View {
+    self.modifier(CanvasContextModifier())
   }
 }
