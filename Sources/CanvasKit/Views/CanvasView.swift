@@ -113,12 +113,18 @@ public struct CanvasView<Content: View>: View {
         //          minDragDistance: canvasHandler.dragTolerance
         //        )
 
-        //        .marqueeDrag(
-        //          isEnabled: canvasHandler.isDragAllowed(.select),
-        //          dragThreshold: canvasHandler.dragTolerance
-        //        ) { phase in
-        //          canvasHandler.handleDrag(type: .select, phase)
-        //        }
+                .marqueeDrag(
+                  isEnabled: canvasHandler.interactions.isAllowed(.drag),
+//                  isEnabled: canvasHandler.isDragAllowed(.select),
+                  dragThreshold: canvasHandler.dragTolerance
+                ) { interaction, phase in
+                  canvasHandler.interactions.updateGesture(
+                    interaction,
+                    phase: phase,
+                    modifiers: modifierKeys
+                  )
+//                  canvasHandler.handleDrag(type: .select, phase)
+                }
 
         // MARK: - Resize
         //        .overlay {
@@ -129,9 +135,9 @@ public struct CanvasView<Content: View>: View {
         //        }
 
         // MARK: - Hover
-        //        .onContinuousHover { phase in
-        //          canvasHandler.handleHover(phase)
-        //        }
+                .onContinuousHover { phase in
+                  canvasHandler.handleHover(phase)
+                }
 
         // MARK: - Keyboard keys
         // TODO: May need to bring this back
@@ -144,16 +150,16 @@ public struct CanvasView<Content: View>: View {
 
       .infoBarView(isEnabled: showsInfoBar)
     
-      .environment(\.canvasPan, canvasHandler.panOffset)
-      .environment(\.canvasZoom, canvasHandler.zoomLevel)
-      .environment(\.canvasZoomRange, canvasHandler.zoomRange)
+      .environment(\.canvasPan, canvasHandler.pan)
+      .environment(\.canvasZoom, canvasHandler.zoom)
+//      .environment(\.canvasZoomRange, canvasHandler.zoomRange)
       
 //      .environment(\.isResizingCanvas, store.canvasHandler.resizeHandler.isDragging)
 //      .environment(\.pointerPhase, canvasHandler.pointerPhase)
     
-      .task(id: modifierKeys) {
-        canvasHandler.interactions.modifiersHeld = modifierKeys
-      }
+//      .task(id: modifierKeys) {
+//        canvasHandler.interactions.modifiersHeld = modifierKeys
+//      }
 
       .debugTextOverlay {
         "Either Canvas or Viewport is Zero"

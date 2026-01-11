@@ -10,26 +10,14 @@ import GestureKit
 import SwiftUI
 
 @dynamicMemberLookup
+//@Observable
+//public final class CanvasHandler {
 public struct CanvasHandler {
 
-//  var gestureHandler: GestureHandler = .init()
-
-  /// Expected to be updated *outside* of `CanvasView`,
-  /// by the consuming app.
-  //  public var viewportSize: CGSize?
-
   public var geometry: CanvasGeometry = .init()
-  //  @Shared(.canvasGeometry) public var geometry
 
-  /// Expected to be updated from outside `CanvasView`, (i.e. from the caller), when canvas size changes.
-  /// `CanvasHandler` does not watch or update canvas dimensions itself.
-  ///
-  /// Note: This is the source of truth for the ResizeHandler,
-  /// to obtain the latest Canvas Size from the Domain View
-  //  public var canvasSize: CGSize?
+  //  public var gestureState: GestureContext
 
-  //  public var hoverLocation: CGPoint?
-  //  public var pointerPhase: PointerPhase?
   public var interactions = InteractionHandler()
   public var resizeHandler = ResizeHandler()
 
@@ -42,40 +30,29 @@ public struct CanvasHandler {
 }
 
 extension CanvasHandler {
-  
-  /// Clamped
-  public var zoomLevel: CGFloat { interactions.current?.gestureZoomValue }
-  public var zoomPercent: CGFloat { zoom.percentage }
-  public var panOffset: CGSize { pan.value }
-  public var rotation: Angle { rotate.value }
-//  public var zoomLevel: CGFloat { zoom.clamped(in: zoomRange).value }
-//  public var zoomPercent: CGFloat { zoom.percentage }
-//  public var panOffset: CGSize { pan.value }
-//  public var rotation: Angle { rotate.value }
-  
-  
-  public subscript<T>(dynamicMember keyPath: KeyPath<GestureHandler, T>) -> T {
-    gestureHandler[keyPath: keyPath]
+
+  public subscript<T>(dynamicMember keyPath: KeyPath<InteractionHandler, T>) -> T {
+    interactions[keyPath: keyPath]
   }
 
   public var viewportSize: CGSize? { geometry.viewportSize }
   public var canvasSize: CGSize? { geometry.canvasSize }
 
-  public mutating func resetGesture(_ transforms: TransformTypes) {
-    let kind = InteractionKind.Meta(from: transforms)
-    gestureHandler.reset(kind)
-  }
+  //  public mutating func resetGesture(_ transforms: TransformTypes) {
+  //    let kind = InteractionKind.Meta(from: transforms)
+  //    gestureHandler.reset(kind)
+  //  }
 
   public mutating func updateAllowedGesture(_ kind: InteractionKind.Meta) {
     interactions.allowed = kind
   }
 
-//  public mutating func updateGesture(
-//    _ kind: GestureKind,
-//    //    geometry: CanvasGeometry
-//  ) {
-//    gestureHandler.update(kind, phase:  geometry: geometry)
-//  }
+  //  public mutating func updateGesture(
+  //    _ kind: GestureKind,
+  //    //    geometry: CanvasGeometry
+  //  ) {
+  //    gestureHandler.update(kind, phase:  geometry: geometry)
+  //  }
   public mutating func updateViewportSize(_ size: CGSize) {
     geometry.viewportSize = size
   }
@@ -92,8 +69,8 @@ extension CanvasHandler {
 
   public var canvasAnchor: UnitPoint { resizeHandler.canvasAnchor }
 
-  func isDragAllowed(_ drag: GestureKind.Meta) -> Bool {
-    return drag == gestureHandler.interactions.allowedDragGesture
+  func isDragAllowed(_ drag: InteractionKind.Meta) -> Bool {
+    return drag == interactions.allowed
   }
 
   public var draggedResizePoint: GridBoundaryPoint? {
@@ -126,26 +103,32 @@ extension CanvasHandler {
 
     switch phase {
       case .active(let location):
-
-        //        let mapped = context.mapToCanvas(viewportPoint: location)
-        hoverLocation = mapped
+        interactions.updateGesture(
+          .hover(location),
+          phase: .changed,
+          modifiers: nil
+        )
+      //        let mapped = context.mapToCanvas(viewportPoint: location)
+      //        hoverLocation = mapped
 
       /// Note: This only triggers when the pointer exits the view.
       /// *Not* when the movement of the pointer stops
       case .ended:
-        hoverLocation = nil
+        interactions.reset(.hover)
+    //        hoverLocation = nil
     }
   }
 
-  public func removeZoom(from value: CGFloat) -> CGFloat {
-    value.removingZoom(gestureHandler.zoomLevel)
-  }
+//  public func removeZoom(from value: CGFloat) -> CGFloat {
+//    value.removingZoom(gestureHandler.zoomLevel)
+//  }
 
   public mutating func handleDrag(
-    type: GestureKind,
-    _ phase: PointerPhase
+    
+//    type: GestureKind,
+//    _ phase: PointerPhase
   ) {
-    pointerPhase = phase
+//    pointerPhase = phase
     //    interactions.interaction = phase.interactionType
     hoverLocation = nil
     //    print("Handling a Tap/Drag: \(phase)")
