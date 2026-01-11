@@ -149,7 +149,7 @@ public struct CanvasView<Content: View>: View {
       .environment(\.canvasZoomRange, canvasHandler.zoomRange)
       
       .environment(\.isResizingCanvas, store.canvasHandler.resizeHandler.isDragging)
-      .environment(\.tapDragPhase, canvasHandler.tapDragPhase)
+      .environment(\.pointerPhase, canvasHandler.pointerPhase)
     
       .task(id: modifierKeys) {
         canvasHandler.gestureHandler.interactions.modifiersHeld = modifierKeys

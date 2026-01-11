@@ -20,7 +20,7 @@ extension EnvironmentValues {
   
   @Entry public var isResizingCanvas: Bool = false
   
-  @Entry public var tapDragPhase: TapDragPhase? = nil
+  @Entry public var pointerPhase: PointerPhase? = nil
 //  @Entry public var isHoverEnabled: Bool = true
 //  @Entry public var isDragEnabled: Bool = true
 }

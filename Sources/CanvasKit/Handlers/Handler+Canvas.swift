@@ -29,7 +29,7 @@ public struct CanvasHandler {
   //  public var canvasSize: CGSize?
 
   public var hoverLocation: CGPoint?
-  public var tapDragPhase: TapDragPhase?
+  public var pointerPhase: PointerPhase?
   //  public var interactions = InteractionHandler()
   public var resizeHandler = ResizeHandler()
 
@@ -89,12 +89,12 @@ extension CanvasHandler {
   }
 
   public var dragRect: CGRect? {
-    guard let unmapped = tapDragPhase?.dragValue else { return nil }
+    guard let unmapped = pointerPhase?.dragValue else { return nil }
     return canvasContext?.dragRect(for: unmapped)
   }
 
   public var tapLocation: CGPoint? {
-    guard let unmapped = tapDragPhase?.tapValue else { return nil }
+    guard let unmapped = pointerPhase?.tapValue else { return nil }
     return canvasContext?.tapLocation(for: unmapped)
   }
 
@@ -130,9 +130,9 @@ extension CanvasHandler {
 
   public mutating func handleDrag(
     type: GestureKind,
-    _ phase: TapDragPhase
+    _ phase: PointerPhase
   ) {
-    tapDragPhase = phase
+    pointerPhase = phase
     //    interactions.interaction = phase.interactionType
     hoverLocation = nil
     //    print("Handling a Tap/Drag: \(phase)")

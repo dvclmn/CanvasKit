@@ -6,6 +6,7 @@
 //
 
 import BasePrimitives
+import GestureKit
 import SwiftUI
 
 /// Unless I otherwise specify an alignment below, this helper
@@ -65,6 +66,10 @@ extension CanvasTransformContext {
 
   public func dragRect(for rect: CGRect) -> CGRect? {
     mapToCanvas(viewportRect: rect)
+  }
+  public func dragRect(for phase: PointerPhase) -> CGRect? {
+    guard let rect = phase.dragValue else { return nil }
+    return dragRect(for: rect)
   }
 
   public func tapLocation(for location: CGPoint) -> CGPoint? {
