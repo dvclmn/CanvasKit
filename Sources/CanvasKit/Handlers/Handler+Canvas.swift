@@ -10,6 +10,7 @@ import BasePrimitives
 //import Sharing
 import SwiftUI
 
+@dynamicMemberLookup
 public struct CanvasHandler {
 
   var gestureHandler: GestureHandler = .init()
@@ -44,15 +45,14 @@ public struct CanvasHandler {
 }
 
 extension CanvasHandler {
-
+  public subscript<T>(dynamicMember keyPath: KeyPath<GestureHandler, T>) -> T {
+    gestureHandler[keyPath: keyPath]
+//    get { gestureHandler[keyPath: keyPath] }
+//    set { gestureHandler[keyPath: keyPath] = newValue }
+  }
+  
   public var viewportSize: CGSize? { geometry?.viewportSize }
   public var canvasSize: CGSize? { geometry?.canvasSize }
-
-  public var zoomLevel: CGFloat { gestureHandler.zoomLevel }
-  public var zoomPercent: CGFloat { gestureHandler.zoomPercent }
-  public var zoomRange: ClosedRange<CGFloat> { gestureHandler.zoomRange }
-  public var panOffset: CGSize { gestureHandler.panOffset }
-  public var rotation: Angle { gestureHandler.rotation }
 
   public mutating func resetGesture(_ transforms: TransformTypes) {
 //  public mutating func resetGesture(_ kind: GestureKind.Meta) {
