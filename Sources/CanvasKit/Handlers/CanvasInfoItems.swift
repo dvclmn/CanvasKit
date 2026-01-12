@@ -51,10 +51,10 @@ enum CanvasInfoItem: CaseIterable, Identifiable, InfoBarSection {
 
   func content(_ handler: CanvasHandler) -> String {
     return switch self {
-      case .pan: handler.panOffset.displayString
-      case .zoomPercent: handler.zoomPercent.displayString
+      case .pan: handler.pan.displayString
+      case .zoomPercent: handler.zoomPercentage.displayString
       case .canvasSize: handler.canvasSize?.displayString ?? "nil"
-      case .interaction: handler.interactions.current?.name ?? "none"
+      case .interaction: handler.interactions.active.debugDescription
     }
   }
 }

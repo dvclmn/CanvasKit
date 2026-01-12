@@ -119,25 +119,25 @@ extension CanvasHandler {
     }
   }
 
-//  public func removeZoom(from value: CGFloat) -> CGFloat {
-//    value.removingZoom(gestureHandler.zoomLevel)
-//  }
+  public func removeZoom(from value: CGFloat) -> CGFloat {
+    value.removingZoom(interactions.zoom)
+  }
 
-  public mutating func handleDrag(
-    
-//    type: GestureKind,
-//    _ phase: PointerPhase
-  ) {
-//    pointerPhase = phase
-    //    interactions.interaction = phase.interactionType
-    hoverLocation = nil
-    //    print("Handling a Tap/Drag: \(phase)")
-  }
+//  public mutating func handleDrag(
+//    
+////    type: GestureKind,
+////    _ phase: PointerPhase
+//  ) {
+////    pointerPhase = phase
+//    //    interactions.interaction = phase.interactionType
+//    hoverLocation = nil
+//    //    print("Handling a Tap/Drag: \(phase)")
+//  }
   //#if canImport(AppKit)
-  mutating func handleKeysHeld(_ keysHeld: Set<KeyEquivalent>) {
-    gestureHandler.interactions.keysHeld = keysHeld
-    //    self.interactions.keysHeld = keysHeld
-  }
+//  mutating func handleKeysHeld(_ keysHeld: Set<KeyEquivalent>) {
+//    gestureHandler.interactions.keysHeld = keysHeld
+//    //    self.interactions.keysHeld = keysHeld
+//  }
   //#endif
 
   //  public var pointerStyle: PointerStyleCompatible? {
@@ -154,21 +154,21 @@ extension CanvasHandler {
   }
 }
 
-extension CanvasHandler: CustomStringConvertible {
-  public var description: String {
-    return """
-
-      /// CanvasTransform ///
-        - Zoom: \(gestureHandler.zoomLevel.displayString)
-        - Pan: \(gestureHandler.panOffset.displayString)
-        - Rotation (degrees): \(gestureHandler.rotation.degrees.displayString)
-        - Viewport size: \(geometry.viewportSize.displayString)
-        - Canvas size: \(geometry.canvasSize.displayString)
-
-
-      """
-  }
-}
+//extension CanvasHandler: CustomStringConvertible {
+//  public var description: String {
+//    return """
+//
+//      /// CanvasTransform ///
+//        - Zoom: \(gestureHandler.zoom.displayString)
+//        - Pan: \(gestureHandler.panOffset.displayString)
+//        - Rotation (degrees): \(gestureHandler.rotation.degrees.displayString)
+//        - Viewport size: \(geometry.viewportSize.displayString)
+//        - Canvas size: \(geometry.canvasSize.displayString)
+//
+//
+//      """
+//  }
+//}
 
 //extension SharedKey where Self == InMemoryKey<CanvasGeometry>.Default {
 //  static var canvasGeometry: Self {
