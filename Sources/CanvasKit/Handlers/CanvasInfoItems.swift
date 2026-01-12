@@ -14,6 +14,7 @@ enum CanvasInfoItem: CaseIterable, Identifiable, InfoBarSection {
   case zoomActual
   case zoomPercent
   case canvasSize
+  case viewportSize
 //  case interaction
   //  case modifiers
 
@@ -27,6 +28,7 @@ enum CanvasInfoItem: CaseIterable, Identifiable, InfoBarSection {
       case .zoomActual: "Zoom Actual"
       case .zoomPercent: "Zoom"
       case .canvasSize: "Canvas Size"
+      case .viewportSize: "Viewport Size"
 //      case .interaction: "Interaction"
     //      case .modifiers: "Modifiers"
     }
@@ -39,6 +41,7 @@ enum CanvasInfoItem: CaseIterable, Identifiable, InfoBarSection {
       case .zoomPercent: .symbol(Icons.search.icon)
 //      case .zoomPercent: .customSymbol(.zoom)
       case .canvasSize: .symbol(Icons.dimensions.icon)
+      case .viewportSize: .symbol(Icons.dimensions.icon)
 //      case .interaction: .symbol(Icons.library.icon)
     }
   }
@@ -54,11 +57,17 @@ enum CanvasInfoItem: CaseIterable, Identifiable, InfoBarSection {
   }
 
   func content(_ handler: CanvasHandler) -> String {
+    let displayFormat: DisplayFormat = .init(
+      decimalPlaces: 0,
+      labelStyle: .none,
+      separatorVisibility: .component
+    )
     return switch self {
-      case .pan: handler.panOffset.displayString(places: 0, labelStyle: .none)
-      case .zoomActual: handler.zoomGesture.zoom.displayString(places: 2)
+      case .pan: handler.panOffset.render(using: displayFormat)
+      case .zoomActual: handler.zoomGesture.zoom.displayString
       case .zoomPercent: handler.zoomGesture.zoom.toPercentString(within: 0...1)
-      case .canvasSize: handler.geometry.canvasSize.displayString(places: 0)
+      case .canvasSize: handler.geometry.canvasSize.render(using: displayFormat)
+      case .viewportSize: handler.geometry.viewportSize.render(using: displayFormat)
 //      case .interaction: handler.interactions.active.debugDescription
 //      case .canvasSize, .interaction: "Not Implemented"
     }

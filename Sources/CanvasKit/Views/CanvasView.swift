@@ -46,46 +46,46 @@ public struct CanvasView<Content: View>: View {
       .viewSize(mode: .debounce(0.1)) { size in
         canvasHandler.updateViewportSize(size)
       }
-      
+
       .overlay {
         //    ZStack {
         /// Don't know why this extra zstack is neccesary? Layer order was wrong, when removed
-//        ZStack {
-          content
-//        }
-        .frame(
-          width: canvasHandler.geometry.canvasSize.width,
-          height: canvasHandler.geometry.canvasSize.height
-        )
-        //        .clipShape(.rect(cornerRadius: canvasHandler.cornerRounding))
-        .modifier(CanvasOutlineModifier(canvasHandler: canvasHandler))
-        //        .scaleEffect(canvasHandler.zoom)
-        //        .rotationEffect(canvasHandler.rotation)
-        .offset(canvasHandler.panOffset)
-        //        .offset(canvasHandler.gestureHandler.panOffset)
+        //        ZStack {
+        content
+          //        }
+          .frame(
+            width: canvasHandler.geometry.canvasSize.width,
+            height: canvasHandler.geometry.canvasSize.height
+          )
+          //        .clipShape(.rect(cornerRadius: canvasHandler.cornerRounding))
+          .modifier(CanvasOutlineModifier(canvasHandler: canvasHandler))
+          //        .scaleEffect(canvasHandler.zoom)
+          //        .rotationEffect(canvasHandler.rotation)
+          .offset(canvasHandler.panOffset)
+          //        .offset(canvasHandler.gestureHandler.panOffset)
 
-        /// This `.frame()` is important to make sure the area *containing*
-        /// the Canvas is spread out to the edges
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .allowsHitTesting(false)
-        .drawingGroup()
-        //        .shaderEffect(
-        //          .chromaticAberration(
-        //            .init(
-        //              red: 0.9,
-        //              blue: 0.3,
-        //              strength: 0.8
-        //            )
-        //          )
-        //        )
+          /// This `.frame()` is important to make sure the area *containing*
+          /// the Canvas is spread out to the edges
+          .frame(maxWidth: .infinity, maxHeight: .infinity)
+          .allowsHitTesting(false)
+          .drawingGroup()
+          //        .shaderEffect(
+          //          .chromaticAberration(
+          //            .init(
+          //              red: 0.9,
+          //              blue: 0.3,
+          //              strength: 0.8
+          //            )
+          //          )
+          //        )
 
-        .background(.black.opacity(0.8))
+          .background(.black.opacity(0.8))
 
-        .addInfoBarItems(CanvasInfoItem.buildItems(from: canvasHandler))
+          .addInfoBarItems(CanvasInfoItem.buildItems(from: canvasHandler))
 
-        .task(id: canvasSize) {
-          canvasHandler.updateCanvasSize(canvasSize)
-        }
+          .task(id: canvasSize) {
+            canvasHandler.updateCanvasSize(canvasSize)
+          }
 
         /// Send modifiers to interacitons handler
 
@@ -103,7 +103,6 @@ public struct CanvasView<Content: View>: View {
 
         // MARK: - Gestures
 
-        
         //        .panAndZoom(interactions: $canvasHandler.interactions)
         //        .panAndZoom(geometry: canvasHandler.geometry)
         //        .modifier(
@@ -153,7 +152,7 @@ public struct CanvasView<Content: View>: View {
 
         //    }  // END geo reader
       }
-    
+
       .panGesture(isEnabled: true) { stream in
         canvasHandler.panGesture = stream
         //          canvasHandler.panGesture.update(offset, phase: phase)
