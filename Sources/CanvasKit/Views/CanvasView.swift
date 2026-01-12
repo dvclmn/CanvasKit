@@ -52,12 +52,12 @@ public struct CanvasView<Content: View>: View {
           width: canvasHandler.geometry.canvasSize.width,
           height: canvasHandler.geometry.canvasSize.height
         )
-        .clipShape(.rect(cornerRadius: canvasHandler.cornerRounding))
+        //        .clipShape(.rect(cornerRadius: canvasHandler.cornerRounding))
         .modifier(CanvasOutlineModifier(canvasHandler: canvasHandler))
-        .scaleEffect(canvasHandler.zoom)
-        .rotationEffect(canvasHandler.rotation)
-        .offset(canvasHandler.pan)
-//        .offset(canvasHandler.gestureHandler.panOffset)
+        //        .scaleEffect(canvasHandler.zoom)
+        //        .rotationEffect(canvasHandler.rotation)
+        .offset(canvasHandler.panOffset)
+        //        .offset(canvasHandler.gestureHandler.panOffset)
 
         /// This `.frame()` is important to make sure the area *containing*
         /// the Canvas is spread out to the edges
@@ -100,8 +100,11 @@ public struct CanvasView<Content: View>: View {
 
         // MARK: - Gestures
 
-        .panAndZoom(interactions: $canvasHandler.interactions)
-//        .panAndZoom(geometry: canvasHandler.geometry)
+        .panGesture(isEnabled: true) { offset, phase in
+          canvasHandler.panGesture.update(offset, phase: phase)
+        }
+//        .panAndZoom(interactions: $canvasHandler.interactions)
+        //        .panAndZoom(geometry: canvasHandler.geometry)
         //        .modifier(
         //          CanvasGesturesModifier(
         //            canvasHandler: $canvasHandler
@@ -115,18 +118,18 @@ public struct CanvasView<Content: View>: View {
         //          minDragDistance: canvasHandler.dragTolerance
         //        )
 
-                .marqueeDrag(
-                  isEnabled: canvasHandler.interactions.isAllowed(.drag),
-//                  isEnabled: canvasHandler.isDragAllowed(.select),
-                  dragThreshold: canvasHandler.dragTolerance
-                ) { interaction, phase in
-                  canvasHandler.interactions.updateGesture(
-                    interaction,
-                    phase: phase,
-                    modifiers: modifierKeys
-                  )
-//                  canvasHandler.handleDrag(type: .select, phase)
-                }
+        //                .marqueeDrag(
+        //                  isEnabled: canvasHandler.interactions.isAllowed(.drag),
+        ////                  isEnabled: canvasHandler.isDragAllowed(.select),
+        //                  dragThreshold: canvasHandler.dragTolerance
+        //                ) { interaction, phase in
+        //                  canvasHandler.interactions.updateGesture(
+        //                    interaction,
+        //                    phase: phase,
+        //                    modifiers: modifierKeys
+        //                  )
+        ////                  canvasHandler.handleDrag(type: .select, phase)
+        //                }
 
         // MARK: - Resize
         //        .overlay {
@@ -137,9 +140,9 @@ public struct CanvasView<Content: View>: View {
         //        }
 
         // MARK: - Hover
-                .onContinuousHover { phase in
-                  canvasHandler.handleHover(phase)
-                }
+        //                .onContinuousHover { phase in
+        //                  canvasHandler.handleHover(phase)
+        //                }
 
         // MARK: - Keyboard keys
         // TODO: May need to bring this back
@@ -151,17 +154,17 @@ public struct CanvasView<Content: View>: View {
       }
 
       .infoBarView(isEnabled: showsInfoBar)
-    
-      .environment(\.canvasPan, canvasHandler.pan)
-      .environment(\.canvasZoom, canvasHandler.zoom)
-//      .environment(\.canvasZoomRange, canvasHandler.zoomRange)
-      
-//      .environment(\.isResizingCanvas, store.canvasHandler.resizeHandler.isDragging)
-//      .environment(\.pointerPhase, canvasHandler.pointerPhase)
-    
-//      .task(id: modifierKeys) {
-//        canvasHandler.interactions.modifiersHeld = modifierKeys
-//      }
+
+      .environment(\.canvasPan, canvasHandler.panOffset)
+      //      .environment(\.canvasZoom, canvasHandler.zoom)
+      //      .environment(\.canvasZoomRange, canvasHandler.zoomRange)
+
+      //      .environment(\.isResizingCanvas, store.canvasHandler.resizeHandler.isDragging)
+      //      .environment(\.pointerPhase, canvasHandler.pointerPhase)
+
+      //      .task(id: modifierKeys) {
+      //        canvasHandler.interactions.modifiersHeld = modifierKeys
+      //      }
 
       .debugTextOverlay {
         "Either Canvas or Viewport is Zero"
@@ -172,5 +175,5 @@ public struct CanvasView<Content: View>: View {
 }
 
 extension CanvasView {
-  
+
 }
