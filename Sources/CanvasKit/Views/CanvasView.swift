@@ -56,10 +56,10 @@ public struct CanvasView<Content: View>: View {
           )
           //        .clipShape(.rect(cornerRadius: canvasHandler.cornerRounding))
           .modifier(CanvasOutlineModifier(canvasHandler: canvasHandler))
-          .scaleEffect(canvasHandler.zoomGesture.zoom)
+          .scaleEffect(canvasHandler.zoom)
           //        .rotationEffect(canvasHandler.rotation)
 
-          .offset(canvasHandler.panGesture.pan)
+          .offset(canvasHandler.pan)
 
           /// This `.frame()` is important to make sure the area *containing*
           /// the Canvas is spread out to the edges
@@ -158,18 +158,19 @@ public struct CanvasView<Content: View>: View {
         //        }
         canvasHandler.panGesture.update(delta, phase: phase)
       }
-      .zoomGesture(
-        initialZoom: canvasHandler.zoomGesture.zoom,
-        isEnabled: true
-      ) { zoom, phase in
-        canvasHandler.zoomGesture.update(zoom, phase: phase)
-      }
+      .zoomGesture(zoom: $canvasHandler.zoomGesture, isEnabled: true)
+      //      .zoomGesture(
+      //        initialZoom: canvasHandler.zoomGesture.zoom,
+      //        isEnabled: true
+      //      ) { zoom, phase in
+      //        canvasHandler.zoomGesture.update(zoom, phase: phase)
+      //      }
 
       .infoBarView(isEnabled: showsInfoBar)
 
       .environment(\.canvasPan, canvasHandler.panGesture.pan)
-    //            .environment(\.canvasZoom, canvasHandler.zoom)
-    //            .environment(\.canvasZoomRange, canvasHandler.zoomRange)
+      //            .environment(\.canvasZoom, canvasHandler.zoom)
+      .environment(\.canvasZoomRange, canvasHandler.zoomRange)
 
     //      .environment(\.isResizingCanvas, store.canvasHandler.resizeHandler.isDragging)
     //      .environment(\.pointerPhase, canvasHandler.pointerPhase)

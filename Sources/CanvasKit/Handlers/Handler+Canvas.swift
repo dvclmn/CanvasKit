@@ -25,6 +25,8 @@ public final class CanvasHandler {
   //  public var interactions = InteractionHandler()
     public var resizeHandler = ResizeHandler()
 
+  let zoomRange: ClosedRange<CGFloat> = 0.2...20
+  
   let dragTolerance: CGFloat = 5
 
 //  public init() {}
@@ -32,6 +34,8 @@ public final class CanvasHandler {
 }
 
 extension CanvasHandler {
+  public var zoom: CGFloat { zoomGesture.zoom(clampedTo: zoomRange) }
+  public var pan: CGSize { panGesture.pan }
   
   public func updateViewportSize(_ size: CGSize) {
     //    print("Updating Viewport size to \(size), at \(Date.debug)")
@@ -46,7 +50,7 @@ extension CanvasHandler {
   public var canvasAnchor: UnitPoint { resizeHandler.canvasAnchor }
   
   public func removeZoom(from value: CGFloat) -> CGFloat {
-    value.removingZoom(zoomGesture.zoom)
+    value.removingZoom(zoom)
     //      zoomGesture.
     //      value.removingZoom()
   }

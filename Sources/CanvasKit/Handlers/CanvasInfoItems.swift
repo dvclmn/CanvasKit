@@ -63,9 +63,9 @@ enum CanvasInfoItem: CaseIterable, Identifiable, InfoBarSection {
       separatorVisibility: .component
     )
     return switch self {
-      case .pan: handler.panGesture.pan.render(using: displayFormat)
-      case .zoomActual: handler.zoomGesture.zoom.displayString
-      case .zoomPercent: handler.zoomGesture.zoom.toPercentString(within: 0...1)
+      case .pan: handler.pan.render(using: displayFormat)
+      case .zoomActual: handler.zoom.displayString
+      case .zoomPercent: handler.zoom.toPercentString(within: 0...1)
       case .canvasSize: handler.geometry.canvasSize.render(using: displayFormat)
       case .viewportSize: handler.geometry.viewportSize.render(using: displayFormat)
 //      case .interaction: handler.interactions.active.debugDescription
