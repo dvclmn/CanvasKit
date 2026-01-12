@@ -16,20 +16,24 @@ public struct CanvasView<Content: View>: View {
 
   //  @State private var hasZoomedToFit: Bool = false
 
-  @Binding var canvasHandler: CanvasHandler
+  @State var canvasHandler = CanvasHandler()
+
+  let canvasSize: CGSize
   let showsInfoBar: Bool
   let content: Content
   //  let didChangeResize: ResizeOutput
   //  let didEndResize: ResizeOutput
 
   public init(
-    handler: Binding<CanvasHandler>,
+    canvasSize: CGSize,
+    //    handler: Binding<CanvasHandler>,
     showsInfoBar: Bool = true,
     @ViewBuilder content: @escaping () -> Content,
     //    didChangeResize: @escaping ResizeOutput = { _, _ in },
     //    didEndResize: @escaping ResizeOutput = { _, _ in },
   ) {
-    self._canvasHandler = handler
+    //    self._canvasHandler = handler
+    self.canvasSize = canvasSize
     self.showsInfoBar = showsInfoBar
     self.content = content()
     //    self.didChangeResize = didChangeResize
@@ -78,11 +82,9 @@ public struct CanvasView<Content: View>: View {
 
         .addInfoBarItems(CanvasInfoItem.buildItems(from: canvasHandler))
 
-        // MARK: - Tasks / On-Appear actions
-        /// Make sure handler has latest Viewport size
-        //        .task(id: proxy.size) {
-        //          canvasHandler.updateViewportSize(proxy.size)
-        //        }
+        .task(id: canvasSize) {
+          canvasHandler.updateCanvasSize(canvasSize)
+        }
 
         /// Send modifiers to interacitons handler
 
@@ -100,10 +102,11 @@ public struct CanvasView<Content: View>: View {
 
         // MARK: - Gestures
 
-        .panGesture(isEnabled: true) { offset, phase in
-          canvasHandler.panGesture.update(offset, phase: phase)
+        .panGesture(isEnabled: true) { stream in
+          canvasHandler.panGesture = stream
+          //          canvasHandler.panGesture.update(offset, phase: phase)
         }
-//        .panAndZoom(interactions: $canvasHandler.interactions)
+        //        .panAndZoom(interactions: $canvasHandler.interactions)
         //        .panAndZoom(geometry: canvasHandler.geometry)
         //        .modifier(
         //          CanvasGesturesModifier(
@@ -169,6 +172,7 @@ public struct CanvasView<Content: View>: View {
       .debugTextOverlay {
         "Either Canvas or Viewport is Zero"
       }
+      .backgroundTint(.yellow)
       .disabled(!canvasHandler.geometry.isEitherZero)
 
   }

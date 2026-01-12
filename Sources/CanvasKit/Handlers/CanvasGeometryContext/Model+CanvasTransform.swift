@@ -18,14 +18,14 @@ public struct TransformTypes: Sendable {
   }
 }
 
-extension InteractionKind.Meta {
-  public init(from transformTypes: TransformTypes) {
-    if transformTypes.contains(.zoom) { self = .gestureZoom }
-    if transformTypes.contains(.pan) { self = .gesturePan }
-    if transformTypes.contains(.rotation) { self = .gestureRotate }
-    self = .none
-  }
-}
+//extension InteractionKind.Meta {
+//  public init(from transformTypes: TransformTypes) {
+//    if transformTypes.contains(.zoom) { self = .gestureZoom }
+//    if transformTypes.contains(.pan) { self = .gesturePan }
+//    if transformTypes.contains(.rotation) { self = .gestureRotate }
+//    self = .none
+//  }
+//}
 
 //public struct TransformTypes: OptionSet, Sendable {
 //  public init(rawValue: Int) {

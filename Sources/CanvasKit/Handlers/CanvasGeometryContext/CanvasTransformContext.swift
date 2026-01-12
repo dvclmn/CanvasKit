@@ -76,10 +76,10 @@ extension CanvasTransformContext {
   public func dragRect(for rect: CGRect) -> CGRect? {
     mapToCanvas(viewportRect: rect)
   }
-  public func dragRect(for phase: InteractionKind) -> CGRect? {
-    guard let rect = phase.dragValue else { return nil }
-    return dragRect(for: rect)
-  }
+//  public func dragRect(for phase: InteractionKind) -> CGRect? {
+//    guard let rect = phase.dragValue else { return nil }
+//    return dragRect(for: rect)
+//  }
 
   public func tapLocation(for location: CGPoint) -> CGPoint? {
     mapToCanvas(viewportPoint: location)

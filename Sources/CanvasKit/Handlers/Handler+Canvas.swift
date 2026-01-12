@@ -34,9 +34,7 @@ public final class CanvasHandler {
 }
 
 extension CanvasHandler {
-  var panOffset: CGSize {
-    panGesture.clamped(to: geometry, zoom: 1.0)
-  }
+  var panOffset: CGSize { panGesture.clamped(to: geometry, zoom: 1.0) }
 
   //  public subscript<T>(dynamicMember keyPath: KeyPath<InteractionHandler, T>) -> T {
   //    interactions[keyPath: keyPath]
@@ -54,12 +52,14 @@ extension CanvasHandler {
   //    interactions.allowed = kind
   //  }
   public func updateViewportSize(_ size: CGSize) {
+    print("Updating Viewport size to \(size), at \(Date.debug)")
     geometry.viewportSize = size
+    print("Now that Viewport size is updated, ensuring it got a value: \(geometry)")
   }
   public func updateCanvasSize(_ size: CGSize) {
     print("Updating canvas size to \(size), at \(Date.debug)")
     geometry.canvasSize = size
-    print("Now that geometry is updated, ensuring it got a value: \(geometry)")
+    print("Now that Canvas size is updated, ensuring it got a value: \(geometry)")
   }
 
   //  public mutating func updateGesture(
