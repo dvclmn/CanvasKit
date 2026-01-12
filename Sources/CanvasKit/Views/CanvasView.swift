@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 24/6/2025.
 //
 
-import BasePrimitives
 import BaseUI
+import CoreTools
 import GestureKit
 import SwiftUI
 
@@ -46,12 +46,13 @@ public struct CanvasView<Content: View>: View {
       .viewSize(mode: .debounce(0.1)) { size in
         canvasHandler.updateViewportSize(size)
       }
+      
       .overlay {
         //    ZStack {
         /// Don't know why this extra zstack is neccesary? Layer order was wrong, when removed
-        ZStack {
+//        ZStack {
           content
-        }
+//        }
         .frame(
           width: canvasHandler.geometry.canvasSize.width,
           height: canvasHandler.geometry.canvasSize.height
@@ -102,10 +103,7 @@ public struct CanvasView<Content: View>: View {
 
         // MARK: - Gestures
 
-        .panGesture(isEnabled: true) { stream in
-          canvasHandler.panGesture = stream
-          //          canvasHandler.panGesture.update(offset, phase: phase)
-        }
+        
         //        .panAndZoom(interactions: $canvasHandler.interactions)
         //        .panAndZoom(geometry: canvasHandler.geometry)
         //        .modifier(
@@ -155,12 +153,17 @@ public struct CanvasView<Content: View>: View {
 
         //    }  // END geo reader
       }
+    
+      .panGesture(isEnabled: true) { stream in
+        canvasHandler.panGesture = stream
+        //          canvasHandler.panGesture.update(offset, phase: phase)
+      }
 
       .infoBarView(isEnabled: showsInfoBar)
 
       .environment(\.canvasPan, canvasHandler.panOffset)
-      //      .environment(\.canvasZoom, canvasHandler.zoom)
-      //      .environment(\.canvasZoomRange, canvasHandler.zoomRange)
+      //            .environment(\.canvasZoom, canvasHandler.zoom)
+      //            .environment(\.canvasZoomRange, canvasHandler.zoomRange)
 
       //      .environment(\.isResizingCanvas, store.canvasHandler.resizeHandler.isDragging)
       //      .environment(\.pointerPhase, canvasHandler.pointerPhase)
@@ -170,7 +173,7 @@ public struct CanvasView<Content: View>: View {
       //      }
 
       .debugTextOverlay {
-        "Either Canvas or Viewport is Zero"
+        "Checking Geometry:\n\(canvasHandler.geometry)"
       }
       .backgroundTint(.yellow)
       .disabled(!canvasHandler.geometry.isEitherZero)

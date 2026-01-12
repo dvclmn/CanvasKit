@@ -11,20 +11,22 @@ public struct CanvasOutlineModifier: ViewModifier {
   let canvasHandler: CanvasHandler
   public func body(content: Content) -> some View {
     content
-      .debugTextOverlay("Turn canvas outline back on")
-      .backgroundTint(.black)
-//      .overlay {
-//        RoundedRectangle(cornerRadius: canvasHandler.cornerRounding)
+//      .debugTextOverlay("Turn canvas outline back on")
+//      .backgroundTint(.black)
+      .overlay {
+        RoundedRectangle(cornerRadius: canvasHandler.cornerRounding)
+          .fill(.clear)
 //          .fill(.white.opacity(0.009))
-//          .stroke(.white.opacity(0.04), lineWidth: canvasOutlineThickness)
-//          .allowsHitTesting(false)
-//      }
+          .stroke(.white.opacity(0.09), lineWidth: canvasOutlineThickness)
+          .allowsHitTesting(false)
+      }
   }
 }
 
-//extension CanvasOutlineModifier {
-//  var canvasOutlineThickness: CGFloat {
+extension CanvasOutlineModifier {
+  var canvasOutlineThickness: CGFloat {
+    return 1
 //    return canvasHandler.removeZoom(from: Double(1))
-////    return Double(1).removingZoom(canvasHandler.zoomHandler.zoom)
-//  }
-//}
+//    return Double(1).removingZoom(canvasHandler.zoomHandler.zoom)
+  }
+}

@@ -10,14 +10,13 @@ import SwiftUI
 import ToolKit
 
 struct ContentView: View {
-  let canvasSize: CGSize = CGSize(1200, 800)
+  let canvasSize: CGSize = CGSize(380, 300)
   var body: some View {
     CanvasView(canvasSize: canvasSize, showsInfoBar: true) {
       Circle().fill(.brown.tertiary)
         .padding()
       Text("Hello")
     }
-
     .background(.blue.quinary)
   }
 }

@@ -10,13 +10,13 @@ import GestureKit
 import SwiftUI
 
 //@dynamicMemberLookup
-//@Observable
+@Observable
 public final class CanvasHandler {
   //public struct CanvasHandler {
 
   //  var pointer: PointerStream?
   var panGesture: PanGestureStream = .centered
-  //  var magnifyGesture: MagnificationStream
+  var zoomGesture: ZoomStream = .default
 
   public var geometry: CanvasGeometry = .init()
 
@@ -40,8 +40,8 @@ extension CanvasHandler {
   //    interactions[keyPath: keyPath]
   //  }
 
-  public var viewportSize: CGSize? { geometry.viewportSize }
-  public var canvasSize: CGSize? { geometry.canvasSize }
+//  public var viewportSize: CGSize? { geometry.viewportSize }
+//  public var canvasSize: CGSize? { geometry.canvasSize }
 
   //  public mutating func resetGesture(_ transforms: TransformTypes) {
   //    let kind = InteractionKind.Meta(from: transforms)
@@ -52,14 +52,14 @@ extension CanvasHandler {
   //    interactions.allowed = kind
   //  }
   public func updateViewportSize(_ size: CGSize) {
-    print("Updating Viewport size to \(size), at \(Date.debug)")
+//    print("Updating Viewport size to \(size), at \(Date.debug)")
     geometry.viewportSize = size
-    print("Now that Viewport size is updated, ensuring it got a value: \(geometry)")
+//    print("Now that Viewport size is updated, ensuring it got a value: \(geometry)")
   }
   public func updateCanvasSize(_ size: CGSize) {
-    print("Updating canvas size to \(size), at \(Date.debug)")
+//    print("Updating canvas size to \(size), at \(Date.debug)")
     geometry.canvasSize = size
-    print("Now that Canvas size is updated, ensuring it got a value: \(geometry)")
+//    print("Now that Canvas size is updated, ensuring it got a value: \(geometry)")
   }
 
   //  public mutating func updateGesture(
@@ -105,14 +105,16 @@ extension CanvasHandler {
   //    }
   //  }
 
-  //  public func removeZoom(from value: CGFloat) -> CGFloat {
-  //    value.removingZoom(interactions.zoom)
-  //  }
+    public func removeZoom(from value: CGFloat) -> CGFloat {
+      value.removingZoom(zoomGesture.zoom)
+//      zoomGesture.
+//      value.removingZoom()
+    }
 
-  //  public var cornerRounding: CGFloat {
-  //    removeZoom(from: Styles.sizeTiny)
-  //    //    Styles.sizeTiny.removingZoom(zoomHandler.zoom)
-  //  }
+    public var cornerRounding: CGFloat {
+      removeZoom(from: Styles.sizeTiny)
+      //    Styles.sizeTiny.removingZoom(zoomHandler.zoom)
+    }
 
   //  public var dragRect: CGRect? {
   //    guard let unmapped = pointerPhase?.dragValue else { return nil }
