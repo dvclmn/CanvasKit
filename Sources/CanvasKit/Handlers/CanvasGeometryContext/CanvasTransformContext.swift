@@ -9,6 +9,15 @@ import CoreTools
 import GestureKit
 import SwiftUI
 
+/// This is probably useful, just on hold for now
+struct CanvasState {
+//  var transform: CanvasTransform
+  
+  var activeMarquee: CGRect?
+//  var selection: Set<ItemID>
+}
+
+
 /// Unless I otherwise specify an alignment below, this helper
 /// assumes the Canvas has a default `center` alignment
 /// within the viewport, before any pan or zoom etc.
