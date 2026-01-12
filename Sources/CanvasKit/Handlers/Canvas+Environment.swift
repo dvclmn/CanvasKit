@@ -10,7 +10,6 @@ import SwiftUI
 
 extension EnvironmentValues {
   @Entry public var canvasSize: CGSize = .zero
-
   @Entry public var canvasPan: CGSize = .zero
   @Entry public var canvasZoom: CGFloat = 1.0
   @Entry public var canvasZoomRange: ClosedRange<CGFloat>? = nil

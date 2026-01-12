@@ -61,8 +61,8 @@ public struct CanvasView<Content: View>: View {
           .modifier(CanvasOutlineModifier(canvasHandler: canvasHandler))
           //        .scaleEffect(canvasHandler.zoom)
           //        .rotationEffect(canvasHandler.rotation)
-          .offset(canvasHandler.panOffset)
-          //        .offset(canvasHandler.gestureHandler.panOffset)
+
+          .offset(canvasHandler.panGesture.pan)
 
           /// This `.frame()` is important to make sure the area *containing*
           /// the Canvas is spread out to the edges
@@ -79,7 +79,7 @@ public struct CanvasView<Content: View>: View {
           //          )
           //        )
 
-          .background(.black.opacity(0.8))
+          .background(.black.opacity(0.96))
 
           .addInfoBarItems(CanvasInfoItem.buildItems(from: canvasHandler))
 
@@ -153,29 +153,34 @@ public struct CanvasView<Content: View>: View {
         //    }  // END geo reader
       }
 
-      .panGesture(isEnabled: true) { stream in
-        canvasHandler.panGesture = stream
+      .panGesture(isEnabled: true) { delta, phase in
+        DebugString {
+          Labeled("Pan Delta", value: delta)
+          Labeled("Pan Phase", value: phase)
+          //          Labeled("Total Pan", value: )
+        }
+        canvasHandler.panGesture.update(delta, phase: phase)
         //          canvasHandler.panGesture.update(offset, phase: phase)
       }
 
       .infoBarView(isEnabled: showsInfoBar)
 
-      .environment(\.canvasPan, canvasHandler.panOffset)
-      //            .environment(\.canvasZoom, canvasHandler.zoom)
-      //            .environment(\.canvasZoomRange, canvasHandler.zoomRange)
+      .environment(\.canvasPan, canvasHandler.panGesture.pan)
+    //            .environment(\.canvasZoom, canvasHandler.zoom)
+    //            .environment(\.canvasZoomRange, canvasHandler.zoomRange)
 
-      //      .environment(\.isResizingCanvas, store.canvasHandler.resizeHandler.isDragging)
-      //      .environment(\.pointerPhase, canvasHandler.pointerPhase)
+    //      .environment(\.isResizingCanvas, store.canvasHandler.resizeHandler.isDragging)
+    //      .environment(\.pointerPhase, canvasHandler.pointerPhase)
 
-      //      .task(id: modifierKeys) {
-      //        canvasHandler.interactions.modifiersHeld = modifierKeys
-      //      }
+    //      .task(id: modifierKeys) {
+    //        canvasHandler.interactions.modifiersHeld = modifierKeys
+    //      }
 
-      .debugTextOverlay {
-        "Checking Geometry:\n\(canvasHandler.geometry)"
-      }
-      .backgroundTint(.yellow)
-      .disabled(!canvasHandler.geometry.isEitherZero)
+    //      .debugTextOverlay {
+    //        "Checking Geometry:\n\(canvasHandler.geometry)"
+    //      }
+    //      .backgroundTint(.yellow)
+    //      .disabled(!canvasHandler.geometry.isEitherZero)
 
   }
 }

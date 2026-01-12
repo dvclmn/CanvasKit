@@ -34,7 +34,7 @@ public final class CanvasHandler {
 }
 
 extension CanvasHandler {
-  var panOffset: CGSize { panGesture.clamped(to: geometry, zoom: 1.0) }
+//  var panOffset: CGSize { panGesture.clamped(to: geometry, zoom: 1.0) }
 
   //  public subscript<T>(dynamicMember keyPath: KeyPath<InteractionHandler, T>) -> T {
   //    interactions[keyPath: keyPath]
