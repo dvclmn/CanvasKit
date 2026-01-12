@@ -17,7 +17,7 @@ struct ContentView: View {
         .padding()
       Text("Hello")
     }
-    .background(.blue.quinary)
+//    .background(.blue.quinary)
   }
 }
 

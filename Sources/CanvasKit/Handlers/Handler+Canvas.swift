@@ -27,13 +27,35 @@ public final class CanvasHandler {
 
   let dragTolerance: CGFloat = 5
 
-  public init() {
-    //    print("Initialised `CanvasHandler` at \(Date.debug)")
-  }
+//  public init() {}
 
 }
 
 extension CanvasHandler {
+  
+  public func updateViewportSize(_ size: CGSize) {
+    //    print("Updating Viewport size to \(size), at \(Date.debug)")
+    geometry.viewportSize = size
+    //    print("Now that Viewport size is updated, ensuring it got a value: \(geometry)")
+  }
+  public func updateCanvasSize(_ size: CGSize) {
+    //    print("Updating canvas size to \(size), at \(Date.debug)")
+    geometry.canvasSize = size
+    //    print("Now that Canvas size is updated, ensuring it got a value: \(geometry)")
+  }
+  public var canvasAnchor: UnitPoint { resizeHandler.canvasAnchor }
+  
+  public func removeZoom(from value: CGFloat) -> CGFloat {
+    value.removingZoom(zoomGesture.zoom)
+    //      zoomGesture.
+    //      value.removingZoom()
+  }
+  
+  public var cornerRounding: CGFloat {
+    removeZoom(from: Styles.sizeTiny)
+    //    Styles.sizeTiny.removingZoom(zoomHandler.zoom)
+  }
+}
 //  var panOffset: CGSize { panGesture.clamped(to: geometry, zoom: 1.0) }
 
   //  public subscript<T>(dynamicMember keyPath: KeyPath<InteractionHandler, T>) -> T {
@@ -51,16 +73,7 @@ extension CanvasHandler {
   //  public func updateAllowedGesture(_ kind: InteractionKind.Meta) {
   //    interactions.allowed = kind
   //  }
-  public func updateViewportSize(_ size: CGSize) {
-//    print("Updating Viewport size to \(size), at \(Date.debug)")
-    geometry.viewportSize = size
-//    print("Now that Viewport size is updated, ensuring it got a value: \(geometry)")
-  }
-  public func updateCanvasSize(_ size: CGSize) {
-//    print("Updating canvas size to \(size), at \(Date.debug)")
-    geometry.canvasSize = size
-//    print("Now that Canvas size is updated, ensuring it got a value: \(geometry)")
-  }
+  
 
   //  public mutating func updateGesture(
   //    _ kind: GestureKind,
@@ -73,7 +86,7 @@ extension CanvasHandler {
 //    resizeHandler.transientCanvasSize
 //  }
 
-  public var canvasAnchor: UnitPoint { resizeHandler.canvasAnchor }
+  
 
   //  func isDragAllowed(_ drag: InteractionKind.Meta) -> Bool {
   //    return drag == interactions.allowed
@@ -105,16 +118,7 @@ extension CanvasHandler {
   //    }
   //  }
 
-    public func removeZoom(from value: CGFloat) -> CGFloat {
-      value.removingZoom(zoomGesture.zoom)
-//      zoomGesture.
-//      value.removingZoom()
-    }
 
-    public var cornerRounding: CGFloat {
-      removeZoom(from: Styles.sizeTiny)
-      //    Styles.sizeTiny.removingZoom(zoomHandler.zoom)
-    }
 
   //  public var dragRect: CGRect? {
   //    guard let unmapped = pointerPhase?.dragValue else { return nil }
@@ -161,7 +165,7 @@ extension CanvasHandler {
   //    }
   //  }
 
-}
+//}
 
 //extension CanvasHandler: CustomStringConvertible {
 //  public var description: String {

@@ -43,23 +43,20 @@ public struct CanvasView<Content: View>: View {
   public var body: some View {
 
     Rectangle()
+      .fill(.clear)
       .viewSize(mode: .debounce(0.1)) { size in
         canvasHandler.updateViewportSize(size)
       }
 
       .overlay {
-        //    ZStack {
-        /// Don't know why this extra zstack is neccesary? Layer order was wrong, when removed
-        //        ZStack {
         content
-          //        }
           .frame(
             width: canvasHandler.geometry.canvasSize.width,
             height: canvasHandler.geometry.canvasSize.height
           )
           //        .clipShape(.rect(cornerRadius: canvasHandler.cornerRounding))
           .modifier(CanvasOutlineModifier(canvasHandler: canvasHandler))
-          //        .scaleEffect(canvasHandler.zoom)
+          .scaleEffect(canvasHandler.zoomGesture.zoom)
           //        .rotationEffect(canvasHandler.rotation)
 
           .offset(canvasHandler.panGesture.pan)
@@ -79,7 +76,7 @@ public struct CanvasView<Content: View>: View {
           //          )
           //        )
 
-          .background(.black.opacity(0.96))
+          .background(.black.opacity(0.8))
 
           .addInfoBarItems(CanvasInfoItem.buildItems(from: canvasHandler))
 
@@ -154,13 +151,18 @@ public struct CanvasView<Content: View>: View {
       }
 
       .panGesture(isEnabled: true) { delta, phase in
-        DebugString {
-          Labeled("Pan Delta", value: delta)
-          Labeled("Pan Phase", value: phase)
-          //          Labeled("Total Pan", value: )
-        }
+        //        DebugString {
+        //          Labeled("Pan Delta", value: delta)
+        //          Labeled("Pan Phase", value: phase)
+        //          //          Labeled("Total Pan", value: )
+        //        }
         canvasHandler.panGesture.update(delta, phase: phase)
-        //          canvasHandler.panGesture.update(offset, phase: phase)
+      }
+      .zoomGesture(
+        initialZoom: canvasHandler.zoomGesture.zoom,
+        isEnabled: true
+      ) { zoom, phase in
+        canvasHandler.zoomGesture.update(zoom, phase: phase)
       }
 
       .infoBarView(isEnabled: showsInfoBar)
