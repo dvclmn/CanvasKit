@@ -15,8 +15,8 @@ public final class CanvasHandler {
   //public struct CanvasHandler {
 
   //  var pointer: PointerStream?
-  var panGesture: PanGestureStream = .centered
-  var zoomGesture: ZoomStream = .default
+  var panGesture: PanState = .centered
+  var zoomGesture: ZoomState = .default
 
   public var geometry: CanvasGeometry = .init()
 
