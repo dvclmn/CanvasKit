@@ -54,11 +54,10 @@ public struct CanvasView<Content: View>: View {
             width: canvasHandler.geometry.canvasSize.width,
             height: canvasHandler.geometry.canvasSize.height
           )
-          //        .clipShape(.rect(cornerRadius: canvasHandler.cornerRounding))
-          .modifier(CanvasOutlineModifier(canvasHandler: canvasHandler))
+
+          .modifier(CanvasOutlineModifier())
           .scaleEffect(canvasHandler.zoom)
           //        .rotationEffect(canvasHandler.rotation)
-
           .offset(canvasHandler.pan)
 
           /// This `.frame()` is important to make sure the area *containing*
@@ -171,6 +170,7 @@ public struct CanvasView<Content: View>: View {
       .environment(\.canvasPan, canvasHandler.panGesture.pan)
       //            .environment(\.canvasZoom, canvasHandler.zoom)
       .environment(\.canvasZoomRange, canvasHandler.zoomRange)
+      .environment(\.canvasHandler, canvasHandler)
 
     //      .environment(\.isResizingCanvas, store.canvasHandler.resizeHandler.isDragging)
     //      .environment(\.pointerPhase, canvasHandler.pointerPhase)
