@@ -114,18 +114,7 @@ public struct CanvasView<Content: View>: View {
         //          minDragDistance: canvasHandler.dragTolerance
         //        )
 
-        //                .marqueeDrag(
-        //                  isEnabled: canvasHandler.interactions.isAllowed(.drag),
-        ////                  isEnabled: canvasHandler.isDragAllowed(.select),
-        //                  dragThreshold: canvasHandler.dragTolerance
-        //                ) { interaction, phase in
-        //                  canvasHandler.interactions.updateGesture(
-        //                    interaction,
-        //                    phase: phase,
-        //                    modifiers: modifierKeys
-        //                  )
-        ////                  canvasHandler.handleDrag(type: .select, phase)
-        //                }
+
 
         // MARK: - Resize
         //        .overlay {
@@ -165,6 +154,26 @@ public struct CanvasView<Content: View>: View {
       //        canvasHandler.zoomGesture.update(zoom, phase: phase)
       //      }
 
+      .marqueeDrag(
+        isEnabled: true,
+        dragThreshold: canvasHandler.pointerState.dragThreshold) { rect, phase in
+          print("Rect: \(rect), Phase: \(phase)")
+          //              canvasHandler.pointerState.update(<#T##interaction: PointerInteraction##PointerInteraction#>, phase: <#T##InteractionPhase#>)
+        }
+    
+    //                .marqueeDrag(
+    //                  isEnabled: canvasHandler.interactions.isAllowed(.drag),
+    ////                  isEnabled: canvasHandler.isDragAllowed(.select),
+    //                  dragThreshold: canvasHandler.dragTolerance
+    //                ) { interaction, phase in
+    //                  canvasHandler.interactions.updateGesture(
+    //                    interaction,
+    //                    phase: phase,
+    //                    modifiers: modifierKeys
+    //                  )
+    ////                  canvasHandler.handleDrag(type: .select, phase)
+    //                }
+    
       .infoBarView(isEnabled: showsInfoBar)
 
       .environment(\.canvasPan, canvasHandler.panGesture.pan)
