@@ -13,7 +13,7 @@ import SwiftUI
 public final class CanvasHandler {
 
   //  var pointer: PointerStream?
-  
+
   /// Canvas transform interactions
   var panGesture: PanState = .centered
   var zoomGesture: ZoomState = .default
@@ -21,7 +21,7 @@ public final class CanvasHandler {
 
   /// Pointer-based interactions
   var pointerState: PointerState = .initial
-  
+
   public var geometry: CanvasGeometry = .init()
 
   //  public var interactions = InteractionHandler()

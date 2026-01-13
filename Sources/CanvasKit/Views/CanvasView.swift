@@ -83,51 +83,46 @@ public struct CanvasView<Content: View>: View {
             canvasHandler.updateCanvasSize(canvasSize)
           }
 
-        /// Send modifiers to interacitons handler
+          /// Send modifiers to interacitons handler
 
-        /// This drives the resizing callbacks, and means I don't have to pass
-        /// them through multiple View inits. Can just keep them in the
-        /// `ResizeHandler`, and make sure they're 'activated'(?) here.
-        //        .onAppear {
-        //          if canvasHandler.resizeHandler.didEndResize == nil {
-        //            canvasHandler.resizeHandler.didEndResize = didEndResize
-        //          }
-        //          if canvasHandler.resizeHandler.didChangeResize == nil {
-        //            canvasHandler.resizeHandler.didChangeResize = didChangeResize
-        //          }
-        //        }
+          /// This drives the resizing callbacks, and means I don't have to pass
+          /// them through multiple View inits. Can just keep them in the
+          /// `ResizeHandler`, and make sure they're 'activated'(?) here.
+          //        .onAppear {
+          //          if canvasHandler.resizeHandler.didEndResize == nil {
+          //            canvasHandler.resizeHandler.didEndResize = didEndResize
+          //          }
+          //          if canvasHandler.resizeHandler.didChangeResize == nil {
+          //            canvasHandler.resizeHandler.didChangeResize = didChangeResize
+          //          }
+          //        }
 
-        // MARK: - Gestures
+          // MARK: - Gestures
 
-        //        .panAndZoom(interactions: $canvasHandler.interactions)
-        //        .panAndZoom(geometry: canvasHandler.geometry)
-        //        .modifier(
-        //          CanvasGesturesModifier(
-        //            canvasHandler: $canvasHandler
-        //          )
-        //        )
+          //        .panAndZoom(interactions: $canvasHandler.interactions)
+          //        .panAndZoom(geometry: canvasHandler.geometry)
+          //        .modifier(
+          //          CanvasGesturesModifier(
+          //            canvasHandler: $canvasHandler
+          //          )
+          //        )
 
-        // MARK: - Drag Types
-        //        .cumulativeDrag(
-        //          $canvasHandler.panHandler.pan,
-        //          isEnabled: canvasHandler.isDragAllowed(.pan),
-        //          minDragDistance: canvasHandler.dragTolerance
-        //        )
+          // MARK: - Drag Types
+          //        .cumulativeDrag(
+          //          $canvasHandler.panHandler.pan,
+          //          isEnabled: canvasHandler.isDragAllowed(.pan),
+          //          minDragDistance: canvasHandler.dragTolerance
+          //        )
 
+          // MARK: - Resize
+          //        .overlay {
+          //          CanvasResizeView(
+          //            store: $canvasHandler.resizeHandler,
+          //            isEnabled: canvasHandler.isDragAllowed(.resize),
+          //          )
+          //        }
 
-
-        // MARK: - Resize
-        //        .overlay {
-        //          CanvasResizeView(
-        //            store: $canvasHandler.resizeHandler,
-        //            isEnabled: canvasHandler.isDragAllowed(.resize),
-        //          )
-        //        }
-
-        // MARK: - Hover
-        //                .onContinuousHover { phase in
-        //                  canvasHandler.handleHover(phase)
-        //                }
+          // MARK: - Hover
 
         // MARK: - Keyboard keys
         // TODO: May need to bring this back
@@ -139,45 +134,26 @@ public struct CanvasView<Content: View>: View {
       }
 
       .panGesture(isEnabled: true) { delta, phase in
-        //        DebugString {
-        //          Labeled("Pan Delta", value: delta)
-        //          Labeled("Pan Phase", value: phase)
-        //          //          Labeled("Total Pan", value: )
-        //        }
         canvasHandler.panGesture.update(delta, phase: phase)
       }
       .zoomGesture(zoom: $canvasHandler.zoomGesture, isEnabled: true)
-      //      .zoomGesture(
-      //        initialZoom: canvasHandler.zoomGesture.zoom,
-      //        isEnabled: true
-      //      ) { zoom, phase in
-      //        canvasHandler.zoomGesture.update(zoom, phase: phase)
-      //      }
 
       .marqueeDrag(
         isEnabled: true,
-        dragThreshold: canvasHandler.pointerState.dragThreshold) { rect, phase in
-          print("Rect: \(rect), Phase: \(phase)")
-          //              canvasHandler.pointerState.update(<#T##interaction: PointerInteraction##PointerInteraction#>, phase: <#T##InteractionPhase#>)
-        }
-    
-    //                .marqueeDrag(
-    //                  isEnabled: canvasHandler.interactions.isAllowed(.drag),
-    ////                  isEnabled: canvasHandler.isDragAllowed(.select),
-    //                  dragThreshold: canvasHandler.dragTolerance
-    //                ) { interaction, phase in
-    //                  canvasHandler.interactions.updateGesture(
-    //                    interaction,
-    //                    phase: phase,
-    //                    modifiers: modifierKeys
-    //                  )
-    ////                  canvasHandler.handleDrag(type: .select, phase)
-    //                }
+        dragThreshold: canvasHandler.pointerState.dragThreshold
+      ) {
+        canvasHandler.pointerState.update($0, phase: $1)
+      }
+
+      .onContinuousHover { phase in
+        canvasHandler.pointerState.update(hoverPhase: phase)
+      }
+
     
       .infoBarView(isEnabled: showsInfoBar)
 
-      .environment(\.canvasPan, canvasHandler.panGesture.pan)
-      //            .environment(\.canvasZoom, canvasHandler.zoom)
+      .environment(\.canvasPan, canvasHandler.pan)
+      .environment(\.canvasZoom, canvasHandler.zoom)
       .environment(\.canvasZoomRange, canvasHandler.zoomRange)
       .environment(\.canvasHandler, canvasHandler)
 

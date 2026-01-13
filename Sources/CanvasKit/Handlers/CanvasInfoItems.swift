@@ -15,7 +15,7 @@ enum CanvasInfoItem: CaseIterable, Identifiable, InfoBarSection {
   case zoomPercent
   case canvasSize
   case viewportSize
-//  case interaction
+  case pointerInteraction
   //  case modifiers
 
   static var sectionTitle: String { "Canvas" }
@@ -29,6 +29,7 @@ enum CanvasInfoItem: CaseIterable, Identifiable, InfoBarSection {
       case .zoomPercent: "Zoom"
       case .canvasSize: "Canvas Size"
       case .viewportSize: "Viewport Size"
+      case .pointerInteraction: "Pointer Interaction"
 //      case .interaction: "Interaction"
     //      case .modifiers: "Modifiers"
     }
@@ -42,6 +43,7 @@ enum CanvasInfoItem: CaseIterable, Identifiable, InfoBarSection {
 //      case .zoomPercent: .customSymbol(.zoom)
       case .canvasSize: .symbol(Icons.dimensions.icon)
       case .viewportSize: .symbol(Icons.dimensions.icon)
+      case .pointerInteraction: .symbol(Icons.cursor.icon)
 //      case .interaction: .symbol(Icons.library.icon)
     }
   }
@@ -68,6 +70,7 @@ enum CanvasInfoItem: CaseIterable, Identifiable, InfoBarSection {
       case .zoomPercent: handler.zoom.toPercentString(within: 0...1)
       case .canvasSize: handler.geometry.canvasSize.render(using: displayFormat)
       case .viewportSize: handler.geometry.viewportSize.render(using: displayFormat)
+      case .pointerInteraction: handler.pointerState.currentInteraction.name
 //      case .interaction: handler.interactions.active.debugDescription
 //      case .canvasSize, .interaction: "Not Implemented"
     }
