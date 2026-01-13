@@ -83,46 +83,29 @@ public struct CanvasView<Content: View>: View {
             canvasHandler.updateCanvasSize(canvasSize)
           }
 
-          /// Send modifiers to interacitons handler
+        /// Send modifiers to interacitons handler
 
-          /// This drives the resizing callbacks, and means I don't have to pass
-          /// them through multiple View inits. Can just keep them in the
-          /// `ResizeHandler`, and make sure they're 'activated'(?) here.
-          //        .onAppear {
-          //          if canvasHandler.resizeHandler.didEndResize == nil {
-          //            canvasHandler.resizeHandler.didEndResize = didEndResize
-          //          }
-          //          if canvasHandler.resizeHandler.didChangeResize == nil {
-          //            canvasHandler.resizeHandler.didChangeResize = didChangeResize
-          //          }
-          //        }
+        /// This drives the resizing callbacks, and means I don't have to pass
+        /// them through multiple View inits. Can just keep them in the
+        /// `ResizeHandler`, and make sure they're 'activated'(?) here.
+        //        .onAppear {
+        //          if canvasHandler.resizeHandler.didEndResize == nil {
+        //            canvasHandler.resizeHandler.didEndResize = didEndResize
+        //          }
+        //          if canvasHandler.resizeHandler.didChangeResize == nil {
+        //            canvasHandler.resizeHandler.didChangeResize = didChangeResize
+        //          }
+        //        }
 
-          // MARK: - Gestures
+        // MARK: - Resize
+        //        .overlay {
+        //          CanvasResizeView(
+        //            store: $canvasHandler.resizeHandler,
+        //            isEnabled: canvasHandler.isDragAllowed(.resize),
+        //          )
+        //        }
 
-          //        .panAndZoom(interactions: $canvasHandler.interactions)
-          //        .panAndZoom(geometry: canvasHandler.geometry)
-          //        .modifier(
-          //          CanvasGesturesModifier(
-          //            canvasHandler: $canvasHandler
-          //          )
-          //        )
-
-          // MARK: - Drag Types
-          //        .cumulativeDrag(
-          //          $canvasHandler.panHandler.pan,
-          //          isEnabled: canvasHandler.isDragAllowed(.pan),
-          //          minDragDistance: canvasHandler.dragTolerance
-          //        )
-
-          // MARK: - Resize
-          //        .overlay {
-          //          CanvasResizeView(
-          //            store: $canvasHandler.resizeHandler,
-          //            isEnabled: canvasHandler.isDragAllowed(.resize),
-          //          )
-          //        }
-
-          // MARK: - Hover
+        // MARK: - Hover
 
         // MARK: - Keyboard keys
         // TODO: May need to bring this back
@@ -145,20 +128,27 @@ public struct CanvasView<Content: View>: View {
         canvasHandler.pointerState.update($0, phase: $1)
       }
 
+      /// This should only be on when e.g. the Pan Hand tool is selected
+      .cumulativeDrag(
+        canvasHandler.cumulativeDragPanBinding(),
+        isEnabled: true,
+        minDragDistance: canvasHandler.pointerState.dragThreshold
+      )
+
       .onContinuousHover { phase in
         canvasHandler.pointerState.update(hoverPhase: phase)
       }
 
-    
       .infoBarView(isEnabled: showsInfoBar)
 
       .environment(\.canvasPan, canvasHandler.pan)
       .environment(\.canvasZoom, canvasHandler.zoom)
       .environment(\.canvasZoomRange, canvasHandler.zoomRange)
-      .environment(\.canvasHandler, canvasHandler)
+      .environment(\.pointerState, canvasHandler.pointerState)
+
+    //      .environment(\.pointerInteraction, canvasHandler.pointerState.currentInteraction)
 
     //      .environment(\.isResizingCanvas, store.canvasHandler.resizeHandler.isDragging)
-    //      .environment(\.pointerPhase, canvasHandler.pointerPhase)
 
     //      .task(id: modifierKeys) {
     //        canvasHandler.interactions.modifiersHeld = modifierKeys

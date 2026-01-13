@@ -39,6 +39,16 @@ extension CanvasHandler {
   public var zoom: CGFloat { zoomGesture.zoom(clampedTo: zoomRange) }
   public var pan: CGSize { panGesture.pan }
 
+  @MainActor
+  public func cumulativeDragPanBinding() -> Binding<CGSize> {
+    Binding {
+      self.pan
+    } set: {
+      self.panGesture.update(newValue: $0, phase: .changed)
+    }
+
+  }
+
   public func updateViewportSize(_ size: CGSize) {
     //    print("Updating Viewport size to \(size), at \(Date.debug)")
     geometry.viewportSize = size
@@ -57,10 +67,10 @@ extension CanvasHandler {
     //      value.removingZoom()
   }
 
-  public var cornerRounding: CGFloat {
-    removeZoom(from: Styles.sizeTiny)
-    //    Styles.sizeTiny.removingZoom(zoomHandler.zoom)
-  }
+//  public var cornerRounding: CGFloat {
+//    removeZoom(from: Styles.sizeTiny)
+//    //    Styles.sizeTiny.removingZoom(zoomHandler.zoom)
+//  }
 }
 //  var panOffset: CGSize { panGesture.clamped(to: geometry, zoom: 1.0) }
 
