@@ -67,10 +67,10 @@ extension CanvasHandler {
     //      value.removingZoom()
   }
 
-//  public var cornerRounding: CGFloat {
-//    removeZoom(from: Styles.sizeTiny)
-//    //    Styles.sizeTiny.removingZoom(zoomHandler.zoom)
-//  }
+  //  public var cornerRounding: CGFloat {
+  //    removeZoom(from: Styles.sizeTiny)
+  //    //    Styles.sizeTiny.removingZoom(zoomHandler.zoom)
+  //  }
 }
 //  var panOffset: CGSize { panGesture.clamped(to: geometry, zoom: 1.0) }
 

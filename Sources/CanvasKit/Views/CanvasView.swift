@@ -141,6 +141,7 @@ public struct CanvasView<Content: View>: View {
 
       .infoBarView(isEnabled: showsInfoBar)
 
+      .environment(\.canvasGeometry, canvasHandler.geometry)
       .environment(\.canvasPan, canvasHandler.pan)
       .environment(\.canvasZoom, canvasHandler.zoom)
       .environment(\.canvasZoomRange, canvasHandler.zoomRange)

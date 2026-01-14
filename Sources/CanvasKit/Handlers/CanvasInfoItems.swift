@@ -9,7 +9,10 @@ import BaseUI
 import CoreTools
 import SwiftUI
 
-enum CanvasInfoItem: CaseIterable, Identifiable, InfoBarSection {
+enum CanvasInfoItem: String, CaseIterable, Identifiable, InfoBarSection {
+
+  typealias Source = CanvasHandler
+
   case pan
   case zoomActual
   case zoomPercent
@@ -24,13 +27,13 @@ enum CanvasInfoItem: CaseIterable, Identifiable, InfoBarSection {
 
   var title: String {
     switch self {
-      case .pan: "Pan"
       case .zoomActual: "Zoom Actual"
-      case .zoomPercent: "Zoom"
+      case .zoomPercent: "Zoom Percent"
       case .canvasSize: "Canvas Size"
       case .viewportSize: "Viewport Size"
       case .pointerInteraction: "Pointer Interaction"
-//      case .interaction: "Interaction"
+      case .pan: rawValue.capitalized
+    //      case .interaction: "Interaction"
     //      case .modifiers: "Modifiers"
     }
   }
@@ -40,39 +43,46 @@ enum CanvasInfoItem: CaseIterable, Identifiable, InfoBarSection {
       case .pan: .symbol(Icons.pan.icon)
       case .zoomActual: .symbol(Icons.antenna.icon)
       case .zoomPercent: .symbol(Icons.search.icon)
-//      case .zoomPercent: .customSymbol(.zoom)
+      //      case .zoomPercent: .customSymbol(.zoom)
       case .canvasSize: .symbol(Icons.dimensions.icon)
       case .viewportSize: .symbol(Icons.dimensions.icon)
       case .pointerInteraction: .symbol(Icons.cursor.icon)
-//      case .interaction: .symbol(Icons.library.icon)
+    //      case .interaction: .symbol(Icons.library.icon)
     }
   }
 
-  static func buildItems(from source: CanvasHandler) -> [InfoBarItem] {
-    allCases.map { item in
-      InfoBarItem(
-        sectionKey: sectionTitle,
-        label: QuickLabel(item.title, icon: item.icon),
-        content: item.content(source)
-      )
-    }
-  }
+  //  static func buildItems(from source: CanvasHandler) -> [InfoBarItem] {
+  //    allCases.map { item in
+  //      InfoBarItem(
+  //        sectionKey: sectionTitle,
+  //        label: QuickLabel(item.title, icon: item.icon),
+  //        content: item.content(source)
+  //      )
+  //    }
+  //  }
 
-  func content(_ handler: CanvasHandler) -> String {
+  func getContent(
+    from source: CanvasHandler,
+    format: DisplayFormat = .default
+  ) -> String {
     let displayFormat: DisplayFormat = .init(
       decimalPlaces: 0,
       labelStyle: .none,
       separatorVisibility: .component
     )
     return switch self {
-      case .pan: handler.pan.render(using: displayFormat)
-      case .zoomActual: handler.zoom.displayString
-      case .zoomPercent: handler.zoom.toPercentString(within: 0...1)
-      case .canvasSize: handler.geometry.canvasSize.render(using: displayFormat)
-      case .viewportSize: handler.geometry.viewportSize.render(using: displayFormat)
-      case .pointerInteraction: handler.pointerState.currentInteraction.name
-//      case .interaction: handler.interactions.active.debugDescription
-//      case .canvasSize, .interaction: "Not Implemented"
+      case .pan: source.pan.render(using: displayFormat)
+      case .zoomActual: source.zoom.displayString
+      case .zoomPercent: source.zoom.toPercentString(within: 0...1)
+      case .canvasSize: source.geometry.canvasSize.render(using: displayFormat)
+      case .viewportSize: source.geometry.viewportSize.render(using: displayFormat)
+      case .pointerInteraction: source.pointerState.currentInteraction?.name ?? "None"
+    //      case .interaction: handler.interactions.active.debugDescription
+    //      case .canvasSize, .interaction: "Not Implemented"
     }
+
   }
+  //  func content(_ handler: CanvasHandler) -> String {
+  //
+  //  }
 }
