@@ -127,23 +127,30 @@ public struct CanvasView<Content: View>: View {
       }
       .zoomGesture(zoom: $canvasHandler.zoomGesture, isEnabled: true)
 
-      .drawMarqueeRect(rect: canvasHandler.pointerState.dragRect, isEnabled: true)
-    
-      .marqueeDrag(
-        isEnabled: true,
-        minimumDistance: canvasHandler.pointerState.dragThreshold,
-        includeTap: true,
-        onUpdate: { interaction in
-//          print("Received `marqueeDrag` update: \(interaction, default: "nil")")
-          canvasHandler.pointerState.update(interaction)
-        }
+      .tapDragGesture(
+        rect: <#T##Binding<CGRect>#>,
+        behavior: <#T##DragBehavior#>,
+        isEnabled: <#T##Bool#>,
+        minimumDistance: <#T##CGFloat#>,
+        didUpdateTap: <#T##TapUpdate##TapUpdate##(CGPoint) -> Void#>,
+        didUpdateDrag: <#T##DragUpdate##DragUpdate##(Bool) -> Void#>
       )
+    
 //      .marqueeDrag(
 //        isEnabled: true,
-//        dragThreshold: canvasHandler.pointerState.dragThreshold
-//      ) {
-//        canvasHandler.pointerState.update($0, phase: $1)
-//      }
+//        minimumDistance: canvasHandler.pointerState.dragThreshold,
+//        includeTap: true,
+//        onUpdate: { interaction in
+//          //          print("Received `marqueeDrag` update: \(interaction, default: "nil")")
+//          canvasHandler.pointerState.update(interaction)
+//        }
+//      )
+      //      .marqueeDrag(
+      //        isEnabled: true,
+      //        dragThreshold: canvasHandler.pointerState.dragThreshold
+      //      ) {
+      //        canvasHandler.pointerState.update($0, phase: $1)
+      //      }
 
       //      .marqueeDrag(
       //        isEnabled: true,
@@ -159,13 +166,13 @@ public struct CanvasView<Content: View>: View {
       //        minDragDistance: canvasHandler.pointerState.dragThreshold
       //      )
 
-    /// This is (I think?) a surprinsingly heavy modifier
-//      .onContinuousHover { phase in
-//        guard !canvasHandler.pointerState.isDragging else { return }
-//        canvasHandler.pointerState.update(hoverPhase: phase)
-//      }
+      /// This is (I think?) a surprinsingly heavy modifier
+      //      .onContinuousHover { phase in
+      //        guard !canvasHandler.pointerState.isDragging else { return }
+      //        canvasHandler.pointerState.update(hoverPhase: phase)
+      //      }
 
-//      .infoBarView(isEnabled: showsInfoBar)
+            .infoBarView(isEnabled: showsInfoBar)
 
       //      .environment(\.sectionLabelDisplay, .hidden)
       //      .infoBarStyle(for: .item, .iconOnly)

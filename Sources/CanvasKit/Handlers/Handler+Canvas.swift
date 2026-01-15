@@ -25,6 +25,8 @@ public final class CanvasHandler {
   public var resizeHandler = ResizeHandler()
 
   let zoomRange: ClosedRange<CGFloat> = 0.2...20
+  
+  var activeDragType: DragType = .marquee
 
   let dragTolerance: CGFloat = 5
 }
@@ -37,6 +39,28 @@ extension CanvasHandler {
   public var zoom: CGFloat { zoomGesture.zoom(clampedTo: zoomRange) }
   public var pan: CGSize { panGesture.pan }
 
+  @MainActor
+  public func dragRectBinding() -> Binding<CGRect> {
+    switch activeDragType {
+      case .marquee:
+        Binding {
+          self.panGesture.pan.toCGRectZeroOrigin
+        } set: {
+          self.panGesture.update($0.size, phase: .changed)
+        }
+
+      case .continuous:
+        Binding {
+          self.pointerState.dragRect ?? .zero
+        } set: {
+          self.pointerState.update(.drag($0, .changed))
+//          self.panGesture.update($0, phase: .changed)
+        }
+    }
+    
+  }
+
+  
   @MainActor
   public func cumulativeDragPanBinding() -> Binding<CGSize> {
     Binding {
