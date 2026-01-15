@@ -78,7 +78,7 @@ enum CanvasInfoItem: String, CaseIterable, Identifiable, InfoBarSection {
       case .zoomPercent: source.zoom.toPercentString(within: 0...1)
       case .canvasSize: source.geometry.canvasSize.render(using: displayFormat)
       case .viewportSize: source.geometry.viewportSize.render(using: displayFormat)
-      case .pointerInteraction: source.pointerState.currentInteraction?.name ?? "None"
+      case .pointerInteraction: source.currentPointerInteraction?.name ?? "None"
     }
 
   }

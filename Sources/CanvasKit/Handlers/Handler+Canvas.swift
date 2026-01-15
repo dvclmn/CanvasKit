@@ -17,22 +17,32 @@ public final class CanvasHandler {
   var zoomGesture: ZoomState = .initial
   var rotateGesture: RotateState = .initial
 
+  var pointerTap: TapState = .init()
+  var pointerDrag: DragState = .init()
+  var pointerHover: RotateState = .init()
+
   /// Pointer-based interactions
-  var pointerState: PointerState = .initial
+  //  var pointerState: PointerState = .initial
 
   public var geometry: CanvasGeometry = .init()
 
   public var resizeHandler = ResizeHandler()
 
   let zoomRange: ClosedRange<CGFloat> = 0.2...20
-  
+
   var activeDragType: DragType = .marquee
 
   let dragTolerance: CGFloat = 5
 }
 
 extension CanvasHandler {
-  
+
+  public var currentPointerInteraction: PointerInteraction.Meta? {
+    if pointerTap.isActive { return .tap }
+    if pointerDrag.isActive { return .drag }
+    if pointerHover.isActive { return .hover }
+    return nil
+  }
   public var isPerformingGesture: Bool {
     panGesture.isActive || zoomGesture.isActive || rotateGesture.isActive
   }
@@ -44,23 +54,22 @@ extension CanvasHandler {
     switch activeDragType {
       case .marquee:
         Binding {
+          self.pointerDrag.value ?? .zero
+        } set: {
+          self.pointerDrag.value = $0
+        }
+
+      case .continuous:
+        Binding {
           self.panGesture.pan.toCGRectZeroOrigin
         } set: {
           self.panGesture.update($0.size, phase: .changed)
         }
 
-      case .continuous:
-        Binding {
-          self.pointerState.dragRect ?? .zero
-        } set: {
-          self.pointerState.update(.drag($0, .changed))
-//          self.panGesture.update($0, phase: .changed)
-        }
     }
-    
+
   }
 
-  
   @MainActor
   public func cumulativeDragPanBinding() -> Binding<CGSize> {
     Binding {

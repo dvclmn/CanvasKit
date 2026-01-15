@@ -128,12 +128,17 @@ public struct CanvasView<Content: View>: View {
       .zoomGesture(zoom: $canvasHandler.zoomGesture, isEnabled: true)
 
       .tapDragGesture(
-        rect: <#T##Binding<CGRect>#>,
-        behavior: <#T##DragBehavior#>,
-        isEnabled: <#T##Bool#>,
-        minimumDistance: <#T##CGFloat#>,
-        didUpdateTap: <#T##TapUpdate##TapUpdate##(CGPoint) -> Void#>,
-        didUpdateDrag: <#T##DragUpdate##DragUpdate##(Bool) -> Void#>
+        rect: canvasHandler.dragRectBinding(),
+        behavior: .marquee(drawMarquee: true),
+//        behavior: .continuous(axes: .vertical),
+        isEnabled: true,
+        minimumDistance: canvasHandler.pointerDrag.dragThreshold,
+        didUpdateTap: { location in
+          canvasHandler.pointerTap.value = location
+        }
+//        didUpdateDrag: { dragged in
+//          <#code#>
+//        }
       )
     
 //      .marqueeDrag(
@@ -181,7 +186,7 @@ public struct CanvasView<Content: View>: View {
       .environment(\.canvasPan, canvasHandler.pan)
       .environment(\.canvasZoom, canvasHandler.zoom)
       .environment(\.canvasZoomRange, canvasHandler.zoomRange)
-      .environment(\.pointerState, canvasHandler.pointerState)
+//      .environment(\.pointerState, canvasHandler.pointerState)
 
     //      .environment(\.pointerInteraction, canvasHandler.pointerState.currentInteraction)
 
