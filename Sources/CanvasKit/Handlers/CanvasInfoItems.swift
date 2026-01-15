@@ -9,9 +9,14 @@ import BaseUI
 import CoreTools
 import SwiftUI
 
+public enum CanvasSectionKey: InfoBarSectionKey {
+  public static let title = "Canvas"
+}
+
 enum CanvasInfoItem: String, CaseIterable, Identifiable, InfoBarSection {
 
   typealias Source = CanvasHandler
+  typealias SectionKey = CanvasSectionKey
 
   case pan
   case zoomActual
@@ -19,9 +24,6 @@ enum CanvasInfoItem: String, CaseIterable, Identifiable, InfoBarSection {
   case canvasSize
   case viewportSize
   case pointerInteraction
-  //  case modifiers
-
-  static var sectionTitle: String { "Canvas" }
 
   var id: String { title }
 
@@ -71,14 +73,12 @@ enum CanvasInfoItem: String, CaseIterable, Identifiable, InfoBarSection {
       separatorVisibility: .component
     )
     return switch self {
-      case .pan: source.pan.render(using: displayFormat)
+      case .pan: source.pan.render(using: displayFormat.with(integerLength: 3))
       case .zoomActual: source.zoom.displayString
       case .zoomPercent: source.zoom.toPercentString(within: 0...1)
       case .canvasSize: source.geometry.canvasSize.render(using: displayFormat)
       case .viewportSize: source.geometry.viewportSize.render(using: displayFormat)
       case .pointerInteraction: source.pointerState.currentInteraction?.name ?? "None"
-    //      case .interaction: handler.interactions.active.debugDescription
-    //      case .canvasSize, .interaction: "Not Implemented"
     }
 
   }

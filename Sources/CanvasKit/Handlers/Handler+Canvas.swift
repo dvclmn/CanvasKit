@@ -12,30 +12,28 @@ import SwiftUI
 @Observable
 public final class CanvasHandler {
 
-  //  var pointer: PointerStream?
-
   /// Canvas transform interactions
-  var panGesture: PanState = .centered
-  var zoomGesture: ZoomState = .default
-  var rotateGesture: RotateState = .zero
+  var panGesture: PanState = .initial
+  var zoomGesture: ZoomState = .initial
+  var rotateGesture: RotateState = .initial
 
   /// Pointer-based interactions
   var pointerState: PointerState = .initial
 
   public var geometry: CanvasGeometry = .init()
 
-  //  public var interactions = InteractionHandler()
   public var resizeHandler = ResizeHandler()
 
   let zoomRange: ClosedRange<CGFloat> = 0.2...20
 
   let dragTolerance: CGFloat = 5
-
-  //  public init() {}
-
 }
 
 extension CanvasHandler {
+  
+  public var isPerformingGesture: Bool {
+    panGesture.isActive || zoomGesture.isActive || rotateGesture.isActive
+  }
   public var zoom: CGFloat { zoomGesture.zoom(clampedTo: zoomRange) }
   public var pan: CGSize { panGesture.pan }
 
@@ -44,7 +42,7 @@ extension CanvasHandler {
     Binding {
       self.pan
     } set: {
-      self.panGesture.update(newValue: $0, phase: .changed)
+      self.panGesture.update($0, phase: .changed)
     }
 
   }

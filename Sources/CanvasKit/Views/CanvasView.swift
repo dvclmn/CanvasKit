@@ -77,7 +77,13 @@ public struct CanvasView<Content: View>: View {
 
           .background(.black.opacity(0.8))
 
-          .addInfoBarItems(CanvasInfoItem.buildItems(from: canvasHandler))
+          .addInfoBarItems(
+            CanvasInfoItem.self,
+            source: canvasHandler,
+            format: .short
+          )
+
+          //          .infoBarStyle(for: .item, .hidden)
 
           .task(id: canvasSize) {
             canvasHandler.updateCanvasSize(canvasSize)
@@ -117,29 +123,52 @@ public struct CanvasView<Content: View>: View {
       }
 
       .panGesture(isEnabled: true) { delta, phase in
-        canvasHandler.panGesture.update(delta, phase: phase)
+        canvasHandler.panGesture.updateDelta(delta, phase: phase)
       }
       .zoomGesture(zoom: $canvasHandler.zoomGesture, isEnabled: true)
 
+      .drawMarqueeRect(rect: canvasHandler.pointerState.dragRect, isEnabled: true)
+    
       .marqueeDrag(
         isEnabled: true,
-        dragThreshold: canvasHandler.pointerState.dragThreshold
-      ) {
-        canvasHandler.pointerState.update($0, phase: $1)
-      }
+        minimumDistance: canvasHandler.pointerState.dragThreshold,
+        includeTap: true,
+        onUpdate: { interaction in
+//          print("Received `marqueeDrag` update: \(interaction, default: "nil")")
+          canvasHandler.pointerState.update(interaction)
+        }
+      )
+//      .marqueeDrag(
+//        isEnabled: true,
+//        dragThreshold: canvasHandler.pointerState.dragThreshold
+//      ) {
+//        canvasHandler.pointerState.update($0, phase: $1)
+//      }
+
+      //      .marqueeDrag(
+      //        isEnabled: true,
+      //        dragThreshold: canvasHandler.pointerState.dragThreshold
+      //      ) {
+      //        canvasHandler.pointerState.update($0, phase: $1)
+      //      }
 
       /// This should only be on when e.g. the Pan Hand tool is selected
-      .cumulativeDrag(
-        canvasHandler.cumulativeDragPanBinding(),
-        isEnabled: true,
-        minDragDistance: canvasHandler.pointerState.dragThreshold
-      )
+      //      .cumulativeDrag(
+      //        canvasHandler.cumulativeDragPanBinding(),
+      //        isEnabled: false,
+      //        minDragDistance: canvasHandler.pointerState.dragThreshold
+      //      )
 
-      .onContinuousHover { phase in
-        canvasHandler.pointerState.update(hoverPhase: phase)
-      }
+    /// This is (I think?) a surprinsingly heavy modifier
+//      .onContinuousHover { phase in
+//        guard !canvasHandler.pointerState.isDragging else { return }
+//        canvasHandler.pointerState.update(hoverPhase: phase)
+//      }
 
-      .infoBarView(isEnabled: showsInfoBar)
+//      .infoBarView(isEnabled: showsInfoBar)
+
+      //      .environment(\.sectionLabelDisplay, .hidden)
+      //      .infoBarStyle(for: .item, .iconOnly)
 
       .environment(\.canvasGeometry, canvasHandler.geometry)
       .environment(\.canvasPan, canvasHandler.pan)
