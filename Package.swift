@@ -5,13 +5,11 @@ import PackageDescription
 let package = Package(
   name: "CanvasKit",
   platforms: [
-    .macOS("14.0"),
+    .macOS("14.0")
   ],
   products: [
-    .library(
-      name: "CanvasKit",
-      targets: ["CanvasKit"]
-    )
+    .library(name: "CanvasKit", targets: ["CanvasKit"])
+    //    .library(name: "DesignKit", targets: ["DesignKit"] )
   ],
   dependencies: [
     .package(url: "https://github.com/dvclmn/BaseHelpers", branch: "main")

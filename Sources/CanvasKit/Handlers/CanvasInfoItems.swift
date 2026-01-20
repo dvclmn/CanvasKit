@@ -25,9 +25,9 @@ enum CanvasInfoItem: String, CaseIterable, Identifiable, InfoBarSection {
   case viewportSize
   case pointerInteraction
 
-  var id: String { title }
+  var id: String { rawValue }
 
-  var title: String {
+  var labelText: String {
     switch self {
       case .zoomActual: "Zoom Actual"
       case .zoomPercent: "Zoom Percent"

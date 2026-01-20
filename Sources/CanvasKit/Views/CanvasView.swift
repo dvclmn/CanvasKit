@@ -60,7 +60,7 @@ public struct CanvasView<Content: View>: View {
           //        .rotationEffect(canvasHandler.rotation)
           .offset(canvasHandler.pan)
 
-          /// This `.frame()` is important to make sure the area *containing*
+          /// This frame modifier is important to make sure the area containing
           /// the Canvas is spread out to the edges
           .frame(maxWidth: .infinity, maxHeight: .infinity)
           .allowsHitTesting(false)
@@ -76,18 +76,6 @@ public struct CanvasView<Content: View>: View {
           //        )
 
           .background(.black.opacity(0.8))
-
-          .addInfoBarItems(
-            CanvasInfoItem.self,
-            source: canvasHandler,
-            format: .short
-          )
-
-          //          .infoBarStyle(for: .item, .hidden)
-
-          .task(id: canvasSize) {
-            canvasHandler.updateCanvasSize(canvasSize)
-          }
 
         /// Send modifiers to interacitons handler
 
@@ -129,78 +117,53 @@ public struct CanvasView<Content: View>: View {
 
       .tapDragGesture(
         rect: canvasHandler.dragRectBinding(),
-        behavior: .marquee(drawMarquee: true),
-//        behavior: .continuous(axes: .vertical),
+        //        behavior: .marquee(drawMarquee: true),
+        behavior: canvasHandler.activeDragType,
+        //        behavior: .continuous(axes: .all),
         isEnabled: true,
         minimumDistance: canvasHandler.pointerDrag.dragThreshold,
         didUpdateTap: { location in
           canvasHandler.pointerTap.value = location
         }
-//        didUpdateDrag: { dragged in
-//          <#code#>
-//        }
       )
-    
-//      .marqueeDrag(
-//        isEnabled: true,
-//        minimumDistance: canvasHandler.pointerState.dragThreshold,
-//        includeTap: true,
-//        onUpdate: { interaction in
-//          //          print("Received `marqueeDrag` update: \(interaction, default: "nil")")
-//          canvasHandler.pointerState.update(interaction)
-//        }
-//      )
-      //      .marqueeDrag(
-      //        isEnabled: true,
-      //        dragThreshold: canvasHandler.pointerState.dragThreshold
-      //      ) {
-      //        canvasHandler.pointerState.update($0, phase: $1)
-      //      }
-
-      //      .marqueeDrag(
-      //        isEnabled: true,
-      //        dragThreshold: canvasHandler.pointerState.dragThreshold
-      //      ) {
-      //        canvasHandler.pointerState.update($0, phase: $1)
-      //      }
-
-      /// This should only be on when e.g. the Pan Hand tool is selected
-      //      .cumulativeDrag(
-      //        canvasHandler.cumulativeDragPanBinding(),
-      //        isEnabled: false,
-      //        minDragDistance: canvasHandler.pointerState.dragThreshold
+      //      .debugTextOverlay(
+      //        "Pointer interaction: \(canvasHandler.currentPointerInteraction?.name, default: "nil")",
+      //        "Binding Rect: \(canvasHandler.dragRectBinding().wrappedValue?.displayString, default: "nil")",
+      //        "Pan Value: \(canvasHandler.panGesture.pan.displayString)"
       //      )
 
       /// This is (I think?) a surprinsingly heavy modifier
-      //      .onContinuousHover { phase in
-      //        guard !canvasHandler.pointerState.isDragging else { return }
-      //        canvasHandler.pointerState.update(hoverPhase: phase)
-      //      }
+      .onContinuousHover { phase in
+        //              guard !canvasHandler.pointerState.isDragging else { return }
+        //              canvasHandler.pointerState.update(hoverPhase: phase)
+      }
 
-            .infoBarView(isEnabled: showsInfoBar)
+      .addInfoBarItems(
+        CanvasInfoItem.self,
+        source: canvasHandler,
+        format: .short
+      )
 
-      //      .environment(\.sectionLabelDisplay, .hidden)
-      //      .infoBarStyle(for: .item, .iconOnly)
+      .infoBarView(isEnabled: showsInfoBar)
+      .infoBarStyle(for: .item, .iconOnly)
 
       .environment(\.canvasGeometry, canvasHandler.geometry)
       .environment(\.canvasPan, canvasHandler.pan)
       .environment(\.canvasZoom, canvasHandler.zoom)
       .environment(\.canvasZoomRange, canvasHandler.zoomRange)
-//      .environment(\.pointerState, canvasHandler.pointerState)
 
-    //      .environment(\.pointerInteraction, canvasHandler.pointerState.currentInteraction)
+      .task(id: canvasSize) {
+        canvasHandler.updateCanvasSize(canvasSize)
+      }
+      //      .task(id: modifierKeys) {
+      //        canvasHandler.interactions.modifiersHeld = modifierKeys
+      //      }
 
-    //      .environment(\.isResizingCanvas, store.canvasHandler.resizeHandler.isDragging)
-
-    //      .task(id: modifierKeys) {
-    //        canvasHandler.interactions.modifiersHeld = modifierKeys
-    //      }
-
-    //      .debugTextOverlay {
-    //        "Checking Geometry:\n\(canvasHandler.geometry)"
-    //      }
-    //      .backgroundTint(.yellow)
-    //      .disabled(!canvasHandler.geometry.isEitherZero)
+      .onAppear {
+        if isPreview {
+          canvasHandler.panGesture.update(CGSize(30, 80), phase: .ended)
+        }
+      }
 
   }
 }

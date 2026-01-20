@@ -30,9 +30,13 @@ public final class CanvasHandler {
 
   let zoomRange: ClosedRange<CGFloat> = 0.2...20
 
-  var activeDragType: DragType = .marquee
+  var activeDragType: DragBehavior = .continuous(axes: .horizontal)
+//  var activeDragType: DragBehavior = .marquee(drawMarquee: true)
+//  var activeDragType: DragType = .marquee
 
   let dragTolerance: CGFloat = 5
+  
+  public init() {}
 }
 
 extension CanvasHandler {
@@ -50,35 +54,39 @@ extension CanvasHandler {
   public var pan: CGSize { panGesture.pan }
 
   @MainActor
-  public func dragRectBinding() -> Binding<CGRect> {
+  public func dragRectBinding() -> Binding<CGRect?> {
     switch activeDragType {
       case .marquee:
         Binding {
-          self.pointerDrag.value ?? .zero
+          let value = self.pointerDrag.value
+//          print("Marquee Mode. GET Value: \(value?.displayString, default: "nil")")
+          return value
         } set: {
           self.pointerDrag.value = $0
         }
 
       case .continuous:
         Binding {
-          self.panGesture.pan.toCGRectZeroOrigin
+          let value = self.panGesture.pan.toCGRectZeroOrigin
+//          print("Continuous Mode. GET Value: \(value)")
+          return value
         } set: {
-          self.panGesture.update($0.size, phase: .changed)
+          self.panGesture.update($0?.size ?? .zero, phase: .changed)
         }
 
     }
 
   }
 
-  @MainActor
-  public func cumulativeDragPanBinding() -> Binding<CGSize> {
-    Binding {
-      self.pan
-    } set: {
-      self.panGesture.update($0, phase: .changed)
-    }
-
-  }
+  //  @MainActor
+  //  public func cumulativeDragPanBinding() -> Binding<CGSize> {
+  //    Binding {
+  //      self.pan
+  //    } set: {
+  //      self.panGesture.update($0, phase: .changed)
+  //    }
+  //
+  //  }
 
   public func updateViewportSize(_ size: CGSize) {
     //    print("Updating Viewport size to \(size), at \(Date.debug)")
