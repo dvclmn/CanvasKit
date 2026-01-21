@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 27/7/2025.
 //
 
-import Sharing
-import SwiftUI
+//import Sharing
+//import SwiftUI
 
 //public struct ZoomHandler: Equatable, Sendable {
 //  public var zoom: CGFloat = 4.0
