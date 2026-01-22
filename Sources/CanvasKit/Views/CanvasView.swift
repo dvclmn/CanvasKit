@@ -144,8 +144,8 @@ public struct CanvasView<Content: View>: View {
         format: .short
       )
 
-      .infoBarView(isEnabled: showsInfoBar)
-      .infoBarStyle(for: .item, .iconOnly)
+//      .infoBarView(isEnabled: showsInfoBar)
+//      .infoBarStyle(for: .item, .iconOnly)
 
       .environment(\.canvasGeometry, canvasHandler.geometry)
       .environment(\.canvasPan, canvasHandler.pan)
