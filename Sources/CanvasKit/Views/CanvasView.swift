@@ -113,7 +113,8 @@ public struct CanvasView<Content: View>: View {
       .panGesture(isEnabled: true) { delta, phase in
         canvasHandler.panGesture.updateDelta(delta, phase: phase)
       }
-      .zoomGesture(zoom: $canvasHandler.zoomGesture, isEnabled: true)
+      .zoomGesture(zoom: $canvasHandler.zoomGesture.value.toBindingDouble, isEnabled: true)
+//      .zoomGesture(zoom: $canvasHandler.zoomGesture, isEnabled: true)
 
       .tapDragGesture(
         rect: canvasHandler.dragRectBinding(),

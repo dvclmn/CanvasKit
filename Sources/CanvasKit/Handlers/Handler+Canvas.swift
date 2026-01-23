@@ -15,6 +15,7 @@ public final class CanvasHandler {
   /// Canvas transform interactions
   var panGesture: PanState = .initial
   var zoomGesture: ZoomState = .initial
+//  var zoomGesture: ZoomState = .initial
   var rotateGesture: RotateState = .initial
 
   var pointerTap: TapState = .init()
