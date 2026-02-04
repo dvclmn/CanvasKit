@@ -110,7 +110,7 @@ public struct CanvasView<Content: View>: View {
         //    }  // END geo reader
       }
 
-      .panGesture(isEnabled: true) { delta, phase in
+      .panGesture(isEnabled: true) { delta, phase, modifiers in
         canvasHandler.panGesture.updateDelta(delta, phase: phase)
       }
       .zoomGesture(zoom: $canvasHandler.zoomGesture.value.toBindingDouble, isEnabled: true)
