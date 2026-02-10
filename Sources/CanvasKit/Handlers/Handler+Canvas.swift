@@ -15,7 +15,7 @@ public final class CanvasHandler {
   /// Canvas transform interactions
   var panGesture: PanState = .initial
   var zoomGesture: ZoomState = .initial
-//  var zoomGesture: ZoomState = .initial
+  //  var zoomGesture: ZoomState = .initial
   var rotateGesture: RotateState = .initial
 
   var pointerTap: TapState = .init()
@@ -29,14 +29,14 @@ public final class CanvasHandler {
 
   public var resizeHandler = ResizeHandler()
 
-  let zoomRange: ClosedRange<CGFloat> = 0.2...20
+  let zoomRange: ClosedRange<Double> = 0.2...20
 
   var activeDragType: DragBehavior = .continuous(axes: .horizontal)
-//  var activeDragType: DragBehavior = .marquee(drawMarquee: true)
-//  var activeDragType: DragType = .marquee
+  //  var activeDragType: DragBehavior = .marquee(drawMarquee: true)
+  //  var activeDragType: DragType = .marquee
 
   let dragTolerance: CGFloat = 5
-  
+
   public init() {}
 }
 
@@ -51,7 +51,7 @@ extension CanvasHandler {
   public var isPerformingGesture: Bool {
     panGesture.isActive || zoomGesture.isActive || rotateGesture.isActive
   }
-  public var zoom: CGFloat { zoomGesture.zoom(clampedTo: zoomRange) }
+  public var zoom: Double { zoomGesture.zoom(clampedTo: zoomRange) }
   public var pan: CGSize { panGesture.pan }
 
   @MainActor
@@ -60,7 +60,7 @@ extension CanvasHandler {
       case .marquee:
         Binding {
           let value = self.pointerDrag.value
-//          print("Marquee Mode. GET Value: \(value?.displayString, default: "nil")")
+          //          print("Marquee Mode. GET Value: \(value?.displayString, default: "nil")")
           return value
         } set: {
           self.pointerDrag.value = $0
@@ -69,7 +69,7 @@ extension CanvasHandler {
       case .continuous:
         Binding {
           let value = self.panGesture.pan.toCGRectZeroOrigin
-//          print("Continuous Mode. GET Value: \(value)")
+          //          print("Continuous Mode. GET Value: \(value)")
           return value
         } set: {
           self.panGesture.update($0?.size ?? .zero, phase: .changed)

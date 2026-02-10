@@ -30,7 +30,7 @@ public struct CanvasResizeView: View {
           .fill(.clear)
         RoundedRectangle(cornerRadius: Styles.sizeTiny)
           .stroke(
-            .blue, lineWidth: CGFloat(1).removingZoom(canvasZoom, clampedTo: canvasZoomRange)
+            .blue, lineWidth: Double(1).removingZoom(canvasZoom, clampedTo: canvasZoomRange)
           )
           .frameFromSize(canvasSize.addingZoom(canvasZoom))
 
