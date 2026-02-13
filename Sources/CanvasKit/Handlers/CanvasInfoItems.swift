@@ -13,7 +13,7 @@ public enum CanvasSectionKey: InfoBarSectionKey {
   public static let title = "Canvas"
 }
 
-enum CanvasInfoItem: String, CaseIterable, Identifiable, InfoBarSection {
+enum CanvasInfoItem: String, CaseIterable, Identifiable, InfoBarSectionProtocol {
 
   typealias Source = CanvasHandler
   typealias SectionKey = CanvasSectionKey
