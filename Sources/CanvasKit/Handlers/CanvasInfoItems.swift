@@ -13,7 +13,7 @@ public enum CanvasSectionKey: InfoBarSectionKey {
   public static let title = "Canvas"
 }
 
-enum CanvasInfoItem: String, CaseIterable, Identifiable, InfoBarSectionProtocol {
+enum CanvasInfoItem: String, CaseIterable, Identifiable, InfoBarItemDescriptor {
 
   typealias Source = CanvasHandler
   typealias SectionKey = CanvasSectionKey
@@ -63,7 +63,7 @@ enum CanvasInfoItem: String, CaseIterable, Identifiable, InfoBarSectionProtocol 
   //    }
   //  }
 
-  func getContent(
+  func content(
     from source: CanvasHandler,
     format: DisplayFormat = .default
   ) -> String {
