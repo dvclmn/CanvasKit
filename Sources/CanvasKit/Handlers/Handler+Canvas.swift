@@ -35,7 +35,7 @@ public final class CanvasHandler {
   //  var activeDragType: DragBehavior = .marquee(drawMarquee: true)
   //  var activeDragType: DragType = .marquee
 
-  let dragTolerance: CGFloat = 5
+  @ObservationIgnored let dragTolerance: CGFloat = 5
 
   public init() {}
 }
