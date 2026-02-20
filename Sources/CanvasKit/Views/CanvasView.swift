@@ -139,11 +139,11 @@ public struct CanvasView<Content: View>: View {
         //              canvasHandler.pointerState.update(hoverPhase: phase)
       }
 
-      .addInfoBarItems(
-        CanvasInfoItem.self,
-        source: canvasHandler,
-        format: .short
-      )
+//      .addInfoBarItems(
+//        CanvasInfoItem.self,
+//        source: canvasHandler,
+//        format: .short
+//      )
 
 //      .infoBarView(isEnabled: showsInfoBar)
 //      .infoBarStyle(for: .item, .iconOnly)
