@@ -21,23 +21,15 @@ public struct CanvasView<Content: View>: View {
   let canvasSize: CGSize
   let showsInfoBar: Bool
   let content: Content
-  //  let didChangeResize: ResizeOutput
-  //  let didEndResize: ResizeOutput
 
   public init(
     canvasSize: CGSize,
-    //    handler: Binding<CanvasHandler>,
     showsInfoBar: Bool = true,
     @ViewBuilder content: @escaping () -> Content,
-    //    didChangeResize: @escaping ResizeOutput = { _, _ in },
-    //    didEndResize: @escaping ResizeOutput = { _, _ in },
   ) {
-    //    self._canvasHandler = handler
     self.canvasSize = canvasSize
     self.showsInfoBar = showsInfoBar
     self.content = content()
-    //    self.didChangeResize = didChangeResize
-    //    self.didEndResize = didEndResize
   }
 
   public var body: some View {
@@ -114,7 +106,7 @@ public struct CanvasView<Content: View>: View {
         canvasHandler.panGesture.updateDelta(delta, phase: phase)
       }
       .zoomGesture(zoom: $canvasHandler.zoomGesture.value.toBindingDouble, isEnabled: true)
-//      .zoomGesture(zoom: $canvasHandler.zoomGesture, isEnabled: true)
+      //      .zoomGesture(zoom: $canvasHandler.zoomGesture, isEnabled: true)
 
       .tapDragGesture(
         rect: canvasHandler.dragRectBinding(),
@@ -139,14 +131,15 @@ public struct CanvasView<Content: View>: View {
         //              canvasHandler.pointerState.update(hoverPhase: phase)
       }
 
-//      .addInfoBarItems(
-//        CanvasInfoItem.self,
-//        source: canvasHandler,
-//        format: .short
-//      )
+      .addInfoBarItems(
+        CanvasInfoItem.self,
+        source: canvasHandler,
+        format: .short,
+        isEnabled: showsInfoBar
+      )
 
-//      .infoBarView(isEnabled: showsInfoBar)
-//      .infoBarStyle(for: .item, .iconOnly)
+      //      .infoBarView(isEnabled: showsInfoBar)
+      //      .infoBarStyle(for: .item, .iconOnly)
 
       .environment(\.canvasGeometry, canvasHandler.geometry)
       .environment(\.canvasPan, canvasHandler.pan)
