@@ -36,7 +36,7 @@ public struct HitAreaRectModifier: ViewModifier {
             guard !store.isDragging else { return }
             isHovering = hovering
           }
-          .setPointerStyle(resizePoint.toCompatPointerStyle)
+          .pointerStyleCompatible(resizePoint.toCompatPointerStyle)
           .modifier(
             ResizeDragModifier(
               store: $store,
