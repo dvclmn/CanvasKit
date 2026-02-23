@@ -70,7 +70,7 @@ enum CanvasInfoItem: String, CaseIterable, Identifiable, InfoBarItemDescriptor {
     let displayFormat: FloatDisplayFormat = .init(
       decimalPlaces: 0,
       labelStyle: .none,
-      separatorVisibility: .component
+      separators: .component
     )
     return switch self {
       case .pan: source.pan.render(using: displayFormat.with(integerLength: 3))

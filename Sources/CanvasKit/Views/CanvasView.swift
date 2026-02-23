@@ -134,7 +134,7 @@ public struct CanvasView<Content: View>: View {
       .addInfoBarItems(
         CanvasInfoItem.self,
         source: canvasHandler,
-        format: .,
+        format: .default,
         isEnabled: showsInfoBar
       )
 
