@@ -65,9 +65,9 @@ enum CanvasInfoItem: String, CaseIterable, Identifiable, InfoBarItemDescriptor {
 
   func content(
     from source: CanvasHandler,
-    format: DisplayFormat = .default
+    format: FloatDisplayFormat = .default
   ) -> String {
-    let displayFormat: DisplayFormat = .init(
+    let displayFormat: FloatDisplayFormat = .init(
       decimalPlaces: 0,
       labelStyle: .none,
       separatorVisibility: .component
