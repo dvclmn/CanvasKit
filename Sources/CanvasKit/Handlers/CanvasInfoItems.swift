@@ -53,16 +53,6 @@ enum CanvasInfoItem: String, CaseIterable, Identifiable, InfoBarItemDescriptor {
     }
   }
 
-  //  static func buildItems(from source: CanvasHandler) -> [InfoBarItem] {
-  //    allCases.map { item in
-  //      InfoBarItem(
-  //        sectionKey: sectionTitle,
-  //        label: QuickLabel(item.title, icon: item.icon),
-  //        content: item.content(source)
-  //      )
-  //    }
-  //  }
-
   func content(
     from source: CanvasHandler,
     format: FloatDisplayFormat = .default
