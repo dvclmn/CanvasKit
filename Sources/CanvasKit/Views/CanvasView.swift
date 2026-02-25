@@ -59,7 +59,7 @@ public struct CanvasView<Content: View>: View {
           .allowsHitTesting(false)
           .background(.black.opacity(0.8))
           .drawingGroup(opaque: true)
-//          .coordinateSpace(.canvasIdentity)
+        //          .coordinateSpace(.canvasIdentity)
         /// Send modifiers to interacitons handler
 
         /// This drives the resizing callbacks, and means I don't have to pass
@@ -91,8 +91,9 @@ public struct CanvasView<Content: View>: View {
         //        }
 
         //    }  // END geo reader
-    
+
       }
+    
       .panGesture(isEnabled: true) { delta, phase, modifiers in
         canvasHandler.panGesture.updateDelta(delta, phase: phase)
       }
@@ -117,10 +118,10 @@ public struct CanvasView<Content: View>: View {
       //      )
 
       /// This is (I think?) a surprinsingly heavy modifier
-//      .onContinuousHover { phase in
-        //              guard !canvasHandler.pointerState.isDragging else { return }
-        //              canvasHandler.pointerState.update(hoverPhase: phase)
-//      }
+      //      .onContinuousHover { phase in
+      //              guard !canvasHandler.pointerState.isDragging else { return }
+      //              canvasHandler.pointerState.update(hoverPhase: phase)
+      //      }
 
       /// I may bring this back, but I need to fix infobar so that the PreferenceKey reduce stuff
       /// is working properly. Also, I'd like if I can to decouple BaseUI and CanvasKit
@@ -137,19 +138,9 @@ public struct CanvasView<Content: View>: View {
       .environment(\.canvasGeometry, canvasHandler.geometry)
       .environment(\.panOffset, canvasHandler.pan)
       .environment(\.zoomLevel, canvasHandler.zoomClamped)
-      .environment(\.zoomRange, canvasHandler.zoomRange)
 
-      .task(id: canvasSize) {
-        canvasHandler.updateCanvasSize(canvasSize)
-      }
-    
-      .task(id: zoomRange ) {
-        
-//        canvasHandler.updateCanvasSize(canvasSize)
-      }
-    //      .task(id: modifierKeys) {
-    //        canvasHandler.interactions.modifiersHeld = modifierKeys
-    //      }
+      .task(id: canvasSize) { canvasHandler.updateCanvasSize(canvasSize) }
+      .task(id: zoomRange) { canvasHandler.zoomRange = zoomRange }
 
   }
 }
