@@ -57,8 +57,7 @@ public struct CanvasView<Content: View>: View {
           .allowsHitTesting(false)
           .background(.black.opacity(0.8))
           .drawingGroup(opaque: true)
-
-
+          .coordinateSpace(.canvasSpace)
         /// Send modifiers to interacitons handler
 
         /// This drives the resizing callbacks, and means I don't have to pass
