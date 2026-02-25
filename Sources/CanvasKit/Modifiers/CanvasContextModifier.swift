@@ -9,7 +9,7 @@ import SwiftUI
 
 //public struct CanvasContextModifier: ViewModifier {
 //  @Environment(\.canvasZoom) private var canvasZoom
-//  @Environment(\.canvasPan) private var canvasPan
+//  @Environment(\.panOffset) private var panOffset
 //  @Environment(\.canvasRotation) private var canvasRotation
 //  @Environment(\.canvasSize) private var canvasSize
 //  @Environment(\.viewportSize) private var viewportSize
@@ -27,7 +27,7 @@ import SwiftUI
 //      viewportSize: viewportSize,
 //      canvasSize: canvasSize,
 //      zoom: canvasZoom,
-//      pan: canvasPan,
+//      pan: panOffset,
 //      rotation: canvasRotation
 //    )
 //

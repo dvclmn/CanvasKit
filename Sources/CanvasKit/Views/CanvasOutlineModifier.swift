@@ -9,8 +9,7 @@ import BasePrimitives
 import SwiftUI
 
 public struct CanvasOutlineModifier: ViewModifier {
-  @Environment(\.canvasZoom) private var canvasZoom
-  //  @Environment(\.canvasHandler) private var canvasHandler
+  @Environment(\.zoomLevel) private var zoomLevel
 
   public func body(content: Content) -> some View {
     content
@@ -18,7 +17,7 @@ public struct CanvasOutlineModifier: ViewModifier {
       .overlay {
         RoundedRectangle(cornerRadius: cornerRounding)
           .fill(.clear)
-          .stroke(.white.opacity(0.09), lineWidth: outlineThickness)
+          .stroke(.white.opacity(0.07), lineWidth: outlineThickness)
           .allowsHitTesting(false)
       }
   }
@@ -27,12 +26,12 @@ public struct CanvasOutlineModifier: ViewModifier {
 extension CanvasOutlineModifier {
   private var cornerRounding: CGFloat {
     let base = Styles.sizeTiny
-    return base.removingZoom(canvasZoom)
+    return base.removingZoom(zoomLevel)
   }
 
   var outlineThickness: CGFloat {
     let base = 1.0
-    return base.removingZoom(canvasZoom, clampedTo: 1...20)
+    return base.removingZoom(zoomLevel, clampedTo: 1...20)
     //    let line = canvasHandler.removeZoom(from: Double(1))
     //    return Double(1).removingZoom(canvasHandler.zoomHandler.zoom)
   }

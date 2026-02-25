@@ -12,10 +12,10 @@ import SwiftUI
 public typealias ResizeOutput = (GridBoundaryPoint, CGSize) -> Void
 
 public struct CanvasResizeView: View {
-  @Environment(\.canvasPan) private var canvasPan
-  @Environment(\.canvasZoom) private var canvasZoom
+  @Environment(\.panOffset) private var panOffset
+  @Environment(\.zoomLevel) private var zoomLevel
   @Environment(\.canvasSize) private var canvasSize
-  @Environment(\.canvasZoomRange) private var canvasZoomRange
+  @Environment(\.zoomRange) private var zoomRange
 
   @Binding var store: ResizeHandler
 
@@ -30,15 +30,15 @@ public struct CanvasResizeView: View {
           .fill(.clear)
         RoundedRectangle(cornerRadius: Styles.sizeTiny)
           .stroke(
-            .blue, lineWidth: Double(1).removingZoom(canvasZoom, clampedTo: canvasZoomRange)
+            .blue, lineWidth: Double(1).removingZoom(zoomLevel, clampedTo: zoomRange)
           )
-          .frameFromSize(canvasSize.addingZoom(canvasZoom))
+          .frameFromSize(canvasSize.addingZoom(zoomLevel))
 
         if let transientSize = store.transientCanvasSize {
           Rectangle()
             .fill(.pink.opacityFaint)
             .border(.pink)
-            .frameFromSize(transientSize.addingZoom(canvasZoom))
+            .frameFromSize(transientSize.addingZoom(zoomLevel))
         }
 
         //          ForEach([ResizePoint.bottomLeading]) { point in
@@ -55,7 +55,7 @@ public struct CanvasResizeView: View {
 
         /// The hit areas need a stable positioning so they don't move
         /// during a drag?
-        .frameFromSize(canvasSize.addingZoom(canvasZoom))
+        .frameFromSize(canvasSize.addingZoom(zoomLevel))
 
         ControlPointView(
           Circle(),
@@ -65,7 +65,7 @@ public struct CanvasResizeView: View {
 
       }  // END zstack
 
-      .offset(canvasPan)
+      .offset(panOffset)
       .frame(maxWidth: .infinity, maxHeight: .infinity)
 
     }  // END is Resize allowed

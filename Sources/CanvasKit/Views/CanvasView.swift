@@ -39,7 +39,6 @@ public struct CanvasView<Content: View>: View {
       .viewSize(mode: .debounce(0.1)) { size in
         canvasHandler.updateViewportSize(size)
       }
-
       .overlay {
         content
           .frame(
@@ -56,18 +55,9 @@ public struct CanvasView<Content: View>: View {
           /// the Canvas is spread out to the edges
           .frame(maxWidth: .infinity, maxHeight: .infinity)
           .allowsHitTesting(false)
-          .drawingGroup()
-          //        .shaderEffect(
-          //          .chromaticAberration(
-          //            .init(
-          //              red: 0.9,
-          //              blue: 0.3,
-          //              strength: 0.8
-          //            )
-          //          )
-          //        )
-
           .background(.black.opacity(0.8))
+          .drawingGroup(opaque: true)
+
 
         /// Send modifiers to interacitons handler
 
@@ -131,35 +121,29 @@ public struct CanvasView<Content: View>: View {
         //              canvasHandler.pointerState.update(hoverPhase: phase)
       }
 
-    /// I may bring this back, but I need to fix infobar so that the PreferenceKey reduce stuff
-    /// is working properly. Also, I'd like if I can to decouple BaseUI and CanvasKit
-//      .addInfoBarItems(
-//        CanvasInfoItem.self,
-//        source: canvasHandler,
-//        format: .default,
-//        isEnabled: showsInfoBar
-//      )
+      /// I may bring this back, but I need to fix infobar so that the PreferenceKey reduce stuff
+      /// is working properly. Also, I'd like if I can to decouple BaseUI and CanvasKit
+      //      .addInfoBarItems(
+      //        CanvasInfoItem.self,
+      //        source: canvasHandler,
+      //        format: .default,
+      //        isEnabled: showsInfoBar
+      //      )
 
       //      .infoBarView(isEnabled: showsInfoBar)
       //      .infoBarStyle(for: .item, .iconOnly)
 
       .environment(\.canvasGeometry, canvasHandler.geometry)
-      .environment(\.canvasPan, canvasHandler.pan)
-      .environment(\.canvasZoom, canvasHandler.zoom)
-      .environment(\.canvasZoomRange, canvasHandler.zoomRange)
+      .environment(\.panOffset, canvasHandler.pan)
+      .environment(\.zoomLevel, canvasHandler.zoom)
+      .environment(\.zoomRange, canvasHandler.zoomRange)
 
       .task(id: canvasSize) {
         canvasHandler.updateCanvasSize(canvasSize)
       }
-      //      .task(id: modifierKeys) {
-      //        canvasHandler.interactions.modifiersHeld = modifierKeys
-      //      }
-
-      .onAppear {
-        if isPreview {
-          canvasHandler.panGesture.update(CGSize(30, 80), phase: .ended)
-        }
-      }
+    //      .task(id: modifierKeys) {
+    //        canvasHandler.interactions.modifiersHeld = modifierKeys
+    //      }
 
   }
 }
