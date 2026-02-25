@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 24/6/2025.
 //
 
-import BaseUI
+//import BaseUI
 import CoreTools
 import GestureKit
 import SwiftUI
@@ -131,12 +131,14 @@ public struct CanvasView<Content: View>: View {
         //              canvasHandler.pointerState.update(hoverPhase: phase)
       }
 
-      .addInfoBarItems(
-        CanvasInfoItem.self,
-        source: canvasHandler,
-        format: .default,
-        isEnabled: showsInfoBar
-      )
+    /// I may bring this back, but I need to fix infobar so that the PreferenceKey reduce stuff
+    /// is working properly. Also, I'd like if I can to decouple BaseUI and CanvasKit
+//      .addInfoBarItems(
+//        CanvasInfoItem.self,
+//        source: canvasHandler,
+//        format: .default,
+//        isEnabled: showsInfoBar
+//      )
 
       //      .infoBarView(isEnabled: showsInfoBar)
       //      .infoBarStyle(for: .item, .iconOnly)
