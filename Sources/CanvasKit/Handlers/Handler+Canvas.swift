@@ -29,7 +29,10 @@ public final class CanvasHandler {
 
   public var resizeHandler = ResizeHandler()
 
-  let zoomRange: ClosedRange<Double> = 0.2...20
+  /// This is provided from outside via the environment
+  var zoomRange: ClosedRange<Double>?
+
+  //  let zoomRange: ClosedRange<Double> = 0.2...20
 
   var activeDragType: DragBehavior = .continuous(axes: .horizontal)
   //  var activeDragType: DragBehavior = .marquee(drawMarquee: true)
@@ -51,7 +54,12 @@ extension CanvasHandler {
   public var isPerformingGesture: Bool {
     panGesture.isActive || zoomGesture.isActive || rotateGesture.isActive
   }
-  public var zoom: Double { zoomGesture.zoom(clampedTo: zoomRange) }
+
+  public var zoomClamped: Double {
+    guard let zoomRange else { return 1.0 }
+    return zoomGesture.zoom(clampedTo: zoomRange)
+  }
+
   public var pan: CGSize { panGesture.pan }
 
   @MainActor
@@ -102,7 +110,7 @@ extension CanvasHandler {
   public var canvasAnchor: UnitPoint { resizeHandler.canvasAnchor }
 
   public func removeZoom(from value: CGFloat) -> CGFloat {
-    value.removingZoom(zoom)
+    value.removingZoom(zoomClamped)
     //      zoomGesture.
     //      value.removingZoom()
   }

@@ -12,7 +12,8 @@ import SwiftUI
 
 public struct CanvasView<Content: View>: View {
   @Environment(\.isDebugMode) private var isDebugMode
-  @Environment(\.modifierKeys) var modifierKeys
+  @Environment(\.modifierKeys) private var modifierKeys
+  @Environment(\.zoomRange) private var zoomRange
 
   //  @State private var hasZoomedToFit: Bool = false
 
@@ -48,7 +49,7 @@ public struct CanvasView<Content: View>: View {
           .coordinateSpace(.canvasIdentity)
 
           .modifier(CanvasOutlineModifier())
-          .scaleEffect(canvasHandler.zoom)
+          .scaleEffect(canvasHandler.zoomClamped)
           //        .rotationEffect(canvasHandler.rotation)
           .offset(canvasHandler.pan)
 
@@ -116,10 +117,10 @@ public struct CanvasView<Content: View>: View {
       //      )
 
       /// This is (I think?) a surprinsingly heavy modifier
-      .onContinuousHover { phase in
+//      .onContinuousHover { phase in
         //              guard !canvasHandler.pointerState.isDragging else { return }
         //              canvasHandler.pointerState.update(hoverPhase: phase)
-      }
+//      }
 
       /// I may bring this back, but I need to fix infobar so that the PreferenceKey reduce stuff
       /// is working properly. Also, I'd like if I can to decouple BaseUI and CanvasKit
@@ -135,11 +136,16 @@ public struct CanvasView<Content: View>: View {
 
       .environment(\.canvasGeometry, canvasHandler.geometry)
       .environment(\.panOffset, canvasHandler.pan)
-      .environment(\.zoomLevel, canvasHandler.zoom)
+      .environment(\.zoomLevel, canvasHandler.zoomClamped)
       .environment(\.zoomRange, canvasHandler.zoomRange)
 
       .task(id: canvasSize) {
         canvasHandler.updateCanvasSize(canvasSize)
+      }
+    
+      .task(id: zoomRange ) {
+        
+//        canvasHandler.updateCanvasSize(canvasSize)
       }
     //      .task(id: modifierKeys) {
     //        canvasHandler.interactions.modifiersHeld = modifierKeys
