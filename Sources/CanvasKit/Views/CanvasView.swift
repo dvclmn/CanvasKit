@@ -45,6 +45,7 @@ public struct CanvasView<Content: View>: View {
             width: canvasHandler.geometry.canvasSize.width,
             height: canvasHandler.geometry.canvasSize.height
           )
+          .coordinateSpace(.canvasIdentity)
 
           .modifier(CanvasOutlineModifier())
           .scaleEffect(canvasHandler.zoom)
@@ -57,7 +58,7 @@ public struct CanvasView<Content: View>: View {
           .allowsHitTesting(false)
           .background(.black.opacity(0.8))
           .drawingGroup(opaque: true)
-          .coordinateSpace(.canvasSpace)
+//          .coordinateSpace(.canvasIdentity)
         /// Send modifiers to interacitons handler
 
         /// This drives the resizing callbacks, and means I don't have to pass
@@ -89,8 +90,8 @@ public struct CanvasView<Content: View>: View {
         //        }
 
         //    }  // END geo reader
+    
       }
-
       .panGesture(isEnabled: true) { delta, phase, modifiers in
         canvasHandler.panGesture.updateDelta(delta, phase: phase)
       }
