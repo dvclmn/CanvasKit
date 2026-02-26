@@ -10,6 +10,7 @@ import SwiftUI
 
 public struct CanvasOutlineModifier: ViewModifier {
   @Environment(\.zoomLevel) private var zoomLevel
+  @Environment(\.zoomRange) private var zoomRange
 
   public func body(content: Content) -> some View {
     content
@@ -20,6 +21,7 @@ public struct CanvasOutlineModifier: ViewModifier {
           .stroke(.white.opacity(0.07), lineWidth: outlineThickness)
           .allowsHitTesting(false)
       }
+      .environment(\.canvasRounding, cornerRounding)
   }
 }
 
@@ -31,8 +33,6 @@ extension CanvasOutlineModifier {
 
   var outlineThickness: CGFloat {
     let base = 1.0
-    return base.removingZoom(zoomLevel, clampedTo: 1...20)
-    //    let line = canvasHandler.removeZoom(from: Double(1))
-    //    return Double(1).removingZoom(canvasHandler.zoomHandler.zoom)
+    return base.removingZoom(zoomLevel, clampedTo: zoomRange)
   }
 }
