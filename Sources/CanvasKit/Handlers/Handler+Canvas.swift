@@ -34,7 +34,9 @@ public final class CanvasHandler {
 
   //  let zoomRange: ClosedRange<Double> = 0.2...20
 
-  var activeDragType: DragBehavior = .continuous(axes: .horizontal)
+  /// This was previously set to `continuous(axes: .horizontal)` for testing
+  var activeDragType: DragBehavior? = nil
+//  var activeDragType: DragBehavior = .continuous(axes: .horizontal)
   //  var activeDragType: DragBehavior = .marquee(drawMarquee: true)
   //  var activeDragType: DragType = .marquee
 
@@ -64,7 +66,8 @@ extension CanvasHandler {
 
   @MainActor
   public func dragRectBinding() -> Binding<CGRect?> {
-    switch activeDragType {
+    guard let activeDragType else { return .constant(nil) }
+    return switch activeDragType {
       case .marquee:
         Binding {
           let value = self.pointerDrag.value
