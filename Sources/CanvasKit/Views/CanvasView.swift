@@ -37,8 +37,11 @@ public struct CanvasView<Content: View>: View {
 
     Rectangle()
       .fill(.clear)
-      .viewSize(mode: .debounce(0.1)) { size in
-        canvasHandler.updateViewportSize(size)
+      .viewSize(
+        capture: .sizeAndSafeInsets,
+        mode: .debounce(0.1)
+      ) { geometry in
+        canvasHandler.updateViewportRect(geometry.rect)
       }
       .overlay {
         content

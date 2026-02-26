@@ -97,9 +97,9 @@ extension CanvasHandler {
   //
   //  }
 
-  public func updateViewportSize(_ size: CGSize) {
+  public func updateViewportRect(_ rect: CGRect) {
     //    print("Updating Viewport size to \(size), at \(Date.debug)")
-    geometry.viewportSize = size
+    geometry.viewportRect = rect
     //    print("Now that Viewport size is updated, ensuring it got a value: \(geometry)")
   }
   public func updateCanvasSize(_ size: CGSize) {
