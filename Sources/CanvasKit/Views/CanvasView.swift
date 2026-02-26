@@ -111,7 +111,6 @@ public struct CanvasView<Content: View>: View {
           //        behavior: .marquee(drawMarquee: true),
           behavior: canvasHandler.activeDragType,
           //        behavior: .continuous(axes: .all),
-          isEnabled: true,
           minimumDistance: canvasHandler.pointerDrag.dragThreshold,
           didUpdateTap: { location in
             canvasHandler.pointerTap.value = location
