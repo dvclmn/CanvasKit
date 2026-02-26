@@ -89,38 +89,57 @@ extension CanvasTransformContext {
     viewportSize.isGreaterThanZero && canvasSize.isGreaterThanZero
   }
 
-  private var canvasOriginInViewport: CGPoint {
-    let centredOffset = viewportSize.centeringOffset(forChild: zoomedCanvasSize)
-    let pannedOffset: CGSize = centredOffset + pan
-    return pannedOffset.toCGPoint
+  private var viewportRect: CGRect {
+    .init(origin: .zero, size: viewportSize)
   }
 
-  private var zoomedCanvasSize: CGSize { canvasSize * zoom }
+  /// Canonical transform used by all viewport <-> canvas mapping.
+  private var coordinateTransform: CoordinateSpaceContext {
+    .init(
+      viewAnchor: .anchoredToCentre,
+      zoom: zoom,
+      pan: pan,
+      viewportRect: viewportRect,
+      canvasSize: canvasSize,
+      panSpace: .global
+    )
+  }
 
   public var canvasFrameInViewport: CGRect {
-    precondition(dimensionsAreValid, "Viewport and Canvas sizes cannot be zero along either dimension.")
-    let origin = canvasOriginInViewport
-    let size = zoomedCanvasSize
-    return CGRect(origin: origin, size: size)
+    precondition(
+      dimensionsAreValid,
+      "Viewport and Canvas sizes cannot be zero along either dimension."
+    )
+    return coordinateTransform.canvasFrameInGlobalSpace
   }
 
   /// Map Point to Canvas space
   public func mapToCanvas(
     viewportPoint point: CGPoint
   ) -> CGPoint? {
-    let translated: CGPoint = point - canvasFrameInViewport.origin
-    let result: CGPoint = translated.removingZoom(zoom)
-    return result
+    guard dimensionsAreValid else { return nil }
+
+    #if DEBUG
+    coordinateTransform.assertRoundTrip(global: point)
+    #endif
+
+    return coordinateTransform.toLocal(point: point)
   }
 
   /// Map Rect to Canvas space.
   public func mapToCanvas(
     viewportRect rect: CGRect
   ) -> CGRect? {
-    guard let origin = mapToCanvas(viewportPoint: rect.origin) else { return nil }
-    let size = rect.size.removingZoom(zoom)
-    return CGRect(origin: origin, size: size)
+    guard dimensionsAreValid else { return nil }
+    return coordinateTransform.toLocal(rect: rect)
   }
+
+  #if DEBUG
+  public func roundTripError(viewportPoint point: CGPoint) -> CGFloat? {
+    guard dimensionsAreValid else { return nil }
+    return coordinateTransform.roundTripError(global: point)
+  }
+  #endif
 
 }
 

@@ -63,7 +63,7 @@ public struct CanvasView<Content: View>: View {
             /// the Canvas is spread out to the edges
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .allowsHitTesting(false)
-            .background(.black.opacity(0.8))
+//            .background(.black.opacity(0.8))
             .drawingGroup(opaque: true)
           //          .coordinateSpace(.canvasIdentity)
           /// Send modifiers to interacitons handler
