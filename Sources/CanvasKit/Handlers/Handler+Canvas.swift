@@ -35,10 +35,6 @@ public final class CanvasHandler {
 
   /// This was previously set to `continuous(axes: .horizontal)` for testing
   var activeDragType: DragBehavior = .none
-  //  var activeDragType: DragBehavior? = nil
-  //  var activeDragType: DragBehavior = .continuous(axes: .horizontal)
-  //  var activeDragType: DragBehavior = .marquee(drawMarquee: true)
-  //  var activeDragType: DragType = .marquee
 
   @ObservationIgnored let dragTolerance: CGFloat = 5
 
@@ -53,16 +49,17 @@ extension CanvasHandler {
     if pointerHover.isActive { return .hover }
     return nil
   }
+  
   public var isPerformingGesture: Bool {
     panGesture.isActive || zoomGesture.isActive || rotateGesture.isActive
   }
 
-  public var zoomClamped: Double {
-    guard let zoomRange else { return 1.0 }
-    return zoomGesture.zoom(clampedTo: zoomRange)
-  }
+//  public var zoomClamped: Double {
+//    guard let zoomRange else { return 1.0 }
+//    return zoomGesture.zoom(clampedTo: zoomRange)
+//  }
 
-  public var pan: CGSize { panGesture.pan }
+//  public var pan: CGSize { panGesture.pan }
 
   @MainActor
   public func dragRectBinding() -> Binding<CGRect?> {
@@ -102,23 +99,26 @@ extension CanvasHandler {
   //
   //  }
 
-  public func updateViewportRect(_ rect: CGRect) {
-    //    print("Updating Viewport size to \(size), at \(Date.debug)")
-    geometry.viewportRect = rect
-    //    print("Now that Viewport size is updated, ensuring it got a value: \(geometry)")
-  }
-  public func updateCanvasSize(_ size: CGSize) {
-    //    print("Updating canvas size to \(size), at \(Date.debug)")
-    geometry.canvasSize = size
-    //    print("Now that Canvas size is updated, ensuring it got a value: \(geometry)")
-  }
-  public var canvasAnchor: UnitPoint { resizeHandler.canvasAnchor }
+//  public func updateViewportRect(_ rect: CGRect) {
+//    //    print("Updating Viewport size to \(size), at \(Date.debug)")
+//    geometry.viewportRect = rect
+//    //    print("Now that Viewport size is updated, ensuring it got a value: \(geometry)")
+//  }
+  
+  
+//  public func updateCanvasSize(_ size: CGSize) {
+//    //    print("Updating canvas size to \(size), at \(Date.debug)")
+//    geometry.canvasSize = size
+//    //    print("Now that Canvas size is updated, ensuring it got a value: \(geometry)")
+//  }
+  
+//  public var canvasAnchor: UnitPoint { resizeHandler.canvasAnchor }
 
-  public func removeZoom(from value: CGFloat) -> CGFloat {
-    value.removingZoom(zoomClamped)
-    //      zoomGesture.
-    //      value.removingZoom()
-  }
+//  public func removeZoom(from value: CGFloat) -> CGFloat {
+//    value.removingZoom(zoomClamped)
+//    //      zoomGesture.
+//    //      value.removingZoom()
+//  }
 
   //  public var cornerRounding: CGFloat {
   //    removeZoom(from: Styles.sizeTiny)
