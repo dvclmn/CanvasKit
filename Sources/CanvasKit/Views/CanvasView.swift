@@ -140,6 +140,13 @@ public struct CanvasView<Content: View>: View {
         //      .infoBarView(isEnabled: showsInfoBar)
         //      .infoBarStyle(for: .item, .iconOnly)
 
+        .onContinuousHover(coordinateSpace: .global) { phase in
+          switch phase {
+            case .active(let location): store.pointerLocation = location
+            case .ended: store.pointerLocation = nil
+          }
+        }
+      
         .environment(\.canvasGeometry, canvasHandler.geometry)
         .environment(\.panOffset, canvasHandler.pan)
         .environment(\.zoomLevel, canvasHandler.zoomClamped)

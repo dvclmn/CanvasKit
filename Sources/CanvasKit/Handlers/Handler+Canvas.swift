@@ -15,7 +15,6 @@ public final class CanvasHandler {
   /// Canvas transform interactions
   var panGesture: PanState = .initial
   var zoomGesture: ZoomState = .initial
-  //  var zoomGesture: ZoomState = .initial
   var rotateGesture: RotateState = .initial
 
   var pointerTap: TapState = .init()
@@ -25,9 +24,9 @@ public final class CanvasHandler {
   /// Pointer-based interactions
   //  var pointerState: PointerState = .initial
 
-  public var geometry: CanvasGeometry = .init()
+  //  public var geometry: CanvasGeometry = .init()
 
-  public var resizeHandler = ResizeHandler()
+  //  public var resizeHandler = ResizeHandler()
 
   /// This is provided from outside via the environment
   var zoomRange: ClosedRange<Double>?
@@ -36,8 +35,8 @@ public final class CanvasHandler {
 
   /// This was previously set to `continuous(axes: .horizontal)` for testing
   var activeDragType: DragBehavior = .none
-//  var activeDragType: DragBehavior? = nil
-//  var activeDragType: DragBehavior = .continuous(axes: .horizontal)
+  //  var activeDragType: DragBehavior? = nil
+  //  var activeDragType: DragBehavior = .continuous(axes: .horizontal)
   //  var activeDragType: DragBehavior = .marquee(drawMarquee: true)
   //  var activeDragType: DragType = .marquee
 
@@ -85,7 +84,7 @@ extension CanvasHandler {
         } set: {
           self.panGesture.update($0?.size ?? .zero, phase: .changed)
         }
-        
+
       case .none:
         .constant(nil)
 
