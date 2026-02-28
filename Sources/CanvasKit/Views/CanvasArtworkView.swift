@@ -9,10 +9,10 @@ import SwiftUI
 
 struct CanvasArtwork<Content: View>: View {
   @Environment(CanvasHandler.self) private var store
-  @ViewBuilder var content: Content
+  @ViewBuilder var content: () -> Content
 
   var body: some View {
-    content
+    content()
       .frame(
         width: store.geometry.canvasSize.width,
         height: store.geometry.canvasSize.height

@@ -5,22 +5,25 @@
 //  Created by Dave Coleman on 6/8/2025.
 //
 
+import CoreTools
+import GestureKit
 import SwiftUI
 
 struct CanvasCoreView<Content: View>: View {
-   @Environment(CanvasHandler.self) private var store
-  // @Environment(\.viewportSize) private var viewportSize
-  
-  @ViewBuilder var content: Content
-  
+  @Environment(CanvasHandler.self) private var store
+  //   @Environment(\.canvasSize) private var canvasSize
+  @Environment(\.zoomRange) private var zoomRange
+
+  @ViewBuilder var content: () -> Content
+
   var body: some View {
-    
+
+    @Bindable var store = store
+
     Rectangle()
       .fill(.clear)
       .overlay {
-        content
-//        CanvasArtwork()
-//        canvasLayer
+        CanvasArtwork(content: content)
       }
       .panGesture(isEnabled: true) { delta, phase, _ in
         store.panGesture.updateDelta(delta, phase: phase)
@@ -42,11 +45,11 @@ struct CanvasCoreView<Content: View>: View {
             store.pointerHover.update(nil, isActive: false)
         }
       }
-      .environment(\.canvasGeometry, store.geometry)
+//      .environment(\.canvasGeometry, store.geometry)
       .environment(\.panOffset, store.pan)
       .environment(\.zoomLevel, store.zoomClamped)
-      .task(id: canvasSize) { store.updateCanvasSize(canvasSize) }
+
       .task(id: zoomRange) { store.zoomRange = zoomRange }
-    
+
   }
 }

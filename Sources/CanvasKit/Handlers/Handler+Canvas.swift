@@ -22,7 +22,7 @@ public final class CanvasHandler {
   var pointerHover: HoverState = .init()
 
   /// Pointer-based interactions
-  public var geometry: CanvasGeometry = .init()
+//  public var geometry: CanvasGeometry = .init()
 
   //  public var resizeHandler = ResizeHandler()
 

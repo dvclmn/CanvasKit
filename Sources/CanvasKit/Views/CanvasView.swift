@@ -13,10 +13,7 @@ import SwiftUI
 public struct CanvasView<Content: View>: View {
   @Environment(\.isDebugMode) private var isDebugMode
   @Environment(\.modifierKeys) private var modifierKeys
-  @Environment(\.zoomRange) private var zoomRange
   @Environment(\.viewportRect) private var viewportRect
-
-  //  @State private var hasZoomedToFit: Bool = false
 
   @State var store = CanvasHandler()
 
@@ -35,27 +32,16 @@ public struct CanvasView<Content: View>: View {
   }
 
   public var body: some View {
+    
     if let viewportRect {
-      
-      CanvasCoreView()
-//      canvasSurface
+      CanvasCoreView { content }
         .environment(store)
+        .environment(\.canvasSize, canvasSize)
         .task(id: viewportRect) { store.updateViewportRect(viewportRect) }
-      
+        .task(id: canvasSize) { store.updateCanvasSize(canvasSize) }
+
     } else {
       Text("No Viewport rect provided")
     }
   }
-}
-
-extension CanvasView {
-//
-//  private var canvasSurface: some View {
-//   
-//  }
-//
-//  private var canvasLayer: some View {
-//    content
-//
-//  }
 }
