@@ -22,9 +22,7 @@ public final class CanvasHandler {
   var pointerHover: HoverState = .init()
 
   /// Pointer-based interactions
-  //  var pointerState: PointerState = .initial
-
-  //  public var geometry: CanvasGeometry = .init()
+  public var geometry: CanvasGeometry = .init()
 
   //  public var resizeHandler = ResizeHandler()
 
@@ -54,12 +52,12 @@ extension CanvasHandler {
     panGesture.isActive || zoomGesture.isActive || rotateGesture.isActive
   }
 
-  //  public var zoomClamped: Double {
-  //    guard let zoomRange else { return 1.0 }
-  //    return zoomGesture.zoom(clampedTo: zoomRange)
-  //  }
+  public var zoomClamped: Double {
+    guard let zoomRange else { return zoomGesture.value }
+    return zoomGesture.zoom(clampedTo: zoomRange)
+  }
 
-  //  public var pan: CGSize { panGesture.pan }
+  public var pan: CGSize { panGesture.pan }
 
   @MainActor
   public func dragRectBinding() -> Binding<CGRect?> {
@@ -99,17 +97,13 @@ extension CanvasHandler {
   //
   //  }
 
-  //  public func updateViewportRect(_ rect: CGRect) {
-  //    //    print("Updating Viewport size to \(size), at \(Date.debug)")
-  //    geometry.viewportRect = rect
-  //    //    print("Now that Viewport size is updated, ensuring it got a value: \(geometry)")
-  //  }
+  public func updateViewportRect(_ rect: CGRect) {
+    geometry.viewportRect = rect
+  }
 
-  //  public func updateCanvasSize(_ size: CGSize) {
-  //    //    print("Updating canvas size to \(size), at \(Date.debug)")
-  //    geometry.canvasSize = size
-  //    //    print("Now that Canvas size is updated, ensuring it got a value: \(geometry)")
-  //  }
+  public func updateCanvasSize(_ size: CGSize) {
+    geometry.canvasSize = size
+  }
 
   //  public var canvasAnchor: UnitPoint { resizeHandler.canvasAnchor }
 
