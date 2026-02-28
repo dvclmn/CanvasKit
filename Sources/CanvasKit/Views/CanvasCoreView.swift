@@ -11,7 +11,6 @@ import SwiftUI
 
 struct CanvasCoreView<Content: View>: View {
   @Environment(CanvasHandler.self) private var store
-  //   @Environment(\.canvasSize) private var canvasSize
 
   @ViewBuilder var content: () -> Content
 
@@ -43,7 +42,7 @@ struct CanvasCoreView<Content: View>: View {
       .environment(\.zoomLevel, store.zoomClamped)
       .environment(
         \.hoverLocation,
-        isPreview
+         (isPreview && store.pointerHoverCanvas == nil)
           ? CGPoint(x: 10, y: 10)
           : store.pointerHoverCanvas
       )
