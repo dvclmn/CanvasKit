@@ -1,34 +1,36 @@
 # ``CanvasKit``
 
-<!--@START_MENU_TOKEN@-->Summary<!--@END_MENU_TOKEN@-->
+## Data flow
 
-## Overview
+### External State
 
-Thinking through interactions 
+Comes from *outside* CanvasHandler, e.g. the Environment.
+Uses the below example to sync the handler with the Env.
 
-Input source
-  └─ Pointer
-  └─ Trackpad gesture
-  └─ Keyboard
+```swift
+.task(id: externalData) { 
+  store.updateExternalData(externalData) 
+}
+```
 
-↓ maps to
-
-Intent
-  └─ Pan
-  └─ Select
-  └─ Draw
-  └─ Zoom
-
-↓ applies to
-
-State domain
-  └─ Viewport
-  └─ Document
-  └─ Selection
+| State              | Source                         |
+|--------------------|--------------------------------|
+| `viewportRect`     | Environment. Usually comes from as high up the View hierarchy as possible, e.g. App `@main` or `ContentView` |
+| `canvasSize`       | `CanvasView` initialiser       |
+| `modifierKeys`     | Environment.                   | 
 
 
-## Topics
+### Internal State
+Is owned by the Handler (or a Canvas View), and added to the Environment for other domains to consume.
+Uses the below example, to sync the Handler with the Environment.
+```swift
+.environment(\.panOffset, store.pan)
+```
 
-### <!--@START_MENU_TOKEN@-->Group<!--@END_MENU_TOKEN@-->
 
-- <!--@START_MENU_TOKEN@-->``Symbol``<!--@END_MENU_TOKEN@-->
+
+| State              | Flow                           |
+|--------------------|--------------------------------|
+| Pan                | Two-finger/drag Gesture → CanvasHandler → Environment   |
+| Zoom       | `CanvasView` initialiser       |
+| `modifierKeys`     | Environment.                   | 

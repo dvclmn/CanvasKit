@@ -12,7 +12,6 @@ import SwiftUI
 struct CanvasCoreView<Content: View>: View {
   @Environment(CanvasHandler.self) private var store
   //   @Environment(\.canvasSize) private var canvasSize
-  @Environment(\.zoomRange) private var zoomRange
 
   @ViewBuilder var content: () -> Content
 
@@ -40,11 +39,8 @@ struct CanvasCoreView<Content: View>: View {
       .onContinuousHover(coordinateSpace: .global) { phase in
         store.updateHover(phase)
       }
-//      .environment(\.canvasGeometry, store.geometry)
       .environment(\.panOffset, store.pan)
       .environment(\.zoomLevel, store.zoomClamped)
-
-      .task(id: zoomRange) { store.zoomRange = zoomRange }
 
   }
 }

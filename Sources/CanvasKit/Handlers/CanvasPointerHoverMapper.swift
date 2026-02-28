@@ -6,6 +6,7 @@
 //
 
 import CoreTools
+import Foundation
 
 public struct CanvasPointerHoverMapping: Equatable {
   public let screen: CGPoint
