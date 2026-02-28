@@ -38,12 +38,7 @@ struct CanvasCoreView<Content: View>: View {
         }
       )
       .onContinuousHover(coordinateSpace: .global) { phase in
-        switch phase {
-          case .active(let location):
-            store.pointerHover.update(location)
-          case .ended:
-            store.pointerHover.update(nil)
-        }
+        store.updateHover(phase)
       }
 //      .environment(\.canvasGeometry, store.geometry)
       .environment(\.panOffset, store.pan)
