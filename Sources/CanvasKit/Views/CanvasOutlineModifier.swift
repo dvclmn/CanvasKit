@@ -21,7 +21,6 @@ public struct CanvasOutlineModifier: ViewModifier {
           .stroke(.white.opacity(0.07), lineWidth: outlineThickness)
           .allowsHitTesting(false)
       }
-    //      .environment(\.canvasRounding, cornerRounding)
   }
 }
 

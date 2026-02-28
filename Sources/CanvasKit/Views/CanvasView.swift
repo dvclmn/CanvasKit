@@ -20,7 +20,7 @@ public struct CanvasView<Content: View>: View {
 
   let canvasSize: CGSize
   let showsInfoBar: Bool
-  let content: Content
+  let content: () -> Content
 
   public init(
     canvasSize: CGSize,
@@ -29,15 +29,14 @@ public struct CanvasView<Content: View>: View {
   ) {
     self.canvasSize = canvasSize
     self.showsInfoBar = showsInfoBar
-    self.content = content()
+    self.content = content
   }
 
   public var body: some View {
 
     if let viewportRect {
-      CanvasCoreView { content }
+      CanvasCoreView(content: content)
         .environment(store)
-
         .environment(\.canvasGeometry, store.geometry)
 
         /// `canvasSize` added to the environment and the ``CanvasHandler``
