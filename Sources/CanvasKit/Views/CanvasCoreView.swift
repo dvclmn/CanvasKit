@@ -40,9 +40,9 @@ struct CanvasCoreView<Content: View>: View {
       .onContinuousHover(coordinateSpace: .global) { phase in
         switch phase {
           case .active(let location):
-            store.pointerHover.update(location, isActive: true)
+            store.pointerHover.update(location)
           case .ended:
-            store.pointerHover.update(nil, isActive: false)
+            store.pointerHover.update(nil)
         }
       }
 //      .environment(\.canvasGeometry, store.geometry)

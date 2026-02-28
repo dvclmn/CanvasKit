@@ -21,12 +21,11 @@ public final class CanvasHandler {
   var pointerDrag: DragState = .init()
   var pointerHover: HoverState = .init()
 
-  /// Pointer-based interactions
-//  public var geometry: CanvasGeometry = .init()
+  public var geometry: CanvasGeometry = .init()
 
   //  public var resizeHandler = ResizeHandler()
 
-  /// This is provided from outside via the environment
+  /// This is provided via the environment, from in the View
   var zoomRange: ClosedRange<Double>?
 
   //  let zoomRange: ClosedRange<Double> = 0.2...20
@@ -41,12 +40,12 @@ public final class CanvasHandler {
 
 extension CanvasHandler {
 
-  public var currentPointerInteraction: PointerInteraction.Meta? {
-    if pointerTap.isActive { return .tap }
-    if pointerDrag.isActive { return .drag }
-    if pointerHover.isActive { return .hover }
-    return nil
-  }
+//  public var currentPointerInteraction: PointerInteraction.Meta? {
+//    if pointerTap.isActive { return .tap }
+//    if pointerDrag.isActive { return .drag }
+//    if pointerHover.isActive { return .hover }
+//    return nil
+//  }
 
   public var isPerformingGesture: Bool {
     panGesture.isActive || zoomGesture.isActive || rotateGesture.isActive

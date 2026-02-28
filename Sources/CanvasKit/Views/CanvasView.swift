@@ -32,13 +32,16 @@ public struct CanvasView<Content: View>: View {
   }
 
   public var body: some View {
-    
+
     if let viewportRect {
       CanvasCoreView { content }
         .environment(store)
+
+        /// `canvasSize` added to the environment and the ``CanvasHandler``
         .environment(\.canvasSize, canvasSize)
-        .task(id: viewportRect) { store.updateViewportRect(viewportRect) }
         .task(id: canvasSize) { store.updateCanvasSize(canvasSize) }
+
+        .task(id: viewportRect) { store.updateViewportRect(viewportRect) }
 
     } else {
       Text("No Viewport rect provided")
