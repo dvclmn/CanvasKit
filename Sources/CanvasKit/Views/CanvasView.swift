@@ -63,7 +63,7 @@ public struct CanvasView<Content: View>: View {
             /// the Canvas is spread out to the edges
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .allowsHitTesting(false)
-//            .background(.black.opacity(0.8))
+            //            .background(.black.opacity(0.8))
             .drawingGroup(opaque: true)
           //          .coordinateSpace(.canvasIdentity)
           /// Send modifiers to interacitons handler
@@ -141,12 +141,14 @@ public struct CanvasView<Content: View>: View {
         //      .infoBarStyle(for: .item, .iconOnly)
 
         .onContinuousHover(coordinateSpace: .global) { phase in
+
           switch phase {
-            case .active(let location): store.pointerLocation = location
-            case .ended: store.pointerLocation = nil
+            case .active(let location): canvasHandler.pointerHover.update(location, isActive: true)
+            //            case .active(let location): store.pointerLocation = location
+            case .ended: canvasHandler.pointerHover.update(nil, isActive: false)
           }
         }
-      
+
         .environment(\.canvasGeometry, canvasHandler.geometry)
         .environment(\.panOffset, canvasHandler.pan)
         .environment(\.zoomLevel, canvasHandler.zoomClamped)
