@@ -18,7 +18,7 @@ public struct CanvasView<Content: View>: View {
 
   //  @State private var hasZoomedToFit: Bool = false
 
-  @State var canvasHandler = CanvasHandler()
+  @State var store = CanvasHandler()
 
   let canvasSize: CGSize
   let showsInfoBar: Bool
@@ -36,8 +36,12 @@ public struct CanvasView<Content: View>: View {
 
   public var body: some View {
     if let viewportRect {
-      canvasSurface
-        .task(id: viewportRect) { canvasHandler.updateViewportRect(viewportRect) }
+      
+      CanvasCoreView()
+//      canvasSurface
+        .environment(store)
+        .task(id: viewportRect) { store.updateViewportRect(viewportRect) }
+      
     } else {
       Text("No Viewport rect provided")
     }
@@ -45,50 +49,13 @@ public struct CanvasView<Content: View>: View {
 }
 
 extension CanvasView {
-
-  private var canvasSurface: some View {
-    Rectangle()
-      .fill(.clear)
-      .overlay { canvasLayer }
-      .panGesture(isEnabled: true) { delta, phase, _ in
-        canvasHandler.panGesture.updateDelta(delta, phase: phase)
-      }
-      .zoomGesture(zoom: $canvasHandler.zoomGesture.value.toBindingDouble, isEnabled: true)
-      .tapDragGesture(
-        rect: canvasHandler.dragRectBinding(),
-        behavior: canvasHandler.activeDragType,
-        minimumDistance: canvasHandler.pointerDrag.dragThreshold,
-        didUpdateTap: { location in
-          canvasHandler.pointerTap.value = location
-        }
-      )
-      .onContinuousHover(coordinateSpace: .global) { phase in
-        switch phase {
-          case .active(let location):
-            canvasHandler.pointerHover.update(location, isActive: true)
-          case .ended:
-            canvasHandler.pointerHover.update(nil, isActive: false)
-        }
-      }
-      .environment(\.canvasGeometry, canvasHandler.geometry)
-      .environment(\.panOffset, canvasHandler.pan)
-      .environment(\.zoomLevel, canvasHandler.zoomClamped)
-      .task(id: canvasSize) { canvasHandler.updateCanvasSize(canvasSize) }
-      .task(id: zoomRange) { canvasHandler.zoomRange = zoomRange }
-  }
-
-  private var canvasLayer: some View {
-    content
-      .frame(
-        width: canvasHandler.geometry.canvasSize.width,
-        height: canvasHandler.geometry.canvasSize.height
-      )
-      .coordinateSpace(.canvasIdentity)
-      .modifier(CanvasOutlineModifier())
-      .scaleEffect(canvasHandler.zoomClamped)
-      .offset(canvasHandler.pan)
-      .frame(maxWidth: .infinity, maxHeight: .infinity)
-      .allowsHitTesting(false)
-      .drawingGroup(opaque: true)
-  }
+//
+//  private var canvasSurface: some View {
+//   
+//  }
+//
+//  private var canvasLayer: some View {
+//    content
+//
+//  }
 }
