@@ -17,16 +17,16 @@ extension CanvasHandler {
     )
   }
 
-  public var pointerHoverMapper: CanvasPointerHoverMapper? {
+  public var pointerHoverMapper: PointerHoverHandler? {
     guard let viewportContext else { return nil }
-    return CanvasPointerHoverMapper(context: viewportContext)
+    return PointerHoverHandler(context: viewportContext)
   }
 
   public var pointerHoverGlobal: CGPoint? {
     pointerHover.value
   }
 
-  public var pointerHoverMapped: CanvasPointerHoverMapping? {
+  public var pointerHoverMapped: HoverMapping? {
     guard let pointerHoverGlobal, let mapper = pointerHoverMapper else { return nil }
     return mapper.map(screenPoint: pointerHoverGlobal)
   }

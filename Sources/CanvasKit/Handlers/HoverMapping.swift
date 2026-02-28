@@ -8,7 +8,7 @@
 import CoreTools
 import Foundation
 
-public struct CanvasPointerHoverMapping: Equatable {
+public struct HoverMapping: Equatable {
   public let screen: CGPoint
   public let canvas: CGPoint
   public let isInsideCanvas: Bool
@@ -24,7 +24,7 @@ public struct CanvasPointerHoverMapping: Equatable {
   }
 }
 
-public struct CanvasPointerHoverMapper {
+public struct PointerHoverHandler {
   public var context: ViewportContext
 
   public init(context: ViewportContext) {
@@ -32,7 +32,7 @@ public struct CanvasPointerHoverMapper {
   }
 }
 
-extension CanvasPointerHoverMapper {
+extension PointerHoverHandler {
   public var canvasRect: CGRect {
     CGRect(origin: .zero, size: context.canvasSize.cgSize)
   }
@@ -44,14 +44,14 @@ extension CanvasPointerHoverMapper {
       && canvasPoint.y < context.canvasSize.height
   }
 
-  public func map(screenPoint: CGPoint) -> CanvasPointerHoverMapping {
+  public func map(screenPoint: CGPoint) -> HoverMapping {
     let canvas = context.toCanvas(
       screenPoint: Point<ScreenSpace>(fromPoint: screenPoint)
     )
     let canvasPoint = CGPoint(x: canvas.x, y: canvas.y)
     let isInside = isInsideCanvas(canvasPoint)
 
-    return CanvasPointerHoverMapping(
+    return HoverMapping(
       screen: screenPoint,
       canvas: canvasPoint,
       isInsideCanvas: isInside
@@ -60,7 +60,7 @@ extension CanvasPointerHoverMapper {
 
   public func mapIfInside(
     screenPoint: CGPoint
-  ) -> CanvasPointerHoverMapping? {
+  ) -> HoverMapping? {
     let mapped = map(screenPoint: screenPoint)
     return mapped.isInsideCanvas ? mapped : nil
   }
