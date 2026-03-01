@@ -45,6 +45,7 @@ public struct CanvasView<Content: View>: View {
         .task(id: viewportRect) { store.updateViewportRect(viewportRect) }
         .task(id: zoomRange) { store.zoomRange = zoomRange }
 
+
     } else {
       Text("No Viewport rect provided")
     }
