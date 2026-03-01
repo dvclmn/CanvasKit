@@ -27,8 +27,6 @@ public final class CanvasHandler {
   var zoomRange: ClosedRange<Double>?
   var zoomFocusResolver: ZoomFocusResolver = .latchedPointerOrViewportCentre
 
-  //  let zoomRange: ClosedRange<Double> = 0.2...20
-
   /// This was previously set to `continuous(axes: .horizontal)` for testing
   var activeDragType: DragBehavior = .none
 

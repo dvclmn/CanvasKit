@@ -34,7 +34,7 @@ public struct CanvasView<Content: View>: View {
 
   public var body: some View {
 
-    if let viewportRect {
+    if let viewportRect, let zoomRange {
       CanvasCoreView(content: content)
         .environment(store)
         .environment(\.canvasGeometry, store.geometry)
@@ -44,10 +44,19 @@ public struct CanvasView<Content: View>: View {
         .task(id: canvasSize) { store.updateCanvasSize(canvasSize) }
         .task(id: viewportRect) { store.updateViewportRect(viewportRect) }
         .task(id: zoomRange) { store.zoomRange = zoomRange }
-
+      
+        .addInfoBarItems {
+          Labeled(
+            "Zoom",
+            value: store.transform.zoom.value.toPercentString(
+              within: zoomRange,
+              decimalPlaces: 2
+            )
+          )
+        }
 
     } else {
-      Text("No Viewport rect provided")
+      Text("Viewport Rect or Zoom Range missing from environment. \(viewportRect.debugDescription), \(zoomRange.debugDescription)")
     }
   }
 }
