@@ -53,6 +53,8 @@ public struct CanvasView<Content: View>: View {
               decimalPlaces: 2
             )
           )
+          
+          Labeled("Zoom Range", value: "\(zoomRange.lowerBound)...\(zoomRange.upperBound)")
         }
 
     } else {
