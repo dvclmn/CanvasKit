@@ -13,9 +13,7 @@ import SwiftUI
 public final class CanvasHandler {
 
   /// Canvas transform interactions
-  var panGesture: PanState = .initial
-  var zoomGesture: ZoomState = .initial
-  var rotateGesture: RotateState = .initial
+  var transform: CanvasTransformState = .initial
 
   var pointerTap: TapState = .init()
   var pointerDrag: DragState = .init()
@@ -27,6 +25,7 @@ public final class CanvasHandler {
 
   /// This is provided via the environment, from in the View
   var zoomRange: ClosedRange<Double>?
+  var zoomFocusResolver: ZoomFocusResolver = .latchedPointerOrViewportCentre
 
   //  let zoomRange: ClosedRange<Double> = 0.2...20
 
@@ -39,6 +38,20 @@ public final class CanvasHandler {
 }
 
 extension CanvasHandler {
+  var panGesture: PanState {
+    get { transform.pan }
+    set { transform.pan = newValue }
+  }
+
+  var zoomGesture: ZoomState {
+    get { transform.zoom }
+    set { transform.zoom = newValue }
+  }
+
+  var rotateGesture: RotateState {
+    get { transform.rotation }
+    set { transform.rotation = newValue }
+  }
 
 //  public var currentPointerInteraction: PointerInteraction.Meta? {
 //    if pointerTap.isActive { return .tap }
@@ -48,7 +61,7 @@ extension CanvasHandler {
 //  }
 
   public var isPerformingGesture: Bool {
-    panGesture.isActive || zoomGesture.isActive || rotateGesture.isActive
+    transform.isPerformingGesture
   }
 
   public var zoomClamped: Double {

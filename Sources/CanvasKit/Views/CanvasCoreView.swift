@@ -26,10 +26,13 @@ struct CanvasCoreView<Content: View>: View {
       .panGesture(isEnabled: true) { delta, phase, _ in
         store.panGesture.updateDelta(delta, phase: phase)
       }
-      .zoomGesture(zoom: $store.zoomGesture.value.toBindingDouble, isEnabled: true) { newZoom, phase in
-        store.updateZoom(newZoom, phase: phase)
-        return store.zoomGesture.value
-      }
+      .zoomGesture(
+        zoom: $store.transform.zoom.value.toBindingDouble,
+        isEnabled: true,
+        didUpdateEvent: { event in
+          store.updateZoom(using: event)
+        }
+      )
       .tapDragGesture(
         rect: store.dragRectBinding(),
         behavior: store.activeDragType,

@@ -10,36 +10,27 @@ import GestureKit
 import SwiftUI
 
 extension CanvasHandler {
-  /// Preferred zoom focus in screen/global space.
-  /// Uses hover when available, otherwise falls back to viewport centre.
-  public var zoomFocusGlobal: CGPoint {
-    if let pointerHoverGlobal {
-      return pointerHoverGlobal
-    }
-    return CGPoint(
-      x: geometry.viewportRect.midX,
-      y: geometry.viewportRect.midY
-    )
-  }
-
   /// Updates zoom while preserving the focused screen point.
   /// This makes pinch/spread feel anchored to pointer intent instead of viewport centre.
+  @discardableResult
   public func updateZoom(
-    _ proposedZoom: Double,
-    phase: InteractionPhase,
-    focusGlobal: CGPoint? = nil
-  ) {
-    let previousZoom = zoomClamped
-    let nextZoom = clampedZoom(proposedZoom)
+    using event: ZoomGestureEvent
+  ) -> Double {
+    defer { clearLatchedZoomFocusIfNeeded(for: event.phase) }
 
-    zoomGesture.update(nextZoom, phase: phase)
+    let previousZoom = clampedZoom(event.previousZoom)
+    let nextZoom = clampedZoom(event.proposedZoom)
 
-    guard geometry.isValidForCoordinateMapping else { return }
-    guard previousZoom.isFinite, nextZoom.isFinite else { return }
-    guard previousZoom > 0, nextZoom > 0 else { return }
-    guard abs(nextZoom - previousZoom) > .ulpOfOne else { return }
+    zoomGesture.update(nextZoom, phase: event.phase)
 
-    let focus = sanitisedFocusPoint(focusGlobal ?? zoomFocusGlobal)
+    guard geometry.isValidForCoordinateMapping else { return zoomGesture.value }
+    guard previousZoom.isFinite, nextZoom.isFinite else { return zoomGesture.value }
+    guard previousZoom > 0, nextZoom > 0 else { return zoomGesture.value }
+    guard abs(nextZoom - previousZoom) > .ulpOfOne else { return zoomGesture.value }
+
+    let focus = sanitisedFocusPoint(
+      resolvedZoomFocus(for: event.phase)
+    )
 
     let previousContext = geometry.viewportContext(
       zoom: CGFloat(previousZoom),
@@ -63,6 +54,7 @@ extension CanvasHandler {
     )
 
     panGesture.value = clampedPan(proposedPan, at: nextZoom)
+    return zoomGesture.value
   }
 }
 
