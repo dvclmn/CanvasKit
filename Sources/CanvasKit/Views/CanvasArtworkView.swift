@@ -12,6 +12,8 @@ struct CanvasArtwork<Content: View>: View {
   @Environment(CanvasHandler.self) private var store
   @Environment(\.zoomLevel) private var zoomLevel
   @Environment(\.zoomRange) private var zoomRange
+  @Environment(\.canvasBackground) private var canvasBackground
+  
   let content: Content
 
   init(
@@ -26,11 +28,12 @@ struct CanvasArtwork<Content: View>: View {
         width: store.geometry.canvasSize.width,
         height: store.geometry.canvasSize.height
       )
-      .coordinateSpace(.canvasIdentity)
+      //      .coordinateSpace(.canvasIdentity)
       .scaleEffect(store.zoomClamped)
       .offset(store.pan)
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       .allowsHitTesting(false)
+      .background(canvasBackground)
       .drawingGroup(opaque: true)
 
   }

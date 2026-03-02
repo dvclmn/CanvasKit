@@ -12,26 +12,24 @@ import SwiftUI
 public struct CanvasView<Content: View>: View {
   @Environment(\.viewportRect) private var viewportRect
   @Environment(\.zoomRange) private var zoomRange
+  @Environment(\.shouldShowInfoBarItems) private var shouldShowInfoBarItems
 
   @State var store = CanvasHandler()
 
   let canvasSize: CGSize
-//  let showsInfoBar: Bool
   let content: () -> Content
 
   public init(
     canvasSize: CGSize,
-//    showsInfoBar: Bool = true,
     @ViewBuilder content: @escaping () -> Content,
   ) {
     self.canvasSize = canvasSize
-//    self.showsInfoBar = showsInfoBar
     self.content = content
   }
 
   public var body: some View {
     if let viewportRect, let zoomRange {
-      
+
       CanvasCoreView(content: content)
         .environment(store)
         .environment(\.canvasGeometry, store.geometry)
@@ -46,8 +44,10 @@ public struct CanvasView<Content: View>: View {
 
     } else {
       Text(
-        "Viewport Rect or Zoom Range missing from environment. \(viewportRect.debugDescription), \(zoomRange.debugDescription)"
-      )
+        """
+        Viewport Rect or Zoom Range missing from environment.
+        \(viewportRect.debugDescription), \(zoomRange.debugDescription)
+        """)
     }
   }
 }
@@ -55,7 +55,7 @@ public struct CanvasView<Content: View>: View {
 extension CanvasView {
   @DisplayStringBuilder
   private func InfoItems(_ zoomRange: ClosedRange<Double>) -> [DisplayBlock] {
-    if showsInfoBar {
+    if shouldShowInfoBarItems {
       Labeled(
         "Zoom",
         value: store.transform.zoom.value.toPercentString(
@@ -65,6 +65,8 @@ extension CanvasView {
       )
       Labeled(
         "Zoom Range",
+        // TODO: This was determined to add "Optional(...)", find way to
+        // improve rendering of ClosedRange types
         value: "\(zoomRange.lowerBound)...\(zoomRange.upperBound)"
       )
     }
