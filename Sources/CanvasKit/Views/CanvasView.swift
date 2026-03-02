@@ -16,21 +16,22 @@ public struct CanvasView<Content: View>: View {
   @State var store = CanvasHandler()
 
   let canvasSize: CGSize
-  let showsInfoBar: Bool
+//  let showsInfoBar: Bool
   let content: () -> Content
 
   public init(
     canvasSize: CGSize,
-    showsInfoBar: Bool = true,
+//    showsInfoBar: Bool = true,
     @ViewBuilder content: @escaping () -> Content,
   ) {
     self.canvasSize = canvasSize
-    self.showsInfoBar = showsInfoBar
+//    self.showsInfoBar = showsInfoBar
     self.content = content
   }
 
   public var body: some View {
     if let viewportRect, let zoomRange {
+      
       CanvasCoreView(content: content)
         .environment(store)
         .environment(\.canvasGeometry, store.geometry)
@@ -38,25 +39,11 @@ public struct CanvasView<Content: View>: View {
         .task(id: canvasSize) { store.updateCanvasSize(canvasSize) }
         .task(id: viewportRect) { store.updateViewportRect(viewportRect) }
         .task(id: zoomRange) { store.zoomRange = zoomRange }
+
         .addInfoBarItems {
-          if showsInfoBar {
-            Labeled(
-              "Zoom",
-              value: store.transform.zoom.value.toPercentString(
-                within: zoomRange,
-                decimalPlaces: 2
-              )
-            )
-            Labeled(
-              "Zoom Range",
-              value: "\(zoomRange.lowerBound)...\(zoomRange.upperBound)"
-            )
-          }
+          InfoItems(zoomRange)
         }
-//      configuredCanvas(
-//        viewportRect: viewportRect,
-//        zoomRange: zoomRange
-//      )
+
     } else {
       Text(
         "Viewport Rect or Zoom Range missing from environment. \(viewportRect.debugDescription), \(zoomRange.debugDescription)"
@@ -65,17 +52,21 @@ public struct CanvasView<Content: View>: View {
   }
 }
 
-//extension CanvasView {
-//  @ViewBuilder
-//  private func configuredCanvas(
-//    viewportRect: CGRect,
-//    zoomRange: ClosedRange<Double>
-//  ) -> some View {
-//    let canvas =
-////    if showsInfoBar {
-////      canvas
-////    } else {
-////      canvas
-////    }
-//  }
-//}
+extension CanvasView {
+  @DisplayStringBuilder
+  private func InfoItems(_ zoomRange: ClosedRange<Double>) -> [DisplayBlock] {
+    if showsInfoBar {
+      Labeled(
+        "Zoom",
+        value: store.transform.zoom.value.toPercentString(
+          within: zoomRange,
+          decimalPlaces: 2
+        )
+      )
+      Labeled(
+        "Zoom Range",
+        value: "\(zoomRange.lowerBound)...\(zoomRange.upperBound)"
+      )
+    }
+  }
+}
