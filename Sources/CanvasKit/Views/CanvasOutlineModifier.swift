@@ -32,6 +32,6 @@ extension CanvasOutlineModifier {
 
   var outlineThickness: CGFloat {
     let base = 1.0
-    return base.removingZoom(zoomLevel, clampedTo: zoomRange)
+    return base.removingZoom(zoomLevel, across: zoomRange)
   }
 }
