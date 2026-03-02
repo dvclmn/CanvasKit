@@ -46,7 +46,7 @@ struct CanvasCoreView<Content: View>: View {
       }
       .environment(\.panOffset, store.pan)
       .environment(\.zoomLevel, store.zoomClamped)
-      .environment(\.hoverLocation, store.pointerHoverCanvas)
+      .environment(\.pointerLocation, store.pointerHoverCanvas)
 
   }
 }
