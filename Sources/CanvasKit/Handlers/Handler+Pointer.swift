@@ -62,7 +62,7 @@ extension PointerHoverHandler {
   #endif
 }
 
-/// These are not neccesarily defined by the number of fingers
+/// These are not necessarily defined by the number of fingers.
 ///
 /// PointerInteraction
 /// - operates in content space
@@ -73,23 +73,3 @@ extension PointerHoverHandler {
 /// - operates in view / world / mode space
 /// - often multi-pointer
 /// - relative motion matters
-///
-
-//struct PointerHandler {
-//  let phase: PointerPhase? = nil
-//}
-//
-//extension PointerHandler {
-//  mutating func update(
-//    for kind: PointerInteractionKind,
-//    phase: PointerPhase?
-//  ) {
-//
-//  }
-//}
-//
-//public enum PointerInteractionKind {
-//  case tap
-//  case drag
-//  case hover
-//}

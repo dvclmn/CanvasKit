@@ -47,7 +47,6 @@ public struct HitAreaRectModifier: ViewModifier {
           .offset(layout.rectOffset)
           .overlay(alignment: controlPoint.toAlignment) {
             ControlPointView(
-              //              store: $store,
               point: resizePoint.toUnitPoint,
               length: store.controlLength,
               strokeWidth: store.controlStrokeWeight,
@@ -82,25 +81,3 @@ extension HitAreaRectModifier {
     )
   }
 }
-
-//extension View {
-//  public func hitAreaRect(
-//    size: Binding<CGSize>,
-//    unitPoint: UnitPoint,
-//    thickness: CGFloat,
-//    colour: Color = .blue,
-//    offset: RectBoundaryPlacement,
-//    didUpdateSize: @escaping ResizeUpdate
-//  ) -> some View {
-//    self.modifier(
-//      HitAreaRectModifier(
-//        size: size,
-//        unitPoint: unitPoint,
-//        thickness: thickness,
-//        colour: colour,
-//        offset: offset,
-//        didUpdateSize: didUpdateSize
-//      )
-//    )
-//  }
-//}
