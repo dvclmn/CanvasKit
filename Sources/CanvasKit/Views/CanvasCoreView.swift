@@ -44,7 +44,7 @@ struct CanvasCoreView<Content: View>: View {
       .onContinuousHover(coordinateSpace: .global) { phase in
         store.updateHover(phase)
       }
-      .environment(\.panOffset, store.pan)
+      .environment(\.panOffset, store.panGesture.pan)
       .environment(\.zoomLevel, store.zoomClamped)
       .environment(\.pointerLocation, store.pointerHoverCanvas)
 

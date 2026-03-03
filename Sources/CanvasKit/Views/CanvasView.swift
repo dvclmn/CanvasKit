@@ -12,6 +12,7 @@ import SwiftUI
 public struct CanvasView<Content: View>: View {
   @Environment(\.viewportRect) private var viewportRect
   @Environment(\.zoomRange) private var zoomRange
+  @Environment(\.canvasGeometry) private var canvasGeometry
   @Environment(\.shouldShowInfoBarItems) private var shouldShowInfoBarItems
 
   @State var store = CanvasHandler()
@@ -28,16 +29,22 @@ public struct CanvasView<Content: View>: View {
   }
 
   public var body: some View {
-    if let viewportRect, let zoomRange {
+    CanvasMain()
+      .environment(\.canvasSize, Size<CanvasSpace>(fromCGSize: canvasSize))
+  }
+}
+
+extension CanvasView {
+
+  @ViewBuilder
+  private func CanvasMain() -> some View {
+    
+    if let canvasGeometry, let zoomRange {
 
       CanvasCoreView(content: content)
         .environment(store)
-        //        .environment(\.canvasGeometry, store.geometry)
-        .environment(\.canvasSize, Size<CanvasSpace>(fromCGSize: canvasSize))
-      
-      
-//        .task(id: canvasSize) { store.updateCanvasSize(canvasSize) }
-//        .task(id: viewportRect) { store.updateViewportRect(viewportRect) }
+
+        .task(id: canvasGeometry) { store.geometry = canvasGeometry }
         .task(id: zoomRange) { store.zoomRange = zoomRange }
 
         .addInfoBarItems {
@@ -47,15 +54,13 @@ public struct CanvasView<Content: View>: View {
     } else {
       Text(
         """
-        Viewport Rect or Zoom Range missing from environment.
+        Canvas Geometry or Zoom Range missing from environment.
         \(viewportRect.debugDescription), \(zoomRange.debugDescription)
         """
       )
     }
   }
-}
 
-extension CanvasView {
   @DisplayStringBuilder
   private func InfoItems(_ zoomRange: ClosedRange<Double>) -> [DisplayBlock] {
     if shouldShowInfoBarItems {
@@ -68,8 +73,6 @@ extension CanvasView {
       )
       Labeled(
         "Zoom Range",
-        // TODO: This was determined to add "Optional(...)", find way to
-        // improve rendering of ClosedRange types
         value: "\(zoomRange.lowerBound)...\(zoomRange.upperBound)"
       )
     }
