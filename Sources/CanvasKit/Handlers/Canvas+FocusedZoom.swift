@@ -20,32 +20,36 @@ extension CanvasHandler {
 
     let previousZoom = clampedZoom(event.previousZoom)
     let nextZoom = clampedZoom(event.proposedZoom)
+    
+    
 
     zoomGesture.update(nextZoom, phase: event.phase)
 
-    guard geometry.isValidForCoordinateMapping else { return zoomGesture.value }
-    guard previousZoom.isFinite, nextZoom.isFinite else { return zoomGesture.value }
-    guard previousZoom > 0, nextZoom > 0 else { return zoomGesture.value }
-    guard abs(nextZoom - previousZoom) > .ulpOfOne else { return zoomGesture.value }
+    guard let geometry, geometry.isValidForCoordinateMapping,
+      previousZoom.isFinite, nextZoom.isFinite,
+      previousZoom > 0, nextZoom > 0,
+      abs(nextZoom - previousZoom) > .ulpOfOne
+    else { return zoomGesture.value }
 
     let focus = sanitisedFocusPoint(
       resolvedZoomFocus(for: event.phase)
     )
 
-    let previousContext = geometry.viewportContext(
+    guard let previousContext = geometry.viewportContext(
       zoom: CGFloat(previousZoom),
-      pan: pan
-    )
+      pan: panGesture.pan
+    ) else { return zoomGesture.value }
 
     let focusCanvas = previousContext.toCanvas(
       screenPoint: Point<ScreenSpace>(fromPoint: focus)
     )
+
     let focusCanvasPoint = CGPoint(x: focusCanvas.x, y: focusCanvas.y)
 
-    let newContextZeroPan = geometry.viewportContext(
+    guard let newContextZeroPan = geometry.viewportContext(
       zoom: CGFloat(nextZoom),
       pan: .zero
-    )
+    )  else { return zoomGesture.value }
     let focusGlobalAtZeroPan = newContextZeroPan.toGlobal(point: focusCanvasPoint)
 
     let proposedPan = CGSize(
@@ -60,21 +64,24 @@ extension CanvasHandler {
 
 extension CanvasHandler {
   private func clampedZoom(_ proposedZoom: Double) -> Double {
-    guard proposedZoom.isFinite else { return zoomClamped }
-    guard let zoomRange else { return proposedZoom }
-    return proposedZoom.clamped(to: zoomRange)
+    guard proposedZoom.isFinite else {
+      return zoomGesture.value.clampedIfNeeded(to: zoomRange)
+    }
+    return proposedZoom.clampedIfNeeded(to: zoomRange)
   }
 
   private func clampedPan(
     _ proposedPan: CGSize,
     at zoom: Double
   ) -> CGSize {
+    guard let geometry else { return panGesture.pan }
     var candidate = panGesture
     candidate.value = proposedPan
     return candidate.clamped(to: geometry, zoom: CGFloat(zoom))
   }
 
   private func sanitisedFocusPoint(_ point: CGPoint) -> CGPoint {
+    guard let geometry else { return point }
     guard point.x.isFinite, point.y.isFinite else {
       return CGPoint(
         x: geometry.viewportRect.midX,

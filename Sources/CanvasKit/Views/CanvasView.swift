@@ -34,8 +34,10 @@ public struct CanvasView<Content: View>: View {
         .environment(store)
         //        .environment(\.canvasGeometry, store.geometry)
         .environment(\.canvasSize, Size<CanvasSpace>(fromCGSize: canvasSize))
-        .task(id: canvasSize) { store.updateCanvasSize(canvasSize) }
-        .task(id: viewportRect) { store.updateViewportRect(viewportRect) }
+      
+      
+//        .task(id: canvasSize) { store.updateCanvasSize(canvasSize) }
+//        .task(id: viewportRect) { store.updateViewportRect(viewportRect) }
         .task(id: zoomRange) { store.zoomRange = zoomRange }
 
         .addInfoBarItems {

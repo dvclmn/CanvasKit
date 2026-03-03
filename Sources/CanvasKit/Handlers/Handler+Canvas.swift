@@ -1,6 +1,6 @@
 //
 //  Handler+CanvasGesture.swift
-//  LilyPad
+//  CanvasKit
 //
 //  Created by Dave Coleman on 24/6/2025.
 //
@@ -17,6 +17,9 @@ public final class CanvasHandler {
   var pointerDrag: DragState = .init()
   var pointerHover: HoverState = .init()
 
+  /// Note: this `CanvasGeometry` value is computed in the Environment.
+  /// This property can be mutated/updated from `CanvasView` to reflect
+  /// the latest from the env, but cannot be mutated in the Env itself
   public var geometry: CanvasGeometry?
 
   var zoomRange: ClosedRange<Double>?
@@ -27,7 +30,9 @@ public final class CanvasHandler {
   public init() {}
 }
 
+/// Basic convenience for `CanvasTransformState` access
 extension CanvasHandler {
+
   var panGesture: PanState {
     get { transform.pan }
     set { transform.pan = newValue }
@@ -42,17 +47,13 @@ extension CanvasHandler {
     get { transform.rotation }
     set { transform.rotation = newValue }
   }
-
+  
   public var isPerformingGesture: Bool {
     transform.isPerformingGesture
   }
+}
 
-  public var zoomClamped: Double {
-    guard let zoomRange else { return zoomGesture.value }
-    return zoomGesture.zoom(clampedTo: zoomRange)
-  }
-
-  public var pan: CGSize { panGesture.pan }
+extension CanvasHandler {
 
   @MainActor
   public func dragRectBinding() -> Binding<CGRect?> {
@@ -76,12 +77,4 @@ extension CanvasHandler {
 
     }
   }
-
-//  public func updateViewportRect(_ rect: CGRect) {
-//    geometry.viewportRect = rect
-//  }
-
-//  public func updateCanvasSize(_ size: CGSize) {
-//    geometry.canvasSize = size
-//  }
 }

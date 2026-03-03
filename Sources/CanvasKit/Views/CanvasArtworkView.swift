@@ -13,22 +13,15 @@ struct CanvasArtwork<Content: View>: View {
   @Environment(\.zoomLevel) private var zoomLevel
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.canvasBackground) private var canvasBackground
-  
-  let content: Content
 
-  init(
-    @ViewBuilder content: @escaping () -> Content
-  ) {
-    self.content = content()
-  }
+  @ViewBuilder var content: () -> Content
 
   var body: some View {
-    canvasLayers
+    canvasDecomposed
       .frame(
-        width: store.geometry.canvasSize.width,
-        height: store.geometry.canvasSize.height
+        width: store.geometry?.canvasSize.width,
+        height: store.geometry?.canvasSize.height
       )
-      //      .coordinateSpace(.canvasIdentity)
       .scaleEffect(store.zoomClamped)
       .offset(store.pan)
       .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -41,7 +34,7 @@ struct CanvasArtwork<Content: View>: View {
 
 extension CanvasArtwork {
   @ViewBuilder
-  private var canvasLayers: some View {
+  private var canvasDecomposed: some View {
     if #available(macOS 15.0, iOS 18.0, *) {
       Group(subviews: content) { subviewCollection in
         ZStack {

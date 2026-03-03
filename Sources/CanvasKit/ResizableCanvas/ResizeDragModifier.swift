@@ -5,7 +5,6 @@
 //  Created by Dave Coleman on 3/8/2025.
 //
 
-
 import BasePrimitives
 import SwiftUI
 
@@ -25,7 +24,7 @@ extension ResizeDragModifier {
     DragGesture(minimumDistance: 0)
       .onChanged { value in
         if store.startCanvasSize == nil {
-          store.startCanvasSize = canvasSize
+          store.startCanvasSize = canvasSize?.cgSize
         }
 
         if store.draggedResizePoint == nil {

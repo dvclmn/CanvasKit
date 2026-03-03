@@ -9,13 +9,13 @@ import CoreTools
 import SwiftUI
 
 extension CanvasHandler {
-  public var viewportContext: ViewportContext? {
-    guard geometry.isValidForCoordinateMapping else { return nil }
-    return geometry.viewportContext(
-      zoom: CGFloat(zoomClamped),
-      pan: pan
-    )
-  }
+//  public var viewportContext: ViewportContext? {
+//    guard geometry?.isValidForCoordinateMapping else { return nil }
+//    return geometry.viewportContext(
+//      zoom: CGFloat(zoomClamped),
+//      pan: pan
+//    )
+//  }
 
   public var pointerHoverMapper: PointerHoverHandler? {
     guard let viewportContext else { return nil }
