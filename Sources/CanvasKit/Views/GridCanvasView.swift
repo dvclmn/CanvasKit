@@ -10,7 +10,9 @@ import GestureKit
 import SwiftUI
 
 public struct GridCanvasView<Content: View>: View {
+  @Environment(\.viewportRect) private var viewportRect
   @Environment(\.gridDimensions) private var gridDimensions
+  @Environment(\.canvasAnchor) private var canvasAnchor
   @Environment(\.unitSize) private var unitSize
 
   let content: () -> Content
@@ -23,15 +25,26 @@ public struct GridCanvasView<Content: View>: View {
 
   public var body: some View {
 
-    var body: some View {
-      if let gridCanvasSize {
-        CanvasView(canvasSize: gridCanvasSize, content: content)
-      }
-    }
+    CanvasCoreView(canvasGeometry: canvasGeometry, content: content)
+      .environment(\.canvasSize, gridCanvasSize)
+    //    if let gridCanvasSize {
+    //      CanvasView(canvasSize: gridCanvasSize, content: content)
+    //    } else {
+    //      Text("No value found for `gridCanvasSize`")
+    //    }
   }
 }
 
 extension GridCanvasView {
+
+  private var canvasGeometry: CanvasGeometry? {
+    guard let viewportRect, let gridCanvasSize else { return nil }
+    return CanvasGeometry(
+      viewportRect: viewportRect,
+      canvasSize: gridCanvasSize,
+      anchor: canvasAnchor
+    )
+  }
 
   private var gridCanvasSize: Size<CanvasSpace>? {
 
@@ -45,11 +58,6 @@ extension GridCanvasView {
         `gridDimensions`: \(gridDimensions, default: "nil")
         gridDimensions -> CGSize: \( unitSize.map {gridDimensions?.toScreenSize(using: $0)}, default: "nil") 
         `unitSize`: \(unitSize, default: "nil")
-
-
-        Let's also check
-        `asciiUnitSize`: \(asciiUnitSize, default: "nil")
-        `activeUnitSize`: \(activeUnitSize, default: "nil")
 
         ---
 

@@ -13,7 +13,7 @@ struct CanvasArtwork<Content: View>: View {
   @Environment(\.zoomLevel) private var zoomLevel
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.zoomClamped) private var zoomClamped
-  @Environment(\.canvasBackground) private var canvasBackground
+//  @Environment(\.canvasBackground) private var canvasBackground
 
   @ViewBuilder var content: () -> Content
 
@@ -27,9 +27,9 @@ struct CanvasArtwork<Content: View>: View {
 //      .scaleEffect(store.zoomClamped)
       .offset(store.panGesture.pan)
       .frame(maxWidth: .infinity, maxHeight: .infinity)
-      .allowsHitTesting(false)
-      .background(canvasBackground)
-      .drawingGroup(opaque: true)
+//      .allowsHitTesting(false)
+//      .background(canvasBackground)
+//      .drawingGroup(opaque: true)
 
   }
 }

@@ -11,7 +11,13 @@ import SwiftUI
 
 struct CanvasCoreView<Content: View>: View {
   @Environment(CanvasHandler.self) private var store
+  @Environment(\.canvasBackground) private var canvasBackground
+  @Environment(\.zoomRange) private var zoomRange
 
+  /// A lot of the optionals have been moved here to `CanvasCoreView`
+  /// sepcifically so the 'flash' while dependancies load in (like viewportRect, unitSize etc)
+  /// doesn't cause such a visual disturbance, As the canvas background etc is handled here.
+  let canvasGeometry: CanvasGeometry?
   @ViewBuilder var content: () -> Content
 
   var body: some View {
@@ -21,8 +27,17 @@ struct CanvasCoreView<Content: View>: View {
     Rectangle()
       .fill(.clear)
       .overlay {
-        CanvasArtwork(content: content)
+        if let canvasGeometry, let zoomRange {
+          CanvasArtwork(content: content)
+            .task(id: zoomRange) { store.zoomRange = zoomRange }
+            .task(id: canvasGeometry) { store.geometry = canvasGeometry }
+        }
       }
+      .frame(maxWidth: .infinity, maxHeight: .infinity)
+      .allowsHitTesting(false)
+      .background(canvasBackground)
+      .drawingGroup(opaque: true)
+
       .panGesture(isEnabled: true) { delta, phase, _ in
         store.panGesture.updateDelta(delta, phase: phase)
       }
@@ -44,6 +59,7 @@ struct CanvasCoreView<Content: View>: View {
       .onContinuousHover(coordinateSpace: .global) { phase in
         store.updateHover(phase)
       }
+
       .environment(\.panOffset, store.panGesture.pan)
       .environment(\.zoomLevel, store.zoomClamped)
       .environment(\.pointerLocation, store.pointerHoverCanvas)
