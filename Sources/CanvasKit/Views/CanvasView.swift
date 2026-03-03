@@ -32,8 +32,8 @@ public struct CanvasView<Content: View>: View {
 
       CanvasCoreView(content: content)
         .environment(store)
-        .environment(\.canvasGeometry, store.geometry)
-        .environment(\.canvasSize, canvasSize)
+        //        .environment(\.canvasGeometry, store.geometry)
+        .environment(\.canvasSize, Size<CanvasSpace>(fromCGSize: canvasSize))
         .task(id: canvasSize) { store.updateCanvasSize(canvasSize) }
         .task(id: viewportRect) { store.updateViewportRect(viewportRect) }
         .task(id: zoomRange) { store.zoomRange = zoomRange }
@@ -47,7 +47,8 @@ public struct CanvasView<Content: View>: View {
         """
         Viewport Rect or Zoom Range missing from environment.
         \(viewportRect.debugDescription), \(zoomRange.debugDescription)
-        """)
+        """
+      )
     }
   }
 }

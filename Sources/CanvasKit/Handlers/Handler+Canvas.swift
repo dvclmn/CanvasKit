@@ -17,7 +17,7 @@ public final class CanvasHandler {
   var pointerDrag: DragState = .init()
   var pointerHover: HoverState = .init()
 
-  public var geometry: CanvasGeometry = .init()
+  public var geometry: CanvasGeometry?
 
   var zoomRange: ClosedRange<Double>?
   var zoomFocusResolver: ZoomFocusResolver = .latchedPointerOrViewportCentre
@@ -77,11 +77,11 @@ extension CanvasHandler {
     }
   }
 
-  public func updateViewportRect(_ rect: CGRect) {
-    geometry.viewportRect = rect
-  }
+//  public func updateViewportRect(_ rect: CGRect) {
+//    geometry.viewportRect = rect
+//  }
 
-  public func updateCanvasSize(_ size: CGSize) {
-    geometry.canvasSize = size
-  }
+//  public func updateCanvasSize(_ size: CGSize) {
+//    geometry.canvasSize = size
+//  }
 }

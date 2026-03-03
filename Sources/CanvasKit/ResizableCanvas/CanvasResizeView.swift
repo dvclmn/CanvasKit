@@ -32,7 +32,7 @@ public struct CanvasResizeView: View {
           .stroke(
             .blue, lineWidth: Double(1).removingZoom(zoomLevel, across: zoomRange)
           )
-          .frameFromSize(canvasSize?.addingZoom(zoomLevel))
+          .frameFromSize(canvasSize?.cgSize.addingZoom(zoomLevel))
 
         if let transientSize = store.transientCanvasSize {
           Rectangle()
@@ -55,7 +55,7 @@ public struct CanvasResizeView: View {
 
         /// The hit areas need a stable positioning so they don't move
         /// during a drag?
-        .frameFromSize(canvasSize?.addingZoom(zoomLevel))
+        .frameFromSize(canvasSize?.cgSize.addingZoom(zoomLevel))
 
         ControlPointView(
           Circle(),
