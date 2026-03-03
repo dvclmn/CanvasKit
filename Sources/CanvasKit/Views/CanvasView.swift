@@ -14,7 +14,7 @@ public struct CanvasView<Content: View>: View {
   @Environment(\.canvasAnchor) private var canvasAnchor
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.shouldShowInfoBarItems) private var shouldShowInfoBarItems
-  @Environment(\.unitSize) private var unitSize
+//  @Environment(\.unitSize) private var unitSize
 
   @State var store = CanvasHandler()
 
