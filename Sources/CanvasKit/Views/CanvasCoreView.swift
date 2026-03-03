@@ -29,8 +29,6 @@ struct CanvasCoreView<Content: View>: View {
       .overlay {
         if let canvasGeometry, let zoomRange {
           CanvasArtwork(content: content)
-            .task(id: zoomRange) { store.zoomRange = zoomRange }
-            .task(id: canvasGeometry) { store.geometry = canvasGeometry }
         }
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)

@@ -25,50 +25,64 @@ public struct GridCanvasView<Content: View>: View {
 
   public var body: some View {
 
-    CanvasCoreView(canvasGeometry: canvasGeometry, content: content)
-      .environment(\.canvasSize, gridCanvasSize)
-    //    if let gridCanvasSize {
-    //      CanvasView(canvasSize: gridCanvasSize, content: content)
-    //    } else {
-    //      Text("No value found for `gridCanvasSize`")
-    //    }
+    CanvasView(gridCanvasSize: gridCanvasSize, content: content)
+    //    CanvasCoreView(canvasGeometry: canvasGeometry, content: content)
+    //      .environment(\.canvasSize, gridCanvasSize)
   }
 }
 
-extension GridCanvasView {
-
-  private var canvasGeometry: CanvasGeometry? {
-    guard let viewportRect, let gridCanvasSize else { return nil }
-    return CanvasGeometry(
-      viewportRect: viewportRect,
-      canvasSize: gridCanvasSize,
-      anchor: canvasAnchor
-    )
+/// A specialised CanvasView init for Grid usage
+extension CanvasView {
+  fileprivate init(
+    gridCanvasSize: Size<CanvasSpace>?,
+    @ViewBuilder content: @escaping () -> Content,
+  ) {
+    self.canvasSize = gridCanvasSize
+    self.content = content
   }
 
-  private var gridCanvasSize: Size<CanvasSpace>? {
+}
 
+extension GridCanvasView {
+  private var gridCanvasSize: Size<CanvasSpace>? {
     guard let unitSize, let gridDimensions,
       let size = gridDimensions.toScreenSize(using: unitSize)
-    else {
-      print(
-        """
-        ---
-        Couldn't return `gridCanvasSize`, no value found in Env for:
-        `gridDimensions`: \(gridDimensions, default: "nil")
-        gridDimensions -> CGSize: \( unitSize.map {gridDimensions?.toScreenSize(using: $0)}, default: "nil") 
-        `unitSize`: \(unitSize, default: "nil")
-
-        ---
-
-        """
-      )
-
-      //      print("Unable to return `gridCanvasSize`, no `unitSize` and/or `gridDimensions` found in Env.")
-      return nil
-    }
+    else { return nil }
     return Size<CanvasSpace>(fromCGSize: size)
   }
+
+  //  private var canvasGeometry: CanvasGeometry? {
+  //    guard let viewportRect, let gridCanvasSize else { return nil }
+  //    return CanvasGeometry(
+  //      viewportRect: viewportRect,
+  //      canvasSize: gridCanvasSize,
+  //      anchor: canvasAnchor
+  //    )
+  //  }
+  //
+  //  private var gridCanvasSize: Size<CanvasSpace>? {
+  //
+  //    guard let unitSize, let gridDimensions,
+  //      let size = gridDimensions.toScreenSize(using: unitSize)
+  //    else {
+  //      print(
+  //        """
+  //        ---
+  //        Couldn't return `gridCanvasSize`, no value found in Env for:
+  //        `gridDimensions`: \(gridDimensions, default: "nil")
+  //        gridDimensions -> CGSize: \( unitSize.map {gridDimensions?.toScreenSize(using: $0)}, default: "nil")
+  //        `unitSize`: \(unitSize, default: "nil")
+  //
+  //        ---
+  //
+  //        """
+  //      )
+  //
+  //      //      print("Unable to return `gridCanvasSize`, no `unitSize` and/or `gridDimensions` found in Env.")
+  //      return nil
+  //    }
+  //    return Size<CanvasSpace>(fromCGSize: size)
+  //  }
   //  private var canvasSize: Size<CanvasSpace>? {
   //    gridDimensions?.toScreenSize(using: <#T##CGSize#>)
   //  }
