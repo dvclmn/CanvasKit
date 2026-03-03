@@ -27,7 +27,7 @@ struct CanvasCoreView<Content: View>: View {
     Rectangle()
       .fill(.clear)
       .overlay {
-        if let canvasGeometry, let zoomRange {
+        if canvasGeometry != nil, zoomRange != nil {
           CanvasArtwork(content: content)
         }
       }
