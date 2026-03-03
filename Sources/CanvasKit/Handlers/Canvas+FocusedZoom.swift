@@ -18,27 +18,26 @@ extension CanvasHandler {
   ) -> Double {
     defer { clearLatchedZoomFocusIfNeeded(for: event.phase) }
 
-    let previousZoom = clampedZoom(event.previousZoom)
-    let nextZoom = clampedZoom(event.proposedZoom)
-    
-    
+    let previousZoom = clampedProposedZoom(event.previousZoom)
+    let nextZoom = clampedProposedZoom(event.proposedZoom)
 
     zoomGesture.update(nextZoom, phase: event.phase)
 
     guard let geometry, geometry.isValidForCoordinateMapping,
       previousZoom.isFinite, nextZoom.isFinite,
       previousZoom > 0, nextZoom > 0,
-      abs(nextZoom - previousZoom) > .ulpOfOne
-    else { return zoomGesture.value }
+      abs(nextZoom - previousZoom) > .ulpOfOne,
+      let resolved = resolvedZoomFocus(for: event.phase)
+    else { return zoomGesture.zoom }
 
-    let focus = sanitisedFocusPoint(
-      resolvedZoomFocus(for: event.phase)
-    )
+    let focus = sanitisedFocusPoint(resolved)
 
-    guard let previousContext = geometry.viewportContext(
-      zoom: CGFloat(previousZoom),
-      pan: panGesture.pan
-    ) else { return zoomGesture.value }
+    guard
+      let previousContext = geometry.viewportContext(
+        zoom: CGFloat(previousZoom),
+        pan: panGesture.pan
+      )
+    else { return zoomGesture.zoom }
 
     let focusCanvas = previousContext.toCanvas(
       screenPoint: Point<ScreenSpace>(fromPoint: focus)
@@ -46,10 +45,13 @@ extension CanvasHandler {
 
     let focusCanvasPoint = CGPoint(x: focusCanvas.x, y: focusCanvas.y)
 
-    guard let newContextZeroPan = geometry.viewportContext(
-      zoom: CGFloat(nextZoom),
-      pan: .zero
-    )  else { return zoomGesture.value }
+    guard
+      let newContextZeroPan = geometry.viewportContext(
+        zoom: CGFloat(nextZoom),
+        pan: .zero
+      )
+    else { return zoomGesture.zoom }
+
     let focusGlobalAtZeroPan = newContextZeroPan.toGlobal(point: focusCanvasPoint)
 
     let proposedPan = CGSize(
@@ -58,15 +60,13 @@ extension CanvasHandler {
     )
 
     panGesture.value = clampedPan(proposedPan, at: nextZoom)
-    return zoomGesture.value
+    return zoomGesture.zoom
   }
 }
 
 extension CanvasHandler {
-  private func clampedZoom(_ proposedZoom: Double) -> Double {
-    guard proposedZoom.isFinite else {
-      return zoomGesture.value.clampedIfNeeded(to: zoomRange)
-    }
+  private func clampedProposedZoom(_ proposedZoom: Double) -> Double {
+    guard proposedZoom.isFinite else { return zoomClamped }
     return proposedZoom.clampedIfNeeded(to: zoomRange)
   }
 

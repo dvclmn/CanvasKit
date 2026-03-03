@@ -12,6 +12,7 @@ struct CanvasArtwork<Content: View>: View {
   @Environment(CanvasHandler.self) private var store
   @Environment(\.zoomLevel) private var zoomLevel
   @Environment(\.zoomRange) private var zoomRange
+  @Environment(\.zoomClamped) private var zoomClamped
   @Environment(\.canvasBackground) private var canvasBackground
 
   @ViewBuilder var content: () -> Content
@@ -22,8 +23,9 @@ struct CanvasArtwork<Content: View>: View {
         width: store.geometry?.canvasSize.width,
         height: store.geometry?.canvasSize.height
       )
-      .scaleEffect(store.zoomClamped)
-      .offset(store.pan)
+      .scaleEffect(zoomClamped)
+//      .scaleEffect(store.zoomClamped)
+      .offset(store.panGesture.pan)
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       .allowsHitTesting(false)
       .background(canvasBackground)
@@ -36,7 +38,7 @@ extension CanvasArtwork {
   @ViewBuilder
   private var canvasDecomposed: some View {
     if #available(macOS 15.0, iOS 18.0, *) {
-      Group(subviews: content) { subviewCollection in
+      Group(subviews: content()) { subviewCollection in
         ZStack {
           ForEach(subviews: subviewCollection) { subview in
             if subview.containerValues.allowsCanvasClipping {
@@ -56,7 +58,7 @@ extension CanvasArtwork {
       }
     } else {
       ZStack {
-        content
+        content()
       }
       .modifier(CanvasOutlineModifier())
     }

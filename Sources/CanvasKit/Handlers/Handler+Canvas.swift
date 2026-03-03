@@ -54,6 +54,8 @@ extension CanvasHandler {
 }
 
 extension CanvasHandler {
+  
+  var zoomClamped: CGFloat { zoomGesture.value.clampedIfNeeded(to: zoomRange) }
 
   @MainActor
   public func dragRectBinding() -> Binding<CGRect?> {

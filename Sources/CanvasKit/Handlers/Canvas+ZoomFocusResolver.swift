@@ -24,7 +24,8 @@ public enum ZoomFocusResolver: String, Sendable, Equatable, CaseIterable {
 extension CanvasHandler {
   func resolvedZoomFocus(
     for phase: InteractionPhase
-  ) -> CGPoint {
+  ) -> CGPoint? {
+    guard let geometry else { return nil  }
     let viewportCentre = CGPoint(
       x: geometry.viewportRect.midX,
       y: geometry.viewportRect.midY
