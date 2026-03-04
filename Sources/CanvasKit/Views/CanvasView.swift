@@ -48,6 +48,11 @@ public struct CanvasView<Content: View>: View {
       }
     }
 
+    .toolbar {
+      ToolbarItem {
+        
+      }
+    }
     .environment(\.canvasSize, canvasSize)
   }
 }
