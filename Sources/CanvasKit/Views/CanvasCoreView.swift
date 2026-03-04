@@ -60,7 +60,7 @@ struct CanvasCoreView<Content: View>: View {
 
       .environment(\.panOffset, store.panGesture.pan)
       .environment(\.zoomLevel, store.zoomClamped)
-      .environment(\.pointerLocation, store.pointerHoverCanvas)
+      .environment(\.pointerLocation, store.pointerHoverCanvasIfInside)
 
   }
 }
