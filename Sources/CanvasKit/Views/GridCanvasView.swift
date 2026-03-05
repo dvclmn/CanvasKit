@@ -24,10 +24,7 @@ public struct GridCanvasView<Content: View>: View {
   }
 
   public var body: some View {
-
     CanvasView(gridCanvasSize: gridCanvasSize, content: content)
-    //    CanvasCoreView(canvasGeometry: canvasGeometry, content: content)
-    //      .environment(\.canvasSize, gridCanvasSize)
   }
 }
 

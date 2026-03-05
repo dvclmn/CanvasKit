@@ -11,6 +11,8 @@ import SwiftUI
 
 @Observable
 public final class CanvasHandler {
+  
+  /// Handles pan, zoom, rotation
   var transform: CanvasTransformState = .initial
 
   var pointerTap: TapState = .init()
@@ -47,14 +49,14 @@ extension CanvasHandler {
     get { transform.rotation }
     set { transform.rotation = newValue }
   }
-  
+
   public var isPerformingGesture: Bool {
     transform.isPerformingGesture
   }
 }
 
 extension CanvasHandler {
-  
+
   var zoomClamped: CGFloat { zoomGesture.value.clampedIfNeeded(to: zoomRange) }
 
   @MainActor
