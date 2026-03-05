@@ -30,6 +30,14 @@ extension CanvasHandler {
     return mapper.map(screenPoint: pointerHoverGlobal)
   }
 
+  public var pointerHoverScreenPoint: Point<ScreenSpace>? {
+    pointerHoverMapped?.screenPoint
+  }
+
+  public var pointerHoverCanvasPoint: Point<CanvasSpace>? {
+    pointerHoverMapped?.canvasPoint
+  }
+
   /// Aka canvas local space
   public var pointerHoverCanvas: CGPoint? {
     pointerHoverMapped?.canvas

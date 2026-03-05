@@ -14,6 +14,16 @@ public struct HoverMapping: Equatable {
   public let isInsideCanvas: Bool
 
   public init(
+    screen: Point<ScreenSpace>,
+    canvas: Point<CanvasSpace>,
+    isInsideCanvas: Bool
+  ) {
+    self.screen = screen.cgPoint
+    self.canvas = canvas.cgPoint
+    self.isInsideCanvas = isInsideCanvas
+  }
+
+  public init(
     screen: CGPoint,
     canvas: CGPoint,
     isInsideCanvas: Bool
@@ -22,5 +32,12 @@ public struct HoverMapping: Equatable {
     self.canvas = canvas
     self.isInsideCanvas = isInsideCanvas
   }
-}
 
+  public var screenPoint: Point<ScreenSpace> {
+    .init(fromPoint: screen)
+  }
+
+  public var canvasPoint: Point<CanvasSpace> {
+    .init(fromPoint: canvas)
+  }
+}

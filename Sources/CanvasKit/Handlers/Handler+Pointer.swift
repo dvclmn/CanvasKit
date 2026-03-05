@@ -22,38 +22,55 @@ extension PointerHoverHandler {
     CGRect(origin: .zero, size: context.canvasSize.cgSize)
   }
 
-  public func isInsideCanvas(_ canvasPoint: CGPoint) -> Bool {
-    canvasPoint.x >= 0
-      && canvasPoint.x < context.canvasSize.width
-      && canvasPoint.y >= 0
-      && canvasPoint.y < context.canvasSize.height
+  private var canvasXRange: Range<CGFloat> {
+    0..<context.canvasSize.width
   }
 
-  public func map(screenPoint: CGPoint) -> HoverMapping {
-    let canvas = context.toCanvas(
-      screenPoint: Point<ScreenSpace>(fromPoint: screenPoint)
-    )
-    let canvasPoint = CGPoint(x: canvas.x, y: canvas.y)
-    let isInside = isInsideCanvas(canvasPoint)
+  private var canvasYRange: Range<CGFloat> {
+    0..<context.canvasSize.height
+  }
+
+  public func isInsideCanvas(_ canvasPoint: Point<CanvasSpace>) -> Bool {
+    canvasXRange.contains(canvasPoint.x)
+      && canvasYRange.contains(canvasPoint.y)
+  }
+
+  public func isInsideCanvas(_ canvasPoint: CGPoint) -> Bool {
+    isInsideCanvas(Point<CanvasSpace>(fromPoint: canvasPoint))
+  }
+
+  public func map(screenPoint: Point<ScreenSpace>) -> HoverMapping {
+    let canvas = context.toCanvas(screenPoint: screenPoint)
+    let isInside = isInsideCanvas(canvas)
 
     return HoverMapping(
       screen: screenPoint,
-      canvas: canvasPoint,
+      canvas: canvas,
       isInsideCanvas: isInside
     )
+  }
+
+  public func map(screenPoint: CGPoint) -> HoverMapping {
+    map(screenPoint: Point<ScreenSpace>(fromPoint: screenPoint))
+  }
+
+  public func mapIfInside(
+    screenPoint: Point<ScreenSpace>
+  ) -> HoverMapping? {
+    let mapped = map(screenPoint: screenPoint)
+    return mapped.isInsideCanvas ? mapped : nil
   }
 
   public func mapIfInside(
     screenPoint: CGPoint
   ) -> HoverMapping? {
-    let mapped = map(screenPoint: screenPoint)
-    return mapped.isInsideCanvas ? mapped : nil
+    mapIfInside(screenPoint: Point<ScreenSpace>(fromPoint: screenPoint))
   }
  
   #if DEBUG
   public func roundTripError(screenPoint: CGPoint) -> CGFloat {
     let mapped = map(screenPoint: screenPoint)
-    let roundTrip = context.toGlobal(point: mapped.canvas)
+    let roundTrip = context.toGlobal(point: mapped.canvasPoint.cgPoint)
     return hypot(
       roundTrip.x - screenPoint.x,
       roundTrip.y - screenPoint.y

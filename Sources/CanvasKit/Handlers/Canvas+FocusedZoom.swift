@@ -43,8 +43,6 @@ extension CanvasHandler {
       screenPoint: Point<ScreenSpace>(fromPoint: focus)
     )
 
-    let focusCanvasPoint = CGPoint(x: focusCanvas.x, y: focusCanvas.y)
-
     guard
       let newContextZeroPan = geometry.viewportContext(
         zoom: CGFloat(nextZoom),
@@ -52,7 +50,7 @@ extension CanvasHandler {
       )
     else { return zoomGesture.zoom }
 
-    let focusGlobalAtZeroPan = newContextZeroPan.toGlobal(point: focusCanvasPoint)
+    let focusGlobalAtZeroPan = newContextZeroPan.toGlobal(point: focusCanvas.cgPoint)
 
     let proposedPan = CGSize(
       width: focus.x - focusGlobalAtZeroPan.x,
