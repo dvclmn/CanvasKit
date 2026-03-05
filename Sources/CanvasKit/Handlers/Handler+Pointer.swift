@@ -49,7 +49,7 @@ extension PointerHoverHandler {
     let mapped = map(screenPoint: screenPoint)
     return mapped.isInsideCanvas ? mapped : nil
   }
-
+ 
   #if DEBUG
   public func roundTripError(screenPoint: CGPoint) -> CGFloat {
     let mapped = map(screenPoint: screenPoint)
@@ -61,15 +61,3 @@ extension PointerHoverHandler {
   }
   #endif
 }
-
-/// These are not necessarily defined by the number of fingers.
-///
-/// PointerInteraction
-/// - operates in content space
-/// - usually single primary pointer
-/// - absolute positions matter
-///
-/// GestureInteraction
-/// - operates in view / world / mode space
-/// - often multi-pointer
-/// - relative motion matters

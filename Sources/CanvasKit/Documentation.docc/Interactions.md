@@ -33,3 +33,17 @@ State domain
 | Two-finger Pan      | Pointer drag      | Nothing             |
 | Pinch Zoom          | Pointer drag, pan | Nothing             |
 | Rotate              | Pointer drag, pan | Nothing             |
+
+
+
+These are not necessarily defined by the number of fingers.
+
+PointerInteraction
+- operates in content space
+- usually single primary pointer
+- absolute positions matter
+
+GestureInteraction
+- operates in view / world / mode space
+- often multi-pointer
+- relative motion matters
