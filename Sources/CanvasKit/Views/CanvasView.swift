@@ -8,6 +8,7 @@
 import CoreTools
 import GestureKit
 import SwiftUI
+import UIPrimitives
 
 public struct CanvasView<Content: View>: View {
   @Environment(\.viewportRect) private var viewportRect
@@ -49,8 +50,15 @@ public struct CanvasView<Content: View>: View {
 
     .toolbar {
       ToolbarItem {
+        if let zoomRange {
+          //          Slider(value: $store.transform.zoom.value, in: zoomRange)
+          QuickSlider("Zoom", value: $store.transform.zoom.value, range: zoomRange)
 
+            .frame(minWidth: 200)
+
+        }
       }
+
     }
     .environment(\.canvasSize, canvasSize)
   }

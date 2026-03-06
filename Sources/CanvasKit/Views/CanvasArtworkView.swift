@@ -25,16 +25,18 @@ struct CanvasArtwork<Content: View>: View {
       )
       .scaleEffect(zoomClamped)
       .offset(store.panGesture.pan)
+      .coordinateSpace(.named(CanvasSpace.safeArea))
       .frame(maxWidth: .infinity, maxHeight: .infinity)
-      .allowsHitTesting(false)
-      .background(canvasBackground)
-      .drawingGroup(opaque: true)
+    /// Hit testing, background and drawing group are all handled in Canvas Core view
+    //      .allowsHitTesting(false)
+    //      .background(canvasBackground)
+    //      .drawingGroup(opaque: true)
 
   }
 }
 
 extension CanvasArtwork {
-  
+
   /// This allows Views to specifcy whether they should be clipped
   /// by the Canvas bounds or not
   @ViewBuilder
@@ -55,7 +57,7 @@ extension CanvasArtwork {
           RoundedRectangle(cornerRadius: cornerRounding)
             .fill(.clear)
             .stroke(.white.opacity(0.07), lineWidth: outlineThickness)
-//            .allowsHitTesting(false)
+          //            .allowsHitTesting(false)
         }
       }
     } else {

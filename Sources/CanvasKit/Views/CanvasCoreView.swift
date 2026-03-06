@@ -29,13 +29,20 @@ struct CanvasCoreView<Content: View>: View {
       .overlay {
         if canvasGeometry != nil, zoomRange != nil {
           CanvasArtwork(content: content)
+
+            /// Should probably set this up to be clearer for *non*
+            /// Grid domain contexts
+            .gridFont(for: .canvas)
         }
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       .allowsHitTesting(false)
-      .background(canvasBackground)
+    
+    /// This background is only visible if the Artwork view
+      .background(.orange, ignoresSafeAreaEdges: .top)
+//      .background(canvasBackground, ignoresSafeAreaEdges: .top)
       .drawingGroup(opaque: true)
-
+      .ignoresSafeArea(edges: .top)
       .panGesture(isEnabled: true) { delta, phase, _ in
         store.panGesture.updateDelta(delta, phase: phase)
       }
@@ -54,7 +61,7 @@ struct CanvasCoreView<Content: View>: View {
           store.pointerTap.value = location
         }
       )
-      .onContinuousHover(coordinateSpace: .global) { phase in
+      .onContinuousHover(coordinateSpace: .named(CanvasSpace.safeArea)) { phase in
         store.updateHover(phase)
       }
 

@@ -17,9 +17,7 @@ public struct GridCanvasView<Content: View>: View {
 
   let content: () -> Content
 
-  public init(
-    @ViewBuilder content: @escaping () -> Content,
-  ) {
+  public init(@ViewBuilder content: @escaping () -> Content) {
     self.content = content
   }
 
@@ -37,83 +35,46 @@ extension CanvasView {
     self.canvasSize = gridCanvasSize
     self.content = content
   }
-
 }
 
 extension GridCanvasView {
   private var gridCanvasSize: Size<CanvasSpace>? {
     guard let unitSize, let gridDimensions,
-      let size = gridDimensions.toScreenSize(using: unitSize)
+          let size = gridDimensions.toScreenSize(using: unitSize)
     else { return nil }
-
+    
     /// Verify that `toScreenSize(using:)` matches manual computation within tolerance
     let expected = CGSize(
       width: CGFloat(gridDimensions.width) * unitSize.width,
       height: CGFloat(gridDimensions.height) * unitSize.height
     )
-
+    
     /// allow minor floating point drift and rounding
     let epsilon: CGFloat = 0.5
     let widthMatches = abs(size.width - expected.width) <= epsilon
     let heightMatches = abs(size.height - expected.height) <= epsilon
-
+    
     let isMatching = widthMatches && heightMatches
     let alertMsg = isMatching ? "✔ Matching" : "⚠️ Mismatch"
-
+    
     let mismatchMessage =
       """
       GridDimensions screen size conversion 
       \(alertMsg) 
       Expected: \(expected), 
       got: \(size). 
-
+      
       gridDimensions: \(gridDimensions)
       unitSize: \(unitSize)
       epsilon: \(epsilon)
-
-
+      
+      
       """
-
+    
     print("\(mismatchMessage)")
-
+    
     assert(widthMatches && heightMatches, mismatchMessage)
-
+    
     return Size<CanvasSpace>(fromCGSize: size)
   }
-
-  //  private var canvasGeometry: CanvasGeometry? {
-  //    guard let viewportRect, let gridCanvasSize else { return nil }
-  //    return CanvasGeometry(
-  //      viewportRect: viewportRect,
-  //      canvasSize: gridCanvasSize,
-  //      anchor: canvasAnchor
-  //    )
-  //  }
-  //
-  //  private var gridCanvasSize: Size<CanvasSpace>? {
-  //
-  //    guard let unitSize, let gridDimensions,
-  //      let size = gridDimensions.toScreenSize(using: unitSize)
-  //    else {
-  //      print(
-  //        """
-  //        ---
-  //        Couldn't return `gridCanvasSize`, no value found in Env for:
-  //        `gridDimensions`: \(gridDimensions, default: "nil")
-  //        gridDimensions -> CGSize: \( unitSize.map {gridDimensions?.toScreenSize(using: $0)}, default: "nil")
-  //        `unitSize`: \(unitSize, default: "nil")
-  //
-  //        ---
-  //
-  //        """
-  //      )
-  //
-  //      //      print("Unable to return `gridCanvasSize`, no `unitSize` and/or `gridDimensions` found in Env.")
-  //      return nil
-  //    }
-  //    return Size<CanvasSpace>(fromCGSize: size)
-  //  }
-  //  private var canvasSize: Size<CanvasSpace>? {
-  //    gridDimensions?.toScreenSize(using: <#T##CGSize#>)
-  //  }
 }
