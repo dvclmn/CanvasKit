@@ -15,6 +15,7 @@ public struct CanvasView<Content: View>: View {
   @Environment(\.canvasAnchor) private var canvasAnchor
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.shouldShowInfoBarItems) private var shouldShowInfoBarItems
+  @Environment(\.canvasState) private var canvasState
 
   @State var store = CanvasHandler()
 
@@ -48,19 +49,21 @@ public struct CanvasView<Content: View>: View {
       }
     }
 
-    .toolbar {
-      ToolbarItem {
-        if let zoomRange {
-          //          Slider(value: $store.transform.zoom.value, in: zoomRange)
-          QuickSlider("Zoom", value: $store.transform.zoomState.value, range: zoomRange)
-
-            .frame(minWidth: 200)
-
-        }
-      }
-
-    }
+//    .toolbar {
+//      ToolbarItem {
+//        if let zoomRange {
+//          //          Slider(value: $store.transform.zoom.value, in: zoomRange)
+//          QuickSlider("Zoom", value: $store.transform.zoomState.value, range: zoomRange)
+////          QuickSlider("Zoom", value: $store.transform.zoomState.value, range: zoomRange)
+//
+//            .frame(minWidth: 200)
+//
+//        }
+//      }
+//
+//    }
     .environment(\.canvasSize, canvasSize)
+    .bindModel(debounce: .noDebounce, $store.canvasState, to: canvasState)
   }
 }
 

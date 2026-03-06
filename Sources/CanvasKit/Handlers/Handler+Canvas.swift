@@ -13,8 +13,11 @@ import SwiftUI
 public final class CanvasHandler {
 
   /// Handles pan, zoom, rotation
+  @available(*, deprecated, message: "Prefer `canvasState`, which is passed in from higher up in the View hierarchy, rather than owned by CanvasKit.")
   var transform: CanvasTransformState = .initial
 
+  var canvasState: CanvasState = .initial
+  
   var pointerTap: TapState = .init()
   var pointerDrag: DragState = .init()
   var pointerHover: HoverState = .init()

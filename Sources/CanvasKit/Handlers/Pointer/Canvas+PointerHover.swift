@@ -12,7 +12,8 @@ extension CanvasHandler {
   public var viewportContext: ViewportContext? {
     geometry?.viewportContext(
       zoom: zoomClamped,
-      pan: transform.panState.pan
+      pan: canvasState.panOffset
+//      pan: transform.panState.pan
     )
   }
 

@@ -26,7 +26,7 @@ struct CanvasCoreView<Content: View>: View {
 
     Rectangle()
       .fill(.clear)
-      .environment(\.pointerLocation, store.pointerHoverCanvas)
+//      .environment(\.pointerLocation, store.pointerHoverCanvas)
       .overlay {
         if canvasGeometry != nil, zoomRange != nil {
           CanvasArtwork(content: content)
@@ -78,9 +78,9 @@ struct CanvasCoreView<Content: View>: View {
           store.pointerTap.value = store.canvasPoint(fromViewportPoint: location)
         }
       )
-      .environment(\.panOffset, store.transform.panState.pan)
-      .environment(\.zoomLevel, store.zoomClamped)
-      .environment(\.pointerLocation, store.pointerHoverCanvas)
+//      .environment(\.panOffset, store.transform.panState.pan)
+//      .environment(\.zoomLevel, store.zoomClamped)
+//      .environment(\.pointerLocation, store.pointerHoverCanvas)
 
       .onContinuousHover(coordinateSpace: .named(CanvasSpace.viewport)) { phase in
         store.updateHover(phase)
