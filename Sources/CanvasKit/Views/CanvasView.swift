@@ -34,36 +34,38 @@ public struct CanvasView<Content: View>: View {
 
   public var body: some View {
 
-    CanvasCoreView(
-      canvasGeometry: canvasGeometry,
-      content: content
-    )
-    .environment(store)
+    if let state = canvasState {
+      CanvasCoreView(
+        canvasGeometry: canvasGeometry,
+        content: content
+      )
+      .environment(store)
 
-    .task(id: zoomRange) { store.zoomRange = zoomRange }
-    .task(id: canvasGeometry) { store.geometry = canvasGeometry }
+      .task(id: zoomRange) { store.zoomRange = zoomRange }
+      .task(id: canvasGeometry) { store.geometry = canvasGeometry }
 
-    .addInfoBarItems {
-      if let zoomRange {
-        InfoItems(zoomRange)
+      .addInfoBarItems {
+        if let zoomRange {
+          InfoItems(zoomRange)
+        }
       }
-    }
 
-//    .toolbar {
-//      ToolbarItem {
-//        if let zoomRange {
-//          //          Slider(value: $store.transform.zoom.value, in: zoomRange)
-//          QuickSlider("Zoom", value: $store.transform.zoomState.value, range: zoomRange)
-////          QuickSlider("Zoom", value: $store.transform.zoomState.value, range: zoomRange)
-//
-//            .frame(minWidth: 200)
-//
-//        }
-//      }
-//
-//    }
-    .environment(\.canvasSize, canvasSize)
-    .bindModel(debounce: .noDebounce, $store.canvasState, to: canvasState)
+      //    .toolbar {
+      //      ToolbarItem {
+      //        if let zoomRange {
+      //          //          Slider(value: $store.transform.zoom.value, in: zoomRange)
+      //          QuickSlider("Zoom", value: $store.transform.zoomState.value, range: zoomRange)
+      ////          QuickSlider("Zoom", value: $store.transform.zoomState.value, range: zoomRange)
+      //
+      //            .frame(minWidth: 200)
+      //
+      //        }
+      //      }
+      //
+      //    }
+      .environment(\.canvasSize, canvasSize)
+      .bindModel(debounce: .noDebounce, $store.canvasState, to: state)
+    }
   }
 }
 
@@ -88,18 +90,18 @@ extension CanvasView {
           decimalPlaces: 2
         )
       )
-//      Labeled(
-//        "Zoom Range",
-//        value: "\(zoomRange.lowerBound)...\(zoomRange.upperBound)"
-//      )
+      //      Labeled(
+      //        "Zoom Range",
+      //        value: "\(zoomRange.lowerBound)...\(zoomRange.upperBound)"
+      //      )
 
-//      #if DEBUG
-//      if let comparison = store.pointerHoverMappingComparison {
-//        Labeled("Hover Drift", value: comparison.canvasDrift)
-//        Labeled("Native RT", value: comparison.nativeRoundTripError)
-//        Labeled("Legacy RT", value: comparison.legacyRoundTripError)
-//      }
-//      #endif
+      //      #if DEBUG
+      //      if let comparison = store.pointerHoverMappingComparison {
+      //        Labeled("Hover Drift", value: comparison.canvasDrift)
+      //        Labeled("Native RT", value: comparison.nativeRoundTripError)
+      //        Labeled("Legacy RT", value: comparison.legacyRoundTripError)
+      //      }
+      //      #endif
     }
   }
 }
