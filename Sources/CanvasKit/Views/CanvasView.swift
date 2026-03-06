@@ -89,6 +89,14 @@ extension CanvasView {
         "Zoom Range",
         value: "\(zoomRange.lowerBound)...\(zoomRange.upperBound)"
       )
+
+      #if DEBUG
+      if let comparison = store.pointerHoverMappingComparison {
+        Labeled("Hover Drift", value: comparison.canvasDrift)
+        Labeled("Native RT", value: comparison.nativeRoundTripError)
+        Labeled("Legacy RT", value: comparison.legacyRoundTripError)
+      }
+      #endif
     }
   }
 }

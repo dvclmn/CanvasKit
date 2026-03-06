@@ -37,12 +37,27 @@ struct CanvasCoreView<Content: View>: View {
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       .allowsHitTesting(false)
-    
+
     /// This background is only visible if the Artwork view
       .background(.orange, ignoresSafeAreaEdges: .top)
 //      .background(canvasBackground, ignoresSafeAreaEdges: .top)
       .drawingGroup(opaque: true)
+
       .ignoresSafeArea(edges: .top)
+      .coordinateSpace(.named(CanvasSpace.viewport))
+      .overlayPreferenceValue(CanvasArtworkBoundsAnchorKey.self) { anchor in
+        GeometryReader { proxy in
+          let frame = anchor.map { proxy[$0] }
+          Color.clear
+            .allowsHitTesting(false)
+            .onAppear {
+              store.artworkFrameInViewport = frame
+            }
+            .onChange(of: frame) { _, newValue in
+              store.artworkFrameInViewport = newValue
+            }
+        }
+      }
       .panGesture(isEnabled: true) { delta, phase, _ in
         store.panGesture.updateDelta(delta, phase: phase)
       }
@@ -58,10 +73,10 @@ struct CanvasCoreView<Content: View>: View {
         behavior: store.activeDragType,
         minimumDistance: store.pointerDrag.dragThreshold,
         didUpdateTap: { location in
-          store.pointerTap.value = location
+          store.pointerTap.value = store.canvasPoint(fromViewportPoint: location)
         }
       )
-      .onContinuousHover(coordinateSpace: .named(CanvasSpace.safeArea)) { phase in
+      .onContinuousHover(coordinateSpace: .named(CanvasSpace.viewport)) { phase in
         store.updateHover(phase)
       }
 

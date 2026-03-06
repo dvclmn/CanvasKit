@@ -23,9 +23,13 @@ struct CanvasArtwork<Content: View>: View {
         width: store.geometry?.canvasSize.width,
         height: store.geometry?.canvasSize.height
       )
+      .coordinateSpace(.named(CanvasSpace.artwork))
+      .anchorPreference(
+        key: CanvasArtworkBoundsAnchorKey.self,
+        value: .bounds
+      ) { $0 }
       .scaleEffect(zoomClamped)
       .offset(store.panGesture.pan)
-      .coordinateSpace(.named(CanvasSpace.safeArea))
       .frame(maxWidth: .infinity, maxHeight: .infinity)
     /// Hit testing, background and drawing group are all handled in Canvas Core view
     //      .allowsHitTesting(false)

@@ -24,6 +24,10 @@ public final class CanvasHandler {
   /// the latest from the env, but cannot be mutated in the Env itself
   public var geometry: CanvasGeometry?
 
+  /// The artwork bounds resolved in the viewport named coordinate space.
+  /// Captured via SwiftUI anchor preferences in `CanvasCoreView`.
+  var artworkFrameInViewport: CGRect?
+
   var zoomRange: ClosedRange<Double>?
   var zoomFocusResolver: ZoomFocusResolver = .latchedPointerOrViewportCentre
 
