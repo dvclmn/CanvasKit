@@ -59,10 +59,10 @@ struct CanvasCoreView<Content: View>: View {
         }
       }
       .panGesture(isEnabled: true) { delta, phase, _ in
-        store.panGesture.updateDelta(delta, phase: phase)
+        store.transform.panState.updateDelta(delta, phase: phase)
       }
       .zoomGesture(
-        zoom: $store.transform.zoom.value.toBindingDouble,
+        zoom: $store.transform.zoomState.value.toBindingDouble,
         isEnabled: true,
         didUpdateEvent: { event in
           store.updateZoom(using: event)
@@ -80,7 +80,7 @@ struct CanvasCoreView<Content: View>: View {
         store.updateHover(phase)
       }
 
-      .environment(\.panOffset, store.panGesture.pan)
+      .environment(\.panOffset, store.transform.panState.pan)
       .environment(\.zoomLevel, store.zoomClamped)
       .environment(\.pointerLocation, store.pointerHoverCanvasIfInside)
 

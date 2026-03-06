@@ -10,9 +10,8 @@ import GestureKit
 import SwiftUI
 
 @Observable
-@dynamicMemberLookup
 public final class CanvasHandler {
-  
+
   /// Handles pan, zoom, rotation
   var transform: CanvasTransformState = .initial
 
@@ -35,32 +34,6 @@ public final class CanvasHandler {
   var activeDragType: DragBehavior = .none
 
   public init() {}
-}
-
-/// Basic convenience for `CanvasTransformState` access
-extension CanvasHandler {
-  subscript<T: CanvasGestureState>(dynamicMember keyPath: WritableKeyPath<T, T.Value>) -> T.Value {
-    transform.[keyPath: keyPath]
-  }
-
-//  var panGesture: PanState {
-//    get { transform.pan }
-//    set { transform.pan = newValue }
-//  }
-//
-//  var zoomGesture: ZoomState {
-//    get { transform.zoom }
-//    set { transform.zoom = newValue }
-//  }
-//
-//  var rotateGesture: RotateState {
-//    get { transform.rotation }
-//    set { transform.rotation = newValue }
-//  }
-
-  public var isPerformingGesture: Bool {
-    transform.isPerformingGesture
-  }
 }
 
 extension CanvasHandler {

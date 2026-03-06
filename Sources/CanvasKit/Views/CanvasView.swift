@@ -78,25 +78,25 @@ extension CanvasView {
   @DisplayStringBuilder
   private func InfoItems(_ zoomRange: ClosedRange<Double>) -> [DisplayBlock] {
     if shouldShowInfoBarItems {
-//      Labeled(
-//        "Zoom",
-//        value: store.transform.zoom.value.toPercentString(
-//          within: zoomRange,
-//          decimalPlaces: 2
-//        )
-//      )
+      Labeled(
+        "Zoom",
+        value: store.transform.zoomState.zoom.toPercentString(
+          within: zoomRange,
+          decimalPlaces: 2
+        )
+      )
 //      Labeled(
 //        "Zoom Range",
 //        value: "\(zoomRange.lowerBound)...\(zoomRange.upperBound)"
 //      )
 
-      #if DEBUG
-      if let comparison = store.pointerHoverMappingComparison {
-        Labeled("Hover Drift", value: comparison.canvasDrift)
-        Labeled("Native RT", value: comparison.nativeRoundTripError)
-        Labeled("Legacy RT", value: comparison.legacyRoundTripError)
-      }
-      #endif
+//      #if DEBUG
+//      if let comparison = store.pointerHoverMappingComparison {
+//        Labeled("Hover Drift", value: comparison.canvasDrift)
+//        Labeled("Native RT", value: comparison.nativeRoundTripError)
+//        Labeled("Legacy RT", value: comparison.legacyRoundTripError)
+//      }
+//      #endif
     }
   }
 }
