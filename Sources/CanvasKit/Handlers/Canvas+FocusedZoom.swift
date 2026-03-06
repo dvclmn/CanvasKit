@@ -21,23 +21,24 @@ extension CanvasHandler {
     let previousZoom = clampedProposedZoom(event.previousZoom)
     let nextZoom = clampedProposedZoom(event.proposedZoom)
 
-    zoomGesture.update(nextZoom, phase: event.phase)
+    transform.zoomState.update(nextZoom, phase: event.phase)
 
     guard let geometry, geometry.isValidForCoordinateMapping,
       previousZoom.isFinite, nextZoom.isFinite,
       previousZoom > 0, nextZoom > 0,
       abs(nextZoom - previousZoom) > .ulpOfOne,
       let resolved = resolvedZoomFocus(for: event.phase)
-    else { return zoomGesture.zoom }
+    else { return transform.zoomState.zoom }
 
     let focus = sanitisedFocusPoint(resolved)
 
     guard
       let previousContext = geometry.viewportContext(
         zoom: CGFloat(previousZoom),
-        pan: panGesture.pan
+        pan: transform.panState.pan
+//        pan: panGesture.pan
       )
-    else { return zoomGesture.zoom }
+    else { return transform.zoomState.zoom }
 
     let focusCanvas = previousContext.toCanvas(
       screenPoint: Point<ScreenSpace>(fromPoint: focus)
@@ -48,7 +49,7 @@ extension CanvasHandler {
         zoom: CGFloat(nextZoom),
         pan: .zero
       )
-    else { return zoomGesture.zoom }
+    else { return transform.zoomState.zoom }
 
     let focusGlobalAtZeroPan = newContextZeroPan.toGlobal(point: focusCanvas.cgPoint)
 
@@ -57,8 +58,8 @@ extension CanvasHandler {
       height: focus.y - focusGlobalAtZeroPan.y
     )
 
-    panGesture.value = clampedPan(proposedPan, at: nextZoom)
-    return zoomGesture.zoom
+    transform.panState.value = clampedPan(proposedPan, at: nextZoom)
+    return transform.zoomState.zoom
   }
 }
 
@@ -72,8 +73,8 @@ extension CanvasHandler {
     _ proposedPan: CGSize,
     at zoom: Double
   ) -> CGSize {
-    guard let geometry else { return panGesture.pan }
-    var candidate = panGesture
+    guard let geometry else { return transform.panState.pan }
+    var candidate = transform.panState
     candidate.value = proposedPan
     return candidate.clamped(to: geometry, zoom: CGFloat(zoom))
   }

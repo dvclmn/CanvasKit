@@ -12,15 +12,10 @@ extension CanvasHandler {
   public var viewportContext: ViewportContext? {
     geometry?.viewportContext(
       zoom: zoomClamped,
-      pan: panGesture.pan
+      pan: transform.panState.pan
     )
   }
-
-  public var pointerHoverMapperLegacy: PointerHoverHandler? {
-    guard let viewportContext else { return nil }
-    return PointerHoverHandler(context: viewportContext)
-  }
-
+  
   public var pointerHoverMapperNative: NativePointerHoverHandler? {
     guard let artworkFrameInViewport, let canvasSize = geometry?.canvasSize else {
       return nil
@@ -32,6 +27,18 @@ extension CanvasHandler {
     )
   }
 
+  
+}
+
+// MARK: - Legacy
+extension CanvasHandler {
+
+  public var pointerHoverMapperLegacy: PointerHoverHandler? {
+    guard let viewportContext else { return nil }
+    return PointerHoverHandler(context: viewportContext)
+  }
+
+  
   /// Pointer location in the named viewport coordinate space.
   public var pointerHoverViewport: CGPoint? {
     pointerHover.value
@@ -108,12 +115,22 @@ extension CanvasHandler {
 
   #if DEBUG
   public var pointerHoverMappingComparison: PointerHoverMappingComparison? {
+    
+    DebugString("Hover") {
+      Labeled("Viewport", value: pointerHoverViewport )
+      Labeled("Global", value: pointerHoverGlobal )
+      Labeled("Mapper Legacy", value: pointerHoverMapperLegacy )
+      Labeled("Mapper Native", value: pointerHoverMapperNative )
+    }
+    
     guard
       let viewportPoint = pointerHoverViewport,
       let globalPoint = pointerHoverGlobal,
       let legacyMapper = pointerHoverMapperLegacy,
       let nativeMapper = pointerHoverMapperNative
-    else { return nil }
+    else {
+      return nil
+    }
 
     let legacy = legacyMapper.map(screenPoint: globalPoint)
     let native = nativeMapper.map(viewportPoint: viewportPoint)

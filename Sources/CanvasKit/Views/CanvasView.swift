@@ -52,7 +52,7 @@ public struct CanvasView<Content: View>: View {
       ToolbarItem {
         if let zoomRange {
           //          Slider(value: $store.transform.zoom.value, in: zoomRange)
-          QuickSlider("Zoom", value: $store.transform.zoom.value, range: zoomRange)
+          QuickSlider("Zoom", value: $store.transform.zoomState.value, range: zoomRange)
 
             .frame(minWidth: 200)
 
@@ -78,17 +78,17 @@ extension CanvasView {
   @DisplayStringBuilder
   private func InfoItems(_ zoomRange: ClosedRange<Double>) -> [DisplayBlock] {
     if shouldShowInfoBarItems {
-      Labeled(
-        "Zoom",
-        value: store.transform.zoom.value.toPercentString(
-          within: zoomRange,
-          decimalPlaces: 2
-        )
-      )
-      Labeled(
-        "Zoom Range",
-        value: "\(zoomRange.lowerBound)...\(zoomRange.upperBound)"
-      )
+//      Labeled(
+//        "Zoom",
+//        value: store.transform.zoom.value.toPercentString(
+//          within: zoomRange,
+//          decimalPlaces: 2
+//        )
+//      )
+//      Labeled(
+//        "Zoom Range",
+//        value: "\(zoomRange.lowerBound)...\(zoomRange.upperBound)"
+//      )
 
       #if DEBUG
       if let comparison = store.pointerHoverMappingComparison {

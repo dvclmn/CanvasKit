@@ -40,41 +40,41 @@ extension CanvasView {
 extension GridCanvasView {
   private var gridCanvasSize: Size<CanvasSpace>? {
     guard let unitSize, let gridDimensions,
-          let size = gridDimensions.toScreenSize(using: unitSize)
+      let size = gridDimensions.toScreenSize(using: unitSize)
     else { return nil }
-    
+
     /// Verify that `toScreenSize(using:)` matches manual computation within tolerance
     let expected = CGSize(
       width: CGFloat(gridDimensions.width) * unitSize.width,
       height: CGFloat(gridDimensions.height) * unitSize.height
     )
-    
+
     /// allow minor floating point drift and rounding
     let epsilon: CGFloat = 0.5
     let widthMatches = abs(size.width - expected.width) <= epsilon
     let heightMatches = abs(size.height - expected.height) <= epsilon
-    
+
     let isMatching = widthMatches && heightMatches
     let alertMsg = isMatching ? "✔ Matching" : "⚠️ Mismatch"
-    
+
     let mismatchMessage =
       """
       GridDimensions screen size conversion 
       \(alertMsg) 
       Expected: \(expected), 
       got: \(size). 
-      
+
       gridDimensions: \(gridDimensions)
       unitSize: \(unitSize)
       epsilon: \(epsilon)
-      
-      
+
+
       """
-    
-    print("\(mismatchMessage)")
-    
+
+    if !isMatching { print("\(mismatchMessage)") }
+
     assert(widthMatches && heightMatches, mismatchMessage)
-    
+
     return Size<CanvasSpace>(fromCGSize: size)
   }
 }

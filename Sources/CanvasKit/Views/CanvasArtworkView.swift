@@ -29,7 +29,7 @@ struct CanvasArtwork<Content: View>: View {
         value: .bounds
       ) { $0 }
       .scaleEffect(zoomClamped)
-      .offset(store.panGesture.pan)
+      .offset(store.transform.panState.pan)
       .frame(maxWidth: .infinity, maxHeight: .infinity)
     /// Hit testing, background and drawing group are all handled in Canvas Core view
     //      .allowsHitTesting(false)

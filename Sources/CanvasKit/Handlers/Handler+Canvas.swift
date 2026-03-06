@@ -10,6 +10,7 @@ import GestureKit
 import SwiftUI
 
 @Observable
+@dynamicMemberLookup
 public final class CanvasHandler {
   
   /// Handles pan, zoom, rotation
@@ -38,21 +39,24 @@ public final class CanvasHandler {
 
 /// Basic convenience for `CanvasTransformState` access
 extension CanvasHandler {
-
-  var panGesture: PanState {
-    get { transform.pan }
-    set { transform.pan = newValue }
+  subscript<T: CanvasGestureState>(dynamicMember keyPath: WritableKeyPath<T, T.Value>) -> T.Value {
+    transform.[keyPath: keyPath]
   }
 
-  var zoomGesture: ZoomState {
-    get { transform.zoom }
-    set { transform.zoom = newValue }
-  }
-
-  var rotateGesture: RotateState {
-    get { transform.rotation }
-    set { transform.rotation = newValue }
-  }
+//  var panGesture: PanState {
+//    get { transform.pan }
+//    set { transform.pan = newValue }
+//  }
+//
+//  var zoomGesture: ZoomState {
+//    get { transform.zoom }
+//    set { transform.zoom = newValue }
+//  }
+//
+//  var rotateGesture: RotateState {
+//    get { transform.rotation }
+//    set { transform.rotation = newValue }
+//  }
 
   public var isPerformingGesture: Bool {
     transform.isPerformingGesture
@@ -61,7 +65,7 @@ extension CanvasHandler {
 
 extension CanvasHandler {
 
-  var zoomClamped: CGFloat { zoomGesture.value.clampedIfNeeded(to: zoomRange) }
+  var zoomClamped: CGFloat { transform.zoomState.zoom.clampedIfNeeded(to: zoomRange) }
 
   @MainActor
   public func dragRectBinding() -> Binding<CGRect?> {
@@ -75,9 +79,9 @@ extension CanvasHandler {
 
       case .continuous:
         Binding {
-          self.panGesture.pan.toCGRectZeroOrigin
+          self.transform.panState.pan.toCGRectZeroOrigin
         } set: {
-          self.panGesture.update($0?.size ?? .zero, phase: .changed)
+          self.transform.panState.update($0?.size ?? .zero, phase: .changed)
         }
 
       case .none:

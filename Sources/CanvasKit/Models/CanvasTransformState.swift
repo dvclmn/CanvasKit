@@ -11,9 +11,9 @@ import SwiftUI
 
 /// Value-semantic snapshot of canvas transform interactions.
 public struct CanvasTransformState: Sendable {
-  public var pan: PanState
-  public var zoom: ZoomState
-  public var rotation: RotateState
+  public var panState: PanState
+  public var zoomState: ZoomState
+  public var rotationState: RotateState
   public var latchedZoomFocusGlobal: CGPoint?
 
   public init(
@@ -22,9 +22,9 @@ public struct CanvasTransformState: Sendable {
     rotation: RotateState = .initial,
     latchedZoomFocusGlobal: CGPoint? = nil
   ) {
-    self.pan = pan
-    self.zoom = zoom
-    self.rotation = rotation
+    self.panState = pan
+    self.zoomState = zoom
+    self.rotationState = rotation
     self.latchedZoomFocusGlobal = latchedZoomFocusGlobal
   }
 }
@@ -33,6 +33,6 @@ extension CanvasTransformState {
   public static var initial: Self { .init() }
 
   public var isPerformingGesture: Bool {
-    pan.isActive || zoom.isActive || rotation.isActive
+    panState.isActive || zoomState.isActive || rotationState.isActive
   }
 }

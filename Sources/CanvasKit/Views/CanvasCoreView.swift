@@ -39,8 +39,8 @@ struct CanvasCoreView<Content: View>: View {
       .allowsHitTesting(false)
 
     /// This background is only visible if the Artwork view
-      .background(.orange, ignoresSafeAreaEdges: .top)
-//      .background(canvasBackground, ignoresSafeAreaEdges: .top)
+//      .background(.orange, ignoresSafeAreaEdges: .top)
+      .background(canvasBackground, ignoresSafeAreaEdges: .top)
       .drawingGroup(opaque: true)
 
       .ignoresSafeArea(edges: .top)
