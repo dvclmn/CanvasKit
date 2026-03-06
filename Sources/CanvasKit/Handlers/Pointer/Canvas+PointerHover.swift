@@ -15,7 +15,7 @@ extension CanvasHandler {
       pan: transform.panState.pan
     )
   }
-  
+
   public var pointerHoverMapperNative: NativePointerHoverHandler? {
     guard let artworkFrameInViewport, let canvasSize = geometry?.canvasSize else {
       return nil
@@ -27,18 +27,16 @@ extension CanvasHandler {
     )
   }
 
-  
 }
 
 // MARK: - Legacy
 extension CanvasHandler {
 
-  public var pointerHoverMapperLegacy: PointerHoverHandler? {
-    guard let viewportContext else { return nil }
-    return PointerHoverHandler(context: viewportContext)
-  }
+  //  public var pointerHoverMapperLegacy: PointerHoverHandler? {
+  //    guard let viewportContext else { return nil }
+  //    return PointerHoverHandler(context: viewportContext)
+  //  }
 
-  
   /// Pointer location in the named viewport coordinate space.
   public var pointerHoverViewport: CGPoint? {
     pointerHover.value
@@ -55,18 +53,29 @@ extension CanvasHandler {
     )
   }
 
-  public var pointerHoverMappedLegacy: HoverMapping? {
-    guard let pointerHoverGlobal, let mapper = pointerHoverMapperLegacy else { return nil }
-    return mapper.map(screenPoint: pointerHoverGlobal)
-  }
+  //  public var pointerHoverMappedLegacy: HoverMapping? {
+  //    guard let pointerHoverGlobal, let mapper = pointerHoverMapperLegacy else { return nil }
+  //    return mapper.map(screenPoint: pointerHoverGlobal)
+  //  }
 
   public var pointerHoverMappedNative: HoverMapping? {
-    guard let pointerHoverViewport, let mapper = pointerHoverMapperNative else { return nil }
+
+    guard let pointerHoverViewport else {
+      printMissing("pointerHoverViewport", for: "pointerHoverMappedNative")
+      return nil
+    }
+
+    guard let mapper = pointerHoverMapperNative else {
+      printMissing("pointerHoverMapperNative", for: "pointerHoverMappedNative")
+      return nil
+    }
+
     return mapper.map(viewportPoint: pointerHoverViewport)
   }
 
   public var pointerHoverMapped: HoverMapping? {
-    pointerHoverMappedNative ?? pointerHoverMappedLegacy
+    pointerHoverMappedNative
+    //    pointerHoverMappedNative ?? pointerHoverMappedLegacy
   }
 
   public var pointerHoverScreenPoint: Point<ScreenSpace>? {
@@ -85,7 +94,16 @@ extension CanvasHandler {
 
   /// Nil when the hover point is outside the canvas bounds.
   public var pointerHoverCanvasIfInside: CGPoint? {
-    guard let mapped = pointerHoverMapped, mapped.isInsideCanvas else { return nil }
+    guard let mapped = pointerHoverMapped else {
+      printMissing("pointerHoverMapped", for: "pointerHoverCanvasIfInside")
+      return nil
+    }
+
+    guard mapped.isInsideCanvas else {
+      printDidNotSatisfy("mapped.isInsideCanvas", expectation: "true", for: "pointerHoverCanvasIfInside")
+
+      return nil
+    }
     return mapped.canvas
   }
 
@@ -98,60 +116,62 @@ extension CanvasHandler {
   }
 
   public func canvasPoint(fromViewportPoint point: CGPoint) -> CGPoint? {
-    if let mapper = pointerHoverMapperNative {
-      return mapper.map(viewportPoint: point).canvas
-    }
+    guard let mapper = pointerHoverMapperNative else { return nil }
+    return mapper.map(viewportPoint: point).canvas
+    //    if let mapper = pointerHoverMapperNative {
+    //      return mapper.map(viewportPoint: point).canvas
+    //    }
 
-    guard let viewportRect = geometry?.viewportRect, let mapper = pointerHoverMapperLegacy else {
-      return nil
-    }
-
-    let global = CGPoint(
-      x: viewportRect.minX + point.x,
-      y: viewportRect.minY + point.y
-    )
-    return mapper.map(screenPoint: global).canvas
+    //    guard let viewportRect = geometry?.viewportRect, let mapper = pointerHoverMapperLegacy else {
+    //      return nil
+    //    }
+    //
+    //    let global = CGPoint(
+    //      x: viewportRect.minX + point.x,
+    //      y: viewportRect.minY + point.y
+    //    )
+    //    return mapper.map(screenPoint: global).canvas
   }
 
-  #if DEBUG
-  public var pointerHoverMappingComparison: PointerHoverMappingComparison? {
-    
-    DebugString("Hover") {
-      Labeled("Viewport", value: pointerHoverViewport )
-      Labeled("Global", value: pointerHoverGlobal )
-      Labeled("Mapper Legacy", value: pointerHoverMapperLegacy )
-      Labeled("Mapper Native", value: pointerHoverMapperNative )
-    }
-    
-    guard
-      let viewportPoint = pointerHoverViewport,
-      let globalPoint = pointerHoverGlobal,
-      let legacyMapper = pointerHoverMapperLegacy,
-      let nativeMapper = pointerHoverMapperNative
-    else {
-      return nil
-    }
+  //  #if DEBUG
+  //  public var pointerHoverMappingComparison: PointerHoverMappingComparison? {
+  //
+  //    DebugString("Hover") {
+  //      Labeled("Viewport", value: pointerHoverViewport)
+  //      Labeled("Global", value: pointerHoverGlobal)
+  //      Labeled("Mapper Legacy", value: pointerHoverMapperLegacy)
+  //      Labeled("Mapper Native", value: pointerHoverMapperNative)
+  //    }
+  //
+  //    guard
+  //      let viewportPoint = pointerHoverViewport,
+  //      let globalPoint = pointerHoverGlobal,
+  //      let legacyMapper = pointerHoverMapperLegacy,
+  //      let nativeMapper = pointerHoverMapperNative
+  //    else {
+  //      return nil
+  //    }
+  //
+  //    let legacy = legacyMapper.map(screenPoint: globalPoint)
+  //    let native = nativeMapper.map(viewportPoint: viewportPoint)
+  //    let drift = hypot(
+  //      native.canvas.x - legacy.canvas.x,
+  //      native.canvas.y - legacy.canvas.y
+  //    )
+  //
+  //    return PointerHoverMappingComparison(
+  //      legacyCanvas: legacy.canvas,
+  //      nativeCanvas: native.canvas,
+  //      canvasDrift: drift,
+  //      legacyRoundTripError: legacyMapper.roundTripError(screenPoint: globalPoint),
+  //      nativeRoundTripError: nativeMapper.roundTripError(viewportPoint: viewportPoint)
+  //    )
+  //  }
 
-    let legacy = legacyMapper.map(screenPoint: globalPoint)
-    let native = nativeMapper.map(viewportPoint: viewportPoint)
-    let drift = hypot(
-      native.canvas.x - legacy.canvas.x,
-      native.canvas.y - legacy.canvas.y
-    )
-
-    return PointerHoverMappingComparison(
-      legacyCanvas: legacy.canvas,
-      nativeCanvas: native.canvas,
-      canvasDrift: drift,
-      legacyRoundTripError: legacyMapper.roundTripError(screenPoint: globalPoint),
-      nativeRoundTripError: nativeMapper.roundTripError(viewportPoint: viewportPoint)
-    )
-  }
-
-  public var pointerHoverRoundTripError: CGFloat? {
-    pointerHoverMappingComparison?.nativeRoundTripError
-  }
-  #endif
+  //  public var pointerHoverRoundTripError: CGFloat? {
+  //    pointerHoverMappingComparison?.nativeRoundTripError
+  //  }
+  //  #endif
 }
 
 #if DEBUG

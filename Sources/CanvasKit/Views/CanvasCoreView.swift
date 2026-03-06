@@ -26,6 +26,7 @@ struct CanvasCoreView<Content: View>: View {
 
     Rectangle()
       .fill(.clear)
+      .environment(\.pointerLocation, store.pointerHoverCanvas)
       .overlay {
         if canvasGeometry != nil, zoomRange != nil {
           CanvasArtwork(content: content)
@@ -33,6 +34,7 @@ struct CanvasCoreView<Content: View>: View {
             /// Should probably set this up to be clearer for *non*
             /// Grid domain contexts
             .gridFont(for: .canvas)
+//          Text("\(store.pointerHoverCanvas)")
         }
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -76,13 +78,15 @@ struct CanvasCoreView<Content: View>: View {
           store.pointerTap.value = store.canvasPoint(fromViewportPoint: location)
         }
       )
+      .environment(\.panOffset, store.transform.panState.pan)
+      .environment(\.zoomLevel, store.zoomClamped)
+      .environment(\.pointerLocation, store.pointerHoverCanvas)
+
       .onContinuousHover(coordinateSpace: .named(CanvasSpace.viewport)) { phase in
         store.updateHover(phase)
       }
 
-      .environment(\.panOffset, store.transform.panState.pan)
-      .environment(\.zoomLevel, store.zoomClamped)
-      .environment(\.pointerLocation, store.pointerHoverCanvasIfInside)
+//      .environment(\.pointerLocation, store.pointerHoverCanvasIfInside)
 
   }
 }
