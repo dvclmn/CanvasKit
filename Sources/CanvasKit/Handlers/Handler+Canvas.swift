@@ -27,7 +27,7 @@ public final class CanvasHandler {
   /// Note: this `CanvasGeometry` value is computed in the Environment.
   /// This property can be mutated/updated from `CanvasView` to reflect
   /// the latest from the env, but cannot be mutated in the Env itself
-//  public var geometry: CanvasGeometry?
+  //  public var geometry: CanvasGeometry?
 
   /// The artwork bounds resolved in the viewport named coordinate space.
   /// Captured via SwiftUI anchor preferences in `CanvasCoreView`.
@@ -40,6 +40,36 @@ public final class CanvasHandler {
 
   public init() {}
 }
+
+// MARK: - Pointer mapping (Native)
+extension CanvasHandler {
+  public var pointerHoverMapperNative: NativePointerHoverHandler? {
+    guard let artworkFrameInViewport, let canvasSize = geometry?.canvasSize else {
+      return nil
+    }
+    return NativePointerHoverHandler(
+      artworkFrameInViewport: artworkFrameInViewport,
+      canvasSize: canvasSize,
+      zoom: zoomClamped
+    )
+  }
+  
+  public var pointerHoverMappedNative: HoverMapping? {
+    
+    guard let pointerHoverViewport else {
+      printMissing("pointerHoverViewport", for: "pointerHoverMappedNative")
+      return nil
+    }
+    
+    guard let mapper = pointerHoverMapperNative else {
+      printMissing("pointerHoverMapperNative", for: "pointerHoverMappedNative")
+      return nil
+    }
+    
+    return mapper.map(viewportPoint: pointerHoverViewport)
+  }
+}
+
 
 extension CanvasHandler {
 

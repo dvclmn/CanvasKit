@@ -9,7 +9,21 @@ import BasePrimitives
 import Foundation
 import GestureKit
 
-//public struct PointerHoverHandler {
+/// I think pointer handler doesn't need ViewportContext?
+public struct PointerHandler {
+  
+//  let canvasGeometry: CanvasGeometry
+  let canvasSize: Size<CanvasSpace>
+  let artworkFrameInViewport: CGRect
+  let zoom: CGFloat
+//  let transformState: TransformState
+}
+
+extension PointerHandler {
+  var pointerHoverMapper: NativePointerHoverHandler? {
+    
+  }
+}
 //  public var context: ViewportContext
 //
 //  public init(context: ViewportContext) {

@@ -17,7 +17,7 @@ struct CanvasCoreView<Content: View>: View {
   /// A lot of the optionals have been moved here to `CanvasCoreView`
   /// sepcifically so the 'flash' while dependancies load in (like viewportRect, unitSize etc)
   /// doesn't cause such a visual disturbance, As the canvas background etc is handled here.
-//  let canvasGeometry: CanvasGeometry?
+  //  let canvasGeometry: CanvasGeometry?
   @ViewBuilder var content: () -> Content
 
   var body: some View {
@@ -26,27 +26,25 @@ struct CanvasCoreView<Content: View>: View {
 
     Rectangle()
       .fill(.clear)
-      //      .environment(\.pointerLocation, store.pointerHoverCanvas)
       .overlay {
-        if canvasGeometry != nil, zoomRange != nil {
-          CanvasArtwork(content: content)
+        //        if canvasGeometry != nil, zoomRange != nil {
+        CanvasArtwork(content: content)
 
-            /// Should probably set this up to be clearer for *non*
-            /// Grid domain contexts
-            .gridFont(for: .canvas)
-          //          Text("\(store.pointerHoverCanvas)")
-        }
+          /// Should probably set this up to be clearer for *non*
+          /// Grid domain contexts
+          .gridFont(for: .canvas)
+        //          Text("\(store.pointerHoverCanvas)")
+        //        }
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
-      .allowsHitTesting(false)
-
-      /// This background is only visible if the Artwork view
-      //      .background(.orange, ignoresSafeAreaEdges: .top)
       .background(canvasBackground, ignoresSafeAreaEdges: .top)
       .drawingGroup(opaque: true)
+      .allowsHitTesting(false)
 
       .ignoresSafeArea(edges: .top)
+
       .coordinateSpace(.named(CanvasSpace.viewport))
+    
       .overlayPreferenceValue(CanvasArtworkBoundsAnchorKey.self) { anchor in
         GeometryReader { proxy in
           let frame = anchor.map { proxy[$0] }
@@ -61,21 +59,19 @@ struct CanvasCoreView<Content: View>: View {
         }
       }
       .panGesture(isEnabled: true) { delta, phase, _ in
-        store.state.transform.panState.updateDelta(delta, phase: phase)
+        store.transform.panState.updateDelta(delta, phase: phase)
       }
       .zoomGesture(
-        zoom: $store.state.transform.zoomState.value.toBindingDouble,
+        zoom: $store.transform.zoomState.value.toBindingDouble,
         isEnabled: true,
-        didUpdateEvent: { event in
-          store.updateZoom(using: event)
-        }
+        didUpdateEvent: { store.updateZoom(using: $0) }
       )
       .tapDragGesture(
         rect: store.dragRectBinding(),
         behavior: store.activeDragType,
-        minimumDistance: store.state.pointer.pointerDrag.dragThreshold,
+        minimumDistance: store.pointer.pointerDrag.dragThreshold,
         didUpdateTap: { location in
-          store.state.pointer.pointerTap.value = store.canvasPoint(fromViewportPoint: location)
+          store.pointer.pointerTap.value = store.canvasPoint(fromViewportPoint: location)
         }
       )
       //      .environment(\.panOffset, store.transform.panState.pan)

@@ -34,9 +34,6 @@ struct CanvasArtwork<Content: View>: View {
       .offset(transformState?.wrappedValue.panState.pan ?? .zero)
       .frame(maxWidth: .infinity, maxHeight: .infinity)
     /// Hit testing, background and drawing group are all handled in Canvas Core view
-    //      .allowsHitTesting(false)
-    //      .background(canvasBackground)
-    //      .drawingGroup(opaque: true)
 
   }
 }
@@ -63,7 +60,6 @@ extension CanvasArtwork {
           RoundedRectangle(cornerRadius: cornerRounding)
             .fill(.clear)
             .stroke(.white.opacity(0.07), lineWidth: outlineThickness)
-          //            .allowsHitTesting(false)
         }
       }
     } else {

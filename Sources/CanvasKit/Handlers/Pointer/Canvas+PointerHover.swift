@@ -17,16 +17,7 @@ extension CanvasHandler {
     )
   }
 
-  public var pointerHoverMapperNative: NativePointerHoverHandler? {
-    guard let artworkFrameInViewport, let canvasSize = geometry?.canvasSize else {
-      return nil
-    }
-    return NativePointerHoverHandler(
-      artworkFrameInViewport: artworkFrameInViewport,
-      canvasSize: canvasSize,
-      zoom: zoomClamped
-    )
-  }
+  
 
 }
 
@@ -44,49 +35,36 @@ extension CanvasHandler {
   }
 
   /// Legacy global/screen representation retained for compatibility.
-  public var pointerHoverGlobal: CGPoint? {
-    guard let point = pointerHoverViewport, let viewportRect = geometry?.viewportRect else {
-      return nil
-    }
-    return CGPoint(
-      x: viewportRect.minX + point.x,
-      y: viewportRect.minY + point.y
-    )
-  }
+//  public var pointerHoverGlobal: CGPoint? {
+//    guard let point = pointerHoverViewport, let viewportRect = geometry?.viewportRect else {
+//      return nil
+//    }
+//    return CGPoint(
+//      x: viewportRect.minX + point.x,
+//      y: viewportRect.minY + point.y
+//    )
+//  }
 
   //  public var pointerHoverMappedLegacy: HoverMapping? {
   //    guard let pointerHoverGlobal, let mapper = pointerHoverMapperLegacy else { return nil }
   //    return mapper.map(screenPoint: pointerHoverGlobal)
   //  }
 
-  public var pointerHoverMappedNative: HoverMapping? {
+  
 
-    guard let pointerHoverViewport else {
-      printMissing("pointerHoverViewport", for: "pointerHoverMappedNative")
-      return nil
-    }
+//  public var pointerHoverMapped: HoverMapping? {
+//    pointerHoverMappedNative
+//    //    pointerHoverMappedNative ?? pointerHoverMappedLegacy
+//  }
 
-    guard let mapper = pointerHoverMapperNative else {
-      printMissing("pointerHoverMapperNative", for: "pointerHoverMappedNative")
-      return nil
-    }
+//  public var pointerHoverScreenPoint: Point<ScreenSpace>? {
+//    guard let pointerHoverGlobal else { return nil }
+//    return Point<ScreenSpace>(fromPoint: pointerHoverGlobal)
+//  }
 
-    return mapper.map(viewportPoint: pointerHoverViewport)
-  }
-
-  public var pointerHoverMapped: HoverMapping? {
-    pointerHoverMappedNative
-    //    pointerHoverMappedNative ?? pointerHoverMappedLegacy
-  }
-
-  public var pointerHoverScreenPoint: Point<ScreenSpace>? {
-    guard let pointerHoverGlobal else { return nil }
-    return Point<ScreenSpace>(fromPoint: pointerHoverGlobal)
-  }
-
-  public var pointerHoverCanvasPoint: Point<CanvasSpace>? {
-    pointerHoverMapped?.canvasPoint
-  }
+//  public var pointerHoverCanvasPoint: Point<CanvasSpace>? {
+//    pointerHoverMapped?.canvasPoint
+//  }
 
   /// Aka canvas local space
   public var pointerHoverCanvas: CGPoint? {

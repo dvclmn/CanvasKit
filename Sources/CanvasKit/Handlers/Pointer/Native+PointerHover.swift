@@ -5,14 +5,14 @@
 //  Created by Dave Coleman on 6/3/2026.
 //
 
-import Foundation
 import BasePrimitives
+import Foundation
 
 public struct NativePointerHoverHandler {
   public var artworkFrameInViewport: CGRect
   public var canvasSize: Size<CanvasSpace>
   public var zoom: CGFloat
-  
+
   public init(
     artworkFrameInViewport: CGRect,
     canvasSize: Size<CanvasSpace>,
@@ -25,17 +25,38 @@ public struct NativePointerHoverHandler {
 }
 
 extension NativePointerHoverHandler {
-  public var canvasRect: CGRect {
-    CGRect(origin: .zero, size: canvasSize.cgSize)
+  //  public var canvasRect: CGRect {
+  //    CGRect(origin: .zero, size: canvasSize.cgSize)
+  //  }
+
+  private var zoomSafe: CGFloat { zoom.isFinite && zoom > 0 ? zoom : 1 }
+
+
+  public func map(viewportPoint: CGPoint) -> HoverMapping {
+    let canvas = Point<CanvasSpace>(
+      x: (viewportPoint.x - artworkFrameInViewport.minX) / zoomSafe,
+      y: (viewportPoint.y - artworkFrameInViewport.minY) / zoomSafe
+    )
+    let isInside = isInsideCanvas(canvas)
+
+    return HoverMapping(
+      screen: viewportPoint,
+      canvas: canvas.cgPoint,
+      isInsideCanvas: isInside
+    )
   }
-  
-  private var zoomSafe: CGFloat {
-    if zoom.isFinite, zoom > 0 {
-      return zoom
-    }
-    return 1
-  }
-  
+
+//  public func mapIfInside(viewportPoint: CGPoint) -> HoverMapping? {
+//    let mapped = map(viewportPoint: viewportPoint)
+//    return mapped.isInsideCanvas ? mapped : nil
+//  }
+
+
+}
+
+// MARK: - Containment check
+
+extension NativePointerHoverHandler {
   private var canvasXRange: Range<CGFloat> {
     0..<canvasSize.width
   }
@@ -52,26 +73,11 @@ extension NativePointerHoverHandler {
   public func isInsideCanvas(_ canvasPoint: CGPoint) -> Bool {
     isInsideCanvas(Point<CanvasSpace>(fromPoint: canvasPoint))
   }
-  
-  public func map(viewportPoint: CGPoint) -> HoverMapping {
-    let canvas = Point<CanvasSpace>(
-      x: (viewportPoint.x - artworkFrameInViewport.minX) / zoomSafe,
-      y: (viewportPoint.y - artworkFrameInViewport.minY) / zoomSafe
-    )
-    let isInside = isInsideCanvas(canvas)
-    
-    return HoverMapping(
-      screen: viewportPoint,
-      canvas: canvas.cgPoint,
-      isInsideCanvas: isInside
-    )
-  }
-  
-  public func mapIfInside(viewportPoint: CGPoint) -> HoverMapping? {
-    let mapped = map(viewportPoint: viewportPoint)
-    return mapped.isInsideCanvas ? mapped : nil
-  }
-  
+
+}
+
+// MARK: - Debug
+extension NativePointerHoverHandler {
 #if DEBUG
   public func roundTripError(viewportPoint: CGPoint) -> CGFloat {
     let mapped = map(viewportPoint: viewportPoint)

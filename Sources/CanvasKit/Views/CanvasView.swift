@@ -38,53 +38,53 @@ public struct CanvasView<Content: View>: View {
   public var body: some View {
 
     if let transformState, let pointerState {
-      CanvasCoreView(
-        canvasGeometry: canvasGeometry,
-        content: content
-      )
-      .environment(store)
+      CanvasCoreView(content: content)
+        .environment(store)
 
-      .task(id: zoomRange) { store.zoomRange = zoomRange }
-      .task(id: canvasGeometry) { store.geometry = canvasGeometry }
+        .task(id: zoomRange) { store.zoomRange = zoomRange }
+        //      .task(id: canvasGeometry) { store.geometry = canvasGeometry }
 
-      .addInfoBarItems {
-        if let zoomRange {
-          InfoItems(zoomRange)
+        .addInfoBarItems {
+          if let zoomRange {
+            InfoItems(zoomRange)
+          }
         }
-      }
 
-      //    .toolbar {
-      //      ToolbarItem {
-      //        if let zoomRange {
-      //          //          Slider(value: $store.transform.zoom.value, in: zoomRange)
-      //          QuickSlider("Zoom", value: $store.transform.zoomState.value, range: zoomRange)
-      ////          QuickSlider("Zoom", value: $store.transform.zoomState.value, range: zoomRange)
-      //
-      //            .frame(minWidth: 200)
-      //
-      //        }
-      //      }
-      //
-      //    }
-      .environment(\.canvasSize, canvasSize)
-      .bindModel(debounce: .noDebounce, $store.transform, to: transformState)
-      .bindModel(debounce: .noDebounce, $store.pointer, to: pointerState)
+        //    .toolbar {
+        //      ToolbarItem {
+        //        if let zoomRange {
+        //          //          Slider(value: $store.transform.zoom.value, in: zoomRange)
+        //          QuickSlider("Zoom", value: $store.transform.zoomState.value, range: zoomRange)
+        ////          QuickSlider("Zoom", value: $store.transform.zoomState.value, range: zoomRange)
+        //
+        //            .frame(minWidth: 200)
+        //
+        //        }
+        //      }
+        //
+        //    }
+
+        /// This is passed in via the CanvasView initialiser. Adding it to the Env here.
+        .environment(\.canvasSize, canvasSize)
+        .bindModel(debounce: .noDebounce, $store.transform, to: transformState)
+        .bindModel(debounce: .noDebounce, $store.pointer, to: pointerState)
+
     } else {
-
+      Text("No Transform State or Pointer State")
     }
   }
 }
 
 extension CanvasView {
 
-//  private var canvasGeometry: CanvasGeometry? {
-//    guard let viewportRect, let canvasSize else { return nil }
-//    return CanvasGeometry(
-//      viewportRect: viewportRect,
-//      canvasSize: canvasSize,
-//      anchor: canvasAnchor
-//    )
-//  }
+  //  private var canvasGeometry: CanvasGeometry? {
+  //    guard let viewportRect, let canvasSize else { return nil }
+  //    return CanvasGeometry(
+  //      viewportRect: viewportRect,
+  //      canvasSize: canvasSize,
+  //      anchor: canvasAnchor
+  //    )
+  //  }
 
   @DisplayStringBuilder
   private func InfoItems(_ zoomRange: ClosedRange<Double>) -> [DisplayBlock] {
