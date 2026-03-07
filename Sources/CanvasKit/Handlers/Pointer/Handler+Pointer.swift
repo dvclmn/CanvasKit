@@ -20,7 +20,7 @@ public struct PointerHandler {
 }
 
 extension PointerHandler {
-  var pointerHoverMapper: NativePointerHoverHandler? {
+  var pointerHoverMapper: PointerHoverMapper? {
     
   }
 }

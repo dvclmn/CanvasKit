@@ -79,7 +79,8 @@ struct CanvasCoreView<Content: View>: View {
       //      .environment(\.pointerLocation, store.pointerHoverCanvas)
 
       .onContinuousHover(coordinateSpace: .named(CanvasSpace.viewport)) { phase in
-        store.updateHover(phase)
+        store.pointer.pointerHover.update(phase)
+//        store.updateHover(phase)
       }
 
     //      .environment(\.pointerLocation, store.pointerHoverCanvasIfInside)

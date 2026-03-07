@@ -8,7 +8,7 @@
 import BasePrimitives
 import Foundation
 
-public struct NativePointerHoverHandler {
+public struct PointerHoverMapper {
   public var artworkFrameInViewport: CGRect
   public var canvasSize: Size<CanvasSpace>
   public var zoom: CGFloat
@@ -24,13 +24,9 @@ public struct NativePointerHoverHandler {
   }
 }
 
-extension NativePointerHoverHandler {
-  //  public var canvasRect: CGRect {
-  //    CGRect(origin: .zero, size: canvasSize.cgSize)
-  //  }
+extension PointerHoverMapper {
 
   private var zoomSafe: CGFloat { zoom.isFinite && zoom > 0 ? zoom : 1 }
-
 
   public func map(viewportPoint: CGPoint) -> HoverMapping {
     let canvas = Point<CanvasSpace>(
@@ -46,30 +42,24 @@ extension NativePointerHoverHandler {
     )
   }
 
-//  public func mapIfInside(viewportPoint: CGPoint) -> HoverMapping? {
-//    let mapped = map(viewportPoint: viewportPoint)
-//    return mapped.isInsideCanvas ? mapped : nil
-//  }
-
-
 }
 
 // MARK: - Containment check
 
-extension NativePointerHoverHandler {
+extension PointerHoverMapper {
   private var canvasXRange: Range<CGFloat> {
     0..<canvasSize.width
   }
-  
+
   private var canvasYRange: Range<CGFloat> {
     0..<canvasSize.height
   }
-  
+
   public func isInsideCanvas(_ canvasPoint: Point<CanvasSpace>) -> Bool {
     canvasXRange.contains(canvasPoint.x)
-    && canvasYRange.contains(canvasPoint.y)
+      && canvasYRange.contains(canvasPoint.y)
   }
-  
+
   public func isInsideCanvas(_ canvasPoint: CGPoint) -> Bool {
     isInsideCanvas(Point<CanvasSpace>(fromPoint: canvasPoint))
   }
@@ -77,8 +67,8 @@ extension NativePointerHoverHandler {
 }
 
 // MARK: - Debug
-extension NativePointerHoverHandler {
-#if DEBUG
+extension PointerHoverMapper {
+  #if DEBUG
   public func roundTripError(viewportPoint: CGPoint) -> CGFloat {
     let mapped = map(viewportPoint: viewportPoint)
     let roundTrip = CGPoint(
@@ -90,5 +80,5 @@ extension NativePointerHoverHandler {
       roundTrip.y - viewportPoint.y
     )
   }
-#endif
+  #endif
 }
