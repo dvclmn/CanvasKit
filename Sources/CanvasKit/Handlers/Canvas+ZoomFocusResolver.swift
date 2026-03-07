@@ -25,14 +25,11 @@ extension CanvasHandler {
   func resolvedZoomFocus(
     for phase: InteractionPhase,
     geometry: CanvasGeometry,
-//    pointerLocationGlobal: CGPoint?
+    //    pointerLocationGlobal: CGPoint?
   ) -> CGPoint? {
     //    guard let geometry else { return nil  }
-    let viewportCentre = CGPoint(
-      x: geometry.viewportRect.midX,
-      y: geometry.viewportRect.midY
-    )
     
+
     let pointerLocation = pointer.pointerHover.value
 
     switch zoomFocusResolver {

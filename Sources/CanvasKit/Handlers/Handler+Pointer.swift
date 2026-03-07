@@ -14,7 +14,8 @@ struct PointerHandler {
 
   let canvasSize: Size<CanvasSpace>
 
-  /// Comes from `overlayPreferenceValue()` in `CanvasCoreView`
+  /// The artwork bounds resolved in the viewport named coordinate space.
+  /// Captured via SwiftUI anchor preferences in `CanvasCoreView`.
   let artworkFrameInViewport: CGRect
   let zoom: CGFloat
   let zoomRange: ClosedRange<CGFloat>

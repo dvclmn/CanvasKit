@@ -39,16 +39,13 @@ public struct CanvasView<Content: View>: View {
 
     if let transformState, let pointerState {
       CanvasCoreView(content: content)
-        .environment(store)
-
-        .task(id: zoomRange) { store.zoomRange = zoomRange }
-        //      .task(id: canvasGeometry) { store.geometry = canvasGeometry }
 
         .addInfoBarItems {
           if let zoomRange {
             InfoItems(zoomRange)
           }
         }
+        .environment(store)
 
         //    .toolbar {
         //      ToolbarItem {
@@ -66,7 +63,7 @@ public struct CanvasView<Content: View>: View {
 
         /// This is passed in via the CanvasView initialiser. Adding it to the Env here.
         .environment(\.canvasSize, canvasSize)
-      
+
         .bindModel(debounce: .noDebounce, $store.transform, to: transformState)
         .bindModel(debounce: .noDebounce, $store.pointer, to: pointerState)
 
@@ -88,15 +85,18 @@ extension CanvasView {
   //  }
 
   @DisplayStringBuilder
-  private func InfoItems(_ zoomRange: ClosedRange<Double>) -> [DisplayBlock] {
+  private func InfoItems(
+    _ zoomRange: ClosedRange<Double>
+  ) -> [DisplayBlock] {
     if shouldShowInfoBarItems {
       Labeled(
         "Zoom",
-        value: store.transform.zoomState.zoom.toPercentString(
-          //        value: store.transform.zoomState.zoom.toPercentString(
-          within: zoomRange,
-          decimalPlaces: 2
-        )
+        value: transformState?.wrappedValue.zoomState.zoom.toPercentString(within: zoomRange)
+        //        value: store.transform.zoomState.zoom.toPercentString(
+        //        value: store.transform.zoomState.zoom.toPercentString(
+        //          within: zoomRange,
+        //          decimalPlaces: 2
+        //        )
       )
       //      Labeled(
       //        "Zoom Range",

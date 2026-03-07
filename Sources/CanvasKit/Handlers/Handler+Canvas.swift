@@ -14,14 +14,8 @@ public final class CanvasHandler {
 
   var transform: TransformState = .initial
   var pointer: PointerState = .initial
-
-  /// The artwork bounds resolved in the viewport named coordinate space.
-  /// Captured via SwiftUI anchor preferences in `CanvasCoreView`.
-  //  var artworkFrameInViewport: CGRect?
-
-  var zoomRange: ClosedRange<Double>?
+  //  var zoomRange: ClosedRange<Double>?
   var zoomFocusResolver: ZoomFocusResolver = .latchedPointerOrViewportCentre
-
   var activeDragType: DragBehavior = .none
 
   public init() {}
@@ -29,7 +23,7 @@ public final class CanvasHandler {
 
 extension CanvasHandler {
 
-  var zoomClamped: CGFloat { transform.zoomState.zoom.clampedIfNeeded(to: zoomRange) }
+  //  var zoomClamped: CGFloat { transform.zoomState.zoom.clampedIfNeeded(to: zoomRange) }
 
   @MainActor
   public func dragRectBinding() -> Binding<CGRect?> {
