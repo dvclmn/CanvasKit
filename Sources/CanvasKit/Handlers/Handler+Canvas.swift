@@ -44,10 +44,7 @@ public final class CanvasHandler {
 // MARK: - Pointer mapping (Native)
 extension CanvasHandler {
 
-  public func canvasPoint(fromViewportPoint point: CGPoint) -> CGPoint? {
-    guard let mapper = pointerHoverMapperNative else { return nil }
-    return mapper.map(viewportPoint: point).canvas
-  }
+
 
   public var pointerHoverViewport: CGPoint? {
     pointer.pointerHover.value
@@ -59,30 +56,23 @@ extension CanvasHandler {
   }
 
   public var pointerHoverMapperNative: PointerHoverMapper? {
-    guard let artworkFrameInViewport, let canvasSize = geometry?.canvasSize else {
-      return nil
-    }
-    return PointerHoverMapper(
-      artworkFrameInViewport: artworkFrameInViewport,
-      canvasSize: canvasSize,
-      zoom: zoomClamped
-    )
+
   }
 
-  public var pointerHoverMappedNative: HoverMapping? {
-
-    guard let pointerHoverViewport else {
-      printMissing("pointerHoverViewport", for: "pointerHoverMappedNative")
-      return nil
-    }
-
-    guard let mapper = pointerHoverMapperNative else {
-      printMissing("pointerHoverMapperNative", for: "pointerHoverMappedNative")
-      return nil
-    }
-
-    return mapper.map(viewportPoint: pointerHoverViewport)
-  }
+//  public var pointerHoverMappedNative: HoverMapping? {
+//
+//    guard let pointerHoverViewport else {
+//      printMissing("pointerHoverViewport", for: "pointerHoverMappedNative")
+//      return nil
+//    }
+//
+//    guard let mapper = pointerHoverMapperNative else {
+//      printMissing("pointerHoverMapperNative", for: "pointerHoverMappedNative")
+//      return nil
+//    }
+//
+//    return mapper.map(viewportPoint: pointerHoverViewport)
+//  }
 
   /// Nil when the hover point is outside the canvas bounds.
   public var pointerHoverCanvasIfInside: CGPoint? {

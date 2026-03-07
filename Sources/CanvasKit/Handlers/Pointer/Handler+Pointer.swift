@@ -11,17 +11,88 @@ import GestureKit
 
 /// I think pointer handler doesn't need ViewportContext?
 public struct PointerHandler {
-  
-//  let canvasGeometry: CanvasGeometry
+
+  //  let canvasGeometry: CanvasGeometry
   let canvasSize: Size<CanvasSpace>
-  let artworkFrameInViewport: CGRect
+
+  /// Comes from `overlayPreferenceValue()` in `CanvasCoreView`
+  let artworkFrameInViewport: CGRect?
   let zoom: CGFloat
-//  let transformState: TransformState
+  let zoomRange: ClosedRange<CGFloat>
+  //  let transformState: TransformState
 }
 
 extension PointerHandler {
-  var pointerHoverMapper: PointerHoverMapper? {
-    
+
+  public func canvasPoint(
+    fromViewportPoint point: CGPoint,
+    artworkFrameInViewport: CGRect
+  ) -> CGPoint? {
+    map(
+      viewportPoint: point,
+      artworkFrameInViewport: artworkFrameInViewport
+    ).canvas
+    //    mapper?.map(viewportPoint: point, zoom: zoomClamped).canvas
+  }
+
+  /// This is the foundational mapping
+  /// Provides a result that was similar to previous `pointerHoverMappedNative`
+  ///
+  //  public func map(viewportPoint point: CGPoint) -> HoverMapping? {
+  //    mapper?.map(viewportPoint: point, zoom: zoomClamped)
+  //  }
+
+  public func map(
+    viewportPoint: CGPoint,
+    artworkFrameInViewport: CGRect
+      //    zoom: CGFloat
+  ) -> HoverMapping {
+    //    guard let artworkFrameInViewport else { return nil }
+    let canvas = Point<CanvasSpace>(
+      x: (viewportPoint.x - artworkFrameInViewport.minX) / zoomClamped,
+      y: (viewportPoint.y - artworkFrameInViewport.minY) / zoomClamped
+    )
+    let isInside = isInsideCanvas(canvas)
+
+    return HoverMapping(
+      screen: viewportPoint,
+      canvas: canvas.cgPoint,
+      isInsideCanvas: isInside
+    )
+  }
+
+  //  private var mapper: PointerHoverMapper? {
+  //    guard let artworkFrameInViewport, let canvasSize else {
+  //      return nil
+  //    }
+  //    return PointerHoverMapper(
+  //      artworkFrameInViewport: artworkFrameInViewport,
+  //      canvasSize: canvasSize,
+  //      zoom: zoomClamped
+  //    )
+  //  }
+
+  private var zoomSafe: CGFloat { zoom.isFinite && zoom > 0 ? zoom : 1 }
+  private var zoomClamped: CGFloat { zoomSafe.clamped(to: zoomRange) }
+}
+
+// MARK: - Containment check
+extension PointerHandler {
+  private var canvasXRange: Range<CGFloat> {
+    0..<canvasSize.width
+  }
+
+  private var canvasYRange: Range<CGFloat> {
+    0..<canvasSize.height
+  }
+
+  public func isInsideCanvas(_ canvasPoint: Point<CanvasSpace>) -> Bool {
+    canvasXRange.contains(canvasPoint.x)
+      && canvasYRange.contains(canvasPoint.y)
+  }
+
+  public func isInsideCanvas(_ canvasPoint: CGPoint) -> Bool {
+    isInsideCanvas(Point<CanvasSpace>(fromPoint: canvasPoint))
   }
 }
 //  public var context: ViewportContext
