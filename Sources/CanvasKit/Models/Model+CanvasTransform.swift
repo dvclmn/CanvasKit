@@ -6,13 +6,13 @@
 //
 
 // import CoreTools
-import EnumMacros
-
-@SetOfOptions<Int>
-public struct TransformTypes: Sendable {
-  public enum Options: Int {
-    case pan  // Translate
-    case zoom  // Scale
-    case rotation  // Rotate
-  }
-}
+//import EnumMacros
+//
+//@SetOfOptions<Int>
+//public struct TransformTypes: Sendable {
+//  public enum Options: Int {
+//    case pan  // Translate
+//    case zoom  // Scale
+//    case rotation  // Rotate
+//  }
+//}

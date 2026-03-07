@@ -88,7 +88,8 @@ extension CanvasView {
     if shouldShowInfoBarItems {
       Labeled(
         "Zoom",
-        value: store.transform.zoomState.zoom.toPercentString(
+        value: store.canvasState.zoomLevel.toPercentString(
+//        value: store.transform.zoomState.zoom.toPercentString(
           within: zoomRange,
           decimalPlaces: 2
         )

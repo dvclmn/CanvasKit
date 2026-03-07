@@ -13,14 +13,15 @@ import SwiftUI
 public final class CanvasHandler {
 
   /// Handles pan, zoom, rotation
-  @available(*, deprecated, message: "Prefer `canvasState`, which is passed in from higher up in the View hierarchy, rather than owned by CanvasKit.")
-  var transform: CanvasTransformState = .initial
+//  @available(*, deprecated, message: "Prefer `canvasState`, which is passed in from higher up in the View hierarchy, rather than owned by CanvasKit.")
+//  var transform: CanvasTransformState = .initial
 
   var canvasState: CanvasState = .initial
+//  var canvasState: CanvasTransformState = .initial
   
-  var pointerTap: TapState = .init()
-  var pointerDrag: DragState = .init()
-  var pointerHover: HoverState = .init()
+//  var pointerTap: TapState = .init()
+//  var pointerDrag: DragState = .init()
+//  var pointerHover: HoverState = .init()
 
   /// Note: this `CanvasGeometry` value is computed in the Environment.
   /// This property can be mutated/updated from `CanvasView` to reflect
@@ -41,7 +42,7 @@ public final class CanvasHandler {
 
 extension CanvasHandler {
 
-  var zoomClamped: CGFloat { transform.zoomState.zoom.clampedIfNeeded(to: zoomRange) }
+  var zoomClamped: CGFloat { canvasState.zoomState.zoom.clampedIfNeeded(to: zoomRange) }
 
   @MainActor
   public func dragRectBinding() -> Binding<CGRect?> {
