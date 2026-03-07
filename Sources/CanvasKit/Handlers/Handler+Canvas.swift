@@ -16,7 +16,8 @@ public final class CanvasHandler {
   //  @available(*, deprecated, message: "Prefer `canvasState`, which is passed in from higher up in the View hierarchy, rather than owned by CanvasKit.")
   //  var transform: CanvasTransformState = .initial
 
-  var state: CanvasState = .initial
+  var transform: TransformState = .initial
+  var pointer: PointerState = .initial
   //  var canvasState: CanvasTransformState = .initial
 
   //  var pointerTap: TapState = .init()
@@ -42,23 +43,23 @@ public final class CanvasHandler {
 
 extension CanvasHandler {
 
-  var zoomClamped: CGFloat { state.transform.zoomState.zoom.clampedIfNeeded(to: zoomRange) }
+  var zoomClamped: CGFloat { transform.zoomState.zoom.clampedIfNeeded(to: zoomRange) }
 
   @MainActor
   public func dragRectBinding() -> Binding<CGRect?> {
     return switch activeDragType {
       case .marquee:
         Binding {
-          self.state.pointer.pointerDrag.value
+          self.pointer.pointerDrag.value
         } set: {
-          self.state.pointer.pointerDrag.value = $0
+          self.pointer.pointerDrag.value = $0
         }
 
       case .continuous:
         Binding {
-          self.state.transform.panState.pan.toCGRectZeroOrigin
+          self.transform.panState.pan.toCGRectZeroOrigin
         } set: {
-          self.state.transform.panState.update($0?.size ?? .zero, phase: .changed)
+          self.transform.panState.update($0?.size ?? .zero, phase: .changed)
         }
 
       case .none:

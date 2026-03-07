@@ -7,8 +7,9 @@
 
 import BasePrimitives
 import GestureKit
-import SwiftUI
 import LayoutKit
+import SwiftUI
+
 //import UIPrimitives
 
 public struct CanvasView<Content: View>: View {
@@ -16,7 +17,8 @@ public struct CanvasView<Content: View>: View {
   @Environment(\.canvasAnchor) private var canvasAnchor
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.shouldShowInfoBarItems) private var shouldShowInfoBarItems
-  @Environment(\.canvasState) private var canvasState
+  @Environment(\.transformState) private var transformState
+  @Environment(\.pointerState) private var pointerState
 
   @State var store = CanvasHandler()
 
@@ -35,7 +37,7 @@ public struct CanvasView<Content: View>: View {
 
   public var body: some View {
 
-    if let state = canvasState {
+    if let transformState, let pointerState {
       CanvasCoreView(
         canvasGeometry: canvasGeometry,
         content: content
@@ -65,9 +67,10 @@ public struct CanvasView<Content: View>: View {
       //
       //    }
       .environment(\.canvasSize, canvasSize)
-      .bindModel(debounce: .noDebounce, $store.state, to: state)
+      .bindModel(debounce: .noDebounce, $store.transform, to: transformState)
+      .bindModel(debounce: .noDebounce, $store.pointer, to: pointerState)
     } else {
-      
+
     }
   }
 }
@@ -89,7 +92,7 @@ extension CanvasView {
       Labeled(
         "Zoom",
         value: store.state.transform.zoomState.zoom.toPercentString(
-//        value: store.transform.zoomState.zoom.toPercentString(
+          //        value: store.transform.zoomState.zoom.toPercentString(
           within: zoomRange,
           decimalPlaces: 2
         )

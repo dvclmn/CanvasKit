@@ -12,7 +12,7 @@ extension CanvasHandler {
   public var viewportContext: ViewportContext? {
     geometry?.viewportContext(
       zoom: zoomClamped,
-      pan: state.transform.panState.pan
+      pan: transform.panState.pan
         //      pan: transform.panState.pan
     )
   }
@@ -40,7 +40,7 @@ extension CanvasHandler {
 
   /// Pointer location in the named viewport coordinate space.
   public var pointerHoverViewport: CGPoint? {
-    state.pointer.pointerHover.value
+    pointer.pointerHover.value
   }
 
   /// Legacy global/screen representation retained for compatibility.
