@@ -1,13 +1,12 @@
 //
-//  Canvas+ZoomFocusResolver.swift
+//  ZoomFocusResolver.swift
 //  BaseHelpers
 //
-//  Created by Dave Coleman on 1/3/2026.
+//  Created by Dave Coleman on 7/3/2026.
 //
 
 import BasePrimitives
 import Foundation
-import GestureKit
 
 public enum ZoomFocusResolver: String, Sendable, Equatable, CaseIterable {
   /// Locks to the first available focus point for the whole pinch gesture.
@@ -21,24 +20,27 @@ public enum ZoomFocusResolver: String, Sendable, Equatable, CaseIterable {
   case viewportCentre
 }
 
-extension CanvasHandler {
-  func resolvedZoomFocus(
+extension ZoomFocusResolver {
+  func resolved(
     for phase: InteractionPhase,
+    pointerLocation: CGPoint?,
+    transform: inout TransformState,
     geometry: CanvasGeometry,
     //    pointerLocationGlobal: CGPoint?
   ) -> CGPoint? {
     //    guard let geometry else { return nil  }
-    
 
-    let pointerLocation = pointer.pointerHover.value
+    //    let pointerLocation = pointer.pointerHover.value
 
-    switch zoomFocusResolver {
+    let viewportCentre = geometry.viewportRect.midpoint
+    switch self {
       case .latchedPointerOrViewportCentre:
         if let latched = transform.latchedZoomFocusGlobal {
           return latched
         }
 
         let resolved = pointerLocation ?? viewportCentre
+
         if phase.isActive {
           transform.latchedZoomFocusGlobal = resolved
         }
@@ -50,12 +52,5 @@ extension CanvasHandler {
       case .viewportCentre:
         return viewportCentre
     }
-  }
-
-  func clearLatchedZoomFocusIfNeeded(
-    for phase: InteractionPhase
-  ) {
-    guard !phase.isActive else { return }
-    transform.latchedZoomFocusGlobal = nil
   }
 }

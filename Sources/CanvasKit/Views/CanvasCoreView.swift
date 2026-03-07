@@ -18,7 +18,7 @@ struct CanvasCoreView<Content: View>: View {
   @Environment(\.canvasGeometry) private var canvasGeometry
   @Environment(\.pointerState) private var pointerState
 
-  @State private var artworkFrameInViewport: CGRect?
+//  @State private var artworkFrameInViewport: CGRect?
 
   /// A lot of the optionals have been moved here to `CanvasCoreView`
   /// sepcifically so the 'flash' while dependancies load in (like viewportRect, unitSize etc)
@@ -57,16 +57,9 @@ struct CanvasCoreView<Content: View>: View {
           Color.clear
             .allowsHitTesting(false)
             .task(id: frame) {
-              artworkFrameInViewport = frame
+              store.canvasFrameInViewport = frame
             }
-          //            .onAppear {
-          //              artworkFrameInViewport = frame
-          ////              store.artworkFrameInViewport = frame
-          //            }
-          //            .onChange(of: frame) { _, newValue in
-          //              artworkFrameInViewport = newValue
-          ////              store.artworkFrameInViewport = newValue
-          //            }
+
         }
       }
       .panGesture(isEnabled: true) { delta, phase, _ in
@@ -77,7 +70,7 @@ struct CanvasCoreView<Content: View>: View {
         isEnabled: true,
         didUpdateEvent: {
           guard let canvasGeometry else { return nil }
-          return store.updateZoom(using: $0, geometry: canvasGeometry)
+          return store.updateZoom(using: $0, geometry: canvasGeometry, in: zoomRange)
         }
       )
       .tapDragGesture(
@@ -85,8 +78,9 @@ struct CanvasCoreView<Content: View>: View {
         behavior: store.activeDragType,
         minimumDistance: store.pointer.pointerDrag.dragThreshold,
         didUpdateTap: { location in
-          pointerState?.wrappedValue.pointerTap.update(
-            pointerHandler?.canvasPoint(fromViewportPoint: location))
+          store.updateTapLocation(location)
+//          pointerState?.wrappedValue.pointerTap.update(
+//            pointerHandler?.canvasPoint(fromViewportPoint: location))
           //          store.pointer.pointerTap.value = store.canvasPoint(fromViewportPoint: location)
         }
       )
@@ -95,7 +89,8 @@ struct CanvasCoreView<Content: View>: View {
       //      .environment(\.pointerLocation, store.pointerHoverCanvas)
 
       .onContinuousHover(coordinateSpace: .named(CanvasSpace.viewport)) { phase in
-        store.pointer.pointerHover.update(phase)
+        store.updatePointerLocation(phase)
+//        store.pointer.pointerHover.update(phase)
         //        store.updateHover(phase)
       }
 
@@ -105,13 +100,8 @@ struct CanvasCoreView<Content: View>: View {
 }
 
 extension CanvasCoreView {
-  private var pointerHandler: PointerHandler? {
-    guard let zoomRange else { return nil }
-    return .init(
-      canvasSize: canvasSize,
-      artworkFrameInViewport: artworkFrameInViewport,
-      zoom: zoomLevel,
-      zoomRange: zoomRange.toCGFloatRange
-    )
-  }
+
+//  private var pointerHandler: PointerHandler? {
+//    
+//  }
 }

@@ -10,30 +10,32 @@ import GestureKit
 import SwiftUI
 
 extension CanvasHandler {
+
+  fileprivate var zoomValue: Double { transform.zoomState.zoom }
+
   /// Updates zoom while preserving the focused screen point.
   /// This makes pinch/spread feel anchored to pointer intent instead of viewport centre.
   @discardableResult
   public func updateZoom(
     using event: ZoomGestureEvent,
-    geometry: CanvasGeometry
+    geometry: CanvasGeometry,
+    in zoomRange: ClosedRange<Double>?
   ) -> Double {
     defer { clearLatchedZoomFocusIfNeeded(for: event.phase) }
 
-    let previousZoom = clampedProposedZoom(event.previousZoom)
-    let nextZoom = clampedProposedZoom(event.proposedZoom)
+    let previousZoom = clampedProposedZoom(event.previousZoom, in: zoomRange)
+    let nextZoom = clampedProposedZoom(event.proposedZoom, in: zoomRange)
 
     transform.zoomState.update(nextZoom, phase: event.phase)
-    //    transform.zoomState.update(nextZoom, phase: event.phase)
 
-    guard geometry.isValidForCoordinateMapping,
-      previousZoom.isFinite, nextZoom.isFinite,
-      previousZoom > 0, nextZoom > 0,
-      abs(nextZoom - previousZoom) > .ulpOfOne,
-      let resolved = resolvedZoomFocus(
+    guard isZoomSafe(in: geometry, prev: previousZoom, next: nextZoom),
+      let resolved = zoomFocusResolver.resolved(
         for: event.phase,
-        geometry: geometry,
+        pointerLocation: pointer.pointerHover.value,
+        transform: &transform,
+        geometry: geometry
       )
-    else { return transform.zoomState.zoom }
+    else { return zoomValue }
 
     let focus = sanitisedFocusPoint(resolved, geometry: geometry)
 
@@ -41,9 +43,8 @@ extension CanvasHandler {
       let previousContext = geometry.viewportContext(
         zoom: CGFloat(previousZoom),
         pan: transform.panState.pan
-          //        pan: panGesture.pan
       )
-    else { return transform.zoomState.zoom }
+    else { return zoomValue }
 
     let focusCanvas = previousContext.toCanvas(
       screenPoint: Point<ScreenSpace>(fromPoint: focus)
@@ -54,7 +55,7 @@ extension CanvasHandler {
         zoom: CGFloat(nextZoom),
         pan: .zero
       )
-    else { return transform.zoomState.zoom }
+    else { return zoomValue }
 
     let focusGlobalAtZeroPan = newContextZeroPan.toGlobal(point: focusCanvas.cgPoint)
 
@@ -68,13 +69,18 @@ extension CanvasHandler {
       at: nextZoom,
       geometry: geometry
     )
-    return transform.zoomState.zoom
+    return zoomValue
   }
 }
 
 extension CanvasHandler {
-  private func clampedProposedZoom(_ proposedZoom: Double) -> Double {
-    guard proposedZoom.isFinite else { return zoomClamped }
+  private func clampedProposedZoom(
+    _ proposedZoom: Double,
+    in zoomRange: ClosedRange<Double>?
+  ) -> Double {
+    guard proposedZoom.isFinite else {
+      return zoomValue.clampedIfNeeded(to: zoomRange)
+    }
     return proposedZoom.clampedIfNeeded(to: zoomRange)
   }
 
@@ -83,7 +89,6 @@ extension CanvasHandler {
     at zoom: Double,
     geometry: CanvasGeometry
   ) -> CGSize {
-    //    guard let geometry else { return transform.panState.pan }
     var candidate = transform.panState
     candidate.value = proposedPan
     return candidate.clamped(to: geometry, zoom: CGFloat(zoom))
@@ -93,7 +98,6 @@ extension CanvasHandler {
     _ point: CGPoint,
     geometry: CanvasGeometry
   ) -> CGPoint {
-    //    guard let geometry else { return point }
     guard point.x.isFinite, point.y.isFinite else {
       return CGPoint(
         x: geometry.viewportRect.midX,
@@ -101,5 +105,16 @@ extension CanvasHandler {
       )
     }
     return point
+  }
+
+  private func isZoomSafe(
+    in geometry: CanvasGeometry,
+    prev previousZoom: Double,
+    next nextZoom: Double
+  ) -> Bool {
+    geometry.isValidForCoordinateMapping
+      && previousZoom.isFinite && nextZoom.isFinite
+      && previousZoom > 0 && nextZoom > 0
+      && abs(nextZoom - previousZoom) > .ulpOfOne
   }
 }

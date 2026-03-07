@@ -14,7 +14,11 @@ public final class CanvasHandler {
 
   var transform: TransformState = .initial
   var pointer: PointerState = .initial
-  //  var zoomRange: ClosedRange<Double>?
+  var zoomRange: ClosedRange<Double>?
+
+  var canvasFrameInViewport: CGRect?
+  var canvasSize: Size<CanvasSpace>?
+
   var zoomFocusResolver: ZoomFocusResolver = .latchedPointerOrViewportCentre
   var activeDragType: DragBehavior = .none
 
@@ -22,8 +26,51 @@ public final class CanvasHandler {
 }
 
 extension CanvasHandler {
+  var pointerMapper: PointerHandler? {
+    guard let zoomRange else { return nil }
+    return .init(
+      canvasSize: canvasSize,
+      artworkFrameInViewport: canvasFrameInViewport,
+      zoom: transform.zoomState.zoom,
+      zoomRange: zoomRange.toCGFloatRange
+    )
+  }
+  //  private var pointerHandler: PointerHandler? {
+  //    guard let zoomRange else { return nil }
+  //    return .init(
+  //      canvasSize: canvasSize,
+  //      artworkFrameInViewport: artworkFrameInViewport,
+  //      zoom: zoomLevel,
+  //      zoomRange: zoomRange.toCGFloatRange
+  //    )
+  //  }
 
-  //  var zoomClamped: CGFloat { transform.zoomState.zoom.clampedIfNeeded(to: zoomRange) }
+  func updateTapLocation(_ location: CGPoint) {
+    let mapped = pointerMapper?.canvasPoint(fromViewportPoint: location)
+    pointer.pointerTap.update(mapped)
+  }
+
+  func updatePointerLocation(_ phase: HoverPhase) {
+    guard
+      let location =
+        switch phase {
+          case .active(let val): val
+          case .ended: nil
+        }
+    else { return }
+
+    let mappedHover = pointerMapper?.canvasPoint(fromViewportPoint: location)
+    pointer.pointerHover.update(mappedHover)
+  }
+
+  func clearLatchedZoomFocusIfNeeded(
+    for phase: InteractionPhase
+  ) {
+    guard !phase.isActive else { return }
+    transform.latchedZoomFocusGlobal = nil
+  }
+
+  //  var zoomClamped: CGFloat {  }
 
   @MainActor
   public func dragRectBinding() -> Binding<CGRect?> {
