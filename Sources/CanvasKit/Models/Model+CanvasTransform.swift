@@ -5,7 +5,8 @@
 //  Created by Dave Coleman on 5/7/2025.
 //
 
-import CoreTools
+// import CoreTools
+import EnumMacros
 
 @SetOfOptions<Int>
 public struct TransformTypes: Sendable {
