@@ -28,6 +28,7 @@ public final class CanvasHandler {
   /// This property can be mutated/updated from `CanvasView` to reflect
   /// the latest from the env, but cannot be mutated in the Env itself
   //  public var geometry: CanvasGeometry?
+  
 
   /// The artwork bounds resolved in the viewport named coordinate space.
   /// Captured via SwiftUI anchor preferences in `CanvasCoreView`.
@@ -46,18 +47,18 @@ extension CanvasHandler {
 
 
 
-  public var pointerHoverViewport: CGPoint? {
-    pointer.pointerHover.value
-  }
+//  public var pointerHoverViewport: CGPoint? {
+//    pointer.pointerHover.value
+//  }
 
   /// Aka canvas local space
-  public var pointerHoverCanvas: CGPoint? {
-    pointerHoverMappedNative?.canvas
-  }
+//  public var pointerHoverCanvas: CGPoint? {
+//    pointerHoverMappedNative?.canvas
+//  }
 
-  public var pointerHoverMapperNative: PointerHoverMapper? {
-
-  }
+//  public var pointerHoverMapperNative: PointerHoverMapper? {
+//
+//  }
 
 //  public var pointerHoverMappedNative: HoverMapping? {
 //
@@ -75,19 +76,19 @@ extension CanvasHandler {
 //  }
 
   /// Nil when the hover point is outside the canvas bounds.
-  public var pointerHoverCanvasIfInside: CGPoint? {
-    guard let mapped = pointerHoverMappedNative else {
-      printMissing("pointerHoverMapped", for: "pointerHoverCanvasIfInside")
-      return nil
-    }
-
-    guard mapped.isInsideCanvas else {
-      printDidNotSatisfy("mapped.isInsideCanvas", expectation: "true", for: "pointerHoverCanvasIfInside")
-
-      return nil
-    }
-    return mapped.canvas
-  }
+//  public var pointerHoverCanvasIfInside: CGPoint? {
+//    guard let mapped = pointerHoverMappedNative else {
+//      printMissing("pointerHoverMapped", for: "pointerHoverCanvasIfInside")
+//      return nil
+//    }
+//
+//    guard mapped.isInsideCanvas else {
+//      printDidNotSatisfy("mapped.isInsideCanvas", expectation: "true", for: "pointerHoverCanvasIfInside")
+//
+//      return nil
+//    }
+//    return mapped.canvas
+//  }
 }
 
 extension CanvasHandler {

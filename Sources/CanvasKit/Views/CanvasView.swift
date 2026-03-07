@@ -66,6 +66,7 @@ public struct CanvasView<Content: View>: View {
 
         /// This is passed in via the CanvasView initialiser. Adding it to the Env here.
         .environment(\.canvasSize, canvasSize)
+      
         .bindModel(debounce: .noDebounce, $store.transform, to: transformState)
         .bindModel(debounce: .noDebounce, $store.pointer, to: pointerState)
 

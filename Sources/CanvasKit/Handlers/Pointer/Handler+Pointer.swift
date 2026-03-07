@@ -10,27 +10,43 @@ import Foundation
 import GestureKit
 
 /// I think pointer handler doesn't need ViewportContext?
-public struct PointerHandler {
+struct PointerHandler {
 
   //  let canvasGeometry: CanvasGeometry
   let canvasSize: Size<CanvasSpace>
 
   /// Comes from `overlayPreferenceValue()` in `CanvasCoreView`
-  let artworkFrameInViewport: CGRect?
+  let artworkFrameInViewport: CGRect
   let zoom: CGFloat
   let zoomRange: ClosedRange<CGFloat>
   //  let transformState: TransformState
+
+  init?(
+    canvasSize: Size<CanvasSpace>?,
+    artworkFrameInViewport: CGRect?,
+    zoom: CGFloat,
+    zoomRange: ClosedRange<CGFloat>?
+  ) {
+    guard let canvasSize,
+      let artworkFrameInViewport,
+      let zoomRange
+    else { return nil }
+    self.canvasSize = canvasSize
+    self.artworkFrameInViewport = artworkFrameInViewport
+    self.zoom = zoom
+    self.zoomRange = zoomRange
+  }
 }
 
 extension PointerHandler {
 
   public func canvasPoint(
     fromViewportPoint point: CGPoint,
-    artworkFrameInViewport: CGRect
+//    artworkFrameInViewport: CGRect
   ) -> CGPoint? {
     map(
       viewportPoint: point,
-      artworkFrameInViewport: artworkFrameInViewport
+//      artworkFrameInViewport: artworkFrameInViewport
     ).canvas
     //    mapper?.map(viewportPoint: point, zoom: zoomClamped).canvas
   }
@@ -44,7 +60,7 @@ extension PointerHandler {
 
   public func map(
     viewportPoint: CGPoint,
-    artworkFrameInViewport: CGRect
+//    artworkFrameInViewport: CGRect
       //    zoom: CGFloat
   ) -> HoverMapping {
     //    guard let artworkFrameInViewport else { return nil }

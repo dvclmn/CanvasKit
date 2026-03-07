@@ -23,13 +23,17 @@ public enum ZoomFocusResolver: String, Sendable, Equatable, CaseIterable {
 
 extension CanvasHandler {
   func resolvedZoomFocus(
-    for phase: InteractionPhase
+    for phase: InteractionPhase,
+    geometry: CanvasGeometry,
+//    pointerLocationGlobal: CGPoint?
   ) -> CGPoint? {
-    guard let geometry else { return nil  }
+    //    guard let geometry else { return nil  }
     let viewportCentre = CGPoint(
       x: geometry.viewportRect.midX,
       y: geometry.viewportRect.midY
     )
+    
+    let pointerLocation = pointer.pointerHover.value
 
     switch zoomFocusResolver {
       case .latchedPointerOrViewportCentre:
@@ -37,14 +41,14 @@ extension CanvasHandler {
           return latched
         }
 
-        let resolved = pointerHoverGlobal ?? viewportCentre
+        let resolved = pointerLocation ?? viewportCentre
         if phase.isActive {
           transform.latchedZoomFocusGlobal = resolved
         }
         return resolved
 
       case .pointerOrViewportCentre:
-        return pointerHoverGlobal ?? viewportCentre
+        return pointerLocation ?? viewportCentre
 
       case .viewportCentre:
         return viewportCentre

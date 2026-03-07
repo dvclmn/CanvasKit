@@ -14,7 +14,8 @@ extension CanvasHandler {
   /// This makes pinch/spread feel anchored to pointer intent instead of viewport centre.
   @discardableResult
   public func updateZoom(
-    using event: ZoomGestureEvent
+    using event: ZoomGestureEvent,
+    geometry: CanvasGeometry
   ) -> Double {
     defer { clearLatchedZoomFocusIfNeeded(for: event.phase) }
 
@@ -22,22 +23,25 @@ extension CanvasHandler {
     let nextZoom = clampedProposedZoom(event.proposedZoom)
 
     transform.zoomState.update(nextZoom, phase: event.phase)
-//    transform.zoomState.update(nextZoom, phase: event.phase)
+    //    transform.zoomState.update(nextZoom, phase: event.phase)
 
-    guard let geometry, geometry.isValidForCoordinateMapping,
+    guard geometry.isValidForCoordinateMapping,
       previousZoom.isFinite, nextZoom.isFinite,
       previousZoom > 0, nextZoom > 0,
       abs(nextZoom - previousZoom) > .ulpOfOne,
-      let resolved = resolvedZoomFocus(for: event.phase)
+      let resolved = resolvedZoomFocus(
+        for: event.phase,
+        geometry: geometry,
+      )
     else { return transform.zoomState.zoom }
 
-    let focus = sanitisedFocusPoint(resolved)
+    let focus = sanitisedFocusPoint(resolved, geometry: geometry)
 
     guard
       let previousContext = geometry.viewportContext(
         zoom: CGFloat(previousZoom),
         pan: transform.panState.pan
-//        pan: panGesture.pan
+          //        pan: panGesture.pan
       )
     else { return transform.zoomState.zoom }
 
@@ -59,7 +63,11 @@ extension CanvasHandler {
       height: focus.y - focusGlobalAtZeroPan.y
     )
 
-    transform.panState.value = clampedPan(proposedPan, at: nextZoom)
+    transform.panState.value = clampedPan(
+      proposedPan,
+      at: nextZoom,
+      geometry: geometry
+    )
     return transform.zoomState.zoom
   }
 }
@@ -72,16 +80,20 @@ extension CanvasHandler {
 
   private func clampedPan(
     _ proposedPan: CGSize,
-    at zoom: Double
+    at zoom: Double,
+    geometry: CanvasGeometry
   ) -> CGSize {
-    guard let geometry else { return transform.panState.pan }
+    //    guard let geometry else { return transform.panState.pan }
     var candidate = transform.panState
     candidate.value = proposedPan
     return candidate.clamped(to: geometry, zoom: CGFloat(zoom))
   }
 
-  private func sanitisedFocusPoint(_ point: CGPoint) -> CGPoint {
-    guard let geometry else { return point }
+  private func sanitisedFocusPoint(
+    _ point: CGPoint,
+    geometry: CanvasGeometry
+  ) -> CGPoint {
+    //    guard let geometry else { return point }
     guard point.x.isFinite, point.y.isFinite else {
       return CGPoint(
         x: geometry.viewportRect.midX,
