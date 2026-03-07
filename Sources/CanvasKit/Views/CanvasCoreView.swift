@@ -26,7 +26,7 @@ struct CanvasCoreView<Content: View>: View {
 
     Rectangle()
       .fill(.clear)
-//      .environment(\.pointerLocation, store.pointerHoverCanvas)
+      //      .environment(\.pointerLocation, store.pointerHoverCanvas)
       .overlay {
         if canvasGeometry != nil, zoomRange != nil {
           CanvasArtwork(content: content)
@@ -34,14 +34,14 @@ struct CanvasCoreView<Content: View>: View {
             /// Should probably set this up to be clearer for *non*
             /// Grid domain contexts
             .gridFont(for: .canvas)
-//          Text("\(store.pointerHoverCanvas)")
+          //          Text("\(store.pointerHoverCanvas)")
         }
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       .allowsHitTesting(false)
 
-    /// This background is only visible if the Artwork view
-//      .background(.orange, ignoresSafeAreaEdges: .top)
+      /// This background is only visible if the Artwork view
+      //      .background(.orange, ignoresSafeAreaEdges: .top)
       .background(canvasBackground, ignoresSafeAreaEdges: .top)
       .drawingGroup(opaque: true)
 
@@ -61,10 +61,10 @@ struct CanvasCoreView<Content: View>: View {
         }
       }
       .panGesture(isEnabled: true) { delta, phase, _ in
-        store.transform.panState.updateDelta(delta, phase: phase)
+        store.state.transform.panState.updateDelta(delta, phase: phase)
       }
       .zoomGesture(
-        zoom: $store.transform.zoomState.value.toBindingDouble,
+        zoom: $store.state.transform.zoomState.value.toBindingDouble,
         isEnabled: true,
         didUpdateEvent: { event in
           store.updateZoom(using: event)
@@ -73,20 +73,20 @@ struct CanvasCoreView<Content: View>: View {
       .tapDragGesture(
         rect: store.dragRectBinding(),
         behavior: store.activeDragType,
-        minimumDistance: store.pointerDrag.dragThreshold,
+        minimumDistance: store.state.pointer.pointerDrag.dragThreshold,
         didUpdateTap: { location in
-          store.pointerTap.value = store.canvasPoint(fromViewportPoint: location)
+          store.state.pointer.pointerTap.value = store.canvasPoint(fromViewportPoint: location)
         }
       )
-//      .environment(\.panOffset, store.transform.panState.pan)
-//      .environment(\.zoomLevel, store.zoomClamped)
-//      .environment(\.pointerLocation, store.pointerHoverCanvas)
+      //      .environment(\.panOffset, store.transform.panState.pan)
+      //      .environment(\.zoomLevel, store.zoomClamped)
+      //      .environment(\.pointerLocation, store.pointerHoverCanvas)
 
       .onContinuousHover(coordinateSpace: .named(CanvasSpace.viewport)) { phase in
         store.updateHover(phase)
       }
 
-//      .environment(\.pointerLocation, store.pointerHoverCanvasIfInside)
+    //      .environment(\.pointerLocation, store.pointerHoverCanvasIfInside)
 
   }
 }

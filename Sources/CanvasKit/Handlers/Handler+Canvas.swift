@@ -42,23 +42,23 @@ public final class CanvasHandler {
 
 extension CanvasHandler {
 
-  var zoomClamped: CGFloat { canvasState.zoomState.zoom.clampedIfNeeded(to: zoomRange) }
+  var zoomClamped: CGFloat { state.transform.zoomState.zoom.clampedIfNeeded(to: zoomRange) }
 
   @MainActor
   public func dragRectBinding() -> Binding<CGRect?> {
     return switch activeDragType {
       case .marquee:
         Binding {
-          state.pointer.pointerDrag.value
+          self.state.pointer.pointerDrag.value
         } set: {
-          state.pointer.pointerDrag.value = $0
+          self.state.pointer.pointerDrag.value = $0
         }
 
       case .continuous:
         Binding {
-          state.transform.panState.pan.toCGRectZeroOrigin
+          self.state.transform.panState.pan.toCGRectZeroOrigin
         } set: {
-          state.transform.panState.update($0?.size ?? .zero, phase: .changed)
+          self.state.transform.panState.update($0?.size ?? .zero, phase: .changed)
         }
 
       case .none:

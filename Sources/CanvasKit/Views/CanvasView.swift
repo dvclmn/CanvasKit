@@ -65,7 +65,7 @@ public struct CanvasView<Content: View>: View {
       //
       //    }
       .environment(\.canvasSize, canvasSize)
-      .bindModel(debounce: .noDebounce, $store.canvasState, to: state)
+      .bindModel(debounce: .noDebounce, $store.state, to: state)
     } else {
       
     }
@@ -88,7 +88,7 @@ extension CanvasView {
     if shouldShowInfoBarItems {
       Labeled(
         "Zoom",
-        value: store.canvasState.zoomLevel.toPercentString(
+        value: store.state.transform.zoomState.zoom.toPercentString(
 //        value: store.transform.zoomState.zoom.toPercentString(
           within: zoomRange,
           decimalPlaces: 2
