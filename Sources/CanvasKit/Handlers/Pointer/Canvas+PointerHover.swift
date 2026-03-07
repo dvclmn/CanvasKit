@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 28/2/2026.
 //
 
-import CoreTools
+import BasePrimitives
 import SwiftUI
 
 extension CanvasHandler {
