@@ -12,27 +12,12 @@ import SwiftUI
 @Observable
 public final class CanvasHandler {
 
-  /// Handles pan, zoom, rotation
-  //  @available(*, deprecated, message: "Prefer `canvasState`, which is passed in from higher up in the View hierarchy, rather than owned by CanvasKit.")
-  //  var transform: CanvasTransformState = .initial
-
   var transform: TransformState = .initial
   var pointer: PointerState = .initial
-  //  var canvasState: CanvasTransformState = .initial
-
-  //  var pointerTap: TapState = .init()
-  //  var pointerDrag: DragState = .init()
-  //  var pointerHover: HoverState = .init()
-
-  /// Note: this `CanvasGeometry` value is computed in the Environment.
-  /// This property can be mutated/updated from `CanvasView` to reflect
-  /// the latest from the env, but cannot be mutated in the Env itself
-  //  public var geometry: CanvasGeometry?
-  
 
   /// The artwork bounds resolved in the viewport named coordinate space.
   /// Captured via SwiftUI anchor preferences in `CanvasCoreView`.
-  var artworkFrameInViewport: CGRect?
+  //  var artworkFrameInViewport: CGRect?
 
   var zoomRange: ClosedRange<Double>?
   var zoomFocusResolver: ZoomFocusResolver = .latchedPointerOrViewportCentre
@@ -40,55 +25,6 @@ public final class CanvasHandler {
   var activeDragType: DragBehavior = .none
 
   public init() {}
-}
-
-// MARK: - Pointer mapping (Native)
-extension CanvasHandler {
-
-
-
-//  public var pointerHoverViewport: CGPoint? {
-//    pointer.pointerHover.value
-//  }
-
-  /// Aka canvas local space
-//  public var pointerHoverCanvas: CGPoint? {
-//    pointerHoverMappedNative?.canvas
-//  }
-
-//  public var pointerHoverMapperNative: PointerHoverMapper? {
-//
-//  }
-
-//  public var pointerHoverMappedNative: HoverMapping? {
-//
-//    guard let pointerHoverViewport else {
-//      printMissing("pointerHoverViewport", for: "pointerHoverMappedNative")
-//      return nil
-//    }
-//
-//    guard let mapper = pointerHoverMapperNative else {
-//      printMissing("pointerHoverMapperNative", for: "pointerHoverMappedNative")
-//      return nil
-//    }
-//
-//    return mapper.map(viewportPoint: pointerHoverViewport)
-//  }
-
-  /// Nil when the hover point is outside the canvas bounds.
-//  public var pointerHoverCanvasIfInside: CGPoint? {
-//    guard let mapped = pointerHoverMappedNative else {
-//      printMissing("pointerHoverMapped", for: "pointerHoverCanvasIfInside")
-//      return nil
-//    }
-//
-//    guard mapped.isInsideCanvas else {
-//      printDidNotSatisfy("mapped.isInsideCanvas", expectation: "true", for: "pointerHoverCanvasIfInside")
-//
-//      return nil
-//    }
-//    return mapped.canvas
-//  }
 }
 
 extension CanvasHandler {
@@ -117,4 +53,51 @@ extension CanvasHandler {
 
     }
   }
+}
+
+// MARK: - Pointer mapping (Native)
+extension CanvasHandler {
+
+  //  public var pointerHoverViewport: CGPoint? {
+  //    pointer.pointerHover.value
+  //  }
+
+  /// Aka canvas local space
+  //  public var pointerHoverCanvas: CGPoint? {
+  //    pointerHoverMappedNative?.canvas
+  //  }
+
+  //  public var pointerHoverMapperNative: PointerHoverMapper? {
+  //
+  //  }
+
+  //  public var pointerHoverMappedNative: HoverMapping? {
+  //
+  //    guard let pointerHoverViewport else {
+  //      printMissing("pointerHoverViewport", for: "pointerHoverMappedNative")
+  //      return nil
+  //    }
+  //
+  //    guard let mapper = pointerHoverMapperNative else {
+  //      printMissing("pointerHoverMapperNative", for: "pointerHoverMappedNative")
+  //      return nil
+  //    }
+  //
+  //    return mapper.map(viewportPoint: pointerHoverViewport)
+  //  }
+
+  /// Nil when the hover point is outside the canvas bounds.
+  //  public var pointerHoverCanvasIfInside: CGPoint? {
+  //    guard let mapped = pointerHoverMappedNative else {
+  //      printMissing("pointerHoverMapped", for: "pointerHoverCanvasIfInside")
+  //      return nil
+  //    }
+  //
+  //    guard mapped.isInsideCanvas else {
+  //      printDidNotSatisfy("mapped.isInsideCanvas", expectation: "true", for: "pointerHoverCanvasIfInside")
+  //
+  //      return nil
+  //    }
+  //    return mapped.canvas
+  //  }
 }
