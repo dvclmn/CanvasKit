@@ -27,7 +27,7 @@ public final class CanvasHandler {
   /// Note: this `CanvasGeometry` value is computed in the Environment.
   /// This property can be mutated/updated from `CanvasView` to reflect
   /// the latest from the env, but cannot be mutated in the Env itself
-  public var geometry: CanvasGeometry?
+//  public var geometry: CanvasGeometry?
 
   /// The artwork bounds resolved in the viewport named coordinate space.
   /// Captured via SwiftUI anchor preferences in `CanvasCoreView`.

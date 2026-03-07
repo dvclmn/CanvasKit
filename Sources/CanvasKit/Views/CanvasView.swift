@@ -77,21 +77,21 @@ public struct CanvasView<Content: View>: View {
 
 extension CanvasView {
 
-  private var canvasGeometry: CanvasGeometry? {
-    guard let viewportRect, let canvasSize else { return nil }
-    return CanvasGeometry(
-      viewportRect: viewportRect,
-      canvasSize: canvasSize,
-      anchor: canvasAnchor
-    )
-  }
+//  private var canvasGeometry: CanvasGeometry? {
+//    guard let viewportRect, let canvasSize else { return nil }
+//    return CanvasGeometry(
+//      viewportRect: viewportRect,
+//      canvasSize: canvasSize,
+//      anchor: canvasAnchor
+//    )
+//  }
 
   @DisplayStringBuilder
   private func InfoItems(_ zoomRange: ClosedRange<Double>) -> [DisplayBlock] {
     if shouldShowInfoBarItems {
       Labeled(
         "Zoom",
-        value: store.state.transform.zoomState.zoom.toPercentString(
+        value: store.transform.zoomState.zoom.toPercentString(
           //        value: store.transform.zoomState.zoom.toPercentString(
           within: zoomRange,
           decimalPlaces: 2

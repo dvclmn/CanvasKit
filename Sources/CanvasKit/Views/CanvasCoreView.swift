@@ -17,7 +17,7 @@ struct CanvasCoreView<Content: View>: View {
   /// A lot of the optionals have been moved here to `CanvasCoreView`
   /// sepcifically so the 'flash' while dependancies load in (like viewportRect, unitSize etc)
   /// doesn't cause such a visual disturbance, As the canvas background etc is handled here.
-  let canvasGeometry: CanvasGeometry?
+//  let canvasGeometry: CanvasGeometry?
   @ViewBuilder var content: () -> Content
 
   var body: some View {

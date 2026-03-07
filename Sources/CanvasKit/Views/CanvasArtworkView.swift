@@ -14,14 +14,16 @@ struct CanvasArtwork<Content: View>: View {
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.zoomClamped) private var zoomClamped
   @Environment(\.canvasBackground) private var canvasBackground
+  @Environment(\.transformState) private var transformState
+  @Environment(\.canvasSize) private var canvasSize
 
   @ViewBuilder var content: () -> Content
 
   var body: some View {
     canvasDecomposed
       .frame(
-        width: store.geometry?.canvasSize.width,
-        height: store.geometry?.canvasSize.height
+        width: canvasSize?.width,
+        height: canvasSize?.height
       )
       .coordinateSpace(.named(CanvasSpace.artwork))
       .anchorPreference(
@@ -29,7 +31,7 @@ struct CanvasArtwork<Content: View>: View {
         value: .bounds
       ) { $0 }
       .scaleEffect(zoomClamped)
-      .offset(store.state.transform.panState.pan)
+      .offset(transformState?.wrappedValue.panState.pan ?? .zero)
       .frame(maxWidth: .infinity, maxHeight: .infinity)
     /// Hit testing, background and drawing group are all handled in Canvas Core view
     //      .allowsHitTesting(false)

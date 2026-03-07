@@ -113,7 +113,7 @@ extension CanvasHandler {
   }
 
   public func updateHover(_ phase: HoverPhase) {
-    state.pointer.pointerHover.update(phase)
+    pointer.pointerHover.update(phase)
     //    pointerHover.update(phase)
   }
 
