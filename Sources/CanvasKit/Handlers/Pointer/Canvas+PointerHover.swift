@@ -13,7 +13,7 @@ extension CanvasHandler {
     geometry?.viewportContext(
       zoom: zoomClamped,
       pan: canvasState.panOffset
-//      pan: transform.panState.pan
+        //      pan: transform.panState.pan
     )
   }
 
@@ -40,7 +40,7 @@ extension CanvasHandler {
 
   /// Pointer location in the named viewport coordinate space.
   public var pointerHoverViewport: CGPoint? {
-    pointerHover.value
+    state.pointer.pointerHover.value
   }
 
   /// Legacy global/screen representation retained for compatibility.
@@ -113,7 +113,8 @@ extension CanvasHandler {
   }
 
   public func updateHover(_ phase: HoverPhase) {
-    pointerHover.update(phase)
+    state.pointer.pointerHover.update(phase)
+    //    pointerHover.update(phase)
   }
 
   public func canvasPoint(fromViewportPoint point: CGPoint) -> CGPoint? {

@@ -33,13 +33,13 @@ extension CanvasHandler {
 
     switch zoomFocusResolver {
       case .latchedPointerOrViewportCentre:
-        if let latched = transform.latchedZoomFocusGlobal {
+        if let latched = state.transform.latchedZoomFocusGlobal {
           return latched
         }
 
         let resolved = pointerHoverGlobal ?? viewportCentre
         if phase.isActive {
-          transform.latchedZoomFocusGlobal = resolved
+          state.transform.latchedZoomFocusGlobal = resolved
         }
         return resolved
 
@@ -55,6 +55,6 @@ extension CanvasHandler {
     for phase: InteractionPhase
   ) {
     guard !phase.isActive else { return }
-    transform.latchedZoomFocusGlobal = nil
+    state.transform.latchedZoomFocusGlobal = nil
   }
 }
