@@ -65,6 +65,8 @@ public struct CanvasView<Content: View>: View {
       //    }
       .environment(\.canvasSize, canvasSize)
       .bindModel(debounce: .noDebounce, $store.canvasState, to: state)
+    } else {
+      
     }
   }
 }
