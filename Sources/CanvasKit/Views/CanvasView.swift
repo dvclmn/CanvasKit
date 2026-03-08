@@ -65,10 +65,10 @@ public struct CanvasView<Content: View>: View {
       /// This is passed in via the CanvasView initialiser. Adding it to the Env here.
       .environment(\.canvasSize, canvasSize)
       .environment(\.canvasFrameInViewport, store.canvasFrameInViewport)
-    
-      .environment(\.zoomLevel, interactionState.transform.zoomState.zoom)
-      .environment(\.panOffset, interactionState.transform.panState.pan)
-      .environment(\.rotation, interactionState.transform.rotationState.rotation)
+
+      .environment(\.zoomLevel, interactionState.transform.zoom)
+      .environment(\.panOffset, interactionState.transform.pan)
+      .environment(\.rotation, interactionState.transform.rotation)
       .environment(\.pointerLocation, interactionState.pointer.pointerHover.value)
 
       .task(id: zoomRange) { store.zoomRange = zoomRange }
@@ -99,11 +99,14 @@ extension CanvasView {
     _ zoomRange: ClosedRange<Double>
   ) -> [DisplayBlock] {
     if shouldShowInfoBarItems {
+      Labeled("Viewport", value: viewportRect)
+      
       Labeled(
         "Zoom",
-        value: interactionState.transform.zoomState.zoom.toPercentString(within: zoomRange)
-
+        value: interactionState.transform.zoom
+          .toPercentString(within: zoomRange)
       )
+      
     }
   }
 }
