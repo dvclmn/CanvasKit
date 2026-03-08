@@ -10,11 +10,12 @@ import SwiftUI
 
 struct CanvasArtwork<Content: View>: View {
   @Environment(CanvasHandler.self) private var store
+  @Environment(InteractionState.self) private var interactionState
   @Environment(\.zoomLevel) private var zoomLevel
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.zoomClamped) private var zoomClamped
   @Environment(\.canvasBackground) private var canvasBackground
-  @Environment(\.transformState) private var transformState
+//  @Environment(\.transformState) private var transformState
   @Environment(\.canvasSize) private var canvasSize
 
   @ViewBuilder var content: () -> Content
@@ -29,7 +30,7 @@ struct CanvasArtwork<Content: View>: View {
       .anchorPreference(key: ArtworkBoundsAnchorKey.self, value: .bounds) { $0 }
     
       .scaleEffect(zoomClamped)
-      .offset(transformState?.wrappedValue.panState.pan ?? .zero)
+      .offset(interactionState.transform.panState.pan)
       .frame(maxWidth: .infinity, maxHeight: .infinity)
     /// Hit testing, background and drawing group are all handled in Canvas Core view
 
