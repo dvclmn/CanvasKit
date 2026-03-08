@@ -11,13 +11,14 @@ import SwiftUI
 
 struct CanvasCoreView<Content: View>: View {
   @Environment(CanvasHandler.self) private var store
+  @Environment(InteractionState.self) private var interactionState
   @Environment(\.canvasBackground) private var canvasBackground
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.zoomLevel) private var zoomLevel
   @Environment(\.canvasSize) private var canvasSize
   @Environment(\.canvasGeometry) private var canvasGeometry
-  @Environment(\.pointerState) private var pointerState
-  @Environment(\.transformState) private var transformState
+//  @Environment(\.pointerState) private var pointerState
+//  @Environment(\.transformState) private var transformState
 
   /// A lot of the optionals have been moved here to `CanvasCoreView`
   /// sepcifically so the 'flash' while dependancies load in (like viewportRect, unitSize etc)
@@ -28,6 +29,7 @@ struct CanvasCoreView<Content: View>: View {
   var body: some View {
 
     @Bindable var store = store
+    @Bindable var interactionState = interactionState
 
     Rectangle()
       .fill(.clear)
@@ -62,16 +64,18 @@ struct CanvasCoreView<Content: View>: View {
         }
       }
       .panGesture(isEnabled: true) { delta, phase, _ in
-        transformState?.wrappedValue.panState.updateDelta(delta, phase: phase)
+        interactionState.transform.panState.updateDelta(delta, phase: phase)
+//        transformState?.wrappedValue.panState.updateDelta(delta, phase: phase)
       }
       .zoomGesture(
-        zoom: transformState?.zoomState.value.toBindingDouble ?? .constant(1),
+        zoom: $interactionState.transform.zoomState.value.toBindingDouble,
+//        zoom: transformState?.zoomState.value.toBindingDouble ?? .constant(1),
         //        zoom: $store.transform.zoomState.value.toBindingDouble,
         isEnabled: true,
         didUpdateEvent: {
 //          guard let canvasGeometry else { return nil }
           let newZoom = $0.magnification
-          transformState?.wrappedValue.zoomState.update($0.magnification, phase: .ended)
+          interactionState.transform.zoomState.update($0.magnification, phase: .ended)
           return newZoom
           //return
           //          return
@@ -82,10 +86,10 @@ struct CanvasCoreView<Content: View>: View {
         rect: dragRectBinding(),
         //        rect: store.dragRectBinding(),
         behavior: store.activeDragType,
-        minimumDistance: pointerState?.wrappedValue.pointerDrag.dragThreshold ?? 2,
+        minimumDistance: interactionState.pointer.pointerDrag.dragThreshold,
         didUpdateTap: { location in
           let newValue = store.updateTapLocation(location, zoom: zoom)
-          pointerState?.wrappedValue.pointerTap.update(newValue)
+          interactionState.pointer.pointerTap.update(newValue)
           //          store.updateTapLocation(location, zoom: transformState?.wrappedValue.zoomState.zoom.toCGFloat)
           //          pointerState?.wrappedValue.pointerTap.update(
           //            pointerHandler?.canvasPoint(fromViewportPoint: location))
@@ -98,7 +102,7 @@ struct CanvasCoreView<Content: View>: View {
 
       .onContinuousHover(coordinateSpace: .named(CanvasSpace.viewport)) { phase in
         let newValue = store.updateHoverLocation(phase, zoom: zoom)
-        pointerState?.wrappedValue.pointerHover.update(newValue)
+        interactionState.pointer.pointerHover.update(newValue)
         //        transformState?.wrappedValue.panState.u
         //        store.updatePointerLocation(phase)
         //        store.pointer.pointerHover.update(phase)
@@ -113,23 +117,23 @@ struct CanvasCoreView<Content: View>: View {
 extension CanvasCoreView {
 
   private var zoom: CGFloat {
-    transformState?.wrappedValue.zoomState.zoom.toCGFloat ?? 1.0
+    interactionState.transform.zoomState.zoom.toCGFloat
   }
   //  @MainActor
   func dragRectBinding() -> Binding<CGRect?> {
     return switch store.activeDragType {
       case .marquee:
         Binding {
-          pointerState?.wrappedValue.pointerDrag.value
+          interactionState.pointer.pointerDrag.value
         } set: {
-          pointerState?.wrappedValue.pointerDrag.value = $0
+          interactionState.pointer.pointerDrag.value = $0
         }
 
       case .continuous:
         Binding {
-          transformState?.wrappedValue.panState.pan.toCGRectZeroOrigin
+          interactionState.transform.panState.pan.toCGRectZeroOrigin
         } set: {
-          transformState?.wrappedValue.panState.update($0?.size ?? .zero, phase: .changed)
+          interactionState.transform.panState.update($0?.size ?? .zero, phase: .changed)
         }
 
       case .none:

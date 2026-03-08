@@ -13,12 +13,13 @@ import SwiftUI
 //import UIPrimitives
 
 public struct CanvasView<Content: View>: View {
+  @Environment(InteractionState.self) private var interactionState
   @Environment(\.viewportRect) private var viewportRect
   @Environment(\.canvasAnchor) private var canvasAnchor
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.shouldShowInfoBarItems) private var shouldShowInfoBarItems
-  @Environment(\.transformState) private var transformState
-  @Environment(\.pointerState) private var pointerState
+  //  @Environment(\.transformState) private var transformState
+  //  @Environment(\.pointerState) private var pointerState
 
   @State var store = CanvasHandler()
 
@@ -37,43 +38,43 @@ public struct CanvasView<Content: View>: View {
 
   public var body: some View {
 
-    if let transformState, let pointerState {
-      CanvasCoreView(content: content)
+    //    if let transformState, let pointerState {
+    CanvasCoreView(content: content)
 
-        .addInfoBarItems {
-          if let zoomRange {
-            InfoItems(zoomRange)
-          }
+      .addInfoBarItems {
+        if let zoomRange {
+          InfoItems(zoomRange)
         }
-        .environment(store)
+      }
+      .environment(store)
 
-        //    .toolbar {
-        //      ToolbarItem {
-        //        if let zoomRange {
-        //          //          Slider(value: $store.transform.zoom.value, in: zoomRange)
-        //          QuickSlider("Zoom", value: $store.transform.zoomState.value, range: zoomRange)
-        ////          QuickSlider("Zoom", value: $store.transform.zoomState.value, range: zoomRange)
-        //
-        //            .frame(minWidth: 200)
-        //
-        //        }
-        //      }
-        //
-        //    }
+      //    .toolbar {
+      //      ToolbarItem {
+      //        if let zoomRange {
+      //          //          Slider(value: $store.transform.zoom.value, in: zoomRange)
+      //          QuickSlider("Zoom", value: $store.transform.zoomState.value, range: zoomRange)
+      ////          QuickSlider("Zoom", value: $store.transform.zoomState.value, range: zoomRange)
+      //
+      //            .frame(minWidth: 200)
+      //
+      //        }
+      //      }
+      //
+      //    }
 
-        /// This is passed in via the CanvasView initialiser. Adding it to the Env here.
-        .environment(\.canvasSize, canvasSize)
-        .environment(\.canvasFrameInViewport, store.canvasFrameInViewport)
+      /// This is passed in via the CanvasView initialiser. Adding it to the Env here.
+      .environment(\.canvasSize, canvasSize)
+      .environment(\.canvasFrameInViewport, store.canvasFrameInViewport)
 
-        .task(id: zoomRange) { store.zoomRange = zoomRange }
-        .task(id: canvasSize) { store.canvasSize = canvasSize }
-      
-//        .bindModel(debounce: .noDebounce, $store.transform, to: transformState)
-//        .bindModel(debounce: .noDebounce, $store.pointer, to: pointerState)
+      .task(id: zoomRange) { store.zoomRange = zoomRange }
+      .task(id: canvasSize) { store.canvasSize = canvasSize }
 
-    } else {
-      Text("No Transform State or Pointer State")
-    }
+    //        .bindModel(debounce: .noDebounce, $store.transform, to: transformState)
+    //        .bindModel(debounce: .noDebounce, $store.pointer, to: pointerState)
+
+    //    } else {
+    //      Text("No Transform State or Pointer State")
+    //    }
   }
 }
 
@@ -95,7 +96,8 @@ extension CanvasView {
     if shouldShowInfoBarItems {
       Labeled(
         "Zoom",
-        value: transformState?.wrappedValue.zoomState.zoom.toPercentString(within: zoomRange)
+        value: interactionState.transform.zoomState.zoom.toPercentString(within: zoomRange)
+//        value: transformState?.wrappedValue.zoomState.zoom.toPercentString(within: zoomRange)
         //        value: store.transform.zoomState.zoom.toPercentString(
         //        value: store.transform.zoomState.zoom.toPercentString(
         //          within: zoomRange,
