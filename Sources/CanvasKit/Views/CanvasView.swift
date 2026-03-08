@@ -65,6 +65,11 @@ public struct CanvasView<Content: View>: View {
       /// This is passed in via the CanvasView initialiser. Adding it to the Env here.
       .environment(\.canvasSize, canvasSize)
       .environment(\.canvasFrameInViewport, store.canvasFrameInViewport)
+    
+      .environment(\.zoomLevel, interactionState.transform.zoomState.zoom)
+      .environment(\.panOffset, interactionState.transform.panState.pan)
+      .environment(\.rotation, interactionState.transform.rotationState.rotation)
+      .environment(\.pointerLocation, interactionState.pointer.pointerHover.value)
 
       .task(id: zoomRange) { store.zoomRange = zoomRange }
       .task(id: canvasSize) { store.canvasSize = canvasSize }
@@ -97,25 +102,8 @@ extension CanvasView {
       Labeled(
         "Zoom",
         value: interactionState.transform.zoomState.zoom.toPercentString(within: zoomRange)
-//        value: transformState?.wrappedValue.zoomState.zoom.toPercentString(within: zoomRange)
-        //        value: store.transform.zoomState.zoom.toPercentString(
-        //        value: store.transform.zoomState.zoom.toPercentString(
-        //          within: zoomRange,
-        //          decimalPlaces: 2
-        //        )
-      )
-      //      Labeled(
-      //        "Zoom Range",
-      //        value: "\(zoomRange.lowerBound)...\(zoomRange.upperBound)"
-      //      )
 
-      //      #if DEBUG
-      //      if let comparison = store.pointerHoverMappingComparison {
-      //        Labeled("Hover Drift", value: comparison.canvasDrift)
-      //        Labeled("Native RT", value: comparison.nativeRoundTripError)
-      //        Labeled("Legacy RT", value: comparison.legacyRoundTripError)
-      //      }
-      //      #endif
+      )
     }
   }
 }

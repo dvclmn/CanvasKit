@@ -69,17 +69,19 @@ struct CanvasCoreView<Content: View>: View {
       }
       .zoomGesture(
         zoom: $interactionState.transform.zoomState.value.toBindingDouble,
-//        zoom: transformState?.zoomState.value.toBindingDouble ?? .constant(1),
-        //        zoom: $store.transform.zoomState.value.toBindingDouble,
         isEnabled: true,
         didUpdateEvent: {
-//          guard let canvasGeometry else { return nil }
-          let newZoom = $0.magnification
-          interactionState.transform.zoomState.update($0.magnification, phase: .ended)
-          return newZoom
-          //return
-          //          return
-          //          return store.updateZoom(using: $0, geometry: canvasGeometry, in: zoomRange)
+          guard let canvasGeometry else {
+            let newZoom = $0.magnification
+            interactionState.transform.zoomState.update(newZoom, phase: $0.phase)
+            return newZoom
+          }
+          return store.updateZoom(
+            using: $0,
+            interactionState: &interactionState,
+            geometry: canvasGeometry,
+            in: zoomRange
+          )
         }
       )
       .tapDragGesture(
