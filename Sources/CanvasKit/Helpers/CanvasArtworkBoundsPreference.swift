@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CanvasArtworkBoundsAnchorKey: PreferenceKey {
+struct ArtworkBoundsAnchorKey: PreferenceKey {
   static let defaultValue: Anchor<CGRect>? = nil
 
   static func reduce(

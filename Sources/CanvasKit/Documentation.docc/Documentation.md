@@ -68,7 +68,7 @@ This difference is important: hover and tap now use a native-first mapping path 
 | `ViewportContext.toCanvas(screenPoint:)` | `(viewportPoint - artworkFrame.minXY) / zoom` in `NativePointerHoverHandler` | Same conversion intent, but origin source is native resolved frame, not recomputed maths. |
 | `PointerHoverHandler(context:)` | `NativePointerHoverHandler(artworkFrameInViewport:canvasSize:zoom:)` | Both currently run side-by-side for one-to-one comparison. |
 | `.coordinateSpace(.named(CanvasSpace.safeArea))` on artwork only | `.coordinateSpace(.named(CanvasSpace.viewport))` on ``CanvasCoreView`` + `.coordinateSpace(.named(CanvasSpace.artwork))` on ``CanvasArtwork`` | Named spaces are now placed where gesture capture and artwork identity live. |
-| Implicit frame derivation from env values | `CanvasArtworkBoundsAnchorKey` + `overlayPreferenceValue` | Uses anchor preferences to propagate bounds up tree and resolve in ancestor space. |
+| Implicit frame derivation from env values | `ArtworkBoundsAnchorKey` + `overlayPreferenceValue` | Uses anchor preferences to propagate bounds up tree and resolve in ancestor space. |
 
 ## Migration instrumentation
 
@@ -96,7 +96,7 @@ Trackpad delta arrives in GestureKit pan modifier
 ### 3) Pointer hover mapping
 Hover point captured in viewport named space
 -> `store.pointerHover`
--> `CanvasArtwork` emits `.bounds` anchor via `CanvasArtworkBoundsAnchorKey`
+-> `CanvasArtwork` emits `.bounds` anchor via `ArtworkBoundsAnchorKey`
 -> `CanvasCoreView` resolves anchor with `GeometryProxy` into `artworkFrameInViewport`
 -> `NativePointerHoverHandler.map(viewportPoint:)`
 -> `HoverMapping` with canvas point + inside/outside result.

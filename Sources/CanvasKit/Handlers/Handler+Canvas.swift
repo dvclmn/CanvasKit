@@ -12,8 +12,8 @@ import SwiftUI
 @Observable
 public final class CanvasHandler {
 
-  var transform: TransformState = .initial
-  var pointer: PointerState = .initial
+  //  var transform: TransformState = .initial
+  //  var pointer: PointerState = .initial
   var zoomRange: ClosedRange<Double>?
 
   var canvasFrameInViewport: CGRect?
@@ -26,12 +26,16 @@ public final class CanvasHandler {
 }
 
 extension CanvasHandler {
-  var pointerMapper: PointerHandler? {
-    guard let zoomRange else { return nil }
+  func pointerMapper(
+    zoom: CGFloat?
+  ) -> PointerHandler? {
+    //  var pointerMapper: PointerHandler? {
+    guard let zoomRange, let zoom else { return nil }
     return .init(
       canvasSize: canvasSize,
       artworkFrameInViewport: canvasFrameInViewport,
-      zoom: transform.zoomState.zoom,
+      zoom: zoom,
+      //      zoom: transform.zoomState.zoom,
       zoomRange: zoomRange.toCGFloatRange
     )
   }
@@ -45,55 +49,41 @@ extension CanvasHandler {
   //    )
   //  }
 
-  func updateTapLocation(_ location: CGPoint) {
-    let mapped = pointerMapper?.canvasPoint(fromViewportPoint: location)
-    pointer.pointerTap.update(mapped)
+  func updateTapLocation(
+    _ location: CGPoint,
+    zoom: CGFloat?
+  ) -> CGPoint? {
+    pointerMapper(zoom: zoom)?.canvasPoint(fromViewportPoint: location)
+    //    pointer.pointerTap.update(mapped)
+    //    return mapped
   }
 
-  func updatePointerLocation(_ phase: HoverPhase) {
+  func updateHoverLocation(
+    _ phase: HoverPhase,
+    zoom: CGFloat?
+  ) -> CGPoint? {
     guard
       let location =
         switch phase {
           case .active(let val): val
           case .ended: nil
         }
-    else { return }
-
-    let mappedHover = pointerMapper?.canvasPoint(fromViewportPoint: location)
-    pointer.pointerHover.update(mappedHover)
+    else { return nil }
+    return pointerMapper(zoom: zoom)?.canvasPoint(fromViewportPoint: location)
+//    let mappedHover = pointerMapper(zoom: zoom)?.canvasPoint(fromViewportPoint: location)
+//    pointer.pointerHover.update(mappedHover)
   }
 
-  func clearLatchedZoomFocusIfNeeded(
-    for phase: InteractionPhase
-  ) {
-    guard !phase.isActive else { return }
-    transform.latchedZoomFocusGlobal = nil
-  }
+//  func clearLatchedZoomFocusIfNeeded(
+//    for phase: InteractionPhase
+//  ) {
+//    guard !phase.isActive else { return }
+//    transform.latchedZoomFocusGlobal = nil
+//  }
 
   //  var zoomClamped: CGFloat {  }
 
-  @MainActor
-  public func dragRectBinding() -> Binding<CGRect?> {
-    return switch activeDragType {
-      case .marquee:
-        Binding {
-          self.pointer.pointerDrag.value
-        } set: {
-          self.pointer.pointerDrag.value = $0
-        }
 
-      case .continuous:
-        Binding {
-          self.transform.panState.pan.toCGRectZeroOrigin
-        } set: {
-          self.transform.panState.update($0?.size ?? .zero, phase: .changed)
-        }
-
-      case .none:
-        .constant(nil)
-
-    }
-  }
 }
 
 // MARK: - Pointer mapping (Native)

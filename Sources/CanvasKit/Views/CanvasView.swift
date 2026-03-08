@@ -68,8 +68,8 @@ public struct CanvasView<Content: View>: View {
         .task(id: zoomRange) { store.zoomRange = zoomRange }
         .task(id: canvasSize) { store.canvasSize = canvasSize }
       
-        .bindModel(debounce: .noDebounce, $store.transform, to: transformState)
-        .bindModel(debounce: .noDebounce, $store.pointer, to: pointerState)
+//        .bindModel(debounce: .noDebounce, $store.transform, to: transformState)
+//        .bindModel(debounce: .noDebounce, $store.pointer, to: pointerState)
 
     } else {
       Text("No Transform State or Pointer State")
