@@ -99,7 +99,7 @@ extension CanvasView {
     _ zoomRange: ClosedRange<Double>
   ) -> [DisplayBlock] {
     if shouldShowInfoBarItems {
-      Labeled("Viewport", value: viewportRect)
+//      Labeled("Viewport", value: viewportRect)
       
       Labeled(
         "Zoom",
