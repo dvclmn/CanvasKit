@@ -32,7 +32,7 @@ extension CanvasHandler {
     guard isZoomSafe(in: geometry, prev: previousZoom, next: nextZoom),
       let resolved = zoomFocusResolver.resolved(
         for: event.phase,
-        pointerLocation: interactionState.pointer.pointerHover.value,
+        pointerLocation: interactionState.pointer.hover.value,
         transform: &interactionState.transform,
         geometry: geometry
       )

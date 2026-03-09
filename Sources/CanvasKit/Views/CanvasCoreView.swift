@@ -88,10 +88,10 @@ struct CanvasCoreView<Content: View>: View {
         rect: dragRectBinding(),
         //        rect: store.dragRectBinding(),
         behavior: store.activeDragType,
-        minimumDistance: interactionState.pointer.pointerDrag.dragThreshold,
+        minimumDistance: interactionState.pointer.drag.dragThreshold,
         didUpdateTap: { location in
           let newValue = store.updateTapLocation(location, zoom: zoom)
-          interactionState.pointer.pointerTap.update(newValue)
+          interactionState.pointer.tap.update(newValue)
           //          store.updateTapLocation(location, zoom: transformState?.wrappedValue.zoomState.zoom.toCGFloat)
           //          pointerState?.wrappedValue.pointerTap.update(
           //            pointerHandler?.canvasPoint(fromViewportPoint: location))
@@ -104,7 +104,7 @@ struct CanvasCoreView<Content: View>: View {
 
       .onContinuousHover(coordinateSpace: .named(CanvasSpace.viewport)) { phase in
         let newValue = store.updateHoverLocation(phase, zoom: zoom)
-        interactionState.pointer.pointerHover.update(newValue)
+        interactionState.pointer.hover.update(newValue)
         //        transformState?.wrappedValue.panState.u
         //        store.updatePointerLocation(phase)
         //        store.pointer.pointerHover.update(phase)
@@ -126,9 +126,9 @@ extension CanvasCoreView {
     return switch store.activeDragType {
       case .marquee:
         Binding {
-          interactionState.pointer.pointerDrag.value
+          interactionState.pointer.drag.value
         } set: {
-          interactionState.pointer.pointerDrag.value = $0
+          interactionState.pointer.drag.value = $0
         }
 
       case .continuous:

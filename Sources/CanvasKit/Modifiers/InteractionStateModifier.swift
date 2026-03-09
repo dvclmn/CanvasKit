@@ -25,7 +25,7 @@ struct InteractionStateModifier: ViewModifier {
       .environment(\.zoomLevel, interactionState.transform.zoom)
       .environment(\.panOffset, interactionState.transform.pan)
       .environment(\.rotation, interactionState.transform.rotation)
-      .environment(\.pointerLocation, interactionState.pointer.pointerHover.value)
+      .environment(\.pointerLocation, interactionState.pointer.hover.value)
   }
 }
 extension View {

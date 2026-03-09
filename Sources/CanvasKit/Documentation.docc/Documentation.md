@@ -29,9 +29,9 @@ That handler is the runtime owner of canvas interaction state:
 | `panGesture` (`PanState`) | `panGesture` modifier in ``CanvasCoreView`` |
 | `zoomGesture` (`ZoomState`) | `zoomGesture` modifier in ``CanvasCoreView`` |
 | `rotateGesture` (`RotateState`) | (Declared, not currently wired in `CanvasCoreView`) |
-| `pointerTap` (`TapState`) | `tapDragGesture` tap callback in ``CanvasCoreView`` |
+| `tap` (`TapState`) | `tapDragGesture` tap callback in ``CanvasCoreView`` |
 | `pointerDrag` (`DragState`) | `dragRectBinding()` when drag behaviour is `.marquee` |
-| `pointerHover` (`HoverState`) | `.onContinuousHover(coordinateSpace: .named(CanvasSpace.viewport))` in ``CanvasCoreView`` |
+| `hover` (`HoverState`) | `.onContinuousHover(coordinateSpace: .named(CanvasSpace.viewport))` in ``CanvasCoreView`` |
 | `activeDragType` (`DragBehavior`) | Internal policy (default `.none`) |
 | `geometry` (`CanvasGeometry`) | Mirrored from external `viewportRect` + `canvasSize` |
 | `artworkFrameInViewport` (`CGRect?`) | Resolved in ``CanvasCoreView`` from `Anchor<CGRect>` emitted by ``CanvasArtwork`` |
