@@ -9,7 +9,7 @@ import BasePrimitives
 import SwiftUI
 
 @Observable
-@dynamicMemberLookup
+//@dynamicMemberLookup
 public final class InteractionState {
   public var pointer: PointerState
   public var transform: TransformState
@@ -24,8 +24,8 @@ public final class InteractionState {
 }
 
 extension InteractionState {
-  public subscript(dynamicMember: keyPath: ) {
-    
-  }
+  //  public subscript(dynamicMember: keyPath: ) {
+
+  //  }
   public var isDragActive: Bool { pointer.drag.isActive }
 }
