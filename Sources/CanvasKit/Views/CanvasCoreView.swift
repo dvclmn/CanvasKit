@@ -17,8 +17,8 @@ struct CanvasCoreView<Content: View>: View {
   @Environment(\.zoomLevel) private var zoomLevel
   @Environment(\.canvasSize) private var canvasSize
   @Environment(\.canvasGeometry) private var canvasGeometry
-//  @Environment(\.pointerState) private var pointerState
-//  @Environment(\.transformState) private var transformState
+  //  @Environment(\.pointerState) private var pointerState
+  //  @Environment(\.transformState) private var transformState
 
   /// A lot of the optionals have been moved here to `CanvasCoreView`
   /// sepcifically so the 'flash' while dependancies load in (like viewportRect, unitSize etc)
@@ -65,7 +65,7 @@ struct CanvasCoreView<Content: View>: View {
       }
       .panGesture(isEnabled: true) { delta, phase, _ in
         interactionState.transform.panState.updateDelta(delta, phase: phase)
-//        transformState?.wrappedValue.panState.updateDelta(delta, phase: phase)
+        //        transformState?.wrappedValue.panState.updateDelta(delta, phase: phase)
       }
       .zoomGesture(
         zoom: $interactionState.transform.zoomState.value.toBindingDouble,
@@ -86,42 +86,36 @@ struct CanvasCoreView<Content: View>: View {
       )
       .tapDragGesture(
         rect: dragRectBinding(),
-        //        rect: store.dragRectBinding(),
         behavior: store.activeDragType,
         minimumDistance: interactionState.pointer.drag.dragThreshold,
         didUpdateTap: { location in
-          let newValue = store.updateTapLocation(location, zoom: zoom)
-          interactionState.pointer.tap.update(newValue)
-          //          store.updateTapLocation(location, zoom: transformState?.wrappedValue.zoomState.zoom.toCGFloat)
-          //          pointerState?.wrappedValue.pointerTap.update(
-          //            pointerHandler?.canvasPoint(fromViewportPoint: location))
-          //          store.pointer.pointerTap.value = store.canvasPoint(fromViewportPoint: location)
+          handleTap(at: location)
+
         }
       )
-      //      .environment(\.panOffset, store.transform.panState.pan)
-      //      .environment(\.zoomLevel, store.zoomClamped)
-      //      .environment(\.pointerLocation, store.pointerHoverCanvas)
 
       .onContinuousHover(coordinateSpace: .named(CanvasSpace.viewport)) { phase in
-        let newValue = store.updateHoverLocation(phase, zoom: zoom)
-        interactionState.pointer.hover.update(newValue)
-        //        transformState?.wrappedValue.panState.u
-        //        store.updatePointerLocation(phase)
-        //        store.pointer.pointerHover.update(phase)
-        //        store.updateHover(phase)
+        handleHover(phase)
       }
-
-    //      .environment(\.pointerLocation, store.pointerHoverCanvasIfInside)
-
   }
 }
 
 extension CanvasCoreView {
 
+  private func handleTap(at location: CGPoint) {
+    let newValue = store.updateTapLocation(location, zoom: zoom)
+    interactionState.pointer.tap.update(newValue)
+  }
+
+  private func handleHover(_ phase: HoverPhase) {
+    let newValue = store.updateHoverLocation(phase, zoom: zoom)
+    interactionState.pointer.hover.update(newValue)
+  }
+
   private var zoom: CGFloat {
     interactionState.transform.zoomState.zoom.toCGFloat
   }
-  //  @MainActor
+  
   func dragRectBinding() -> Binding<CGRect?> {
     return switch store.activeDragType {
       case .marquee:
@@ -143,7 +137,4 @@ extension CanvasCoreView {
 
     }
   }
-  //  private var pointerHandler: PointerHandler? {
-  //
-  //  }
 }

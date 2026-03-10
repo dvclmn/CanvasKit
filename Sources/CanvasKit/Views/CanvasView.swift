@@ -10,16 +10,12 @@ import GestureKit
 import LayoutKit
 import SwiftUI
 
-//import UIPrimitives
-
 public struct CanvasView<Content: View>: View {
   @Environment(InteractionState.self) private var interactionState
   @Environment(\.viewportRect) private var viewportRect
   @Environment(\.canvasAnchor) private var canvasAnchor
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.shouldShowInfoBarItems) private var shouldShowInfoBarItems
-  //  @Environment(\.transformState) private var transformState
-  //  @Environment(\.pointerState) private var pointerState
 
   @State var store = CanvasHandler()
 
@@ -38,7 +34,6 @@ public struct CanvasView<Content: View>: View {
 
   public var body: some View {
 
-    //    if let transformState, let pointerState {
     CanvasCoreView(content: content)
 
       .addInfoBarItems {
@@ -69,39 +64,23 @@ public struct CanvasView<Content: View>: View {
       .task(id: zoomRange) { store.zoomRange = zoomRange }
       .task(id: canvasSize) { store.canvasSize = canvasSize }
 
-    //        .bindModel(debounce: .noDebounce, $store.transform, to: transformState)
-    //        .bindModel(debounce: .noDebounce, $store.pointer, to: pointerState)
-
-    //    } else {
-    //      Text("No Transform State or Pointer State")
-    //    }
   }
 }
 
 extension CanvasView {
-
-  //  private var canvasGeometry: CanvasGeometry? {
-  //    guard let viewportRect, let canvasSize else { return nil }
-  //    return CanvasGeometry(
-  //      viewportRect: viewportRect,
-  //      canvasSize: canvasSize,
-  //      anchor: canvasAnchor
-  //    )
-  //  }
 
   @DisplayStringBuilder
   private func InfoItems(
     _ zoomRange: ClosedRange<Double>
   ) -> [DisplayBlock] {
     if shouldShowInfoBarItems {
-//      Labeled("Viewport", value: viewportRect)
-      
+
       Labeled(
         "Zoom",
         value: interactionState.transform.zoom
           .toPercentString(within: zoomRange)
       )
-      
+
     }
   }
 }
