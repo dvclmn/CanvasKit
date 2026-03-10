@@ -49,7 +49,7 @@ extension CanvasHandler {
   //    )
   //  }
 
-  func updateTapLocation(
+  func mappedTapLocation(
     _ location: CGPoint,
     zoom: CGFloat?
   ) -> CGPoint? {
@@ -58,7 +58,7 @@ extension CanvasHandler {
     //    return mapped
   }
 
-  func updateHoverLocation(
+  func mappedHoverLocation(
     _ phase: HoverPhase,
     zoom: CGFloat?
   ) -> CGPoint? {

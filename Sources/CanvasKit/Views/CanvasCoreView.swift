@@ -103,13 +103,13 @@ struct CanvasCoreView<Content: View>: View {
 extension CanvasCoreView {
 
   private func handleTap(at location: CGPoint) {
-    let newValue = store.updateTapLocation(location, zoom: zoom)
-    interactionState.pointer.tap.update(newValue)
+    let mapped = store.mappedTapLocation(location, zoom: zoom)
+    interactionState.pointer.tap.update(mapped)
   }
 
   private func handleHover(_ phase: HoverPhase) {
-    let newValue = store.updateHoverLocation(phase, zoom: zoom)
-    interactionState.pointer.hover.update(newValue)
+    let mapped = store.mappedHoverLocation(phase, zoom: zoom)
+    interactionState.pointer.hover.update(mapped)
   }
 
   private var zoom: CGFloat {
