@@ -9,7 +9,6 @@ import BasePrimitives
 import SwiftUI
 
 @Observable
-//@dynamicMemberLookup
 public final class CanvasInteraction {
   public var pointer: PointerState
   public var transform: TransformState
@@ -24,8 +23,5 @@ public final class CanvasInteraction {
 }
 
 extension CanvasInteraction {
-  //  public subscript(dynamicMember: keyPath: ) {
-
-  //  }
   public var isDragActive: Bool { pointer.drag.isActive }
 }
