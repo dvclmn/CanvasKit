@@ -11,7 +11,7 @@ import SwiftUI
 
 struct CanvasCoreView<Content: View>: View {
   @Environment(CanvasHandler.self) private var store
-  @Environment(InteractionState.self) private var interactionState
+  @Environment(CanvasInteraction.self) private var interactionState
   @Environment(\.canvasBackground) private var canvasBackground
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.zoomLevel) private var zoomLevel

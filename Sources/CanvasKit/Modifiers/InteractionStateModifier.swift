@@ -11,10 +11,10 @@
 import SwiftUI
 
 struct InteractionStateModifier: ViewModifier {
-  @State private var interactionState: InteractionState
+  @State private var interactionState: CanvasInteraction
 
   init(
-    state: InteractionState? = nil,
+    state: CanvasInteraction? = nil,
   ) {
     self._interactionState = State(initialValue: state ?? .init())
   }
@@ -29,7 +29,7 @@ struct InteractionStateModifier: ViewModifier {
   }
 }
 extension View {
-  public func setUpInteractionState(_ state: InteractionState? = nil) -> some View {
+  public func setUpInteractionState(_ state: CanvasInteraction? = nil) -> some View {
     self.modifier(InteractionStateModifier(state: state))
   }
 }

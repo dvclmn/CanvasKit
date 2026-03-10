@@ -1,5 +1,5 @@
 //
-//  InteractionState.swift
+//  CanvasInteraction.swift
 //  BaseHelpers
 //
 //  Created by Dave Coleman on 8/3/2026.
@@ -10,7 +10,7 @@ import SwiftUI
 
 @Observable
 //@dynamicMemberLookup
-public final class InteractionState {
+public final class CanvasInteraction {
   public var pointer: PointerState
   public var transform: TransformState
 
@@ -23,7 +23,7 @@ public final class InteractionState {
   }
 }
 
-extension InteractionState {
+extension CanvasInteraction {
   //  public subscript(dynamicMember: keyPath: ) {
 
   //  }

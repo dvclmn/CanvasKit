@@ -11,7 +11,7 @@ import LayoutKit
 import SwiftUI
 
 public struct CanvasView<Content: View>: View {
-  @Environment(InteractionState.self) private var interactionState
+  @Environment(CanvasInteraction.self) private var interactionState
   @Environment(\.viewportRect) private var viewportRect
   @Environment(\.canvasAnchor) private var canvasAnchor
   @Environment(\.zoomRange) private var zoomRange
