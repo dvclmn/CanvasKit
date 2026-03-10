@@ -17,7 +17,7 @@ public final class CanvasHandler {
   var canvasSize: Size<CanvasSpace>?
 
   var zoomFocusResolver: ZoomFocusResolver = .viewportCentre
-  var activeDragType: DragBehavior = .none
+//  var activeDragType: DragBehavior = .none
 
   public init() {}
 }

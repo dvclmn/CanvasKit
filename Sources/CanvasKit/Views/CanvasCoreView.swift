@@ -17,6 +17,7 @@ struct CanvasCoreView<Content: View>: View {
   @Environment(\.zoomLevel) private var zoomLevel
   @Environment(\.canvasSize) private var canvasSize
   @Environment(\.canvasGeometry) private var canvasGeometry
+  @Environment(\.canvasInteractionPolicy) private var policy
   //  @Environment(\.pointerState) private var pointerState
   //  @Environment(\.transformState) private var transformState
 
@@ -63,13 +64,13 @@ struct CanvasCoreView<Content: View>: View {
 
         }
       }
-      .panGesture(isEnabled: true) { delta, phase, _ in
+      .panGesture(isEnabled: policy.panGestureEnabled) { delta, phase, _ in
         interactionState.transform.panState.updateDelta(delta, phase: phase)
         //        transformState?.wrappedValue.panState.updateDelta(delta, phase: phase)
       }
       .zoomGesture(
         zoom: $interactionState.transform.zoomState.value.toBindingDouble,
-        isEnabled: true,
+        isEnabled: policy.zoomGestureEnabled,
         didUpdateEvent: {
           guard let canvasGeometry else {
             let newZoom = $0.magnification
@@ -86,7 +87,7 @@ struct CanvasCoreView<Content: View>: View {
       )
       .tapDragGesture(
         rect: dragRectBinding(),
-        behavior: store.activeDragType,
+        behavior: policy.dragBehaviour,
         minimumDistance: interactionState.pointer.drag.dragThreshold,
         didUpdateTap: { location in
           handleTap(at: location)

@@ -6,6 +6,7 @@
 //
 
 import BasePrimitives
+import GestureKit
 import SwiftUI
 
 @Observable
@@ -25,3 +26,4 @@ public final class CanvasInteraction {
 extension CanvasInteraction {
   public var isDragActive: Bool { pointer.drag.isActive }
 }
+
