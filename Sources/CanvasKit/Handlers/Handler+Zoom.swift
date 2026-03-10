@@ -11,18 +11,5 @@ import Foundation
 struct ZoomHandler {
   let zoomEvent: ZoomGestureEvent
   let geometry: CanvasGeometry
-  //  let transform: TransformState
   let resolver: ZoomFocusResolver
-}
-
-extension ZoomHandler {
-  
-}
-extension ZoomHandler {
-//  private var viewportCentre: CGPoint {  }
-  //    CGPoint(
-  //      x: geometry.viewportRect.midX,
-  //      y: geometry.viewportRect.midY
-  //    )
-  //  }
 }
