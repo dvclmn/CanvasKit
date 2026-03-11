@@ -18,13 +18,10 @@ struct CanvasCoreView<Content: View>: View {
   @Environment(\.canvasSize) private var canvasSize
   @Environment(\.canvasGeometry) private var canvasGeometry
   @Environment(\.canvasInteractionPolicy) private var policy
-  //  @Environment(\.pointerState) private var pointerState
-  //  @Environment(\.transformState) private var transformState
 
   /// A lot of the optionals have been moved here to `CanvasCoreView`
   /// sepcifically so the 'flash' while dependancies load in (like viewportRect, unitSize etc)
   /// doesn't cause such a visual disturbance, As the canvas background etc is handled here.
-  //  let canvasGeometry: CanvasGeometry?
   @ViewBuilder var content: () -> Content
 
   var body: some View {
@@ -52,7 +49,6 @@ struct CanvasCoreView<Content: View>: View {
       .ignoresSafeArea(edges: .top)
 
       .coordinateSpace(.named(CanvasSpace.viewport))
-      //      .prefer
       .overlayPreferenceValue(ArtworkBoundsAnchorKey.self) { anchor in
         GeometryReader { proxy in
           let frame = anchor.map { proxy[$0] }
@@ -64,76 +60,8 @@ struct CanvasCoreView<Content: View>: View {
 
         }
       }
-      .panGesture(isEnabled: policy.panGestureEnabled) { delta, phase, _ in
-        interactionState.transform.panState.updateDelta(delta, phase: phase)
-        //        transformState?.wrappedValue.panState.updateDelta(delta, phase: phase)
-      }
-      .zoomGesture(
-        zoom: $interactionState.transform.zoomState.value.toBindingDouble,
-        isEnabled: policy.zoomGestureEnabled,
-        didUpdateEvent: {
-          guard let canvasGeometry else {
-            let newZoom = $0.magnification
-            interactionState.transform.zoomState.update(newZoom, phase: $0.phase)
-            return newZoom
-          }
-          return store.updateZoom(
-            using: $0,
-            interactionState: &interactionState,
-            geometry: canvasGeometry,
-            in: zoomRange
-          )
-        }
-      )
-      .tapDragGesture(
-        rect: dragRectBinding(),
-        behavior: policy.dragBehaviour,
-        minimumDistance: interactionState.pointer.drag.dragThreshold,
-        didUpdateTap: { location in
-          handleTap(at: location)
-        }
-      )
 
-      .onContinuousHover(coordinateSpace: .named(CanvasSpace.viewport)) { phase in
-        guard policy.hoverEnabled else { return }
-        handleHover(phase)
-      }
-  }
-}
+      .canvasTransformations()
 
-extension CanvasCoreView {
-  
-  func dragRectBinding() -> Binding<CGRect?> {
-    switch policy.dragBehaviour {
-      case .marquee:
-        return Binding {
-          interactionState.pointer.drag.value
-        } set: {
-          interactionState.pointer.drag.value = $0
-        }
-      case .continuous:
-        return Binding {
-          interactionState.transform.panState.pan.toCGRectZeroOrigin
-        } set: {
-          guard let size = $0?.size else { return }
-          interactionState.transform.panState.update(size, phase: .changed)
-        }
-      case .none:
-        return .constant(nil)
-    }
-  }
-
-  private func handleTap(at location: CGPoint) {
-    let mapped = store.mappedTapLocation(location, zoom: zoom)
-    interactionState.pointer.tap.update(mapped)
-  }
-
-  private func handleHover(_ phase: HoverPhase) {
-    let mapped = store.mappedHoverLocation(phase, zoom: zoom)
-    interactionState.pointer.hover.update(mapped)
-  }
-
-  private var zoom: CGFloat {
-    interactionState.transform.zoomState.zoom.toCGFloat
   }
 }
