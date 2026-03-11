@@ -9,6 +9,9 @@ import BasePrimitives
 import GestureKit
 import SwiftUI
 
+/// `CanvasInteraction`'s state is owned outside of CanvasKit,
+/// by the project *using* CanvasKit. E.g. in the case of DrawString,
+/// this is owned by `BaseContainer` view.
 @Observable
 public final class CanvasInteraction {
   public var pointer: PointerState
