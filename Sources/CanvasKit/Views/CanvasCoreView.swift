@@ -91,7 +91,6 @@ struct CanvasCoreView<Content: View>: View {
         minimumDistance: interactionState.pointer.drag.dragThreshold,
         didUpdateTap: { location in
           handleTap(at: location)
-
         }
       )
 
@@ -103,6 +102,26 @@ struct CanvasCoreView<Content: View>: View {
 }
 
 extension CanvasCoreView {
+  
+  func dragRectBinding() -> Binding<CGRect?> {
+    switch policy.dragBehaviour {
+      case .marquee:
+        return Binding {
+          interactionState.pointer.drag.value
+        } set: {
+          interactionState.pointer.drag.value = $0
+        }
+      case .continuous:
+        return Binding {
+          interactionState.transform.panState.pan.toCGRectZeroOrigin
+        } set: {
+          guard let size = $0?.size else { return }
+          interactionState.transform.panState.update(size, phase: .changed)
+        }
+      case .none:
+        return .constant(nil)
+    }
+  }
 
   private func handleTap(at location: CGPoint) {
     let mapped = store.mappedTapLocation(location, zoom: zoom)
@@ -116,27 +135,5 @@ extension CanvasCoreView {
 
   private var zoom: CGFloat {
     interactionState.transform.zoomState.zoom.toCGFloat
-  }
-  
-  func dragRectBinding() -> Binding<CGRect?> {
-    return switch policy.dragBehaviour {
-      case .marquee:
-        Binding {
-          interactionState.pointer.drag.value
-        } set: {
-          interactionState.pointer.drag.value = $0
-        }
-
-      case .continuous:
-        Binding {
-          interactionState.transform.panState.pan.toCGRectZeroOrigin
-        } set: {
-          interactionState.transform.panState.update($0?.size ?? .zero, phase: .changed)
-        }
-
-      case .none:
-        .constant(nil)
-
-    }
   }
 }

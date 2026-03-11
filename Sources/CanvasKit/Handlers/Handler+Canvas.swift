@@ -15,6 +15,8 @@ public final class CanvasHandler {
 
   var canvasFrameInViewport: CGRect?
   var canvasSize: Size<CanvasSpace>?
+  
+  var dragRect: CGRect?
 
   var zoomFocusResolver: ZoomFocusResolver = .viewportCentre
 //  var activeDragType: DragBehavior = .none
