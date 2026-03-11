@@ -9,18 +9,16 @@ import BasePrimitives
 import SwiftUI
 
 struct CanvasArtwork<Content: View>: View {
-  @Environment(CanvasHandler.self) private var store
+  //  @Environment(CanvasHandler.self) private var store
   @Environment(CanvasInteraction.self) private var interactionState
-  @Environment(\.zoomLevel) private var zoomLevel
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.zoomClamped) private var zoomClamped
-  @Environment(\.canvasBackground) private var canvasBackground
-//  @Environment(\.transformState) private var transformState
   @Environment(\.canvasSize) private var canvasSize
 
   @ViewBuilder var content: () -> Content
 
   var body: some View {
+    /// Note: Hit testing, background and drawing group are all handled in Canvas Core view
     canvasDecomposed
       .frame(
         width: canvasSize?.width,
@@ -28,11 +26,10 @@ struct CanvasArtwork<Content: View>: View {
       )
       .coordinateSpace(.named(CanvasSpace.artwork))
       .anchorPreference(key: ArtworkBoundsAnchorKey.self, value: .bounds) { $0 }
-    
+
       .scaleEffect(zoomClamped)
       .offset(interactionState.transform.panState.pan)
       .frame(maxWidth: .infinity, maxHeight: .infinity)
-    /// Hit testing, background and drawing group are all handled in Canvas Core view
 
   }
 }
@@ -71,11 +68,11 @@ extension CanvasArtwork {
 
   private var cornerRounding: CGFloat {
     let base = Styles.sizeTiny
-    return base.removingZoom(zoomLevel)
+    return base.removingZoom(zoomClamped)
   }
 
   private var outlineThickness: CGFloat {
     let base = 1.0
-    return base.removingZoom(zoomLevel, across: zoomRange)
+    return base.removingZoom(zoomClamped, across: zoomRange)
   }
 }

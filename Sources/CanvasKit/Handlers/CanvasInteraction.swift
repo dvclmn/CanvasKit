@@ -25,8 +25,3 @@ public final class CanvasInteraction {
     self.transform = transform
   }
 }
-
-extension CanvasInteraction {
-  public var isDragActive: Bool { pointer.drag.isActive }
-}
-

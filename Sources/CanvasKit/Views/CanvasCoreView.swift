@@ -11,13 +11,9 @@ import SwiftUI
 
 struct CanvasCoreView<Content: View>: View {
   @Environment(CanvasHandler.self) private var store
-  @Environment(CanvasInteraction.self) private var interactionState
   @Environment(\.canvasBackground) private var canvasBackground
   @Environment(\.zoomRange) private var zoomRange
-  @Environment(\.zoomLevel) private var zoomLevel
-  @Environment(\.canvasSize) private var canvasSize
   @Environment(\.canvasGeometry) private var canvasGeometry
-  @Environment(\.canvasInteractionPolicy) private var policy
 
   /// A lot of the optionals have been moved here to `CanvasCoreView`
   /// sepcifically so the 'flash' while dependancies load in (like viewportRect, unitSize etc)
@@ -25,10 +21,6 @@ struct CanvasCoreView<Content: View>: View {
   @ViewBuilder var content: () -> Content
 
   var body: some View {
-
-    @Bindable var store = store
-    @Bindable var interactionState = interactionState
-
     Rectangle()
       .fill(.clear)
       .overlay {
@@ -36,8 +28,7 @@ struct CanvasCoreView<Content: View>: View {
         if canvasGeometry != nil, zoomRange != nil {
           CanvasArtwork(content: content)
 
-            /// Should probably set this up to be clearer for *non*
-            /// Grid domain contexts
+            /// Should probably set this up to be clearer for *non* Grid domain contexts
             .gridFont(for: .canvas)
         }
       }
@@ -57,7 +48,6 @@ struct CanvasCoreView<Content: View>: View {
             .task(id: frame) {
               store.canvasFrameInViewport = frame
             }
-
         }
       }
 
