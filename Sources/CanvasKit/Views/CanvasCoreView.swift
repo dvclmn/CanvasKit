@@ -96,6 +96,7 @@ struct CanvasCoreView<Content: View>: View {
       )
 
       .onContinuousHover(coordinateSpace: .named(CanvasSpace.viewport)) { phase in
+        guard policy.hoverEnabled else { return }
         handleHover(phase)
       }
   }
@@ -118,7 +119,7 @@ extension CanvasCoreView {
   }
   
   func dragRectBinding() -> Binding<CGRect?> {
-    return switch store.activeDragType {
+    return switch policy.dragBehaviour {
       case .marquee:
         Binding {
           interactionState.pointer.drag.value
