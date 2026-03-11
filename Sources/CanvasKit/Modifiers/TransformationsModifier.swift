@@ -15,7 +15,7 @@ struct TransformationsModifier: ViewModifier {
   @Environment(\.canvasInteractionPolicy) private var policy
   @Environment(\.canvasGeometry) private var canvasGeometry
   @Environment(\.zoomRange) private var zoomRange
-  
+
   func body(content: Content) -> some View {
     @Bindable var store = store
     @Bindable var interactionState = interactionState
@@ -24,7 +24,7 @@ struct TransformationsModifier: ViewModifier {
       .panGesture(isEnabled: policy.panGestureEnabled) { delta, phase, _ in
         interactionState.transform.panState.updateDelta(delta, phase: phase)
       }
-    
+
       .zoomGesture(
         zoom: $interactionState.transform.zoomState.value.toBindingDouble,
         isEnabled: policy.zoomGestureEnabled,
@@ -42,7 +42,7 @@ struct TransformationsModifier: ViewModifier {
           )
         }
       )
-    
+
       .tapDragGesture(
         rect: dragRectBinding(),
         behavior: policy.dragBehaviour,
@@ -51,11 +51,12 @@ struct TransformationsModifier: ViewModifier {
           handleTap(at: location)
         }
       )
-    
+
       .onContinuousHover(coordinateSpace: .named(CanvasSpace.viewport)) { phase in
         guard policy.hoverEnabled else { return }
         handleHover(phase)
       }
+
   }
 }
 extension TransformationsModifier {
@@ -78,18 +79,17 @@ extension TransformationsModifier {
         return .constant(nil)
     }
   }
-  
+
   private func handleTap(at location: CGPoint) {
     let mapped = store.mappedTapLocation(location, zoom: zoom)
     interactionState.pointer.tap.update(mapped)
   }
-  
+
   private func handleHover(_ phase: HoverPhase) {
     let mapped = store.mappedHoverLocation(phase, zoom: zoom)
     interactionState.pointer.hover.update(mapped)
   }
-  
-  
+
   private var zoom: CGFloat {
     interactionState.transform.zoomState.zoom.toCGFloat
   }
