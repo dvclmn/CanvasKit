@@ -28,6 +28,6 @@ public final class CanvasInteraction {
 
 extension CanvasInteraction {
   public func resetAll() {
-    
+
   }
 }
