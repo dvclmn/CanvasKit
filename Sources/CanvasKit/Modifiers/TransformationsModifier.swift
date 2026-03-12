@@ -43,24 +43,25 @@ struct TransformationsModifier: ViewModifier {
         }
       )
 
+      .onContinuousHover(coordinateSpace: .named(CanvasSpace.viewport)) { phase in
+        guard policy.hoverEnabled else { return }
+        handleHover(phase)
+      }
+    
       .tapDragGesture(
         rect: dragRectBinding(),
         behavior: policy.dragBehaviour,
-        minimumDistance: interactionState.pointer.drag.dragThreshold,
+        minimumDistance: interactionState.pointer.dragThreshold,
         didUpdateTap: { location in
           handleTap(at: location)
         }
       )
 
-      .onContinuousHover(coordinateSpace: .named(CanvasSpace.viewport)) { phase in
-        guard policy.hoverEnabled else { return }
-        handleHover(phase)
-      }
-
   }
 }
 extension TransformationsModifier {
   private func dragRectBinding() -> Binding<CGRect?> {
+    print("Running Drag Rect Binding. Current Policy: \(policy)")
     switch policy.dragBehaviour {
       case .marquee:
         return Binding {

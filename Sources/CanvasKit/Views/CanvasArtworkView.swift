@@ -28,7 +28,7 @@ struct CanvasArtwork<Content: View>: View {
       .anchorPreference(key: ArtworkBoundsAnchorKey.self, value: .bounds) { $0 }
 
       .scaleEffect(zoomClamped)
-      .offset(interactionState.transform.panState.pan)
+      .offset(interactionState.pan)
       .frame(maxWidth: .infinity, maxHeight: .infinity)
 
   }

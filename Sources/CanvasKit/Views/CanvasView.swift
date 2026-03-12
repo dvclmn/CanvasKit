@@ -78,7 +78,7 @@ extension CanvasView {
       Labeled(
         "Zoom",
         value: interactionState.transform.zoom.value
-          .toPercentString(within: zoomRange)
+          .toPercentString(within: zoomRange.toCGFloatRange)
       )
 
     }
