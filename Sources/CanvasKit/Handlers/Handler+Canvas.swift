@@ -67,7 +67,7 @@ extension CanvasHandler {
   @discardableResult
   public func updateZoom(
     using event: ZoomGestureEvent,
-    interactionState: inout CanvasInteraction,
+    interactionState: inout CanvasInteractionState,
     geometry: CanvasGeometry,
     in zoomRange: ClosedRange<Double>?
   ) -> Double {

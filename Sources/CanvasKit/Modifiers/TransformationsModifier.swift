@@ -11,7 +11,7 @@ import SwiftUI
 
 struct TransformationsModifier: ViewModifier {
   @Environment(CanvasHandler.self) private var store
-  @Environment(CanvasInteraction.self) private var interactionState
+  @Environment(CanvasInteractionState.self) private var interactionState
   @Environment(\.canvasInteractionPolicy) private var policy
   @Environment(\.canvasGeometry) private var canvasGeometry
   @Environment(\.zoomRange) private var zoomRange
@@ -50,7 +50,8 @@ struct TransformationsModifier: ViewModifier {
     
       .tapDragGesture(
         rect: dragRectBinding(),
-        behavior: policy.dragBehaviour,
+        behaviour: policy.dragBehaviour,
+        drawsMarqueeRect: true, // Need to hook this up
         minimumDistance: interactionState.pointer.dragThreshold,
         didUpdateTap: { location in
           handleTap(at: location)
@@ -61,7 +62,7 @@ struct TransformationsModifier: ViewModifier {
 }
 extension TransformationsModifier {
   private func dragRectBinding() -> Binding<CGRect?> {
-    print("Running Drag Rect Binding. Current Policy: \(policy)")
+//    print("Running Drag Rect Binding. Current Policy: \(policy)")
     switch policy.dragBehaviour {
       case .marquee:
         return Binding {

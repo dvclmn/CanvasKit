@@ -21,7 +21,7 @@ extension ZoomHandler {
   
   
   @discardableResult
-  func updateZoom(interactionState: inout CanvasInteraction) -> Double {
+  func updateZoom(interactionState: inout CanvasInteractionState) -> Double {
     defer { clearLatchedZoomFocusIfNeeded(for: zoomEvent.phase, interactionState: &interactionState) }
 
     let currentZoom = interactionState.zoom
@@ -81,7 +81,7 @@ extension ZoomHandler {
 extension ZoomHandler {
   private func clearLatchedZoomFocusIfNeeded(
     for phase: InteractionPhase,
-    interactionState: inout CanvasInteraction
+    interactionState: inout CanvasInteractionState
   ) {
     guard !phase.isActive else { return }
     interactionState.transform.latchedZoomFocusGlobal = nil
@@ -97,7 +97,7 @@ extension ZoomHandler {
   private func clampedPan(
     _ proposedPan: CGSize,
     at zoom: Double,
-    interactionState: CanvasInteraction
+    interactionState: CanvasInteractionState
   ) -> CGSize {
     var candidate = interactionState.transform.pan
     candidate.value = proposedPan

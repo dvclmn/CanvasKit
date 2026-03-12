@@ -10,7 +10,7 @@ import SwiftUI
 
 struct CanvasArtwork<Content: View>: View {
   //  @Environment(CanvasHandler.self) private var store
-  @Environment(CanvasInteraction.self) private var interactionState
+  @Environment(CanvasInteractionState.self) private var interactionState
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.zoomClamped) private var zoomClamped
   @Environment(\.canvasSize) private var canvasSize
