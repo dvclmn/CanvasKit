@@ -9,6 +9,7 @@
 /// outside of CanvasView. This should be placed as high up the
 /// hierarchy as is needed for access.
 import SwiftUI
+import BasePrimitives
 
 struct InteractionStateModifier: ViewModifier {
   @State private var interactionState: CanvasInteraction
@@ -22,10 +23,10 @@ struct InteractionStateModifier: ViewModifier {
   func body(content: Content) -> some View {
     content
       .environment(interactionState)
-      .environment(\.zoomLevel, interactionState.transform.zoomState.zoom)
-      .environment(\.panOffset, interactionState.transform.panState.pan)
-      .environment(\.rotation, interactionState.transform.rotationState.rotation)
-      .environment(\.pointerLocation, interactionState.pointer.hoverState.value)
+      .environment(\.zoomLevel, interactionState.zoom)
+      .environment(\.panOffset, interactionState.pan)
+      .environment(\.rotation, interactionState.rotation)
+      .environment(\.pointerLocation, interactionState.pointer.hover.value)
   }
 }
 extension View {

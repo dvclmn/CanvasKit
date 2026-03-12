@@ -18,21 +18,23 @@ struct ZoomHandler {
 // MARK: - Main update
 
 extension ZoomHandler {
+  
+  
   @discardableResult
   func updateZoom(interactionState: inout CanvasInteraction) -> Double {
     defer { clearLatchedZoomFocusIfNeeded(for: zoomEvent.phase, interactionState: &interactionState) }
 
-    let currentZoom = interactionState.transform.zoomState.zoom
+    let currentZoom = interactionState.zoom
 
     let previousZoom = clampedProposedZoom(zoomEvent.previousZoom, currentZoom: currentZoom)
     let nextZoom = clampedProposedZoom(zoomEvent.proposedZoom, currentZoom: currentZoom)
 
-    interactionState.transform.zoomState.update(nextZoom, phase: zoomEvent.phase)
+    interactionState.transform.zoom.update(nextZoom, phase: zoomEvent.phase)
 
     guard isZoomSafe(prev: previousZoom, next: nextZoom),
       let resolved = resolver.resolved(
         for: zoomEvent.phase,
-        pointerLocation: interactionState.pointer.hoverState.value,
+        pointerLocation: interactionState.pointer.hover.value,
         transform: &interactionState.transform,
         geometry: geometry
       )
@@ -43,7 +45,7 @@ extension ZoomHandler {
     guard
       let previousContext = geometry.viewportContext(
         zoom: CGFloat(previousZoom),
-        pan: interactionState.transform.panState.pan
+        pan: interactionState.pan
       )
     else { return currentZoom }
 
@@ -65,12 +67,12 @@ extension ZoomHandler {
       height: focus.y - focusGlobalAtZeroPan.y
     )
 
-    interactionState.transform.panState.value = clampedPan(
+    interactionState.transform.pan.value = clampedPan(
       proposedPan,
       at: nextZoom,
       interactionState: interactionState
     )
-    return interactionState.transform.zoomState.zoom
+    return interactionState.zoom
   }
 }
 
@@ -97,7 +99,7 @@ extension ZoomHandler {
     at zoom: Double,
     interactionState: CanvasInteraction
   ) -> CGSize {
-    var candidate = interactionState.transform.panState
+    var candidate = interactionState.transform.pan
     candidate.value = proposedPan
     return candidate.clamped(to: geometry, zoom: CGFloat(zoom))
   }

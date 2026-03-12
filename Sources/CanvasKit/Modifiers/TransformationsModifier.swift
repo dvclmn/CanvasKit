@@ -22,16 +22,16 @@ struct TransformationsModifier: ViewModifier {
 
     content
       .panGesture(isEnabled: policy.panGestureEnabled) { delta, phase, _ in
-        interactionState.transform.panState.updateDelta(delta, phase: phase)
+        interactionState.transform.pan.updateDelta(delta, phase: phase)
       }
 
       .zoomGesture(
-        zoom: $interactionState.transform.zoomState.value.toBindingDouble,
+        zoom: $interactionState.transform.zoom.value.toBindingDouble,
         isEnabled: policy.zoomGestureEnabled,
         didUpdateEvent: {
           guard let canvasGeometry else {
             let newZoom = $0.magnification
-            interactionState.transform.zoomState.update(newZoom, phase: $0.phase)
+            interactionState.transform.zoom.update(newZoom, phase: $0.phase)
             return newZoom
           }
           return store.updateZoom(
@@ -46,7 +46,7 @@ struct TransformationsModifier: ViewModifier {
       .tapDragGesture(
         rect: dragRectBinding(),
         behavior: policy.dragBehaviour,
-        minimumDistance: interactionState.pointer.dragState.dragThreshold,
+        minimumDistance: interactionState.pointer.drag.dragThreshold,
         didUpdateTap: { location in
           handleTap(at: location)
         }
@@ -64,16 +64,16 @@ extension TransformationsModifier {
     switch policy.dragBehaviour {
       case .marquee:
         return Binding {
-          interactionState.pointer.dragState.value
+          interactionState.pointer.drag.value
         } set: {
-          interactionState.pointer.dragState.value = $0
+          interactionState.pointer.drag.value = $0
         }
       case .continuous:
         return Binding {
-          interactionState.transform.panState.pan.toCGRectZeroOrigin
+          interactionState.pan.toCGRectZeroOrigin
         } set: {
           guard let size = $0?.size else { return }
-          interactionState.transform.panState.update(size, phase: .changed)
+          interactionState.transform.pan.update(size, phase: .changed)
         }
       case .none:
         return .constant(nil)
@@ -82,16 +82,16 @@ extension TransformationsModifier {
 
   private func handleTap(at location: CGPoint) {
     let mapped = store.mappedTapLocation(location, zoom: zoom)
-    interactionState.pointer.tapState.update(mapped)
+    interactionState.pointer.tap.update(mapped, phase: .ended)
   }
 
   private func handleHover(_ phase: HoverPhase) {
     let mapped = store.mappedHoverLocation(phase, zoom: zoom)
-    interactionState.pointer.hoverState.update(mapped)
+    interactionState.pointer.hover.update(mapped, phase: InteractionPhase(fromHover: phase))
   }
 
   private var zoom: CGFloat {
-    interactionState.transform.zoomState.zoom.toCGFloat
+    interactionState.zoom.toCGFloat
   }
 }
 
