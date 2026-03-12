@@ -46,7 +46,7 @@ struct TransformationsModifier: ViewModifier {
       .tapDragGesture(
         rect: dragRectBinding(),
         behavior: policy.dragBehaviour,
-        minimumDistance: interactionState.pointer.drag.dragThreshold,
+        minimumDistance: interactionState.pointer.dragState.dragThreshold,
         didUpdateTap: { location in
           handleTap(at: location)
         }
@@ -64,9 +64,9 @@ extension TransformationsModifier {
     switch policy.dragBehaviour {
       case .marquee:
         return Binding {
-          interactionState.pointer.drag.value
+          interactionState.pointer.dragState.value
         } set: {
-          interactionState.pointer.drag.value = $0
+          interactionState.pointer.dragState.value = $0
         }
       case .continuous:
         return Binding {
@@ -82,12 +82,12 @@ extension TransformationsModifier {
 
   private func handleTap(at location: CGPoint) {
     let mapped = store.mappedTapLocation(location, zoom: zoom)
-    interactionState.pointer.tap.update(mapped)
+    interactionState.pointer.tapState.update(mapped)
   }
 
   private func handleHover(_ phase: HoverPhase) {
     let mapped = store.mappedHoverLocation(phase, zoom: zoom)
-    interactionState.pointer.hover.update(mapped)
+    interactionState.pointer.hoverState.update(mapped)
   }
 
   private var zoom: CGFloat {

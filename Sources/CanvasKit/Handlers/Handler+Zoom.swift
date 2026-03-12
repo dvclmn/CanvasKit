@@ -32,7 +32,7 @@ extension ZoomHandler {
     guard isZoomSafe(prev: previousZoom, next: nextZoom),
       let resolved = resolver.resolved(
         for: zoomEvent.phase,
-        pointerLocation: interactionState.pointer.hover.value,
+        pointerLocation: interactionState.pointer.hoverState.value,
         transform: &interactionState.transform,
         geometry: geometry
       )

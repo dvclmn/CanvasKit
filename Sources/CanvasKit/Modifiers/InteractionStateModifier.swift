@@ -22,10 +22,10 @@ struct InteractionStateModifier: ViewModifier {
   func body(content: Content) -> some View {
     content
       .environment(interactionState)
-      .environment(\.zoomLevel, interactionState.transform.zoom)
-      .environment(\.panOffset, interactionState.transform.pan)
-      .environment(\.rotation, interactionState.transform.rotation)
-      .environment(\.pointerLocation, interactionState.pointer.hover.value)
+      .environment(\.zoomLevel, interactionState.transform.zoomState.zoom)
+      .environment(\.panOffset, interactionState.transform.panState.pan)
+      .environment(\.rotation, interactionState.transform.rotationState.rotation)
+      .environment(\.pointerLocation, interactionState.pointer.hoverState.value)
   }
 }
 extension View {

@@ -28,6 +28,7 @@ public final class CanvasInteraction {
 
 extension CanvasInteraction {
   public func resetAll() {
-
+    pointer.reset()
+    transform.reset()
   }
 }
