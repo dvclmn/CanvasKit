@@ -11,37 +11,37 @@ import SwiftUI
 
 @Observable
 public final class CanvasHandler {
-  var zoomRange: ClosedRange<Double>?
 
+  var zoomRange: ClosedRange<Double>?
   var canvasFrameInViewport: CGRect?
   var canvasSize: Size<CanvasSpace>?
-  
-  var dragRect: CGRect?
-
-  var zoomFocusResolver: ZoomFocusResolver = .viewportCentre
-//  var activeDragType: DragBehavior = .none
+//  var zoomFocusResolver: ZoomFocusResolver = .viewportCentre
 
   public init() {}
 }
 
 extension CanvasHandler {
-  private func pointerMapper(
-    zoom: CGFloat?
-  ) -> PointerHandler? {
-    guard let zoomRange, let zoom else { return nil }
-    return .init(
-      canvasSize: canvasSize,
-      artworkFrameInViewport: canvasFrameInViewport,
-      zoom: zoom,
-      zoomRange: zoomRange.toCGFloatRange
-    )
+  
+  private func mappedPointerLocation() -> CGPoint? {
+    pointerMapper(zoom: zoom)?.canvasPoint(fromViewportPoint: location)
   }
 
-  func mappedTapLocation(
-    _ location: CGPoint,
-    zoom: CGFloat?
-  ) -> CGPoint? {
-    pointerMapper(zoom: zoom)?.canvasPoint(fromViewportPoint: location)
+  func handleTap(
+    at location: CGPoint,
+    zoom: Double,
+    state: inout CanvasInteractionState
+  ) {
+    let mapped = pointerMapper(zoom: zoom)?.canvasPoint(fromViewportPoint: location)
+    state.pointer.tap.update(mapped, phase: .ended)
+  }
+  
+  func handleHover(
+    _ phase: HoverPhase,
+    zoom: Double,
+  ) {
+    let mapped =
+//    let mapped = store.mappedHoverLocation(phase, zoom: zoom)
+    interactionState.pointer.hover.update(mapped, phase: InteractionPhase(fromHover: phase))
   }
 
   func mappedHoverLocation(
@@ -57,15 +57,45 @@ extension CanvasHandler {
     else { return nil }
     return pointerMapper(zoom: zoom)?.canvasPoint(fromViewportPoint: location)
   }
+
+  func handleZoom(
+    _ zoomEvent: ZoomGestureEvent,
+    geometry: CanvasGeometry?,
+    state: inout CanvasInteractionState
+  ) -> Double {
+    guard let geometry else {
+      let newZoom = zoomEvent.magnification
+      state.transform.zoom.update(newZoom, phase: zoomEvent.phase)
+      return newZoom
+    }
+    let handler = ZoomHandler(
+      zoomEvent: zoomEvent,
+      geometry: geometry,
+      resolver: zoomFocusResolver,
+      zoomRange: zoomRange
+    )
+    return handler.updateZoom(state: &state)
+  }
+
 }
 
 // MARK: - Zoom {
 extension CanvasHandler {
 
-  /// Updates zoom while preserving the focused screen point.
-  /// This makes pinch/spread feel anchored to pointer intent instead of viewport centre.
+  private func pointerMapper(
+    zoom: CGFloat?
+  ) -> PointerHandler? {
+    guard let zoomRange, let zoom else { return nil }
+    return .init(
+      canvasSize: canvasSize,
+      artworkFrameInViewport: canvasFrameInViewport,
+      zoom: zoom,
+      zoomRange: zoomRange.toCGFloatRange
+    )
+  }
+
   @discardableResult
-  public func updateZoom(
+  public func updateHover(
     using event: ZoomGestureEvent,
     interactionState: inout CanvasInteractionState,
     geometry: CanvasGeometry,
@@ -78,4 +108,21 @@ extension CanvasHandler {
       zoomRange: zoomRange
     ).updateZoom(interactionState: &interactionState)
   }
+
+  /// Updates zoom while preserving the focused screen point.
+  /// This makes pinch/spread feel anchored to pointer intent instead of viewport centre.
+  //  @discardableResult
+  //  public func updateZoom(
+  //    using event: ZoomGestureEvent,
+  //    interactionState: inout CanvasInteractionState,
+  //    geometry: CanvasGeometry,
+  //    in zoomRange: ClosedRange<Double>?
+  //  ) -> Double {
+  //    ZoomHandler(
+  //      zoomEvent: event,
+  //      geometry: geometry,
+  //      resolver: zoomFocusResolver,
+  //      zoomRange: zoomRange
+  //    ).updateZoom(interactionState: &interactionState)
+  //  }
 }

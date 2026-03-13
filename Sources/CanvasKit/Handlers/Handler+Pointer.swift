@@ -61,8 +61,8 @@ extension PointerHandler {
 
 // MARK: - Containment check
 extension PointerHandler {
-  private var canvasXRange: Range<CGFloat> { 0..<canvasSize.width }
 
+  private var canvasXRange: Range<CGFloat> { 0..<canvasSize.width }
   private var canvasYRange: Range<CGFloat> { 0..<canvasSize.height }
 
   public func isInsideCanvas(_ canvasPoint: Point<CanvasSpace>) -> Bool {

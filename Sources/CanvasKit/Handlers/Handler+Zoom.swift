@@ -18,24 +18,28 @@ struct ZoomHandler {
 // MARK: - Main update
 
 extension ZoomHandler {
-  
-  
-  @discardableResult
-  func updateZoom(interactionState: inout CanvasInteractionState) -> Double {
-    defer { clearLatchedZoomFocusIfNeeded(for: zoomEvent.phase, interactionState: &interactionState) }
 
-    let currentZoom = interactionState.zoom
+  @discardableResult
+  func updateZoom(state: inout CanvasInteractionState) -> Double {
+    defer {
+      clearLatchedZoomFocusIfNeeded(
+        for: zoomEvent.phase,
+        interactionState: &state
+      )
+    }
+
+    let currentZoom = state.zoom
 
     let previousZoom = clampedProposedZoom(zoomEvent.previousZoom, currentZoom: currentZoom)
     let nextZoom = clampedProposedZoom(zoomEvent.proposedZoom, currentZoom: currentZoom)
 
-    interactionState.transform.zoom.update(nextZoom, phase: zoomEvent.phase)
+    state.transform.zoom.update(nextZoom, phase: zoomEvent.phase)
 
     guard isZoomSafe(prev: previousZoom, next: nextZoom),
       let resolved = resolver.resolved(
         for: zoomEvent.phase,
-        pointerLocation: interactionState.pointer.hover.value,
-        transform: &interactionState.transform,
+        pointerLocation: state.pointer.hover.value,
+        transform: &state.transform,
         geometry: geometry
       )
     else { return currentZoom }
@@ -45,7 +49,7 @@ extension ZoomHandler {
     guard
       let previousContext = geometry.viewportContext(
         zoom: CGFloat(previousZoom),
-        pan: interactionState.pan
+        pan: state.pan
       )
     else { return currentZoom }
 
@@ -67,12 +71,12 @@ extension ZoomHandler {
       height: focus.y - focusGlobalAtZeroPan.y
     )
 
-    interactionState.transform.pan.value = clampedPan(
+    state.transform.pan.value = clampedPan(
       proposedPan,
       at: nextZoom,
-      interactionState: interactionState
+      state: state
     )
-    return interactionState.zoom
+    return state.zoom
   }
 }
 
@@ -97,9 +101,9 @@ extension ZoomHandler {
   private func clampedPan(
     _ proposedPan: CGSize,
     at zoom: Double,
-    interactionState: CanvasInteractionState
+    state: CanvasInteractionState
   ) -> CGSize {
-    var candidate = interactionState.transform.pan
+    var candidate = state.transform.pan
     candidate.value = proposedPan
     return candidate.clamped(to: geometry, zoom: CGFloat(zoom))
   }

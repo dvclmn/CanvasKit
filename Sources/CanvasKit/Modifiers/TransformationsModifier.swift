@@ -28,41 +28,26 @@ struct TransformationsModifier: ViewModifier {
       .zoomGesture(
         zoom: $interactionState.transform.zoom.value.toBindingDouble,
         isEnabled: policy.zoomGestureEnabled,
-        didUpdateEvent: {
-          guard let canvasGeometry else {
-            let newZoom = $0.magnification
-            interactionState.transform.zoom.update(newZoom, phase: $0.phase)
-            return newZoom
-          }
-          return store.updateZoom(
-            using: $0,
-            interactionState: &interactionState,
-            geometry: canvasGeometry,
-            in: zoomRange
-          )
-        }
+        didUpdateEvent: { store.handleZoom($0, geometry: canvasGeometry, state: &interactionState) }
       )
 
       .onContinuousHover(coordinateSpace: .named(CanvasSpace.viewport)) { phase in
         guard policy.hoverEnabled else { return }
         handleHover(phase)
       }
-    
+
       .tapDragGesture(
         rect: dragRectBinding(),
         behaviour: policy.dragBehaviour,
-        drawsMarqueeRect: true, // Need to hook this up
+        drawsMarqueeRect: true,  // Need to hook this up properly
         minimumDistance: interactionState.pointer.dragThreshold,
-        didUpdateTap: { location in
-          handleTap(at: location)
-        }
+        didUpdateTap: { store.handleTap(at: $0, zoom: zoom, state: &interactionState) }
       )
 
   }
 }
 extension TransformationsModifier {
   private func dragRectBinding() -> Binding<CGRect?> {
-//    print("Running Drag Rect Binding. Current Policy: \(policy)")
     switch policy.dragBehaviour {
       case .marquee:
         return Binding {
@@ -80,16 +65,6 @@ extension TransformationsModifier {
       case .none:
         return .constant(nil)
     }
-  }
-
-  private func handleTap(at location: CGPoint) {
-    let mapped = store.mappedTapLocation(location, zoom: zoom)
-    interactionState.pointer.tap.update(mapped, phase: .ended)
-  }
-
-  private func handleHover(_ phase: HoverPhase) {
-    let mapped = store.mappedHoverLocation(phase, zoom: zoom)
-    interactionState.pointer.hover.update(mapped, phase: InteractionPhase(fromHover: phase))
   }
 
   private var zoom: CGFloat {
