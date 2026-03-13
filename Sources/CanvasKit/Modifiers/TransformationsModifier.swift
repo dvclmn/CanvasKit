@@ -14,7 +14,6 @@ struct TransformationsModifier: ViewModifier {
   @Environment(CanvasInteractionState.self) private var interactionState
   @Environment(\.canvasInteractionPolicy) private var policy
   @Environment(\.canvasGeometry) private var canvasGeometry
-  @Environment(\.zoomRange) private var zoomRange
 
   func body(content: Content) -> some View {
     @Bindable var store = store
@@ -26,7 +25,7 @@ struct TransformationsModifier: ViewModifier {
       }
 
       .zoomGesture(
-        zoom: $interactionState.transform.zoom.value.toBindingDouble,
+        zoom: $interactionState.transform.zoom.value,
         isEnabled: policy.zoomGestureEnabled,
         didUpdateEvent: { store.handleZoom($0, geometry: canvasGeometry, state: &interactionState) }
       )
@@ -67,8 +66,8 @@ extension TransformationsModifier {
     }
   }
 
-  private var zoom: CGFloat {
-    interactionState.zoom.toCGFloat
+  private var zoom: Double {
+    interactionState.zoom.toDouble
   }
 }
 
