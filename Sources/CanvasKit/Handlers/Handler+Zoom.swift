@@ -11,7 +11,7 @@ import Foundation
 struct ZoomHandler {
   let zoomEvent: ZoomGestureEvent
   let geometry: CanvasGeometry
-  let resolver: ZoomFocusResolver
+//  let resolver: ZoomFocusResolver
   let zoomRange: ClosedRange<Double>?
 }
 
@@ -35,14 +35,16 @@ extension ZoomHandler {
 
     state.transform.zoom.update(nextZoom, phase: zoomEvent.phase)
 
-    guard isZoomSafe(prev: previousZoom, next: nextZoom),
-      let resolved = resolver.resolved(
-        for: zoomEvent.phase,
-        pointerLocation: state.pointer.hover.value,
-        transform: &state.transform,
-        geometry: geometry
-      )
+    guard isZoomSafe(prev: previousZoom, next: nextZoom)
+//      let resolved = resolver.resolved(
+//        for: zoomEvent.phase,
+//        pointerLocation: state.pointer.hover.value,
+//        transform: &state.transform,
+//        geometry: geometry
+//      )
     else { return currentZoom }
+    
+    let resolved = state.pointer.hover.value ?? geometry.viewportRect.midpoint
 
     let focus = sanitisedFocusPoint(resolved)
 

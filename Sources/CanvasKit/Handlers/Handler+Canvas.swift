@@ -15,47 +15,32 @@ public final class CanvasHandler {
   var zoomRange: ClosedRange<Double>?
   var canvasFrameInViewport: CGRect?
   var canvasSize: Size<CanvasSpace>?
-//  var zoomFocusResolver: ZoomFocusResolver = .viewportCentre
+  //  var zoomFocusResolver: ZoomFocusResolver = .viewportCentre
 
   public init() {}
 }
 
 extension CanvasHandler {
-  
-  private func mappedPointerLocation() -> CGPoint? {
-    pointerMapper(zoom: zoom)?.canvasPoint(fromViewportPoint: location)
-  }
 
   func handleTap(
     at location: CGPoint,
     zoom: Double,
     state: inout CanvasInteractionState
   ) {
-    let mapped = pointerMapper(zoom: zoom)?.canvasPoint(fromViewportPoint: location)
+    let mapped = mappedPointer(location, zoom: zoom)
+
+    //    let mapped = pointerMapper(zoom: zoom)?.canvasPoint(fromViewportPoint: location)
     state.pointer.tap.update(mapped, phase: .ended)
   }
-  
+
   func handleHover(
     _ phase: HoverPhase,
     zoom: Double,
+    state: inout CanvasInteractionState
   ) {
-    let mapped =
-//    let mapped = store.mappedHoverLocation(phase, zoom: zoom)
-    interactionState.pointer.hover.update(mapped, phase: InteractionPhase(fromHover: phase))
-  }
-
-  func mappedHoverLocation(
-    _ phase: HoverPhase,
-    zoom: CGFloat?
-  ) -> CGPoint? {
-    guard
-      let location =
-        switch phase {
-          case .active(let val): val
-          case .ended: nil
-        }
-    else { return nil }
-    return pointerMapper(zoom: zoom)?.canvasPoint(fromViewportPoint: location)
+    guard let location = phase.location else { return }
+    let mapped = mappedPointer(location, zoom: zoom)
+    state.pointer.hover.update(mapped, phase: phase.interactionPhase)
   }
 
   func handleZoom(
@@ -71,7 +56,7 @@ extension CanvasHandler {
     let handler = ZoomHandler(
       zoomEvent: zoomEvent,
       geometry: geometry,
-      resolver: zoomFocusResolver,
+      //      resolver: zoomFocusResolver,
       zoomRange: zoomRange
     )
     return handler.updateZoom(state: &state)
@@ -82,32 +67,47 @@ extension CanvasHandler {
 // MARK: - Zoom {
 extension CanvasHandler {
 
-  private func pointerMapper(
-    zoom: CGFloat?
-  ) -> PointerHandler? {
-    guard let zoomRange, let zoom else { return nil }
-    return .init(
+  private func mappedPointer(
+    _ location: CGPoint,
+    zoom: Double
+  ) -> CGPoint? {
+    guard let zoomRange else { return nil }
+    return PointerHandler(
       canvasSize: canvasSize,
       artworkFrameInViewport: canvasFrameInViewport,
       zoom: zoom,
       zoomRange: zoomRange.toCGFloatRange
-    )
+    )?.canvasPoint(fromViewportPoint: location)
+    //    pointerMapper(zoom: zoom)?.canvasPoint(fromViewportPoint: location)
   }
 
-  @discardableResult
-  public func updateHover(
-    using event: ZoomGestureEvent,
-    interactionState: inout CanvasInteractionState,
-    geometry: CanvasGeometry,
-    in zoomRange: ClosedRange<Double>?
-  ) -> Double {
-    ZoomHandler(
-      zoomEvent: event,
-      geometry: geometry,
-      resolver: zoomFocusResolver,
-      zoomRange: zoomRange
-    ).updateZoom(interactionState: &interactionState)
-  }
+  //  private func pointerMapper(
+  //    zoom: CGFloat?
+  //  ) -> PointerHandler? {
+  //    guard let zoomRange, let zoom else { return nil }
+  //    return .init(
+  //      canvasSize: canvasSize,
+  //      artworkFrameInViewport: canvasFrameInViewport,
+  //      zoom: zoom,
+  //      zoomRange: zoomRange.toCGFloatRange
+  //    )
+  //  }
+
+  //  @discardableResult
+  //  public func updateHover(
+  //    using event: ZoomGestureEvent,
+  //    interactionState: inout CanvasInteractionState,
+  //    geometry: CanvasGeometry,
+  //    in zoomRange: ClosedRange<Double>?
+  //  ) -> Double {
+  //    ZoomHandler(
+  //      zoomEvent: event,
+  //      geometry: geometry,
+  //      //      resolver: zoomFocusResolver,
+  //      zoomRange: zoomRange
+  //    )
+  //    .updateZoom(state: &interactionState)
+  //  }
 
   /// Updates zoom while preserving the focused screen point.
   /// This makes pinch/spread feel anchored to pointer intent instead of viewport centre.
