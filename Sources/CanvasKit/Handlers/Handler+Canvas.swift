@@ -28,8 +28,6 @@ extension CanvasHandler {
     state: inout CanvasInteractionState
   ) {
     let mapped = mappedPointer(location, zoom: zoom)
-
-    //    let mapped = pointerMapper(zoom: zoom)?.canvasPoint(fromViewportPoint: location)
     state.pointer.tap.update(mapped, phase: .ended)
   }
 
@@ -56,7 +54,6 @@ extension CanvasHandler {
     let handler = ZoomHandler(
       zoomEvent: zoomEvent,
       geometry: geometry,
-      //      resolver: zoomFocusResolver,
       zoomRange: zoomRange
     )
     return handler.updateZoom(state: &state)
@@ -78,51 +75,6 @@ extension CanvasHandler {
       zoom: zoom,
       zoomRange: zoomRange.toCGFloatRange
     )?.canvasPoint(fromViewportPoint: location)
-    //    pointerMapper(zoom: zoom)?.canvasPoint(fromViewportPoint: location)
   }
 
-  //  private func pointerMapper(
-  //    zoom: CGFloat?
-  //  ) -> PointerHandler? {
-  //    guard let zoomRange, let zoom else { return nil }
-  //    return .init(
-  //      canvasSize: canvasSize,
-  //      artworkFrameInViewport: canvasFrameInViewport,
-  //      zoom: zoom,
-  //      zoomRange: zoomRange.toCGFloatRange
-  //    )
-  //  }
-
-  //  @discardableResult
-  //  public func updateHover(
-  //    using event: ZoomGestureEvent,
-  //    interactionState: inout CanvasInteractionState,
-  //    geometry: CanvasGeometry,
-  //    in zoomRange: ClosedRange<Double>?
-  //  ) -> Double {
-  //    ZoomHandler(
-  //      zoomEvent: event,
-  //      geometry: geometry,
-  //      //      resolver: zoomFocusResolver,
-  //      zoomRange: zoomRange
-  //    )
-  //    .updateZoom(state: &interactionState)
-  //  }
-
-  /// Updates zoom while preserving the focused screen point.
-  /// This makes pinch/spread feel anchored to pointer intent instead of viewport centre.
-  //  @discardableResult
-  //  public func updateZoom(
-  //    using event: ZoomGestureEvent,
-  //    interactionState: inout CanvasInteractionState,
-  //    geometry: CanvasGeometry,
-  //    in zoomRange: ClosedRange<Double>?
-  //  ) -> Double {
-  //    ZoomHandler(
-  //      zoomEvent: event,
-  //      geometry: geometry,
-  //      resolver: zoomFocusResolver,
-  //      zoomRange: zoomRange
-  //    ).updateZoom(interactionState: &interactionState)
-  //  }
 }

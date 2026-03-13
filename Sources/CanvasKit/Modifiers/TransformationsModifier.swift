@@ -33,7 +33,7 @@ struct TransformationsModifier: ViewModifier {
 
       .onContinuousHover(coordinateSpace: .named(CanvasSpace.viewport)) { phase in
         guard policy.hoverEnabled else { return }
-        handleHover(phase)
+        store.handleHover(phase, zoom: zoom, state: &interactionState)
       }
 
       .tapDragGesture(
