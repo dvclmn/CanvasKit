@@ -12,7 +12,7 @@ import SwiftUI
 struct TransformationsModifier: ViewModifier {
   @Environment(CanvasHandler.self) private var store
   @Environment(CanvasInteractionState.self) private var interactionState
-  @Environment(\.canvasInteractionPolicy) private var policy
+  @Environment(\.canvasInputPolicy) private var policy
   @Environment(\.canvasGeometry) private var canvasGeometry
 
   func body(content: Content) -> some View {
@@ -38,9 +38,11 @@ struct TransformationsModifier: ViewModifier {
       .tapDragGesture(
         rect: dragRectBinding(),
         behaviour: policy.dragBehaviour,
-        drawsMarqueeRect: true,  // Need to hook this up properly
+        drawsMarqueeRect: true,
         minimumDistance: interactionState.pointer.dragThreshold,
-        didUpdateTap: { store.handleTap(at: $0, zoom: zoom, state: &interactionState) }
+        didUpdateTap: { location in
+          store.handleTap(at: location, zoom: zoom, state: &interactionState)
+        }
       )
 
   }
@@ -55,6 +57,15 @@ extension TransformationsModifier {
           interactionState.pointer.drag.value = $0
         }
       case .continuous:
+        guard policy.pointerDragPanEnabled else {
+          // Continuous drag that isn't routed to pan (e.g. zoom tool vertical drag).
+          // Route to pointer drag state so the operation resolver can see it.
+          return Binding {
+            interactionState.pointer.drag.value
+          } set: {
+            interactionState.pointer.drag.value = $0
+          }
+        }
         return Binding {
           interactionState.pan.toCGRectZeroOrigin
         } set: {
