@@ -1,4 +1,4 @@
-# Toolhandler
+# ToolHandler
 
 Example setup
 
