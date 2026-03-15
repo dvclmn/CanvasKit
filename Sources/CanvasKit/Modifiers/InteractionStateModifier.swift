@@ -29,10 +29,10 @@ struct InteractionStateModifier: ViewModifier {
       .environment(\.zoomLevel, interactionState.zoom)
       .environment(\.panOffset, interactionState.pan)
       .environment(\.rotation, interactionState.rotation)
-      .environment(\.pointerLocation, interactionState.pointer.hover.value)
+      .environment(\.pointerLocation, interactionState.pointer.hover.value?.cgPoint)
       .environment(\.canvasOperation, operation)
       .environment(\.canvasInputPolicy, canvasPolicy)
-    
+
       .task(id: modifierKeys) { toolHandler.updateModifiers(modifierKeys) }
   }
 }

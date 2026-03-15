@@ -94,7 +94,7 @@ extension CanvasHandler {
       isGestureStart: true
     )
 
-    // Latch the focus point so zoom centers on the click location.
+    /// Latch the focus point so zoom centers on the click location.
     state.pointer.hover.update(location, phase: .changed)
     _ = handleZoom(event, geometry: geometry, state: &state)
   }
