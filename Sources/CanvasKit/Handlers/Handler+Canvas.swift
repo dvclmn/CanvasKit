@@ -36,7 +36,7 @@ extension CanvasHandler {
     zoom: Double,
     state: inout CanvasInteractionState
   ) {
-    let mapped = pointerCanvasLocation(from: location, zoom: zoom)
+    let mapped = pointerCanvasLocation(from: location, zoom: zoom)?.cgPoint
     state.pointer.tap.update(mapped, phase: .ended)
   }
 
@@ -46,7 +46,7 @@ extension CanvasHandler {
     state: inout CanvasInteractionState
   ) {
     guard let location = phase.location else { return }
-    let mapped = pointerCanvasLocation(location, zoom: zoom)
+    let mapped = pointerCanvasLocation(from: location, zoom: zoom)?.cgPoint
     state.pointer.hover.update(mapped, phase: phase.interactionPhase)
   }
 

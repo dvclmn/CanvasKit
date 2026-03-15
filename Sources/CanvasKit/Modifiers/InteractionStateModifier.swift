@@ -29,7 +29,7 @@ struct InteractionStateModifier: ViewModifier {
       .environment(\.zoomLevel, interactionState.zoom)
       .environment(\.panOffset, interactionState.pan)
       .environment(\.rotation, interactionState.rotation)
-      .environment(\.pointerLocation, interactionState.pointer.hover.value?.cgPoint)
+      .environment(\.pointerLocation, interactionState.pointer.hover.value)
       .environment(\.canvasOperation, operation)
       .environment(\.canvasInputPolicy, canvasPolicy)
 

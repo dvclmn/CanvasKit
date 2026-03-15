@@ -59,7 +59,7 @@ public struct CanvasView<Content: View>: View {
 
       /// This is passed in via the CanvasView initialiser. Adding it to the Env here.
       .environment(\.canvasSize, canvasSize)
-      .environment(\.canvasFrameInViewport, store.canvasFrameInViewport)
+      .environment(\.canvasFrameInViewport, store.canvasFrameInViewport?.cgRect)
 
       .task(id: zoomRange) { store.zoomRange = zoomRange }
       .task(id: canvasSize) { store.canvasSize = canvasSize }

@@ -44,7 +44,7 @@ extension ZoomHandler {
     //      )
     else { return currentZoom }
 
-    let resolved = state.pointer.hover.value ?? geometry.viewportRect.midpoint
+    let resolved = state.pointer.hover.value ?? geometry.viewportRect.midpoint.cgPoint
 
     let focus = sanitisedFocusPoint(resolved)
 
@@ -55,9 +55,7 @@ extension ZoomHandler {
       )
     else { return currentZoom }
 
-    let focusCanvas = previousContext.toCanvas(
-      screenPoint: focus
-    )
+    let focusCanvas = previousContext.toCanvas(screenPoint: focus)
 
     guard
       let newContextZeroPan = geometry.viewportMapping(
@@ -69,7 +67,7 @@ extension ZoomHandler {
     let focusGlobalAtZeroPan = newContextZeroPan.toGlobal(point: focusCanvas.cgPoint)
 
     let proposedPan = Size<ScreenSpace>(
-//    let proposedPan = CGSize(
+      //    let proposedPan = CGSize(
       width: focus.x - focusGlobalAtZeroPan.x,
       height: focus.y - focusGlobalAtZeroPan.y
     )
@@ -107,15 +105,16 @@ extension ZoomHandler {
     at zoom: Double,
     state: CanvasInteractionState
   ) -> Size<ScreenSpace> {
-//  ) -> CGSize {
+    //  ) -> CGSize {
     var candidate = state.transform.pan
     candidate.value = proposedPan
     return candidate.clamped(to: geometry, zoom: CGFloat(zoom))
   }
 
-  private func sanitisedFocusPoint(_ point: Point<ScreenSpace>) -> Point<ScreenSpace> {
-    //  private func sanitisedFocusPoint(_ point: CGPoint) -> CGPoint {
-    let fallback = geometry.viewportRect.midpoint
+  //  private func sanitisedFocusPoint(_ point: Point<ScreenSpace>) -> Point<ScreenSpace> {
+  private func sanitisedFocusPoint(_ point: CGPoint) -> CGPoint {
+    let fallback = geometry.viewportRect.midpoint.cgPoint
+    //    let fallback = geometry.viewportRect.midpoint
     guard point.x.isFinite, point.y.isFinite else {
       return fallback
     }
