@@ -31,11 +31,16 @@ struct InteractionStateModifier: ViewModifier {
       .environment(\.rotation, interactionState.rotation)
       .environment(\.pointerLocation, interactionState.pointer.hover.value)
       .environment(\.canvasOperation, operation)
-
+      .environment(\.canvasInputPolicy, canvasPolicy)
+    
+      .task(id: modifierKeys) { toolHandler.updateModifiers(modifierKeys) }
   }
 }
 
 extension InteractionStateModifier {
+  private var canvasPolicy: CanvasInputPolicy {
+    .init(fromOperation: operation, tool: toolHandler.effectiveTool)
+  }
   /// The semantic operation currently being performed, computed from all input layers.
   private var operation: CanvasOperation {
     //  private func activeOperation(
