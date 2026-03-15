@@ -36,7 +36,8 @@ struct TransformationsModifier: ViewModifier {
       }
 
       .tapDragGesture(
-        rect: dragRectBinding(),
+        rect: interactionState.dragRectBinding(using: policy),
+        coordinateSpace: .named(CanvasSpace.viewport),
         behaviour: policy.dragBehaviour,
         drawsMarqueeRect: true,
         minimumDistance: interactionState.pointer.dragThreshold,
@@ -48,34 +49,6 @@ struct TransformationsModifier: ViewModifier {
   }
 }
 extension TransformationsModifier {
-  private func dragRectBinding() -> Binding<CGRect?> {
-    switch policy.dragBehaviour {
-      case .marquee:
-        return Binding {
-          interactionState.pointer.drag.value
-        } set: {
-          interactionState.pointer.drag.value = $0
-        }
-      case .continuous:
-        guard policy.pointerDragPanEnabled else {
-          // Continuous drag that isn't routed to pan (e.g. zoom tool vertical drag).
-          // Route to pointer drag state so the operation resolver can see it.
-          return Binding {
-            interactionState.pointer.drag.value
-          } set: {
-            interactionState.pointer.drag.value = $0
-          }
-        }
-        return Binding {
-          interactionState.pan.toCGRectZeroOrigin
-        } set: {
-          guard let size = $0?.size else { return }
-          interactionState.transform.pan.update(size, phase: .changed)
-        }
-      case .none:
-        return .constant(nil)
-    }
-  }
 
   private var zoom: Double {
     interactionState.zoom.toDouble

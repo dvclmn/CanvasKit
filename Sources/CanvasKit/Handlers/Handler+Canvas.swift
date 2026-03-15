@@ -13,7 +13,8 @@ import SwiftUI
 public final class CanvasHandler {
 
   var zoomRange: ClosedRange<Double>?
-  var canvasFrameInViewport: CGRect?
+  var canvasFrameInViewport: Rect<CanvasSpace>?
+  //  var canvasFrameInViewport: CGRect?
   var canvasSize: Size<CanvasSpace>?
 
   /// Zoom multiplier per click when using the Zoom tool tap.
@@ -35,7 +36,7 @@ extension CanvasHandler {
     zoom: Double,
     state: inout CanvasInteractionState
   ) {
-    let mapped = mappedPointer(location, zoom: zoom)
+    let mapped = pointerCanvasLocation(from: location, zoom: zoom)
     state.pointer.tap.update(mapped, phase: .ended)
   }
 
@@ -45,7 +46,7 @@ extension CanvasHandler {
     state: inout CanvasInteractionState
   ) {
     guard let location = phase.location else { return }
-    let mapped = mappedPointer(location, zoom: zoom)
+    let mapped = pointerCanvasLocation(location, zoom: zoom)
     state.pointer.hover.update(mapped, phase: phase.interactionPhase)
   }
 
@@ -131,18 +132,19 @@ extension CanvasHandler {
 // MARK: - Coordinate Mapping
 extension CanvasHandler {
 
-  private func mappedPointer(
-    _ location: Point<ScreenSpace>,
-//    _ location: CGPoint,
+  private func pointerCanvasLocation(
+    //    from screenLocation: Point<ScreenSpace>,
+    from screenLocation: CGPoint,
     zoom: Double
-  ) -> CGPoint? {
+  ) -> Point<CanvasSpace>? {
+    //  ) -> CGPoint? {
     guard let zoomRange else { return nil }
     return PointerHandler(
       canvasSize: canvasSize,
       canvasFrameInViewport: canvasFrameInViewport,
       zoom: zoom,
       zoomRange: zoomRange.toCGFloatRange
-    )?.canvasPoint(fromViewportPoint: location)
+    )?.canvasPoint(fromViewportPoint: screenLocation)
   }
 
 }
