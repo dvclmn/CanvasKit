@@ -49,7 +49,7 @@ extension ZoomHandler {
     let focus = sanitisedFocusPoint(resolved)
 
     guard
-      let previousContext = geometry.viewportContext(
+      let previousContext = geometry.viewportMapping(
         zoom: CGFloat(previousZoom),
         pan: state.pan
       )
@@ -60,7 +60,7 @@ extension ZoomHandler {
     )
 
     guard
-      let newContextZeroPan = geometry.viewportContext(
+      let newContextZeroPan = geometry.viewportMapping(
         zoom: CGFloat(nextZoom),
         pan: .zero
       )

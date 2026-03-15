@@ -9,7 +9,7 @@ import BasePrimitives
 import Foundation
 import GestureKit
 
-/// I think pointer handler doesn't need ViewportContext?
+/// I think pointer handler doesn't need CanvasViewportMapping?
 struct PointerHandler {
 
   let canvasSize: Size<CanvasSpace>

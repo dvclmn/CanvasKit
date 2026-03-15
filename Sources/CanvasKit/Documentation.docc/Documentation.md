@@ -36,7 +36,7 @@ That handler is the runtime owner of canvas interaction state:
 | `geometry` (`CanvasGeometry`) | Mirrored from external `viewportRect` + `canvasSize` |
 | `artworkFrameInViewport` (`CGRect?`) | Resolved in ``CanvasCoreView`` from `Anchor<CGRect>` emitted by ``CanvasArtwork`` |
 
-Derived canvas-owned values include `zoomClamped`, `pan`, `viewportContext` (legacy path), `pointerHoverMappedNative`, `pointerHoverMappedLegacy`, and `pointerHoverCanvasIfInside`.
+Derived canvas-owned values include `zoomClamped`, `pan`, `CanvasViewportMapping` (legacy path), `pointerHoverMappedNative`, `pointerHoverMappedLegacy`, and `pointerHoverCanvasIfInside`.
 
 ## Published outbound state (for ancestor/child domains)
 
@@ -64,8 +64,8 @@ This difference is important: hover and tap now use a native-first mapping path 
 
 | Legacy/manual component | SwiftUI-native replacement in first pass | Notes |
 |---|---|---|
-| `ViewportContext.centeringOffset` + `totalGlobalOffset` | `Anchor<CGRect>` from artwork + resolve with `GeometryProxy` in viewport space | SwiftUI now gives the transformed artwork frame directly, including zoom/pan/anchor layout outcome. |
-| `ViewportContext.toCanvas(screenPoint:)` | `(viewportPoint - artworkFrame.minXY) / zoom` in `NativePointerHoverHandler` | Same conversion intent, but origin source is native resolved frame, not recomputed maths. |
+| `CanvasViewportMapping.centeringOffset` + `totalGlobalOffset` | `Anchor<CGRect>` from artwork + resolve with `GeometryProxy` in viewport space | SwiftUI now gives the transformed artwork frame directly, including zoom/pan/anchor layout outcome. |
+| `CanvasViewportMapping.toCanvas(screenPoint:)` | `(viewportPoint - artworkFrame.minXY) / zoom` in `NativePointerHoverHandler` | Same conversion intent, but origin source is native resolved frame, not recomputed maths. |
 | `PointerHoverHandler(context:)` | `NativePointerHoverHandler(artworkFrameInViewport:canvasSize:zoom:)` | Both currently run side-by-side for one-to-one comparison. |
 | `.coordinateSpace(.named(CanvasSpace.safeArea))` on artwork only | `.coordinateSpace(.named(CanvasSpace.viewport))` on ``CanvasCoreView`` + `.coordinateSpace(.named(CanvasSpace.artwork))` on ``CanvasArtwork`` | Named spaces are now placed where gesture capture and artwork identity live. |
 | Implicit frame derivation from env values | `ArtworkBoundsAnchorKey` + `overlayPreferenceValue` | Uses anchor preferences to propagate bounds up tree and resolve in ancestor space. |
