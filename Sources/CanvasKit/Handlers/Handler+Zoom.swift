@@ -11,7 +11,7 @@ import Foundation
 struct ZoomHandler {
   let zoomEvent: ZoomGestureEvent
   let geometry: CanvasGeometry
-//  let resolver: ZoomFocusResolver
+  //  let resolver: ZoomFocusResolver
   let zoomRange: ClosedRange<Double>?
 }
 
@@ -36,14 +36,14 @@ extension ZoomHandler {
     state.transform.zoom.update(nextZoom, phase: zoomEvent.phase)
 
     guard isZoomSafe(prev: previousZoom, next: nextZoom)
-//      let resolved = resolver.resolved(
-//        for: zoomEvent.phase,
-//        pointerLocation: state.pointer.hover.value,
-//        transform: &state.transform,
-//        geometry: geometry
-//      )
+    //      let resolved = resolver.resolved(
+    //        for: zoomEvent.phase,
+    //        pointerLocation: state.pointer.hover.value,
+    //        transform: &state.transform,
+    //        geometry: geometry
+    //      )
     else { return currentZoom }
-    
+
     let resolved = state.pointer.hover.value ?? geometry.viewportRect.midpoint
 
     let focus = sanitisedFocusPoint(resolved)
@@ -51,7 +51,7 @@ extension ZoomHandler {
     guard
       let previousContext = geometry.viewportMapping(
         zoom: CGFloat(previousZoom),
-        pan: state.pan
+        pan: state.transform.pan.value
       )
     else { return currentZoom }
 
@@ -101,7 +101,8 @@ extension ZoomHandler {
   }
 
   private func clampedPan(
-    _ proposedPan: CGSize,
+    _ proposedPan: Size<ScreenSpace>,
+    //    _ proposedPan: CGSize,
     at zoom: Double,
     state: CanvasInteractionState
   ) -> CGSize {
@@ -110,9 +111,11 @@ extension ZoomHandler {
     return candidate.clamped(to: geometry, zoom: CGFloat(zoom))
   }
 
-  private func sanitisedFocusPoint(_ point: CGPoint) -> CGPoint {
+  private func sanitisedFocusPoint(_ point: Point<ScreenSpace>) -> Point<ScreenSpace> {
+    //  private func sanitisedFocusPoint(_ point: CGPoint) -> CGPoint {
+    let fallback = geometry.viewportRect.midpoint
     guard point.x.isFinite, point.y.isFinite else {
-      return CGPoint(x: geometry.viewportRect.midX, y: geometry.viewportRect.midY)
+      return fallback
     }
     return point
   }
