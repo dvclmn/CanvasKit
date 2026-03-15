@@ -16,22 +16,23 @@ struct PointerHandler {
 
   /// The artwork bounds resolved in the viewport named coordinate space.
   /// Captured via SwiftUI anchor preferences in `CanvasCoreView`.
-  let artworkFrameInViewport: CGRect
+  let canvasFrameInViewport: Rect<CanvasSpace>
+  //  let canvasFrameInViewport: CGRect
   let zoom: CGFloat
   let zoomRange: ClosedRange<CGFloat>
 
   init?(
     canvasSize: Size<CanvasSpace>?,
-    artworkFrameInViewport: CGRect?,
+    canvasFrameInViewport: Rect<CanvasSpace>?,
     zoom: CGFloat,
     zoomRange: ClosedRange<CGFloat>?
   ) {
     guard let canvasSize,
-      let artworkFrameInViewport,
+      let canvasFrameInViewport,
       let zoomRange
     else { return nil }
     self.canvasSize = canvasSize
-    self.artworkFrameInViewport = artworkFrameInViewport
+    self.canvasFrameInViewport = canvasFrameInViewport
     self.zoom = zoom
     self.zoomRange = zoomRange
   }
@@ -39,21 +40,33 @@ struct PointerHandler {
 
 extension PointerHandler {
 
-  public func canvasPoint(fromViewportPoint point: CGPoint) -> CGPoint? {
-    map(viewportPoint: point).canvas
+  public func canvasPoint(
+    fromViewportPoint point: CGPoint
+  ) -> Point<CanvasSpace>? {
+    Point<CanvasSpace>(
+      //    let canvas = Point<CanvasSpace>(
+      x: (point.x - canvasFrameInViewport.minX) / zoomClamped,
+      y: (point.y - canvasFrameInViewport.minY) / zoomClamped
+    )
+    //          return HoverMapping(
+    //            screen: viewportPoint,
+    //            canvas: canvas.cgPoint,
+    //            isInsideCanvas: isInsideCanvas(canvas)
+    //          )
+    //    map(viewportPoint: point).canvas
   }
 
-  public func map(viewportPoint: CGPoint) -> HoverMapping {
-    let canvas = Point<CanvasSpace>(
-      x: (viewportPoint.x - artworkFrameInViewport.minX) / zoomClamped,
-      y: (viewportPoint.y - artworkFrameInViewport.minY) / zoomClamped
-    )
-    return HoverMapping(
-      screen: viewportPoint,
-      canvas: canvas.cgPoint,
-      isInsideCanvas: isInsideCanvas(canvas)
-    )
-  }
+  //  public func map(viewportPoint: CGPoint) -> HoverMapping {
+  //    let canvas = Point<CanvasSpace>(
+  //      x: (viewportPoint.x - canvasFrameInViewport.minX) / zoomClamped,
+  //      y: (viewportPoint.y - canvasFrameInViewport.minY) / zoomClamped
+  //    )
+  //    return HoverMapping(
+  //      screen: viewportPoint,
+  //      canvas: canvas.cgPoint,
+  //      isInsideCanvas: isInsideCanvas(canvas)
+  //    )
+  //  }
 
   private var zoomSafe: CGFloat { zoom.isFinite && zoom > 0 ? zoom : 1 }
   private var zoomClamped: CGFloat { zoomSafe.clamped(to: zoomRange) }

@@ -132,13 +132,14 @@ extension CanvasHandler {
 extension CanvasHandler {
 
   private func mappedPointer(
-    _ location: CGPoint,
+    _ location: Point<ScreenSpace>,
+//    _ location: CGPoint,
     zoom: Double
   ) -> CGPoint? {
     guard let zoomRange else { return nil }
     return PointerHandler(
       canvasSize: canvasSize,
-      artworkFrameInViewport: canvasFrameInViewport,
+      canvasFrameInViewport: canvasFrameInViewport,
       zoom: zoom,
       zoomRange: zoomRange.toCGFloatRange
     )?.canvasPoint(fromViewportPoint: location)

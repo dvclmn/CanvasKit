@@ -56,7 +56,7 @@ extension ZoomHandler {
     else { return currentZoom }
 
     let focusCanvas = previousContext.toCanvas(
-      screenPoint: Point<ScreenSpace>(fromPoint: focus)
+      screenPoint: focus
     )
 
     guard
@@ -68,7 +68,8 @@ extension ZoomHandler {
 
     let focusGlobalAtZeroPan = newContextZeroPan.toGlobal(point: focusCanvas.cgPoint)
 
-    let proposedPan = CGSize(
+    let proposedPan = Size<ScreenSpace>(
+//    let proposedPan = CGSize(
       width: focus.x - focusGlobalAtZeroPan.x,
       height: focus.y - focusGlobalAtZeroPan.y
     )
@@ -105,7 +106,8 @@ extension ZoomHandler {
     //    _ proposedPan: CGSize,
     at zoom: Double,
     state: CanvasInteractionState
-  ) -> CGSize {
+  ) -> Size<ScreenSpace> {
+//  ) -> CGSize {
     var candidate = state.transform.pan
     candidate.value = proposedPan
     return candidate.clamped(to: geometry, zoom: CGFloat(zoom))

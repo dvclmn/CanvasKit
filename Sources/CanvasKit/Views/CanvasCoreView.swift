@@ -33,7 +33,8 @@ struct CanvasCoreView<Content: View>: View {
         }
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
-      .background(canvasBackground, ignoresSafeAreaEdges: .top)
+      .background(canvasBackground)
+//      .background(canvasBackground, ignoresSafeAreaEdges: .top)
       .drawingGroup(opaque: true)
       .allowsHitTesting(false)
 
@@ -45,13 +46,9 @@ struct CanvasCoreView<Content: View>: View {
           let frame = anchor.map { proxy[$0] }
           Color.clear
             .allowsHitTesting(false)
-            .task(id: frame) {
-              store.canvasFrameInViewport = frame
-            }
+            .task(id: frame) { store.canvasFrameInViewport = frame }
         }
       }
-
       .canvasTransformations()
-
   }
 }
