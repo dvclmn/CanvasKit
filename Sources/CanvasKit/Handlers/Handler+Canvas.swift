@@ -31,6 +31,17 @@ public final class CanvasHandler {
 
 extension CanvasHandler {
 
+  func handlePan(
+    delta: CGSize,
+    phase: InteractionPhase,
+    state: inout CanvasInteractionState
+  ) {
+    state.transform.pan.updateDelta(
+      delta,
+      phase: phase,
+      source: .gesture(.pan)
+    )
+  }
   func handleTap(
     at location: CGPoint,
     zoom: Double,

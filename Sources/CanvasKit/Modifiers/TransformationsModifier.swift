@@ -21,13 +21,19 @@ struct TransformationsModifier: ViewModifier {
 
     content
       .panGesture(isEnabled: policy.panGestureEnabled) { delta, phase, _ in
-        interactionState.transform.pan.updateDelta(delta, phase: phase)
+        store.handlePan(delta: delta, phase: phase, state: &interactionState)
       }
 
       .zoomGesture(
         zoom: $interactionState.transform.zoom.value,
         isEnabled: policy.zoomGestureEnabled,
-        didUpdateEvent: { store.handleZoom($0, geometry: canvasGeometry, state: &interactionState) }
+        didUpdateEvent: {
+          store.handleZoom(
+            $0,
+            geometry: canvasGeometry,
+            state: &interactionState
+          )
+        }
       )
 
       .onContinuousHover(coordinateSpace: .named(CanvasSpace.viewport)) { phase in
@@ -38,7 +44,7 @@ struct TransformationsModifier: ViewModifier {
       .tapDragGesture(
         rect: interactionState.dragRectBinding(using: policy),
         coordinateSpace: .named(CanvasSpace.viewport),
-        behaviour: policy.dragBehaviour,
+        //        behaviour: policy.dragBehaviour,
         drawsMarqueeRect: true,
         minimumDistance: interactionState.pointer.dragThreshold,
         didUpdateTap: { location in
