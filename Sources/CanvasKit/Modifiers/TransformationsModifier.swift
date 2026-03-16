@@ -25,7 +25,7 @@ struct TransformationsModifier: ViewModifier {
       }
 
       .zoomGesture(
-        zoom: $interactionState.transform.zoom.value,
+        zoom: $interactionState.transform.scale.value,
         isEnabled: policy.zoomGestureEnabled,
         didUpdateEvent: {
           store.handleZoom(
@@ -46,11 +46,12 @@ struct TransformationsModifier: ViewModifier {
       }
 
       .tapDragGesture(
-        rect: interactionState.dragRectBinding(using: policy),
+        rect: $interactionState.dragRect,
+//        rect: interactionState.dragRectBinding(using: policy),
         coordinateSpace: .named(CanvasSpace.viewport),
         behaviour: policy.dragBehaviour,
         drawsMarqueeRect: true,
-        minimumDistance: interactionState.pointer.dragThreshold
+        minimumDistance: interactionState.dragThreshold
       )
 
   }
@@ -58,7 +59,7 @@ struct TransformationsModifier: ViewModifier {
 extension TransformationsModifier {
 
   private var zoom: Double {
-    interactionState.zoom.toDouble
+    interactionState.transform.scale.value.toDouble
   }
 }
 
