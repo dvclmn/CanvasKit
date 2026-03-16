@@ -41,24 +41,16 @@ struct TransformationsModifier: ViewModifier {
         store.handleHover(phase, zoom: zoom, state: &interactionState)
       }
 
-      .onTapGesture(
-        count: 1,
-        coordinateSpace: .named(CanvasSpace.viewport)
-      ) {
+      .onTapGesture(count: 1, coordinateSpace: .named(CanvasSpace.viewport)) {
         store.handleTap(at: $0, zoom: zoom, state: &interactionState)
-//        didUpdateTap($0)
       }
-    
-    
+
       .tapDragGesture(
         rect: interactionState.dragRectBinding(using: policy),
         coordinateSpace: .named(CanvasSpace.viewport),
-        //        behaviour: policy.dragBehaviour,
+        behaviour: policy.dragBehaviour,
         drawsMarqueeRect: true,
-        minimumDistance: interactionState.pointer.dragThreshold,
-        didUpdateTap: { location in
-          
-        }
+        minimumDistance: interactionState.pointer.dragThreshold
       )
 
   }

@@ -34,12 +34,13 @@ extension CanvasHandler {
   func handlePan(
     delta: CGSize,
     phase: InteractionPhase,
-    state: inout CanvasInteractionState
+    state: inout CanvasInteractionState,
+    source: InteractionSource
   ) {
     state.transform.pan.updateDelta(
       delta,
       phase: phase,
-      source: .gesture(.pan)
+      source: source
     )
   }
   func handleTap(
@@ -48,7 +49,11 @@ extension CanvasHandler {
     state: inout CanvasInteractionState
   ) {
     let mapped = pointerCanvasLocation(from: location, zoom: zoom)?.cgPoint
-    state.pointer.tap.update(mapped, phase: .ended)
+    state.pointer.tap.update(
+      mapped,
+      phase: .ended,
+      source: .
+    )
   }
 
   func handleHover(
@@ -68,7 +73,11 @@ extension CanvasHandler {
   ) -> Double {
     guard let geometry else {
       let newZoom = zoomEvent.magnification
-      state.transform.zoom.update(newZoom, phase: zoomEvent.phase)
+      state.transform.zoom.update(
+        newZoom,
+        phase: zoomEvent.phase,
+        source: .
+      )
       return newZoom
     }
     let handler = ZoomHandler(
