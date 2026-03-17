@@ -25,24 +25,31 @@ public final class CanvasHandler {
   /// Sensitivity for pointer-drag zoom (zoom delta per pixel of vertical drag).
   /// Positive values mean drag-up = zoom in.
   public var pointerZoomSensitivity: Double = 0.005
+  
+  public var interaction: Interaction?
 
   public init() {}
 }
 
 extension CanvasHandler {
 
-  func handlePan(
-    delta: CGSize,
-    phase: InteractionPhase,
-    state: inout CanvasInteractionState,
-    source: InteractionSource
-  ) {
-    state.transform.pan.updateDelta(
-      delta,
-      phase: phase,
-      source: source
-    )
-  }
+//  func handlePan(
+//    delta: CGSize,
+//    phase: InteractionPhase,
+////    state: inout CanvasInteractionState,
+////    source: InteractionSource
+//  ) -> Interaction {
+//    .init(
+//      kind: .,
+//      phase: <#T##InteractionPhase#>,
+//      modifiers: <#T##Modifiers#>
+//    )
+////    state.transform.pan.updateDelta(
+////      delta,
+////      phase: phase,
+////      source: source
+////    )
+//  }
   func handleTap(
     at location: CGPoint,
     zoom: Double,

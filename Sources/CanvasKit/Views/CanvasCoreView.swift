@@ -34,7 +34,6 @@ struct CanvasCoreView<Content: View>: View {
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       .background(canvasBackground)
-      //      .background(canvasBackground, ignoresSafeAreaEdges: .top)
       .drawingGroup(opaque: true)
       .allowsHitTesting(false)
 

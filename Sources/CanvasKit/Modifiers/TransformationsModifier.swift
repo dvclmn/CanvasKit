@@ -14,6 +14,7 @@ struct TransformationsModifier: ViewModifier {
   @Environment(CanvasInteractionState.self) private var interactionState
   @Environment(\.canvasInputPolicy) private var policy
   @Environment(\.canvasGeometry) private var canvasGeometry
+  @Environment(\.modifierKeys) private var modifierKeys
 
   func body(content: Content) -> some View {
     @Bindable var store = store
@@ -21,7 +22,12 @@ struct TransformationsModifier: ViewModifier {
 
     content
       .panGesture(isEnabled: policy.panGestureEnabled) { delta, phase, _ in
-        store.handlePan(delta: delta, phase: phase, state: &interactionState)
+
+        guard store.interaction == nil else { return }
+        store.interaction = Interaction(
+          kind: .scrolling(origin: .zero, delta: delta, location: .zero), phase: phase,
+          modifiers: modifierKeys)
+        //        store.handlePan(delta: delta, phase: phase, state: &interactionState)
       }
 
       .zoomGesture(
@@ -47,7 +53,7 @@ struct TransformationsModifier: ViewModifier {
 
       .tapDragGesture(
         rect: $interactionState.dragRect,
-//        rect: interactionState.dragRectBinding(using: policy),
+        //        rect: interactionState.dragRectBinding(using: policy),
         coordinateSpace: .named(CanvasSpace.viewport),
         behaviour: policy.dragBehaviour,
         drawsMarqueeRect: true,
