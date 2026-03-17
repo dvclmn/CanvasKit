@@ -180,3 +180,12 @@ extension CanvasHandler {
   }
 
 }
+
+/// This is for sure a duplicate of something
+struct ViewportContext {
+  let canvasSize: CGSize
+  let canvasFrameInViewport: CGRect
+  
+  /// Already safe/clamped
+  let zoom: Double
+}

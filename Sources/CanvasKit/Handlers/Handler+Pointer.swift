@@ -7,7 +7,6 @@
 
 import BasePrimitives
 import Foundation
-import GestureKit
 
 /// I think pointer handler doesn't need CanvasViewportMapping?
 struct PointerHandler {
