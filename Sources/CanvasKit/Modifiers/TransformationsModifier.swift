@@ -6,7 +6,7 @@
 //
 
 import BasePrimitives
-import GestureKit
+//import GestureKit
 import SwiftUI
 
 struct TransformationsModifier: ViewModifier {

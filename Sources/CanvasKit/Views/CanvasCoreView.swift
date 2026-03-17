@@ -6,7 +6,7 @@
 //
 
 import BasePrimitives
-import GestureKit
+//import GestureKit
 import SwiftUI
 
 struct CanvasCoreView<Content: View>: View {
@@ -15,6 +15,8 @@ struct CanvasCoreView<Content: View>: View {
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.canvasGeometry) private var canvasGeometry
 
+  @State private var canvasFrame: Rect<CanvasSpace>?
+  
   /// A lot of the optionals have been moved here to `CanvasCoreView`
   /// sepcifically so the 'flash' while dependancies load in (like viewportRect, unitSize etc)
   /// doesn't cause such a visual disturbance, As the canvas background etc is handled here.
@@ -45,10 +47,11 @@ struct CanvasCoreView<Content: View>: View {
           Color.clear
             .allowsHitTesting(false)
             .task(id: frame) {
-              store.canvasFrameInViewport = frame.map { Rect<CanvasSpace>(fromRect: $0) }
+              canvasFrame = frame.map { Rect<CanvasSpace>(fromRect: $0) }
             }
         }
       }
       .canvasTransformations()
+      .environment(\.canvasFrameInViewport, canvasFrame)
   }
 }
