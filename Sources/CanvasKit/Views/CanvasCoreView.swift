@@ -38,8 +38,7 @@ struct CanvasCoreView<Content: View>: View {
       .allowsHitTesting(false)
 
       .ignoresSafeArea(edges: .top)
-
-      .coordinateSpace(.named(CanvasSpace.viewport))
+      .coordinateSpace(.named(CanvasSpace.screen))
       .overlayPreferenceValue(ArtworkBoundsAnchorKey.self) { anchor in
         GeometryReader { proxy in
           let frame = anchor.map { proxy[$0] }
