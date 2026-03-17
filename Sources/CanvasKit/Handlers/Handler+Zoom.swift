@@ -11,7 +11,6 @@ import Foundation
 struct ZoomHandler {
   let zoomEvent: ZoomGestureEvent
   let geometry: CanvasGeometry
-  //  let resolver: ZoomFocusResolver
   let zoomRange: ClosedRange<Double>?
 }
 
@@ -20,7 +19,10 @@ struct ZoomHandler {
 extension ZoomHandler {
 
   @discardableResult
-  func updateZoom(state: inout CanvasInteractionState) -> Double {
+  func updateZoom(
+    pointerHover:
+    state: inout CanvasInteractionState
+  ) -> Double {
     defer {
       clearLatchedZoomFocusIfNeeded(
         for: zoomEvent.phase,
@@ -44,9 +46,8 @@ extension ZoomHandler {
     //      )
     else { return currentZoom }
 
-    let resolved = state.pointer.hover.value ?? geometry.viewportRect.midpoint.cgPoint
-
-    let focus = sanitisedFocusPoint(resolved)
+    let hover = state.pointer.hover.value
+    let focusLocation = sanitisedFocusPoint(hover) ?? geometry.viewportRect.midpoint.cgPoint
 
     guard
       let previousContext = geometry.viewportMapping(
@@ -55,7 +56,7 @@ extension ZoomHandler {
       )
     else { return currentZoom }
 
-    let focusCanvas = previousContext.toCanvas(screenPoint: focus)
+    let focusCanvas = previousContext.toCanvas(screenPoint: focusLocation)
 
     guard
       let newContextZeroPan = geometry.viewportMapping(
@@ -68,8 +69,8 @@ extension ZoomHandler {
 
     let proposedPan = Size<ScreenSpace>(
       //    let proposedPan = CGSize(
-      width: focus.x - focusGlobalAtZeroPan.x,
-      height: focus.y - focusGlobalAtZeroPan.y
+      width: focusLocation.x - focusGlobalAtZeroPan.x,
+      height: focusLocation.y - focusGlobalAtZeroPan.y
     )
 
     state.transform.pan.value = clampedPan(
@@ -92,11 +93,12 @@ extension ZoomHandler {
     interactionState.transform.latchedZoomFocusGlobal = nil
   }
 
-  private func clampedProposedZoom(_ proposedZoom: Double, currentZoom: Double) -> Double {
-    guard proposedZoom.isFinite else {
-      return currentZoom.clampedIfNeeded(to: zoomRange)
-    }
-    return proposedZoom.clampedIfNeeded(to: zoomRange)
+  private func clampedProposedZoom(
+    _ proposedZoom: Double,
+    currentZoom: Double
+  ) -> Double {
+    let zoomResult = proposedZoom.isFinite ? proposedZoom : currentZoom
+    return zoomResult.clampedIfNeeded(to: zoomRange)
   }
 
   private func clampedPan(
@@ -111,20 +113,18 @@ extension ZoomHandler {
     return candidate.clamped(to: geometry, zoom: CGFloat(zoom))
   }
 
-  //  private func sanitisedFocusPoint(_ point: Point<ScreenSpace>) -> Point<ScreenSpace> {
-  private func sanitisedFocusPoint(_ point: CGPoint) -> CGPoint {
-    let fallback = geometry.viewportRect.midpoint.cgPoint
-    //    let fallback = geometry.viewportRect.midpoint
-    guard point.x.isFinite, point.y.isFinite else {
-      return fallback
-    }
+  private func sanitisedFocusPoint(_ point: CGPoint?) -> CGPoint? {
+    guard let point, point.isFinite else { return nil }
     return point
   }
 
-  private func isZoomSafe(prev previousZoom: Double, next nextZoom: Double) -> Bool {
+  private func isZoomSafe(
+    prev previousZoom: Double,
+    next nextZoom: Double
+  ) -> Bool {
     geometry.isValidForCoordinateMapping
-      && previousZoom.isFinite && nextZoom.isFinite
-      && previousZoom > 0 && nextZoom > 0
+      && previousZoom.isFiniteAndGreaterThanZero
+      && nextZoom.isFiniteAndGreaterThanZero
       && abs(nextZoom - previousZoom) > .ulpOfOne
   }
 }

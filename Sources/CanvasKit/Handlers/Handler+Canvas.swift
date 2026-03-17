@@ -6,7 +6,7 @@
 //
 
 import BasePrimitives
-import GestureKit
+//import GestureKit
 import SwiftUI
 
 @Observable
@@ -165,8 +165,8 @@ extension CanvasHandler {
 extension CanvasHandler {
 
   private func pointerCanvasLocation(
-    //    from screenLocation: Point<ScreenSpace>,
-    from screenLocation: CGPoint,
+        from screenLocation: Point<ScreenSpace>,
+//    from screenLocation: CGPoint,
     zoom: Double
   ) -> Point<CanvasSpace>? {
     //  ) -> CGPoint? {

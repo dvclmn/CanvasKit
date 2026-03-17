@@ -11,50 +11,51 @@ import SwiftUI
 
 struct TransformationsModifier: ViewModifier {
   @Environment(CanvasHandler.self) private var store
-  @Environment(CanvasInteractionState.self) private var state
+  @Environment(CanvasInteractionState.self) private var interactionState
   @Environment(\.canvasInputPolicy) private var policy
   @Environment(\.canvasGeometry) private var canvasGeometry
   @Environment(\.modifierKeys) private var modifierKeys
 
   func body(content: Content) -> some View {
     @Bindable var store = store
-    @Bindable var state = state
+    @Bindable var interactionState = interactionState
 
     content
-      .panGesture(isEnabled: policy.panGestureEnabled) { event in
-        state.handleSwipeGesture(event)
+      .swipeGesture(isEnabled: policy.panGestureEnabled) { event in
+//        interactionState.handleSwipeGesture(event, with: <#T##Interaction#>)
+        //        interactionState.handleSwipeGesture(event)
       }
 
       .zoomGesture(
-        zoom: $state.transform.scale.value,
+        initial: interactionState.zoom,
         isEnabled: policy.zoomGestureEnabled,
-        didUpdateEvent: {
+        didUpdateEvent: { event in
           store.handleZoom(
-            $0,
+            event,
             geometry: canvasGeometry,
-            state: &state
+            state: &interactionState
           )
         }
       )
 
       .onContinuousHover(coordinateSpace: .named(ScreenSpace.screen)) { phase in
-
+        interactionState.handleHover(phase)
       }
 
       .onTapGesture(
         count: 1,
         coordinateSpace: .named(ScreenSpace.screen)
       ) {
-        store.handleTap(at: $0, zoom: zoom, state: &state)
+        store.handleTap(at: $0, zoom: zoom, state: &interactionState)
       }
 
       .pointerDragGesture(
-        rect: $state.dragRect,
+        rect: $interactionState.dragRect,
         //        rect: interactionState.dragRectBinding(using: policy),
         coordinateSpace: .named(ScreenSpace.screen),
         behaviour: policy.dragBehaviour,
         drawsMarqueeRect: true,
-        minimumDistance: state.pointer.dragThreshold
+        minimumDistance: interactionState.pointer.dragThreshold
       )
 
   }

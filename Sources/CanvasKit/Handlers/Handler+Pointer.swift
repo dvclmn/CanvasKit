@@ -17,24 +17,22 @@ struct PointerHandler {
   /// The artwork bounds resolved in the viewport named coordinate space.
   /// Captured via SwiftUI anchor preferences in `CanvasCoreView`.
   let canvasFrameInViewport: Rect<CanvasSpace>
-  //  let canvasFrameInViewport: CGRect
-  let zoom: CGFloat
-  let zoomRange: ClosedRange<CGFloat>
 
+  let zoom: CGFloat
+
+  /// Expects that zoom comes in already clamped within safe bounds
   init?(
     canvasSize: Size<CanvasSpace>?,
     canvasFrameInViewport: Rect<CanvasSpace>?,
-    zoom: CGFloat,
-    zoomRange: ClosedRange<CGFloat>?
+    zoomClamped: CGFloat?
   ) {
     guard let canvasSize,
       let canvasFrameInViewport,
-      let zoomRange
+      let zoomClamped
     else { return nil }
     self.canvasSize = canvasSize
     self.canvasFrameInViewport = canvasFrameInViewport
-    self.zoom = zoom
-    self.zoomRange = zoomRange
+    self.zoom = zoomClamped
   }
 }
 
@@ -44,32 +42,10 @@ extension PointerHandler {
     fromViewportPoint point: CGPoint
   ) -> Point<CanvasSpace>? {
     Point<CanvasSpace>(
-      //    let canvas = Point<CanvasSpace>(
-      x: (point.x - canvasFrameInViewport.minX) / zoomClamped,
-      y: (point.y - canvasFrameInViewport.minY) / zoomClamped
+      x: (point.x - canvasFrameInViewport.minX) / zoom,
+      y: (point.y - canvasFrameInViewport.minY) / zoom
     )
-    //          return HoverMapping(
-    //            screen: viewportPoint,
-    //            canvas: canvas.cgPoint,
-    //            isInsideCanvas: isInsideCanvas(canvas)
-    //          )
-    //    map(viewportPoint: point).canvas
   }
-
-  //  public func map(viewportPoint: CGPoint) -> HoverMapping {
-  //    let canvas = Point<CanvasSpace>(
-  //      x: (viewportPoint.x - canvasFrameInViewport.minX) / zoomClamped,
-  //      y: (viewportPoint.y - canvasFrameInViewport.minY) / zoomClamped
-  //    )
-  //    return HoverMapping(
-  //      screen: viewportPoint,
-  //      canvas: canvas.cgPoint,
-  //      isInsideCanvas: isInsideCanvas(canvas)
-  //    )
-  //  }
-
-  private var zoomSafe: CGFloat { zoom.isFinite && zoom > 0 ? zoom : 1 }
-  private var zoomClamped: CGFloat { zoomSafe.clamped(to: zoomRange) }
 }
 
 // MARK: - Containment check
@@ -81,9 +57,5 @@ extension PointerHandler {
   public func isInsideCanvas(_ canvasPoint: Point<CanvasSpace>) -> Bool {
     canvasXRange.contains(canvasPoint.x)
       && canvasYRange.contains(canvasPoint.y)
-  }
-
-  public func isInsideCanvas(_ canvasPoint: CGPoint) -> Bool {
-    isInsideCanvas(Point<CanvasSpace>(fromPoint: canvasPoint))
   }
 }
