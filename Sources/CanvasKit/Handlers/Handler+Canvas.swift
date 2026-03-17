@@ -63,11 +63,16 @@ extension CanvasHandler {
     )
   }
 
+  
   func handleHover(
     _ phase: HoverPhase,
     zoom: Double,
+    policy: CanvasInputPolicy,
     state: inout CanvasInteractionState
   ) {
+    guard policy.hoverEnabled else { return }
+//    store.handleHover(phase, zoom: zoom, state: &interactionState)
+    
     guard let location = phase.location else { return }
     let mapped = pointerCanvasLocation(from: location, zoom: zoom)?.cgPoint
     state.pointer.hover.update(mapped, phase: phase.interactionPhase)

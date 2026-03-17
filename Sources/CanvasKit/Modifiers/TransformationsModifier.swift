@@ -42,22 +42,21 @@ struct TransformationsModifier: ViewModifier {
         }
       )
 
-      .onContinuousHover(coordinateSpace: .named(CanvasSpace.viewport)) { phase in
-        guard policy.hoverEnabled else { return }
-        store.handleHover(phase, zoom: zoom, state: &interactionState)
+      .onContinuousHover(coordinateSpace: .named(ScreenSpace.screen)) { phase in
+
       }
 
-      .onTapGesture(count: 1, coordinateSpace: .named(CanvasSpace.viewport)) {
+      .onTapGesture(count: 1, coordinateSpace: .named(ScreenSpace.screen)) {
         store.handleTap(at: $0, zoom: zoom, state: &interactionState)
       }
 
       .tapDragGesture(
         rect: $interactionState.dragRect,
         //        rect: interactionState.dragRectBinding(using: policy),
-        coordinateSpace: .named(CanvasSpace.viewport),
+        coordinateSpace: .named(ScreenSpace.screen),
         behaviour: policy.dragBehaviour,
         drawsMarqueeRect: true,
-        minimumDistance: interactionState.dragThreshold
+        minimumDistance: interactionState.pointer.dragThreshold
       )
 
   }

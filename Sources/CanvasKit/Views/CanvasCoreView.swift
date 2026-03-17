@@ -38,14 +38,14 @@ struct CanvasCoreView<Content: View>: View {
       .allowsHitTesting(false)
 
       .ignoresSafeArea(edges: .top)
-      .coordinateSpace(.named(CanvasSpace.screen))
+      .coordinateSpace(.named(ScreenSpace.screen))
       .overlayPreferenceValue(ArtworkBoundsAnchorKey.self) { anchor in
         GeometryReader { proxy in
           let frame = anchor.map { proxy[$0] }
           Color.clear
             .allowsHitTesting(false)
             .task(id: frame) {
-              store.canvasFrameInViewport = frame.map { Rect<CanvasSpace>(from: $0) }
+              store.canvasFrameInViewport = frame.map { Rect<CanvasSpace>(fromRect: $0) }
             }
         }
       }
