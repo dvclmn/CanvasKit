@@ -11,39 +11,28 @@ import SwiftUI
 
 struct TransformationsModifier: ViewModifier {
   @Environment(CanvasHandler.self) private var store
-  @Environment(CanvasInteractionState.self) private var interactionState
+  @Environment(CanvasInteractionState.self) private var state
   @Environment(\.canvasInputPolicy) private var policy
   @Environment(\.canvasGeometry) private var canvasGeometry
   @Environment(\.modifierKeys) private var modifierKeys
 
   func body(content: Content) -> some View {
     @Bindable var store = store
-    @Bindable var interactionState = interactionState
+    @Bindable var state = state
 
     content
       .panGesture(isEnabled: policy.panGestureEnabled) { event in
-
-        guard store.interaction == nil else { return }
-        store.interaction = Interaction(
-          kind: .scrolling(
-            origin: .zero,
-            delta: event.delta,
-            location: event.location
-          ),
-          phase: event.phase,
-          modifiers: modifierKeys
-        )
-        //        store.handlePan(delta: delta, phase: phase, state: &interactionState)
+        state.handleSwipeGesture(event)
       }
 
       .zoomGesture(
-        zoom: $interactionState.transform.scale.value,
+        zoom: $state.transform.scale.value,
         isEnabled: policy.zoomGestureEnabled,
         didUpdateEvent: {
           store.handleZoom(
             $0,
             geometry: canvasGeometry,
-            state: &interactionState
+            state: &state
           )
         }
       )
@@ -52,17 +41,20 @@ struct TransformationsModifier: ViewModifier {
 
       }
 
-      .onTapGesture(count: 1, coordinateSpace: .named(ScreenSpace.screen)) {
-        store.handleTap(at: $0, zoom: zoom, state: &interactionState)
+      .onTapGesture(
+        count: 1,
+        coordinateSpace: .named(ScreenSpace.screen)
+      ) {
+        store.handleTap(at: $0, zoom: zoom, state: &state)
       }
 
       .pointerDragGesture(
-        rect: $interactionState.dragRect,
+        rect: $state.dragRect,
         //        rect: interactionState.dragRectBinding(using: policy),
         coordinateSpace: .named(ScreenSpace.screen),
         behaviour: policy.dragBehaviour,
         drawsMarqueeRect: true,
-        minimumDistance: interactionState.pointer.dragThreshold
+        minimumDistance: state.pointer.dragThreshold
       )
 
   }
@@ -70,7 +62,7 @@ struct TransformationsModifier: ViewModifier {
 extension TransformationsModifier {
 
   private var zoom: Double {
-    interactionState.transform.scale.value.toDouble
+    state.transform.scale.value.toDouble
   }
 }
 
