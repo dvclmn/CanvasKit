@@ -27,11 +27,11 @@ struct TransformationsModifier: ViewModifier {
       }
 
       .zoomGesture(
-        zoom: $interactionState.transform.scale.value,
+        initial: interactionState.zoom,
         isEnabled: policy.zoomGestureEnabled,
-        didUpdateEvent: {
+        didUpdateEvent: { event in
           store.handleZoom(
-            $0,
+            event,
             geometry: canvasGeometry,
             state: &interactionState
           )
