@@ -21,12 +21,18 @@ struct TransformationsModifier: ViewModifier {
     @Bindable var interactionState = interactionState
 
     content
-      .panGesture(isEnabled: policy.panGestureEnabled) { delta, phase, _ in
+      .panGesture(isEnabled: policy.panGestureEnabled) { event in
 
         guard store.interaction == nil else { return }
         store.interaction = Interaction(
-          kind: .scrolling(origin: .zero, delta: delta, location: .zero), phase: phase,
-          modifiers: modifierKeys)
+          kind: .scrolling(
+            origin: .zero,
+            delta: event.delta,
+            location: event.location
+          ),
+          phase: event.phase,
+          modifiers: modifierKeys
+        )
         //        store.handlePan(delta: delta, phase: phase, state: &interactionState)
       }
 
@@ -50,7 +56,7 @@ struct TransformationsModifier: ViewModifier {
         store.handleTap(at: $0, zoom: zoom, state: &interactionState)
       }
 
-      .tapDragGesture(
+      .pointerDragGesture(
         rect: $interactionState.dragRect,
         //        rect: interactionState.dragRectBinding(using: policy),
         coordinateSpace: .named(ScreenSpace.screen),

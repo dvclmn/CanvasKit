@@ -29,7 +29,7 @@ That handler is the runtime owner of canvas interaction state:
 | `panGesture` (`PanState`) | `panGesture` modifier in ``CanvasCoreView`` |
 | `zoomGesture` (`ZoomState`) | `zoomGesture` modifier in ``CanvasCoreView`` |
 | `rotateGesture` (`RotateState`) | (Declared, not currently wired in `CanvasCoreView`) |
-| `tap` (`TapState`) | `tapDragGesture` tap callback in ``CanvasCoreView`` |
+| `tap` (`TapState`) | `pointerDragGesture` tap callback in ``CanvasCoreView`` |
 | `pointerDrag` (`DragState`) | `dragRectBinding()` when drag behaviour is `.marquee` |
 | `hover` (`HoverState`) | `.onContinuousHover(coordinateSpace: .named(CanvasSpace.viewport))` in ``CanvasCoreView`` |
 | `activeDragType` (`DragBehavior`) | Internal policy (default `.none`) |
