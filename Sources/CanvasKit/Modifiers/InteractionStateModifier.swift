@@ -11,7 +11,7 @@ import BasePrimitives
 /// hierarchy as is needed for access.
 import SwiftUI
 
-struct InteractionStateModifier: ViewModifier {
+struct InteractionStateSetupModifier: ViewModifier {
   @Environment(\.modifierKeys) private var modifierKeys
   @State private var interactionState: CanvasInteractionState
   @Binding var toolHandler: ToolHandler
@@ -26,34 +26,34 @@ struct InteractionStateModifier: ViewModifier {
   func body(content: Content) -> some View {
     content
       .environment(interactionState)
-      .environment(\.zoomLevel, interactionState.zoom)
-      .environment(\.panOffset, interactionState.pan)
-      .environment(\.rotation, interactionState.rotation)
-      .environment(\.pointerLocation, interactionState.pointer.hover.value)
-      .environment(\.canvasOperation, operation)
-      .environment(\.canvasInputPolicy, canvasPolicy)
+      .environment(\.zoomLevel, interactionState.snapshot.zoom)
+      .environment(\.panOffset, interactionState.snapshot.pan)
+      .environment(\.rotation, interactionState.snapshot.pan)
+      .environment(\.pointerLocation, snapshot.pointerLocation?.cgPoint)
+//      .environment(\.canvasOperation, operation)
+//      .environment(\.canvasInputPolicy, canvasPolicy)
 
       .task(id: modifierKeys) { toolHandler.updateModifiers(modifierKeys) }
   }
 }
 
-extension InteractionStateModifier {
-  private var canvasPolicy: CanvasInputPolicy {
-    .init(fromOperation: operation, tool: toolHandler.effectiveTool)
-  }
+extension InteractionStateSetupModifier {
+//  private var canvasPolicy: CanvasInputPolicy {
+//    .init(fromOperation: operation, tool: toolHandler.effectiveTool)
+//  }
   /// The semantic operation currently being performed, computed from all input layers.
-  private var operation: CanvasOperation {
-    //  private func activeOperation(
-    //    state: CanvasInteractionState,
-    //    modifiers: Modifiers
-    //  ) -> CanvasOperation {
-    OperationResolver.resolve(
-      state: interactionState,
-      activeTool: toolHandler.effectiveTool,
-      springLoadedTool: toolHandler.springLoadedTool,
-      modifiers: modifierKeys
-    )
-  }
+//  private var operation: CanvasOperation {
+//    //  private func activeOperation(
+//    //    state: CanvasInteractionState,
+//    //    modifiers: Modifiers
+//    //  ) -> CanvasOperation {
+//    OperationResolver.resolve(
+//      state: interactionState,
+//      activeTool: toolHandler.effectiveTool,
+//      springLoadedTool: toolHandler.springLoadedTool,
+//      modifiers: modifierKeys
+//    )
+//  }
 
 }
 extension View {
@@ -62,7 +62,7 @@ extension View {
     toolHandler: Binding<ToolHandler>,
   ) -> some View {
     self.modifier(
-      InteractionStateModifier(
+      InteractionStateSetupModifier(
         state: state,
         toolHandler: toolHandler
       )

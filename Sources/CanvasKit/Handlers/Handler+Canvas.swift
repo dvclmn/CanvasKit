@@ -162,30 +162,30 @@ extension CanvasHandler {
 }
 
 // MARK: - Coordinate Mapping
-extension CanvasHandler {
+//extension CanvasHandler {
 
-  private func pointerCanvasLocation(
-        from screenLocation: Point<ScreenSpace>,
-//    from screenLocation: CGPoint,
-    zoom: Double
-  ) -> Point<CanvasSpace>? {
-    //  ) -> CGPoint? {
-    guard let zoomRange else { return nil }
-    return PointerHandler(
-      canvasSize: canvasSize,
-      canvasFrameInViewport: canvasFrameInViewport,
-      zoom: zoom,
-      zoomRange: zoomRange.toCGFloatRange
-    )?.canvasPoint(fromViewportPoint: screenLocation)
-  }
+//  private func pointerCanvasLocation(
+//        from screenLocation: Point<ScreenSpace>,
+////    from screenLocation: CGPoint,
+//    zoom: Double
+//  ) -> Point<CanvasSpace>? {
+//    //  ) -> CGPoint? {
+//    guard let zoomRange else { return nil }
+//    return PointerHandler(
+//      canvasSize: canvasSize,
+//      canvasFrameInViewport: canvasFrameInViewport,
+//      zoom: zoom,
+//      zoomRange: zoomRange.toCGFloatRange
+//    )?.canvasPoint(fromViewportPoint: screenLocation)
+//  }
 
-}
+//}
 
 /// This is for sure a duplicate of something
-struct ViewportContext {
-  let canvasSize: CGSize
-  let canvasFrameInViewport: CGRect
-  
-  /// Already safe/clamped
-  let zoom: Double
-}
+//struct ViewportContext {
+//  let canvasSize: CGSize
+//  let canvasFrameInViewport: CGRect
+//  
+//  /// Already safe/clamped
+//  let zoom: Double
+//}

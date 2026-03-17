@@ -22,6 +22,7 @@ struct TransformationsModifier: ViewModifier {
 
     content
       .swipeGesture(isEnabled: policy.panGestureEnabled) { event in
+        
 //        interactionState.handleSwipeGesture(event, with: <#T##Interaction#>)
         //        interactionState.handleSwipeGesture(event)
       }
