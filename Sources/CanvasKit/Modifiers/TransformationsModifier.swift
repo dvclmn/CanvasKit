@@ -15,49 +15,76 @@ struct InteractionModifiers: ViewModifier {
   @Environment(\.canvasGeometry) private var canvasGeometry
   @Environment(\.modifierKeys) private var modifierKeys
 
+  @State private var dragRect: CGRect?
+
   func body(content: Content) -> some View {
     @Bindable var store = store
-//    @Bindable var interactionState = interactionState
+    @Bindable var interactionState = interactionState
 
     content
       .swipeGesture(isEnabled: policy.panGestureEnabled) { event in
-        
-//        interactionState.handleSwipeGesture(event, with: <#T##Interaction#>)
-        //        interactionState.handleSwipeGesture(event)
+        interactionState.handleInput(
+          from: .swipeGesture(delta: event.delta, location: event.location), phase: event.phase,
+          modifiers: event.modifiers)
       }
 
       .pinchGesture(
         initial: interactionState.transform.scale,
         isEnabled: policy.pinchGestureEnabled,
-        didUpdateEvent: { event in
-          interactionState.handleInput(from: .pinchGesture(event), phase: <#T##InteractionPhase#>, modifiers: <#T##Modifiers#>)
-//          store.handleZoom(
-//            event,
-//            geometry: canvasGeometry,
-//            state: &interactionState
-//          )
+        didUpdateEvent: { event, phase in
+          interactionState.handleInput(from: .pinchGesture(event), phase: phase, modifiers: modifierKeys)
+
+          /// Not sure if I should actually return a zoom value here
+          return nil
         }
       )
 
       .onContinuousHover(coordinateSpace: .named(ScreenSpace.screen)) { phase in
-        interactionState.handleHover(phase)
+        guard let location = phase.location else { return }
+        interactionState.handleInput(
+          from: .continuousHover(location.screenPoint), phase: phase.interactionPhase, modifiers: modifierKeys
+        )
+        //        interactionState.handleHover(phase)
       }
 
       .onTapGesture(
         count: 1,
         coordinateSpace: .named(ScreenSpace.screen)
-      ) {
-        store.handleTap(at: $0, zoom: zoom, state: &interactionState)
+      ) { location in
+        interactionState.handleInput(
+          from: .pointerTapGesture(
+            .primary,
+            location: location.screenPoint
+          ),
+          phase: .ended,
+          modifiers: modifierKeys
+        )
+        //        store.handleTap(at: $0, zoom: zoom, state: &interactionState)
       }
 
       .pointerDragGesture(
-        rect: $interactionState.dragRect,
+        rect: $dragRect,
+        //        rect: $interactionState.pointer.drag,
+        //        rect: $interactionState.dragRect,
         //        rect: interactionState.dragRectBinding(using: policy),
         coordinateSpace: .named(ScreenSpace.screen),
         behaviour: policy.dragBehaviour,
         drawsMarqueeRect: true,
         minimumDistance: interactionState.pointer.dragThreshold
       )
+      .onChange(of: dragRect) {
+        guard let dragRect else { return }
+
+        //        guard let origin = dragRect?.origin, let current = dragRect?.size
+        interactionState.handleInput(
+          from: .pointerDragGesture(
+            from: .init(fromPoint: dragRect.origin),
+            current: .init(fromOffset: dragRect.size)
+          ),
+          phase: <#T##InteractionPhase#>,
+          modifiers: <#T##Modifiers#>
+        )
+      }
 
   }
 }
