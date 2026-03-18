@@ -91,7 +91,7 @@ struct InteractionModifiers: ViewModifier {
 extension InteractionModifiers {
 
   private var zoom: Double {
-    state.transform.scale.value.toDouble
+    interactionState.transform.scale.toDouble
   }
 }
 
