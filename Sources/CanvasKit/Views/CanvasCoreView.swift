@@ -14,8 +14,9 @@ struct CanvasCoreView<Content: View>: View {
   @Environment(\.canvasBackground) private var canvasBackground
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.canvasGeometry) private var canvasGeometry
-
-  @State private var canvasFrame: Rect<ScreenSpace>?
+  @Environment(\.viewportRect) private var viewportRect
+  @Environment(\.artworkFrameInViewport) private var artworkFrameInViewport
+  @Environment(\.canvasSize) private var canvasSize
 
   /// A lot of the optionals have been moved here to `CanvasCoreView`
   /// sepcifically so the 'flash' while dependancies load in (like viewportRect, unitSize etc)
@@ -31,7 +32,17 @@ struct CanvasCoreView<Content: View>: View {
           CanvasArtwork(content: content)
 
             /// Should probably set this up to be clearer for *non* Grid domain contexts
-//            .gridFont(for: .canvas)
+            .gridFont(for: .canvas)
+        } else {
+
+          Text(
+            """
+            Canvas geometry or zoom range missing from Env.
+            viewportRect: \(viewportRect?.displayString, default: "nil")
+            artworkFrameInViewport: \(artworkFrameInViewport)
+            canvasSize: \(canvasSize)
+            """)
+          .opacity(0.2)
         }
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -40,19 +51,7 @@ struct CanvasCoreView<Content: View>: View {
       .allowsHitTesting(false)
 
       .ignoresSafeArea(edges: .top)
-      .coordinateSpace(.named(ScreenSpace.screen))
-      .overlayPreferenceValue(ArtworkBoundsAnchorKey.self) { anchor in
-        GeometryReader { proxy in
-          let frame = anchor.map { proxy[$0] }
-          Color.clear
-            .allowsHitTesting(false)
-            .task(id: frame) {
-//              canvasFrame = frame
-              canvasFrame = frame.map { Rect<ScreenSpace>(fromRect: $0) }
-            }
-        }
-      }
+
       .canvasTransformations()
-      .environment(\.artworkFrameInViewport, canvasFrame)
   }
 }

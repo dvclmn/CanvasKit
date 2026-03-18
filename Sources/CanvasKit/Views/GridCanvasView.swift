@@ -6,7 +6,6 @@
 //
 
 import BasePrimitives
-//import GestureKit
 import SwiftUI
 
 public struct GridCanvasView<Content: View>: View {
