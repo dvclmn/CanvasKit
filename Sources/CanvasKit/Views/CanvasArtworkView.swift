@@ -9,7 +9,7 @@ import BasePrimitives
 import SwiftUI
 
 struct CanvasArtwork<Content: View>: View {
-  //  @Environment(CanvasHandler.self) private var store
+
   @Environment(CanvasInteractionState.self) private var interactionState
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.zoomClamped) private var zoomClamped
@@ -24,12 +24,12 @@ struct CanvasArtwork<Content: View>: View {
         width: canvasSize?.width,
         height: canvasSize?.height
       )
-      .coordinateSpace(.named(CanvasSpace.artwork))
+      .coordinateSpace(.named(CanvasSpace.canvas))
       .anchorPreference(key: ArtworkBoundsAnchorKey.self, value: .bounds) { $0 }
 
       .scaleEffect(zoomClamped, anchor: .center)
-      .offset(interactionState.translation)
-      .rotationEffect(interactionState.rotation, anchor: .center)
+      .offset(interactionState.transform.translation.cgSize)
+      .rotationEffect(interactionState.transform.rotation, anchor: .center)
       .frame(maxWidth: .infinity, maxHeight: .infinity)
 
   }

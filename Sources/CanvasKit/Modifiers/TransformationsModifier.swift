@@ -1,15 +1,14 @@
 //
-//  TransformationsModifier.swift
+//  InteractionModifiers.swift
 //  BaseHelpers
 //
 //  Created by Dave Coleman on 11/3/2026.
 //
 
 import BasePrimitives
-//import GestureKit
 import SwiftUI
 
-struct TransformationsModifier: ViewModifier {
+struct InteractionModifiers: ViewModifier {
   @Environment(CanvasHandler.self) private var store
   @Environment(CanvasInteractionState.self) private var interactionState
   @Environment(\.canvasInputPolicy) private var policy
@@ -27,9 +26,9 @@ struct TransformationsModifier: ViewModifier {
         //        interactionState.handleSwipeGesture(event)
       }
 
-      .zoomGesture(
+      .pinchGesture(
         initial: interactionState.transform.scale,
-        isEnabled: policy.zoomGestureEnabled,
+        isEnabled: policy.pinchGestureEnabled,
         didUpdateEvent: { event in
           interactionState.handleInput(from: .pinchGesture(event), phase: <#T##InteractionPhase#>, modifiers: <#T##Modifiers#>)
 //          store.handleZoom(
@@ -62,7 +61,7 @@ struct TransformationsModifier: ViewModifier {
 
   }
 }
-extension TransformationsModifier {
+extension InteractionModifiers {
 
   private var zoom: Double {
     state.transform.scale.value.toDouble
@@ -71,6 +70,6 @@ extension TransformationsModifier {
 
 extension View {
   public func canvasTransformations() -> some View {
-    self.modifier(TransformationsModifier())
+    self.modifier(InteractionModifiers())
   }
 }
