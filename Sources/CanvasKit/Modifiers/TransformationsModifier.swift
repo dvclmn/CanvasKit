@@ -18,7 +18,7 @@ struct TransformationsModifier: ViewModifier {
 
   func body(content: Content) -> some View {
     @Bindable var store = store
-    @Bindable var interactionState = interactionState
+//    @Bindable var interactionState = interactionState
 
     content
       .swipeGesture(isEnabled: policy.panGestureEnabled) { event in
@@ -28,14 +28,15 @@ struct TransformationsModifier: ViewModifier {
       }
 
       .zoomGesture(
-        initial: interactionState.zoom,
+        initial: interactionState.transform.scale,
         isEnabled: policy.zoomGestureEnabled,
         didUpdateEvent: { event in
-          store.handleZoom(
-            event,
-            geometry: canvasGeometry,
-            state: &interactionState
-          )
+          interactionState.handleInput(from: .pinchGesture(event), phase: <#T##InteractionPhase#>, modifiers: <#T##Modifiers#>)
+//          store.handleZoom(
+//            event,
+//            geometry: canvasGeometry,
+//            state: &interactionState
+//          )
         }
       )
 
