@@ -27,7 +27,8 @@ struct InteractionStateSetupModifier: ViewModifier {
   func body(content: Content) -> some View {
 
     let snapshot = interactionState.snapshot
-    let policy = interactionState.activeTool.inputPolicy
+    let tool = toolHandler.effectiveTool
+    let policy = tool.inputPolicy
 
     content
       .environment(interactionState)
@@ -36,7 +37,13 @@ struct InteractionStateSetupModifier: ViewModifier {
       .environment(\.panOffset, snapshot?.pan ?? .zero)
       .environment(\.rotation, snapshot?.rotation ?? .zero)
       .environment(\.pointerLocation, snapshot?.pointerLocation?.cgPoint)
-      .task(id: modifierKeys) { toolHandler.updateModifiers(modifierKeys) }
+      .task(id: modifierKeys) {
+        toolHandler.updateModifiers(modifierKeys)
+        interactionState.updateModifiers(modifierKeys)
+      }
+      .task(id: toolHandler.toolKind) {
+        interactionState.activeTool = toolHandler.effectiveTool
+      }
   }
 }
 

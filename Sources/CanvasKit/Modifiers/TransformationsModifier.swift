@@ -22,6 +22,7 @@ struct InteractionModifiers: ViewModifier {
     @Bindable var interactionState = interactionState
 
     content
+      .pointerStyleCompatible(interactionState.pointerStyle)
       .swipeGesture(isEnabled: policy.panGestureEnabled) { event in
         interactionState.handleInput(
           from: .swipeGesture(delta: event.delta, location: event.location), phase: event.phase,
