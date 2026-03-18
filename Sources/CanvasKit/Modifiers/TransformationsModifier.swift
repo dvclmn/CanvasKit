@@ -15,7 +15,7 @@ struct InteractionModifiers: ViewModifier {
   @Environment(\.canvasGeometry) private var canvasGeometry
   @Environment(\.modifierKeys) private var modifierKeys
 
-  @State private var dragRect: CGRect?
+//  @State private var dragRect: CGRect?
 
   func body(content: Content) -> some View {
     @Bindable var store = store
@@ -63,28 +63,43 @@ struct InteractionModifiers: ViewModifier {
       }
 
       .pointerDragGesture(
-        rect: $dragRect,
-        //        rect: $interactionState.pointer.drag,
-        //        rect: $interactionState.dragRect,
-        //        rect: interactionState.dragRectBinding(using: policy),
-        coordinateSpace: .named(ScreenSpace.screen),
-        behaviour: policy.dragBehaviour,
-        drawsMarqueeRect: true,
-        minimumDistance: interactionState.pointer.dragThreshold
-      )
-      .onChange(of: dragRect) {
-        guard let dragRect else { return }
-
-        //        guard let origin = dragRect?.origin, let current = dragRect?.size
+        observing: $interactionState.pointer.drag,  // read-only sync
+        behaviour: policy.dragBehaviour
+      ) { event, phase in
         interactionState.handleInput(
           from: .pointerDragGesture(
-            from: .init(fromPoint: dragRect.origin),
-            current: .init(fromOffset: dragRect.size)
+            from: event.startLocation,
+            current: event.currentLocation
           ),
-          phase: <#T##InteractionPhase#>,
-          modifiers: <#T##Modifiers#>
+          phase: phase,
+          modifiers: modifierKeys
         )
       }
+    
+//      .pointerDragGesture(
+//        rect: $dragRect,
+//        //        rect: $interactionState.pointer.drag,
+//        //        rect: $interactionState.dragRect,
+//        //        rect: interactionState.dragRectBinding(using: policy),
+//        coordinateSpace: .named(ScreenSpace.screen),
+//        behaviour: policy.dragBehaviour,
+//        drawsMarqueeRect: true,
+//        minimumDistance: interactionState.pointer.dragThreshold
+//      )
+//    
+//      .onChange(of: dragRect) {
+//        guard let dragRect else { return }
+//
+//        //        guard let origin = dragRect?.origin, let current = dragRect?.size
+//        interactionState.handleInput(
+//          from: .pointerDragGesture(
+//            from: .init(fromPoint: dragRect.origin),
+//            current: .init(fromOffset: dragRect.size)
+//          ),
+//          phase: <#T##InteractionPhase#>,
+//          modifiers: <#T##Modifiers#>
+//        )
+//      }
 
   }
 }
