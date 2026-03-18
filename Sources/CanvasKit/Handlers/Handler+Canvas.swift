@@ -27,7 +27,7 @@ public final class CanvasHandler {
   /// Positive values mean drag-up = zoom in.
   public var pointerZoomSensitivity: Double = 0.005
   
-  public var interaction: Interaction?
+//  public var interaction: Interaction?
 
   public init() {}
 }
