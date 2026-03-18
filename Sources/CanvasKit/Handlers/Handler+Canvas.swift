@@ -14,8 +14,8 @@ public final class CanvasHandler {
 
 //  var geometry:
   var zoomRange: ClosedRange<Double>?
-//  var canvasFrameInViewport: Rect<CanvasSpace>?
-  //  var canvasFrameInViewport: CGRect?
+//  var artworkFrameInViewport: Rect<CanvasSpace>?
+  //  var artworkFrameInViewport: CGRect?
 //  var canvasSize: Size<CanvasSpace>?
 
   /// Zoom multiplier per click when using the Zoom tool tap.
@@ -174,7 +174,7 @@ extension CanvasHandler {
 //    guard let zoomRange else { return nil }
 //    return PointerHandler(
 //      canvasSize: canvasSize,
-//      canvasFrameInViewport: canvasFrameInViewport,
+//      artworkFrameInViewport: artworkFrameInViewport,
 //      zoom: zoom,
 //      zoomRange: zoomRange.toCGFloatRange
 //    )?.canvasPoint(fromViewportPoint: screenLocation)
@@ -185,7 +185,7 @@ extension CanvasHandler {
 /// This is for sure a duplicate of something
 //struct ViewportContext {
 //  let canvasSize: CGSize
-//  let canvasFrameInViewport: CGRect
+//  let artworkFrameInViewport: CGRect
 //  
 //  /// Already safe/clamped
 //  let zoom: Double

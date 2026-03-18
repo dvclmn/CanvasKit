@@ -21,22 +21,22 @@ import Foundation
 //
 //  /// The artwork bounds resolved in the viewport named coordinate space.
 //  /// Captured via SwiftUI anchor preferences in `CanvasCoreView`.
-//  let canvasFrameInViewport: Rect<CanvasSpace>
+//  let artworkFrameInViewport: Rect<CanvasSpace>
 //
 //  let zoom: CGFloat
 //
 //  /// Expects that zoom comes in already clamped within safe bounds
 //  init?(
 //    canvasSize: Size<CanvasSpace>?,
-//    canvasFrameInViewport: Rect<CanvasSpace>?,
+//    artworkFrameInViewport: Rect<CanvasSpace>?,
 //    zoomClamped: CGFloat?
 //  ) {
 //    guard let canvasSize,
-//      let canvasFrameInViewport,
+//      let artworkFrameInViewport,
 //      let zoomClamped
 //    else { return nil }
 //    self.canvasSize = canvasSize
-//    self.canvasFrameInViewport = canvasFrameInViewport
+//    self.artworkFrameInViewport = artworkFrameInViewport
 //    self.zoom = zoomClamped
 //  }
 //}
@@ -49,8 +49,8 @@ import Foundation
 //    fromViewportPoint point: CGPoint
 //  ) -> Point<CanvasSpace>? {
 //    Point<CanvasSpace>(
-//      x: (point.x - canvasFrameInViewport.minX) / zoom,
-//      y: (point.y - canvasFrameInViewport.minY) / zoom
+//      x: (point.x - artworkFrameInViewport.minX) / zoom,
+//      y: (point.y - artworkFrameInViewport.minY) / zoom
 //    )
 //  }
 //}

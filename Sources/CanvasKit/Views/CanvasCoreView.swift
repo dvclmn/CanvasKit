@@ -52,6 +52,6 @@ struct CanvasCoreView<Content: View>: View {
         }
       }
       .canvasTransformations()
-      .environment(\.canvasFrameInViewport, canvasFrame)
+      .environment(\.artworkFrameInViewport, canvasFrame)
   }
 }
