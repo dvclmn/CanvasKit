@@ -15,7 +15,7 @@ struct CanvasCoreView<Content: View>: View {
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.canvasGeometry) private var canvasGeometry
 
-  @State private var canvasFrame: Rect<CanvasSpace>?
+  @State private var canvasFrame: Rect<ScreenSpace>?
 
   /// A lot of the optionals have been moved here to `CanvasCoreView`
   /// sepcifically so the 'flash' while dependancies load in (like viewportRect, unitSize etc)
@@ -31,7 +31,7 @@ struct CanvasCoreView<Content: View>: View {
           CanvasArtwork(content: content)
 
             /// Should probably set this up to be clearer for *non* Grid domain contexts
-            .gridFont(for: .canvas)
+//            .gridFont(for: .canvas)
         }
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -47,6 +47,7 @@ struct CanvasCoreView<Content: View>: View {
           Color.clear
             .allowsHitTesting(false)
             .task(id: frame) {
+//              canvasFrame = frame
               canvasFrame = frame.map { Rect<ScreenSpace>(fromRect: $0) }
             }
         }
