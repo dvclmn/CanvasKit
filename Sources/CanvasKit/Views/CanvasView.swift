@@ -14,7 +14,6 @@ public struct CanvasView<Content: View>: View {
   @Environment(\.canvasAnchor) private var canvasAnchor
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.shouldShowInfoBarItems) private var shouldShowInfoBarItems
-  @Environment(\.canvasGeometry) private var canvasGeometry
 
   @State var store = CanvasHandler()
 
@@ -67,8 +66,7 @@ public struct CanvasView<Content: View>: View {
         store.zoomRange = zoomRange
         interactionState.zoomRange = zoomRange?.toCGFloatRange
       }
-      //      .task(id: canvasSize) { store.canvasSize = canvasSize }
-      .task(id: canvasGeometry) { interactionState.geometry = canvasGeometry }
+    //      .task(id: canvasSize) { store.canvasSize = canvasSize }
 
   }
 }

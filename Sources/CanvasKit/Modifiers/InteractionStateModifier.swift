@@ -13,6 +13,7 @@ import SwiftUI
 /// hierarchy as is needed for access.
 struct InteractionStateSetupModifier: ViewModifier {
   @Environment(\.modifierKeys) private var modifierKeys
+  @Environment(\.canvasGeometry) private var canvasGeometry
   @State private var interactionState: CanvasInteractionState
   @Binding var toolHandler: ToolHandler
 
@@ -37,6 +38,9 @@ struct InteractionStateSetupModifier: ViewModifier {
       .environment(\.panOffset, snapshot?.pan ?? .zero)
       .environment(\.rotation, snapshot?.rotation ?? .zero)
       .environment(\.pointerLocation, snapshot?.pointerLocation?.cgPoint)
+      .environment(\.pointerStyle, interactionState.pointerStyle)
+      .environment(\.activeTool, toolHandler.effectiveTool)
+
       .task(id: modifierKeys) {
         toolHandler.updateModifiers(modifierKeys)
         interactionState.updateModifiers(modifierKeys)
@@ -44,6 +48,8 @@ struct InteractionStateSetupModifier: ViewModifier {
       .task(id: toolHandler.toolKind) {
         interactionState.activeTool = toolHandler.effectiveTool
       }
+
+      .task(id: canvasGeometry) { interactionState.geometry = canvasGeometry }
   }
 }
 
