@@ -40,7 +40,7 @@ struct ControlPointView<S: Shape>: View {
         isHovered ? .cyan : .blue,
         lineWidth: strokeWidth
       )
-      .frameFromLength(length, axis: [.horizontal, .vertical])
+//      .frameFromLength(length, axis: [.horizontal, .vertical])
       .offset(point.offset(by: -length / 2))
       .allowsHitTesting(false)
   }

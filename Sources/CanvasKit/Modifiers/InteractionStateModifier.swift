@@ -32,7 +32,7 @@ struct InteractionStateSetupModifier: ViewModifier {
     content
       .environment(interactionState)
       .environment(\.canvasInputPolicy, policy)
-      .environment(\.zoomLevel, snapshot?.zoom ?? 1.0)
+      .environment(\.zoomLevel, snapshot?.zoom.toDouble ?? 1.0)
       .environment(\.panOffset, snapshot?.pan ?? .zero)
       .environment(\.rotation, snapshot?.rotation ?? .zero)
       .environment(\.pointerLocation, snapshot?.pointerLocation?.cgPoint)

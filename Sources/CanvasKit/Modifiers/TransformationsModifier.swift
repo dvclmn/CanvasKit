@@ -63,13 +63,13 @@ struct InteractionModifiers: ViewModifier {
       }
 
       .pointerDragGesture(
-        observing: $interactionState.pointer.drag,  // read-only sync
+        observing: $interactionState.pointer.drag.toBindingCGRect,  // read-only sync
         behaviour: policy.dragBehaviour
       ) { event, phase in
         interactionState.handleInput(
           from: .pointerDragGesture(
-            from: event.startLocation,
-            current: event.currentLocation
+            from: event.startLocation.screenPoint,
+            current: event.currentLocation.screenPoint
           ),
           phase: phase,
           modifiers: modifierKeys
