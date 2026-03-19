@@ -16,7 +16,7 @@ struct InteractionModifiers: ViewModifier {
   @Environment(\.modifierKeys) private var modifierKeys
 
   //  @State private var dragRect: CGRect?
- 
+
   func body(content: Content) -> some View {
     @Bindable var store = store
     @Bindable var interactionState = interactionState
@@ -37,8 +37,11 @@ struct InteractionModifiers: ViewModifier {
         initial: interactionState.transform.scale,
         isEnabled: policy.pinchGestureEnabled,
         didUpdateEvent: { event, phase in
-          interactionState.handleInput(from: .pinchGesture(event), phase: phase, modifiers: modifierKeys)
-
+          interactionState.handleInput(
+            from: .pinchGesture(event),
+            phase: phase,
+            modifiers: modifierKeys
+          )
           /// Not sure if I should actually return a zoom value here
           return nil
         }
@@ -49,7 +52,6 @@ struct InteractionModifiers: ViewModifier {
         interactionState.handleInput(
           from: .continuousHover(location.screenPoint), phase: phase.interactionPhase, modifiers: modifierKeys
         )
-        //        interactionState.handleHover(phase)
       }
 
       .onTapGesture(
@@ -64,7 +66,6 @@ struct InteractionModifiers: ViewModifier {
           phase: .ended,
           modifiers: modifierKeys
         )
-        //        store.handleTap(at: $0, zoom: zoom, state: &interactionState)
       }
 
       .pointerDragGesture(
