@@ -67,16 +67,11 @@ struct InteractionModifiers: ViewModifier {
       }
 
       .onPointerDragGesture(
-        observing: $interactionState.pointer.drag,  // read-only sync
         behaviour: policy.dragBehaviour
       ) { payload, phase in
         guard let payload else { return }
         interactionState.handleInput(
           from: .pointerDragGesture(payload),
-//          from: .pointerDragGesture(
-//            from: event.startLocation.screenPoint,
-//            current: event.currentLocation.screenPoint
-//          ),
           phase: phase,
           modifiers: modifierKeys
         )
