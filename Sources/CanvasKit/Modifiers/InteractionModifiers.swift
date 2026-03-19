@@ -15,14 +15,12 @@ struct InteractionModifiers: ViewModifier {
   @Environment(\.canvasGeometry) private var canvasGeometry
   @Environment(\.modifierKeys) private var modifierKeys
 
-  //  @State private var dragRect: CGRect?
-
   func body(content: Content) -> some View {
     @Bindable var store = store
     @Bindable var interactionState = interactionState
 
     content
-      .swipeGesture(isEnabled: policy.panGestureEnabled) { event in
+      .onSwipeGesture(isEnabled: policy.panGestureEnabled) { event in
         interactionState.handleInput(
           from: .swipeGesture(
             delta: event.delta,
@@ -33,7 +31,7 @@ struct InteractionModifiers: ViewModifier {
         )
       }
 
-      .pinchGesture(
+      .onPinchGesture(
         initial: interactionState.transform.scale,
         isEnabled: policy.pinchGestureEnabled,
         didUpdateEvent: { event, phase in
@@ -68,7 +66,7 @@ struct InteractionModifiers: ViewModifier {
         )
       }
 
-      .pointerDragGesture(
+      .onPointerDragGesture(
         observing: $interactionState.pointer.drag.toBindingCGRect,  // read-only sync
         behaviour: policy.dragBehaviour
       ) { event, phase in
