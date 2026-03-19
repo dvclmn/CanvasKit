@@ -40,8 +40,9 @@ struct InteractionModifiers: ViewModifier {
             phase: phase,
             modifiers: modifierKeys
           )
-          /// Not sure if I should actually return a zoom value here
-          return nil
+          /// Return the resolved scale so the modifier's internalZoom
+          /// stays in sync with what GlobalInteraction wrote to transform.scale.
+          return interactionState.transform.scale
         }
       )
 
