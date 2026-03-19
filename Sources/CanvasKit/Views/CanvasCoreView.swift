@@ -11,6 +11,7 @@ import SwiftUI
 
 struct CanvasCoreView<Content: View>: View {
   @Environment(CanvasHandler.self) private var store
+  @Environment(CanvasInteractionState.self) private var interactionState
   @Environment(\.canvasBackground) private var canvasBackground
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.canvasGeometry) private var canvasGeometry
@@ -44,6 +45,7 @@ struct CanvasCoreView<Content: View>: View {
         ArtworkGeometry(anchor)
       }
 
+      
       .environment(\.artworkFrameInViewport, canvasFrame)
       .canvasTransformations()
   }

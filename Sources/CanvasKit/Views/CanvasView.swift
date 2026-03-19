@@ -14,7 +14,8 @@ public struct CanvasView<Content: View>: View {
   @Environment(\.canvasAnchor) private var canvasAnchor
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.shouldShowInfoBarItems) private var shouldShowInfoBarItems
-
+//  @Environment(\.canvasGeometry) private var canvasGeometry
+  
   @State var store = CanvasHandler()
 
   /// Optional to allow GirdCanvasRect to take advantage of `CanvasCoreView`s
@@ -67,7 +68,7 @@ public struct CanvasView<Content: View>: View {
         interactionState.zoomRange = zoomRange?.toCGFloatRange
       }
     //      .task(id: canvasSize) { store.canvasSize = canvasSize }
-
+      
   }
 }
 

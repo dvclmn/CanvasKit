@@ -15,18 +15,22 @@ struct InteractionModifiers: ViewModifier {
   @Environment(\.canvasGeometry) private var canvasGeometry
   @Environment(\.modifierKeys) private var modifierKeys
 
-//  @State private var dragRect: CGRect?
-
+  //  @State private var dragRect: CGRect?
+ 
   func body(content: Content) -> some View {
     @Bindable var store = store
     @Bindable var interactionState = interactionState
 
     content
-      .pointerStyleCompatible(interactionState.pointerStyle)
       .swipeGesture(isEnabled: policy.panGestureEnabled) { event in
         interactionState.handleInput(
-          from: .swipeGesture(delta: event.delta, location: event.location), phase: event.phase,
-          modifiers: event.modifiers)
+          from: .swipeGesture(
+            delta: event.delta,
+            location: event.location
+          ),
+          phase: event.phase,
+          modifiers: event.modifiers
+        )
       }
 
       .pinchGesture(
@@ -76,32 +80,6 @@ struct InteractionModifiers: ViewModifier {
           modifiers: modifierKeys
         )
       }
-    
-//      .pointerDragGesture(
-//        rect: $dragRect,
-//        //        rect: $interactionState.pointer.drag,
-//        //        rect: $interactionState.dragRect,
-//        //        rect: interactionState.dragRectBinding(using: policy),
-//        coordinateSpace: .named(ScreenSpace.screen),
-//        behaviour: policy.dragBehaviour,
-//        drawsMarqueeRect: true,
-//        minimumDistance: interactionState.pointer.dragThreshold
-//      )
-//    
-//      .onChange(of: dragRect) {
-//        guard let dragRect else { return }
-//
-//        //        guard let origin = dragRect?.origin, let current = dragRect?.size
-//        interactionState.handleInput(
-//          from: .pointerDragGesture(
-//            from: .init(fromPoint: dragRect.origin),
-//            current: .init(fromOffset: dragRect.size)
-//          ),
-//          phase: <#T##InteractionPhase#>,
-//          modifiers: <#T##Modifiers#>
-//        )
-//      }
-
   }
 }
 extension InteractionModifiers {

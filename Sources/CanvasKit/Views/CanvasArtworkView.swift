@@ -15,6 +15,7 @@ struct CanvasArtwork<Content: View>: View {
   @Environment(\.zoomClamped) private var zoomClamped
   @Environment(\.canvasSize) private var canvasSize
   @Environment(\.canvasGeometry) private var canvasGeometry
+  @Environment(\.activeTool) private var activeTool
 
   @ViewBuilder var content: () -> Content
 
@@ -36,14 +37,14 @@ struct CanvasArtwork<Content: View>: View {
       .offset(interactionState.transform.translation.cgSize)
       .rotationEffect(interactionState.transform.rotation, anchor: .center)
       .frame(maxWidth: .infinity, maxHeight: .infinity)
-
+      .task(id: canvasGeometry) { interactionState.geometry = canvasGeometry }
   }
 }
 
 extension CanvasArtwork {
 
   private var isCanvasReady: Bool {
-    canvasGeometry != nil && zoomRange != nil
+    canvasGeometry != nil && zoomRange != nil && activeTool != nil
   }
   /// Based on whether all geometry data is ready, to display
   /// the Canvas proeperly. Note: avoiding actually *hiding*

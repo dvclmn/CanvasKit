@@ -38,18 +38,16 @@ struct InteractionStateSetupModifier: ViewModifier {
       .environment(\.panOffset, snapshot?.pan ?? .zero)
       .environment(\.rotation, snapshot?.rotation ?? .zero)
       .environment(\.pointerLocation, snapshot?.pointerLocation?.cgPoint)
-      .environment(\.pointerStyle, interactionState.pointerStyle)
+      .environment(\.pointerStyle, interactionState.pointerStyle(with: modifierKeys))
       .environment(\.activeTool, toolHandler.effectiveTool)
 
       .task(id: modifierKeys) {
         toolHandler.updateModifiers(modifierKeys)
-        interactionState.updateModifiers(modifierKeys)
+//        interactionState.updateModifiers(modifierKeys)
       }
       .task(id: toolHandler.toolKind) {
         interactionState.activeTool = toolHandler.effectiveTool
       }
-
-      .task(id: canvasGeometry) { interactionState.geometry = canvasGeometry }
   }
 }
 
