@@ -65,7 +65,7 @@ public struct CanvasView<Content: View>: View {
 
       .task(id: zoomRange) {
         store.zoomRange = zoomRange
-        interactionState.zoomRange = zoomRange?.toCGFloatRange
+        interactionState.zoomRange = zoomRange
       }
     //      .task(id: canvasSize) { store.canvasSize = canvasSize }
       
