@@ -53,7 +53,6 @@ struct InteractionModifiers: ViewModifier {
         interactionState.handleInput(
           .continuousHover(location.screenPoint),
           phase: phase.interactionPhase,
-          //          modifiers: modifierKeys
         )
       }
 
@@ -63,12 +62,8 @@ struct InteractionModifiers: ViewModifier {
       ) { location in
         guard policy.activeInputs.contains(.pointerTap) else { return }
         interactionState.handleInput(
-          .pointerTapGesture(
-            .primary,
-            location: location.screenPoint
-          ),
+          .pointerTapGesture(.primary, location: location.screenPoint),
           phase: .ended,
-          //          modifiers: modifierKeys
         )
       }
 
@@ -76,14 +71,10 @@ struct InteractionModifiers: ViewModifier {
         behaviour: policy.dragBehaviour
       ) { payload, phase in
         guard let payload else { return }
-        interactionState.handleInput(
-          .pointerDragGesture(payload),
-          phase: phase,
-          //          modifiers: modifierKeys
-        )
+        interactionState.handleInput(.pointerDragGesture(payload), phase: phase)
       }
 
-    /// Make sure `CanvasInteractionState` gets modifier key updates
+      /// Make sure `CanvasInteractionState` gets modifier key updates
       .task(id: modifierKeys) { interactionState.modifiers = modifierKeys }
   }
 }
