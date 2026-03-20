@@ -26,14 +26,9 @@ struct InteractionStateSetupModifier: ViewModifier {
   }
 
   func body(content: Content) -> some View {
-
-    let snapshot = interactionState.snapshot
-    let tool = toolHandler.effectiveTool
-    let policy = tool.inputPolicy
-
     content
       .environment(interactionState)
-      .environment(\.canvasInputPolicy, policy)
+      .environment(\.canvasInputPolicy, toolHandler.effectiveTool.inputPolicy)
       .environment(\.zoomLevel, snapshot?.zoom.toDouble ?? 1.0)
       .environment(\.panOffset, snapshot?.pan ?? .zero)
       .environment(\.rotation, snapshot?.rotation ?? .zero)
@@ -43,7 +38,7 @@ struct InteractionStateSetupModifier: ViewModifier {
 
       .task(id: modifierKeys) {
         toolHandler.updateModifiers(modifierKeys)
-//        interactionState.updateModifiers(modifierKeys)
+        //        interactionState.updateModifiers(modifierKeys)
       }
       .task(id: toolHandler.toolKind) {
         interactionState.activeTool = toolHandler.effectiveTool
@@ -51,7 +46,12 @@ struct InteractionStateSetupModifier: ViewModifier {
   }
 }
 
+extension InteractionStateSetupModifier {
+  private var snapshot: CanvasSnapshot? { interactionState.snapshot }
+}
+
 extension View {
+
   public func setUpInteractionState(
     _ state: CanvasInteractionState? = nil,
     toolHandler: Binding<ToolHandler>

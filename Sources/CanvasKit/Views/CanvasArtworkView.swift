@@ -32,16 +32,24 @@ struct CanvasArtwork<Content: View>: View {
       )
       .coordinateSpace(.named(CanvasSpace.canvas))
       .anchorPreference(key: ArtworkBoundsAnchorKey.self, value: .bounds) { $0 }
-
-      .scaleEffect(zoomClamped, anchor: .center)
+//      .scaleEffect(zoomClamped, anchor: zoomAnchor)
+    /// Important note: Keep the order 1. Scale, 2. Rotate, 3. Offset
+            .scaleEffect(zoomClamped, anchor: .center)
+            .rotationEffect(interactionState.transform.rotation, anchor: .center)
       .offset(interactionState.transform.translation.cgSize)
-      .rotationEffect(interactionState.transform.rotation, anchor: .center)
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       .task(id: canvasGeometry) { interactionState.geometry = canvasGeometry }
   }
 }
 
 extension CanvasArtwork {
+
+//  private var zoomAnchor: UnitPoint {
+//    guard let hover = interactionState.pointer.hover?.cgPoint,
+//      let size = canvasGeometry?.viewportSize
+//    else { return .center }
+//    return UnitPoint(point: hover, in: size)
+//  }
 
   private var isCanvasReady: Bool {
     canvasGeometry != nil && zoomRange != nil && activeTool != nil
@@ -57,27 +65,33 @@ extension CanvasArtwork {
   private var canvasDecomposed: some View {
     if #available(macOS 15.0, iOS 18.0, *) {
       Group(subviews: content()) { subviewCollection in
-        ZStack {
-          ForEach(subviews: subviewCollection) { subview in
-            if subview.containerValues.allowsCanvasClipping {
-              subview
-                .clipShape(.rect(cornerRadius: cornerRounding))
-            } else {
-              subview
-            }
-          }
-        }
-        .overlay {
-          RoundedRectangle(cornerRadius: cornerRounding)
-            .fill(.clear)
-            .stroke(.white.opacity(0.07), lineWidth: outlineThickness)
-        }
+        SubViews(subviewCollection)
       }
     } else {
       ZStack {
         content()
       }
       .modifier(CanvasOutlineModifier())
+    }
+  }
+
+  @available(macOS 15.0, iOS 18.0, *)
+  @ViewBuilder
+  private func SubViews(_ subviews: SubviewsCollection) -> some View {
+    ZStack {
+      ForEach(subviews: subviews) { subview in
+        if subview.containerValues.allowsCanvasClipping {
+          subview
+            .clipShape(.rect(cornerRadius: cornerRounding))
+        } else {
+          subview
+        }
+      }
+    }
+    .overlay {
+      RoundedRectangle(cornerRadius: cornerRounding)
+        .fill(.clear)
+        .stroke(.white.opacity(0.07), lineWidth: outlineThickness)
     }
   }
 

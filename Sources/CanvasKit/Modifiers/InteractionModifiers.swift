@@ -20,7 +20,9 @@ struct InteractionModifiers: ViewModifier {
     @Bindable var interactionState = interactionState
 
     content
-      .onSwipeGesture(isEnabled: policy.swipeGestureEnabled) { event in
+      .onSwipeGesture(
+        isEnabled: policy.activeInputs.contains(.swipeGesture)
+      ) { event in
         interactionState.handleInput(
           .swipeGesture(
             delta: event.delta,
@@ -33,7 +35,7 @@ struct InteractionModifiers: ViewModifier {
 
       .onPinchGesture(
         initial: interactionState.transform.scale,
-        isEnabled: policy.pinchGestureEnabled
+        isEnabled: policy.activeInputs.contains(.pinchGesture)
       ) { zoom, phase in
         interactionState.handleInput(
           .pinchGesture(scale: zoom),
@@ -46,7 +48,7 @@ struct InteractionModifiers: ViewModifier {
       }
 
       .onContinuousHover(coordinateSpace: .named(ScreenSpace.screen)) { phase in
-        guard policy.hoverEnabled else { return }
+        guard policy.activeInputs.contains(.pointerHover) else { return }
         guard let location = phase.location else { return }
         interactionState.handleInput(
           .continuousHover(location.screenPoint),
@@ -59,6 +61,7 @@ struct InteractionModifiers: ViewModifier {
         count: 1,
         coordinateSpace: .named(ScreenSpace.screen)
       ) { location in
+        guard policy.activeInputs.contains(.pointerTapGesture) else { return }
         interactionState.handleInput(
           .pointerTapGesture(
             .primary,
@@ -79,12 +82,6 @@ struct InteractionModifiers: ViewModifier {
           modifiers: modifierKeys
         )
       }
-  }
-}
-extension InteractionModifiers {
-
-  private var zoom: Double {
-    interactionState.transform.scale.toDouble
   }
 }
 
