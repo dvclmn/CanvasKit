@@ -22,7 +22,7 @@ struct InteractionModifiers: ViewModifier {
     content
       .onSwipeGesture(isEnabled: policy.swipeGestureEnabled) { event in
         interactionState.handleInput(
-          from: .swipeGesture(
+          .swipeGesture(
             delta: event.delta,
             location: event.location
           ),
@@ -36,7 +36,7 @@ struct InteractionModifiers: ViewModifier {
         isEnabled: policy.pinchGestureEnabled,
         didUpdateEvent: { event, phase in
           interactionState.handleInput(
-            from: .pinchGesture(event),
+            .pinchGesture(event),
             phase: phase,
             modifiers: modifierKeys
           )
@@ -47,9 +47,12 @@ struct InteractionModifiers: ViewModifier {
       )
 
       .onContinuousHover(coordinateSpace: .named(ScreenSpace.screen)) { phase in
+        guard policy.hoverEnabled else { return }
         guard let location = phase.location else { return }
         interactionState.handleInput(
-          from: .continuousHover(location.screenPoint), phase: phase.interactionPhase, modifiers: modifierKeys
+          .continuousHover(location.screenPoint),
+          phase: phase.interactionPhase,
+          modifiers: modifierKeys
         )
       }
 
@@ -58,7 +61,7 @@ struct InteractionModifiers: ViewModifier {
         coordinateSpace: .named(ScreenSpace.screen)
       ) { location in
         interactionState.handleInput(
-          from: .pointerTapGesture(
+          .pointerTapGesture(
             .primary,
             location: location.screenPoint
           ),
@@ -72,7 +75,7 @@ struct InteractionModifiers: ViewModifier {
       ) { payload, phase in
         guard let payload else { return }
         interactionState.handleInput(
-          from: .pointerDragGesture(payload),
+          .pointerDragGesture(payload),
           phase: phase,
           modifiers: modifierKeys
         )
