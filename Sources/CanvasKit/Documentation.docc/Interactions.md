@@ -10,7 +10,7 @@ Input source
 
 ↓ maps to
 
-Intent
+Intent/Adjustment
 └─ Pan
 └─ Select
 └─ Draw
