@@ -33,18 +33,17 @@ struct InteractionModifiers: ViewModifier {
 
       .onPinchGesture(
         initial: interactionState.transform.scale,
-        isEnabled: policy.pinchGestureEnabled,
-        didUpdateEvent: { event, phase in
-          interactionState.handleInput(
-            .pinchGesture(event),
-            phase: phase,
-            modifiers: modifierKeys
-          )
-          /// Return the resolved scale so the modifier's internalZoom
-          /// stays in sync with what GlobalInteraction wrote to transform.scale.
-          return interactionState.transform.scale
-        }
-      )
+        isEnabled: policy.pinchGestureEnabled
+      ) { zoom, phase in
+        interactionState.handleInput(
+          .pinchGesture(scale: zoom),
+          phase: phase,
+          modifiers: modifierKeys
+        )
+        /// Return the resolved scale so the modifier's internalZoom
+        /// stays in sync with what GlobalInteraction wrote to transform.scale.
+        return interactionState.transform.scale
+      }
 
       .onContinuousHover(coordinateSpace: .named(ScreenSpace.screen)) { phase in
         guard policy.hoverEnabled else { return }
