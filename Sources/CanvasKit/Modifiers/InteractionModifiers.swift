@@ -29,7 +29,7 @@ struct InteractionModifiers: ViewModifier {
             location: event.location
           ),
           phase: event.phase,
-          modifiers: event.modifiers
+          //          modifiers: event.modifiers
         )
       }
 
@@ -40,7 +40,7 @@ struct InteractionModifiers: ViewModifier {
         interactionState.handleInput(
           .pinchGesture(scale: zoom),
           phase: phase,
-          modifiers: modifierKeys
+          //          modifiers: modifierKeys
         )
         /// Return the resolved scale so the modifier's internalZoom
         /// stays in sync with what GlobalInteraction wrote to transform.scale.
@@ -53,7 +53,7 @@ struct InteractionModifiers: ViewModifier {
         interactionState.handleInput(
           .continuousHover(location.screenPoint),
           phase: phase.interactionPhase,
-          modifiers: modifierKeys
+          //          modifiers: modifierKeys
         )
       }
 
@@ -68,7 +68,7 @@ struct InteractionModifiers: ViewModifier {
             location: location.screenPoint
           ),
           phase: .ended,
-          modifiers: modifierKeys
+          //          modifiers: modifierKeys
         )
       }
 
@@ -79,9 +79,12 @@ struct InteractionModifiers: ViewModifier {
         interactionState.handleInput(
           .pointerDragGesture(payload),
           phase: phase,
-          modifiers: modifierKeys
+          //          modifiers: modifierKeys
         )
       }
+
+    /// Make sure `CanvasInteractionState` gets modifier key updates
+      .task(id: modifierKeys) { interactionState.modifiers = modifierKeys }
   }
 }
 
