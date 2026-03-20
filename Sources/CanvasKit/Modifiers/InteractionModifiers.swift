@@ -21,7 +21,7 @@ struct InteractionModifiers: ViewModifier {
 
     content
       .onSwipeGesture(
-        isEnabled: policy.activeInputs.contains(.swipeGesture)
+        isEnabled: policy.activeInputs.contains(.swipe)
       ) { event in
         interactionState.handleInput(
           .swipeGesture(
@@ -35,7 +35,7 @@ struct InteractionModifiers: ViewModifier {
 
       .onPinchGesture(
         initial: interactionState.transform.scale,
-        isEnabled: policy.activeInputs.contains(.pinchGesture)
+        isEnabled: policy.activeInputs.contains(.pinch)
       ) { zoom, phase in
         interactionState.handleInput(
           .pinchGesture(scale: zoom),
@@ -61,7 +61,7 @@ struct InteractionModifiers: ViewModifier {
         count: 1,
         coordinateSpace: .named(ScreenSpace.screen)
       ) { location in
-        guard policy.activeInputs.contains(.pointerTapGesture) else { return }
+        guard policy.activeInputs.contains(.pointerTap) else { return }
         interactionState.handleInput(
           .pointerTapGesture(
             .primary,
