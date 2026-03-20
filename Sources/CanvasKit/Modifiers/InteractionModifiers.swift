@@ -20,7 +20,7 @@ struct InteractionModifiers: ViewModifier {
     @Bindable var interactionState = interactionState
 
     content
-      .onSwipeGesture(isEnabled: policy.panGestureEnabled) { event in
+      .onSwipeGesture(isEnabled: policy.swipeGestureEnabled) { event in
         interactionState.handleInput(
           from: .swipeGesture(
             delta: event.delta,
