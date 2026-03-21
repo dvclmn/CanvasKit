@@ -11,38 +11,38 @@ import SwiftUI
 // MARK: - onCanvasTap
 
 /// Observes pointer tap events and delivers them in canvas-space.
-struct OnCanvasTapModifier: ViewModifier {
-  @Environment(CanvasInteractionState.self) private var interactionState
-
-  let action: (Point<CanvasSpace>) -> Void
-
-  func body(content: Content) -> some View {
-    content
-      .onChange(of: interactionState.pointer.tap) { _, newTap in
-        guard let screenPoint = newTap,
-          let mapper = interactionState.coordinateSpaceMapper
-        else { return }
-
-        let canvasPoint = mapper.canvasPoint(from: screenPoint)
-        action(canvasPoint)
-      }
-  }
-}
-
-/// Observes pointer tap events and delivers them in screen-space.
-struct OnCanvasTapScreenModifier: ViewModifier {
-  @Environment(CanvasInteractionState.self) private var interactionState
-
-  let action: (Point<ScreenSpace>) -> Void
-
-  func body(content: Content) -> some View {
-    content
-      .onChange(of: interactionState.pointer.tap) { _, newTap in
-        guard let screenPoint = newTap else { return }
-        action(screenPoint)
-      }
-  }
-}
+//struct OnCanvasTapModifier: ViewModifier {
+//  @Environment(CanvasInteractionState.self) private var interactionState
+//
+//  let action: (Point<CanvasSpace>) -> Void
+//
+//  func body(content: Content) -> some View {
+//    content
+//      .onChange(of: interactionState.pointer.tap) { _, newTap in
+//        guard let screenPoint = newTap,
+//          let mapper = interactionState.coordinateSpaceMapper
+//        else { return }
+//
+//        let canvasPoint = mapper.canvasPoint(from: screenPoint)
+//        action(canvasPoint)
+//      }
+//  }
+//}
+//
+///// Observes pointer tap events and delivers them in screen-space.
+//struct OnCanvasTapScreenModifier: ViewModifier {
+//  @Environment(CanvasInteractionState.self) private var interactionState
+//
+//  let action: (Point<ScreenSpace>) -> Void
+//
+//  func body(content: Content) -> some View {
+//    content
+//      .onChange(of: interactionState.pointer.tap) { _, newTap in
+//        guard let screenPoint = newTap else { return }
+//        action(screenPoint)
+//      }
+//  }
+//}
 
 // MARK: - onCanvasDrag
 
@@ -138,25 +138,19 @@ extension View {
   ///     selectGlyph(at: gridPos)
   ///   }
   /// ```
-  public func onCanvasTap(
-    perform action: @escaping (Point<CanvasSpace>) -> Void
-  ) -> some View {
-    self.modifier(OnCanvasTapModifier(action: action))
-  }
-  
-//  public func onGridCanvasTap(
+//  public func onCanvasTap(
 //    perform action: @escaping (Point<CanvasSpace>) -> Void
 //  ) -> some View {
 //    self.modifier(OnCanvasTapModifier(action: action))
 //  }
-
-  /// React to pointer taps in screen-space.
-  public func onCanvasTap(
-    in space: ScreenSpace.Type,
-    perform action: @escaping (Point<ScreenSpace>) -> Void
-  ) -> some View {
-    self.modifier(OnCanvasTapScreenModifier(action: action))
-  }
+//
+//  /// React to pointer taps in screen-space.
+//  public func onCanvasTap(
+//    in space: ScreenSpace.Type,
+//    perform action: @escaping (Point<ScreenSpace>) -> Void
+//  ) -> some View {
+//    self.modifier(OnCanvasTapScreenModifier(action: action))
+//  }
 
   /// React to pointer drags in canvas-space. Fires every frame.
   ///
