@@ -18,15 +18,22 @@ public struct CanvasView<Content: View>: View {
 
   /// Optional to allow GirdCanvasRect to take advantage of `CanvasCoreView`s
   /// optional unwrapping presentation
-  let canvasSize: Size<CanvasSpace>?
+  let canvasSize: Size<CanvasSpace>
   let content: () -> Content
 
+  public init(
+    canvasSize: Size<CanvasSpace>,
+    @ViewBuilder content: @escaping () -> Content,
+  ) {
+    self.canvasSize = canvasSize
+    self.content = content
+  }
+  
   public init(
     canvasSize: CGSize,
     @ViewBuilder content: @escaping () -> Content,
   ) {
-    self.canvasSize = Size<CanvasSpace>(fromCGSize: canvasSize)
-    self.content = content
+    self.init(canvasSize: .init(fromCGSize: canvasSize), content: content)
   }
 
   public var body: some View {
