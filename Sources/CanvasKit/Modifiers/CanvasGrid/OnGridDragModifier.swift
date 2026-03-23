@@ -11,9 +11,9 @@ import BasePrimitives
 //public typealias GridDragEvent = (start: GridPosition, end: GridPosition, phase: InteractionPhase)
 
 public struct GridDragEvent {
-  let start: GridPosition
-  let end: GridPosition
-  let phase: InteractionPhase
+  public let start: GridPosition
+  public let end: GridPosition
+  public let phase: InteractionPhase
   
   public init(start: GridPosition, end: GridPosition, phase: InteractionPhase) {
     self.start = start
@@ -40,18 +40,19 @@ struct OnGridDragModifier: ViewModifier {
   
   func body(content: Content) -> some View {
     content
-      .onCanvasDrag(in: CanvasSpace.self) { canvasRect in
+      .onCanvasDrag(in: CanvasSpace.self) { event in
         guard let gridGeometry else { return }
         
         let projection = gridGeometry.projection
-        let endPoint = Point<CanvasSpace>(x: canvasRect.maxX, y: canvasRect.maxY)
+        let rect = event.rect
+        let endPoint = Point<CanvasSpace>(x: rect.maxX, y: rect.maxY)
         
         guard
-          let origin = projection.gridPositionIfValid(from: canvasRect.origin),
+          let origin = projection.gridPositionIfValid(from: rect.origin),
           let end = projection.gridPositionIfValid(from: endPoint)
         else { return }
         
-        action(.init(start: origin, end: end, phase: <#T##InteractionPhase#>))
+        action(.init(start: origin, end: end, phase: event.phase))
       }
   }
 }

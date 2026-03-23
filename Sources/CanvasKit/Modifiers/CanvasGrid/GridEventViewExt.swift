@@ -48,7 +48,8 @@ extension View {
   /// }
   /// ```
   public func onGridDrag(
-    perform action: @escaping (_ origin: GridPosition, _ end: GridPosition) -> Void
+    perform action: @escaping (GridDragEvent) -> Void
+//    perform action: @escaping (_ origin: GridPosition, _ end: GridPosition) -> Void
   ) -> some View {
     self.modifier(OnGridDragModifier(action: action))
   }

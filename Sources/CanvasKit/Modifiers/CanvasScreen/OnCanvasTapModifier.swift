@@ -25,26 +25,3 @@ struct OnCanvasTapModifier<Space: CanvasCoordinateSpace>: ViewModifier {
       }
   }
 }
-
-extension View {
-
-  /// React to pointer taps in the given coordinate space (defaults to canvas-space).
-  ///
-  /// ```swift
-  /// CanvasView(...)
-  ///   .onCanvasTap { point in
-  ///     selectGlyph(at: point)
-  ///   }
-  ///
-  /// CanvasView(...)
-  ///   .onCanvasTap(in: ScreenSpace.self) { point in
-  ///     showPopover(at: point)
-  ///   }
-  /// ```
-  public func onCanvasTap<Space: CanvasCoordinateSpace>(
-    in space: Space.Type = CanvasSpace.self,
-    perform action: @escaping (Point<Space>) -> Void
-  ) -> some View {
-    self.modifier(OnCanvasTapModifier<Space>(action: action))
-  }
-}
