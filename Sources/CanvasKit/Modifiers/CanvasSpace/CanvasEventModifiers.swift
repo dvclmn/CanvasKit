@@ -8,23 +8,37 @@
 import BasePrimitives
 import SwiftUI
 
-// MARK: - onCanvasDrag
+public struct CanvasDragEvent<Space> {
+  let rect: Rect<Space>
+  let phase: InteractionPhase
+}
 
 /// Observes pointer drag events and delivers the rect in the requested coordinate space.
 struct OnCanvasDragModifier<Space: CanvasCoordinateSpace>: ViewModifier {
   @Environment(CanvasInteractionState.self) private var interactionState
 
-  let action: (Rect<Space>) -> Void
+  let action: (CanvasDragEvent<Space>) -> Void
+//  let action: (Rect<Space>) -> Void
 
   func body(content: Content) -> some View {
     content
       .onChange(of: interactionState.pointer.drag) { _, newDrag in
-        guard
-          let screenRect = newDrag,
-          let mapper = interactionState.coordinateSpaceMapper
-        else { return }
-        action(Space.convert(screenRect, using: mapper))
+        
+        action(.init(rect: Space.convert(<#T##screenRect: Rect<ScreenSpace>##Rect<ScreenSpace>#>, using: <#T##CoordinateSpaceMapper#>), phase: <#T##InteractionPhase#>))
+//        action(Space.convert(screenRect, using: mapper))
       }
+  }
+}
+
+extension OnCanvasDragModifier {
+  private func handleAction(_ newDrag: Rect<ScreenSpace>?) {
+    guard
+      let screenRect = newDrag,
+      let mapper = interactionState.coordinateSpaceMapper
+    else { return }
+    
+    let rect = Space.convert(screenRect, using: <#T##CoordinateSpaceMapper#>)
+    let event = CanvasDragEvent(rect: <#T##Rect<Space>#>, phase: <#T##InteractionPhase#>)
   }
 }
 
