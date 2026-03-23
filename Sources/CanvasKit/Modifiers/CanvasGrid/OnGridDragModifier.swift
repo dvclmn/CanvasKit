@@ -5,28 +5,8 @@
 //  Created by Dave Coleman on 23/3/2026.
 //
 
-import SwiftUI
 import BasePrimitives
-
-//public typealias GridDragEvent = (start: GridPosition, end: GridPosition, phase: InteractionPhase)
-
-public struct GridDragEvent {
-  public let start: GridPosition
-  public let end: GridPosition
-  public let phase: InteractionPhase
-  
-  public init(start: GridPosition, end: GridPosition, phase: InteractionPhase) {
-    self.start = start
-    self.end = end
-    self.phase = phase
-  }
-}
-
-//extension GridDragEvent {
-//  public init() {
-//    
-//  }
-//}
+import SwiftUI
 
 /// Observes pointer drags and delivers the selected grid cell range.
 ///
@@ -35,25 +15,24 @@ public struct GridDragEvent {
 struct OnGridDragModifier: ViewModifier {
   @Environment(CanvasInteractionState.self) private var interactionState
   @Environment(\.gridGeometry) private var gridGeometry
-  
+
   let action: (GridDragEvent) -> Void
-  
+
   func body(content: Content) -> some View {
     content
       .onCanvasDrag(in: CanvasSpace.self) { event in
         guard let gridGeometry else { return }
-        
+
         let projection = gridGeometry.projection
         let rect = event.rect
         let endPoint = Point<CanvasSpace>(x: rect.maxX, y: rect.maxY)
-        
+
         guard
           let origin = projection.gridPositionIfValid(from: rect.origin),
           let end = projection.gridPositionIfValid(from: endPoint)
         else { return }
-        
+
         action(.init(start: origin, end: end, phase: event.phase))
       }
   }
 }
-
