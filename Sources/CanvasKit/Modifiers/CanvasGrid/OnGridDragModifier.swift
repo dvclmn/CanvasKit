@@ -32,7 +32,13 @@ struct OnGridDragModifier: ViewModifier {
           let end = projection.gridPositionIfValid(from: endPoint)
         else { return }
 
-        action(.init(start: origin, end: end, phase: event.phase))
+        action(
+          .init(
+            start: origin,
+            current: end,
+            phase: event.phase
+          )
+        )
       }
   }
 }
