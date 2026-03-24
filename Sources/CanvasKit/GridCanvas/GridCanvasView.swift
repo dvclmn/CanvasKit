@@ -7,6 +7,7 @@
 
 import BasePrimitives
 import SwiftUI
+import BaseUI
 
 //public typealias GridCanvasView<Grid: GridShaped, Content: View> = GridCanvas<Grid>.GridCanvasView<Content>
 
