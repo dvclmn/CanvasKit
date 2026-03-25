@@ -12,7 +12,7 @@ import SwiftUI
 
 extension GridCanvas {
   struct CellSelectionCanvas: View {
-    @Environment(SelectionHandler.self) private var store
+    @Environment(CellSelectionHandler.self) private var store
     @Environment(\.unitSize) private var unitSize
     @Environment(\.cornerRounding) private var cornerRounding
     @Environment(\.gridDimensions) private var gridDimensions

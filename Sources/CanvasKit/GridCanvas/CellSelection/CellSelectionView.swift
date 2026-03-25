@@ -11,7 +11,7 @@ import SwiftUI
 
 extension GridCanvas {
   public struct CellSelectionView<Content: View>: View {
-    @Environment(SelectionHandler.self) private var store
+    @Environment(CellSelectionHandler.self) private var store
     @Environment(\.unitSize) private var unitSize
     @Environment(\.gridDimensions) private var gridDimensions
 
