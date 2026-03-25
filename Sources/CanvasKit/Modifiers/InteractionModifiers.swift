@@ -75,7 +75,7 @@ struct InteractionModifiers: ViewModifier {
       }
 
       /// Make sure `CanvasInteractionState` gets modifier key updates
-//      .task(id: modifierKeys) { interactionState.modifiers = modifierKeys }
+      //      .task(id: modifierKeys) { interactionState.modifiers = modifierKeys }
       .syncModifiers(to: $interactionState.modifiers)
   }
 }
