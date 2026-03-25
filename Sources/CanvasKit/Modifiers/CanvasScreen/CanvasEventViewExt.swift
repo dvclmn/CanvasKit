@@ -51,12 +51,4 @@ extension View {
   ) -> some View {
     self.modifier(OnCanvasDragModifier<Space>(action: action))
   }
-  
-//  /// Handle all canvas events through a single callback.
-//  /// Events are delivered in canvas-space.
-//  public func canvasEventHandler(
-//    _ handler: @escaping (CanvasEvent) -> Void
-//  ) -> some View {
-//    self.modifier(CanvasEventHandlerModifier(handler: handler))
-//  }
 }

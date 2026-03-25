@@ -6,7 +6,6 @@
 //
 
 import BasePrimitives
-import CanvasKit
 import LayoutKit
 import SwiftUI
 
@@ -28,17 +27,8 @@ extension GridCanvas {
       GridCanvasView {
         CellSelectionCanvas()
           .allowsCanvasClipping(false)
-
-          .onGridDrag { event in
-            
-            handleDrag(event)
-          }
-        //          .onGridTap { position in
-        //            store.handleTap([position])
-        //            //            store.handleSelection([position])
-        //
-        //            print("Tapped cell: \(position)")
-        //          }
+          .onGridTap { store.handleTap([$0]) }
+          .onGridDrag { handleDrag($0) }
 
         content()
       }
