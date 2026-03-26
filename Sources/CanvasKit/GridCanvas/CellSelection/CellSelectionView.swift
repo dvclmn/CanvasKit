@@ -34,7 +34,7 @@ extension GridCanvas {
       }
 
       .debugTextOverlay(alignment: .bottomLeading) {
-        Labeled("Selection Mode", value: store.mode.name)
+//        Labeled("Selection Mode", value: store.mode.name)
         Labeled("Selected Cells", value: store.selected.count)
       }
 
