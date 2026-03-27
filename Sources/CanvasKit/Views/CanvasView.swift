@@ -12,9 +12,6 @@ public struct CanvasView<Content: View>: View {
   @Environment(CanvasInteractionState.self) private var interactionState
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.shouldShowInfoBarItems) private var shouldShowInfoBarItems
-  //  @Environment(\.canvasGeometry) private var canvasGeometry
-
-  @State var store = CanvasHandler()
 
   /// Optional to allow GirdCanvasRect to take advantage of `CanvasCoreView`s
   /// optional unwrapping presentation
@@ -28,7 +25,7 @@ public struct CanvasView<Content: View>: View {
     self.canvasSize = canvasSize
     self.content = content
   }
-  
+
   public init(
     canvasSize: CGSize,
     @ViewBuilder content: @escaping () -> Content,
@@ -40,22 +37,18 @@ public struct CanvasView<Content: View>: View {
 
     CanvasCoreView(content: content)
 
-//      .addInfoBarItems {
-//        if let zoomRange {
-//          InfoItems(zoomRange)
-//        }
-//      }
-      .environment(store)
+      //      .addInfoBarItems {
+      //        if let zoomRange {
+      //          InfoItems(zoomRange)
+      //        }
+      //      }
 
-//      .toolbar { CanvasToolbarView() }
+      //      .toolbar { CanvasToolbarView() }
 
       /// This is passed in via the CanvasView initialiser. Adding it to the Env here.
       .environment(\.canvasSize, canvasSize)
 
-      .task(id: zoomRange) {
-        store.zoomRange = zoomRange
-        interactionState.zoomRange = zoomRange
-      }
+      .task(id: zoomRange) { interactionState.zoomRange = zoomRange }
 
   }
 }

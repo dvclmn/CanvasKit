@@ -9,14 +9,12 @@ import BasePrimitives
 import SwiftUI
 
 struct InteractionModifiers: ViewModifier {
-  @Environment(CanvasHandler.self) private var store
   @Environment(CanvasInteractionState.self) private var interactionState
   @Environment(\.canvasInputPolicy) private var policy
   @Environment(\.canvasGeometry) private var canvasGeometry
   @Environment(\.modifierKeys) private var modifierKeys
 
   func body(content: Content) -> some View {
-    @Bindable var store = store
     @Bindable var interactionState = interactionState
 
     content
