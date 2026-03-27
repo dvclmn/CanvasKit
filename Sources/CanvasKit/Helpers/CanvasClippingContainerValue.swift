@@ -7,9 +7,22 @@
 
 import SwiftUI
 
+
 extension View {
   /// Controls whether this canvas layer is clipped to the rounded canvas rect.
+  @ViewBuilder
   public func allowsCanvasClipping(_ enabled: Bool) -> some View {
-    self.containerValueBool(.allowsCanvasClipping, enabled)
+    if #available(macOS 15, iOS 18, *) {
+      self.containerValue(\.allowsCanvasClipping, enabled)
+    } else {
+      self
+    }
   }
+}
+
+import SwiftUI
+
+@available(macOS 15, iOS 18, *)
+extension ContainerValues {
+  @Entry public var allowsCanvasClipping: Bool = true
 }
