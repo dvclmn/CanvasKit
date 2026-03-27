@@ -9,7 +9,6 @@ let package = Package(
   ],
   products: [
     .library(name: "CanvasKit", targets: ["CanvasKit"])
-    //    .library(name: "DesignKit", targets: ["DesignKit"] )
   ],
   dependencies: [
     .package(url: "https://github.com/dvclmn/BaseHelpers", branch: "main")
