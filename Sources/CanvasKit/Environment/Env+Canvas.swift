@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 25/2/2026.
 //
 
+import InteractionPrimitives
 import SwiftUI
-import
 
 extension EnvironmentValues {
 
@@ -38,25 +38,12 @@ extension EnvironmentValues {
       viewportRect: Rect<ScreenSpace>(fromRect: viewportRect),
       artworkFrameInViewport: artworkFrameInViewport,
       canvasSize: canvasSize,
-      anchor: canvasAnchor
+      anchor: canvasAnchor,
     )
   }
-
-  @Entry public var panOffset: CGSize = .zero
-  @Entry public var rotation: Angle = .zero
 
   /// The hover location in resolved CanvasSpace (before pan/zoom)
   @Entry public var pointerLocation: CGPoint?
   @Entry public var pointerStyle: PointerStyleCompatible?
-
-  // MARK: - Zoom
-  @Entry public var zoomLevel: Double = 1.0
-  @Entry public var zoomRange: ClosedRange<Double>?
-
-  /// Will return unclamped if no zoom range found in the Environment
-  public var zoomClamped: Double {
-    guard zoomLevel.isFiniteAndGreaterThanZero else { return 1.0 }
-    return zoomLevel.clampedIfNeeded(to: zoomRange)
-  }
 
 }
