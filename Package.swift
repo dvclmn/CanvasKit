@@ -12,7 +12,7 @@ let package = Package(
   ],
   dependencies: [
 //    .package(url: "https://github.com/dvclmn/BaseHelpers", branch: "main"),
-    .package(url: "https://github.com/dvclmn/GestureKit", branch: "main"),
+    .package(url: "https://github.com/dvclmn/InteractionKit", branch: "main"),
   ],
   targets: [
     .target(
@@ -20,7 +20,7 @@ let package = Package(
       dependencies: [
 //        .module(.basePrimitives),
 //        .module(.enumMacros),
-        .module(.gestureKit),
+        .module(.interactionKit),
       ],
     ),
     .testTarget(
@@ -44,13 +44,13 @@ extension String { static let baseHelpers = "BaseHelpers" }
 enum BaseDependency {
 //  case basePrimitives
 //  case enumMacros
-  case gestureKit
+  case interactionKit
 
   var reference: (String, String?) {
     switch self {
 //      case .basePrimitives: ("BasePrimitives", .baseHelpers)
 //      case .enumMacros: ("BaseMacros", .baseHelpers)
-      case .gestureKit: ("GestureKit", nil)
+      case .interactionKit: ("InteractionKit", nil)
     }
   }
 }
