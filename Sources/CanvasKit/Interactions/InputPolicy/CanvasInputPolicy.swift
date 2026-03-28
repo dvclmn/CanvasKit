@@ -5,6 +5,8 @@
 //  Created by Dave Coleman on 10/3/2026.
 //
 
+import InteractionPrimitives
+
 /// Controls which input modifiers and gestures are active on the canvas.
 ///
 /// Each tool declares its own `inputPolicy`, which is pushed into the
@@ -31,13 +33,13 @@ public struct CanvasInputPolicy: Equatable, Sendable {
   public static let standard = CanvasInputPolicy()
 }
 
-extension CanvasInputPolicy: CustomStringConvertible {
-  public var description: String {
-    DisplayString {
-      Indented {
-        Labeled("Active Inputs", value: activeInputs.stringValueJoined())
-        Labeled("Drag behaviour", value: dragBehaviour.name)
-      }
-    }.text
-  }
-}
+//extension CanvasInputPolicy: CustomStringConvertible {
+//  public var description: String {
+//    DisplayString {
+//      Indented {
+//        Labeled("Active Inputs", value: activeInputs.stringValueJoined())
+//        Labeled("Drag behaviour", value: dragBehaviour.name)
+//      }
+//    }.text
+//  }
+//}

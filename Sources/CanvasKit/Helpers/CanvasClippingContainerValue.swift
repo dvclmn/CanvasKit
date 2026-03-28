@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 extension View {
   /// Controls whether this canvas layer is clipped to the rounded canvas rect.
   @ViewBuilder
@@ -19,8 +18,6 @@ extension View {
     }
   }
 }
-
-import SwiftUI
 
 @available(macOS 15, iOS 18, *)
 extension ContainerValues {
