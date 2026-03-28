@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 5/8/2025.
 //
 
-import BasePrimitives
+//import BasePrimitives
 import SwiftUI
 
 public struct ResizeHandler {

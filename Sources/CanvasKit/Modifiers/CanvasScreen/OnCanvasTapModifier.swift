@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 20/3/2026.
 //
 
-import BasePrimitives
+//import BasePrimitives
 import SwiftUI
 
 /// Observes pointer tap events and delivers them in the requested coordinate space.

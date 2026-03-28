@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 6/8/2025.
 //
 
-import BasePrimitives
+//import BasePrimitives
 import SwiftUI
 
 struct CanvasCoreView<Content: View>: View {

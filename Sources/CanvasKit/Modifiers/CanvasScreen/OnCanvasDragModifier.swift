@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 23/3/2026.
 //
 
-import BasePrimitives
+//import BasePrimitives
 import SwiftUI
 
 /// Observes pointer drag events and delivers the rect in the requested coordinate space.
