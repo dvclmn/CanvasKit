@@ -7,6 +7,7 @@
 
 import CoreGraphics
 import SwiftUI
+import InteractionPrimitives
 
 public struct CanvasGeometry: Sendable, Equatable {
   public var viewportRect: Rect<ScreenSpace>

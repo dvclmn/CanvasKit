@@ -57,7 +57,12 @@ extension ZoomOperation {
   ) -> (CGFloat, CGFloat) {
 
     /// Calculate available space after padding
-    let viewportAvailable = viewport.adjustBoth { $0 - (padding * 2) }
+    
+    let viewportAvailable = CGSize(
+      width: viewport.width - (padding * 2),
+      height: viewport.height - (padding * 2)
+    )
+//    let viewportAvailable = viewport.adjustBoth { $0 - (padding * 2) }
 
     return (
       viewportAvailable.width / artwork.width,

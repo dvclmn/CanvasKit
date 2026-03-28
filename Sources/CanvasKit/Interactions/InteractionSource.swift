@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import InteractionPrimitives
 
 /// The raw input source from a SwiftUI gesture modifier.
 ///
@@ -44,26 +45,26 @@ public enum InteractionSource: Sendable {
   //  )
 }
 
-extension InteractionSource {
-  public var name: String {
-    switch self {
-      case .swipeGesture(let delta, let location): "Swipe[delta: \(formatSize(delta)), location: \(formatPoint(location))]"
-      case .pinchGesture(let scale): "Pinch[scale: \(scale.displayString(.concise))]"
-      case .continuousHover(let point): "Hover[point: \(formatPoint(point))]"
-      case .pointerTapGesture(let pointerButton, let location): "Tap[button: \(pointerButton.rawValue), location: \(formatPoint(location))]"
-      case .pointerDragGesture(let pointerDragPayload): "Drag[payload: \(pointerDragPayload.name)]"
-    }
-  }
-  
-  private func formatSize(_ value: Size<ScreenSpace>) -> String {
-    value.cgSize.displayString(formatPreset)
-  }
-  private func formatPoint(_ value: Point<ScreenSpace>) -> String {
-    value.cgPoint.displayString(formatPreset)
-  }
-  private var formatPreset: FloatDisplayPreset { .concise }
-
-}
+//extension InteractionSource {
+//  public var name: String {
+//    switch self {
+//      case .swipeGesture(let delta, let location): "Swipe[delta: \(formatSize(delta)), location: \(formatPoint(location))]"
+//      case .pinchGesture(let scale): "Pinch[scale: \(scale.displayString(.concise))]"
+//      case .continuousHover(let point): "Hover[point: \(formatPoint(point))]"
+//      case .pointerTapGesture(let pointerButton, let location): "Tap[button: \(pointerButton.rawValue), location: \(formatPoint(location))]"
+//      case .pointerDragGesture(let pointerDragPayload): "Drag[payload: \(pointerDragPayload.name)]"
+//    }
+//  }
+//  
+//  private func formatSize(_ value: Size<ScreenSpace>) -> String {
+//    value.cgSize.displayString(formatPreset)
+//  }
+//  private func formatPoint(_ value: Point<ScreenSpace>) -> String {
+//    value.cgPoint.displayString(formatPreset)
+//  }
+//  private var formatPreset: FloatDisplayPreset { .concise }
+//
+//}
 
 public enum PointerButton: String, Sendable {
   case primary

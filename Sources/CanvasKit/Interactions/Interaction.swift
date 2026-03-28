@@ -5,6 +5,8 @@
 //  Created by Dave Coleman on 16/3/2026.
 //
 
+import InteractionPrimitives
+
 /// See also ``InteractionSource``
 public struct Interaction {
 

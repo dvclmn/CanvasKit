@@ -7,6 +7,7 @@
 
 import CoreGraphics
 import Foundation
+import InteractionPrimitives
 
 /// Not sure if this could/should be different, but have chosen to
 /// use CGPoint for tap and hover, as these stay(?) or are at least

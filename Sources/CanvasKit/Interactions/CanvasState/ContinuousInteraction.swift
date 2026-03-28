@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import InteractionPrimitives
 
 /// E.g. Used for Swipe gesture (Pan), Pinch gesture (Zoom)
 /// Of note: Holds a non-optional Value, because a `ContinuousInteraction`
