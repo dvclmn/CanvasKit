@@ -14,7 +14,7 @@ import InteractionPrimitives
 public struct ContinuousInteraction<Value: Sendable & Equatable>: Equatable, Sendable {
   public var value: Value
   public var phase: InteractionPhase
-//  public var source: InteractionSource
+  //  public var source: InteractionSource
 
   public var isActive: Bool { phase.isActive }
 
@@ -25,21 +25,21 @@ extension ContinuousInteraction {
   public init(
     _ value: Value,
     phase: InteractionPhase = .none,
-//    source: InteractionSource,
+    //    source: InteractionSource,
   ) {
     self.value = value
     self.phase = phase
-//    self.source = source
+    //    self.source = source
   }
 
   public mutating func update(
     _ value: Value,
     phase: InteractionPhase,
-//    source: InteractionSource,
+    //    source: InteractionSource,
   ) {
     self.value = value
     self.phase = phase
-//    self.source = source
+    //    self.source = source
   }
 
 }

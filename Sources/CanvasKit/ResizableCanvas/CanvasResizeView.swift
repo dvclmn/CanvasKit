@@ -9,13 +9,16 @@
 import SwiftUI
 
 /// Note: The provided size here does *not* have zoom applied.
-public typealias ResizeOutput = (GridBoundaryPoint, CGSize) -> Void
+public typealias ResizeOutput = (UnitPoint, CGSize) -> Void
+//public typealias ResizeOutput = (GridBoundaryPoint, CGSize) -> Void
 
 public struct CanvasResizeView: View {
   @Environment(\.panOffset) private var panOffset
   @Environment(\.zoomLevel) private var zoomLevel
   @Environment(\.canvasSize) private var canvasSize
   @Environment(\.zoomRange) private var zoomRange
+  
+  private let cornerRadius: CGFloat = 5.0
 
   @Binding var store: ResizeHandler
 
@@ -26,9 +29,9 @@ public struct CanvasResizeView: View {
     if isEnabled {
 
       ZStack {
-        RoundedRectangle(cornerRadius: Styles.sizeTiny)
+        RoundedRectangle(cornerRadius: cornerRadius)
           .fill(.clear)
-        RoundedRectangle(cornerRadius: Styles.sizeTiny)
+        RoundedRectangle(cornerRadius: cornerRadius)
           .stroke(
             .blue, lineWidth: Double(1).removingZoom(zoomLevel, across: zoomRange)
           )
@@ -36,7 +39,7 @@ public struct CanvasResizeView: View {
 
         if let transientSize = store.transientCanvasSize {
           Rectangle()
-            .fill(.pink.opacityFaint)
+            .fill(.pink.opacity(0.2))
             .border(.pink)
 //            .frameFromSize(transientSize.addingZoom(zoomLevel))
         }

@@ -7,6 +7,7 @@
 
 //import BasePrimitives
 import SwiftUI
+import InteractionPrimitives
 
 struct CanvasArtwork<Content: View>: View {
 
@@ -14,7 +15,7 @@ struct CanvasArtwork<Content: View>: View {
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.zoomClamped) private var zoomClamped
   @Environment(\.canvasSize) private var canvasSize
-  @Environment(\.canvasGeometry) private var canvasGeometry
+//  @Environment(\.canvasGeometry) private var canvasGeometry
   @Environment(\.activeTool) private var activeTool
 
   @ViewBuilder var content: () -> Content
@@ -22,7 +23,7 @@ struct CanvasArtwork<Content: View>: View {
   var body: some View {
     /// Note: Hit testing, background and drawing group are all handled in Canvas Core view
     canvasDecomposed
-      .animation(Styles.animationEasedQuick) { content in
+      .animation(.easeInOut(duration: 0.15)) { content in
         content.opacity(isCanvasReady ? 1.0 : 0.0)
       }
 
@@ -38,7 +39,7 @@ struct CanvasArtwork<Content: View>: View {
             .rotationEffect(interactionState.transform.rotation, anchor: .center)
       .offset(interactionState.transform.translation.cgSize)
       .frame(maxWidth: .infinity, maxHeight: .infinity)
-      .task(id: canvasGeometry) { interactionState.geometry = canvasGeometry }
+//      .task(id: canvasGeometry) { interactionState.geometry = canvasGeometry }
   }
 }
 
@@ -52,7 +53,8 @@ extension CanvasArtwork {
 //  }
 
   private var isCanvasReady: Bool {
-    canvasGeometry != nil && zoomRange != nil && activeTool != nil
+    zoomRange != nil && activeTool != nil
+//    canvasGeometry != nil && zoomRange != nil && activeTool != nil
   }
   /// Based on whether all geometry data is ready, to display
   /// the Canvas proeperly. Note: avoiding actually *hiding*
@@ -96,7 +98,7 @@ extension CanvasArtwork {
   }
 
   private var cornerRounding: CGFloat {
-    let base = Styles.sizeTiny
+    let base = 5.0
     return base.removingZoom(zoomClamped)
   }
 

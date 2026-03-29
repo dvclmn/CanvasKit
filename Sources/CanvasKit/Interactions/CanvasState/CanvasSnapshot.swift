@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import InteractionPrimitives
 
 /// Computed from `Canvas​Interaction​State` + `Transform​State` + geometry.
 /// Holds only already-converted, consumer-ready values

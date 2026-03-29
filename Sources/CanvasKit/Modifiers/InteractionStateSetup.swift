@@ -13,7 +13,7 @@ import SwiftUI
 /// hierarchy as is needed for access.
 struct InteractionStateSetupModifier: ViewModifier {
   @Environment(\.modifierKeys) private var modifierKeys
-  @Environment(\.canvasGeometry) private var canvasGeometry
+//  @Environment(\.canvasGeometry) private var canvasGeometry
   @State private var interactionState: CanvasInteractionState
   @Binding var toolHandler: ToolHandler
 
@@ -29,7 +29,7 @@ struct InteractionStateSetupModifier: ViewModifier {
     content
       .environment(interactionState)
       .environment(\.canvasInputPolicy, toolHandler.effectiveTool.inputPolicy)
-      .environment(\.zoomLevel, snapshot?.zoom.toDouble ?? 1.0)
+      .environment(\.zoomLevel, snapshot.map { Double($0.zoom) } ?? 1.0)
       .environment(\.panOffset, snapshot?.pan ?? .zero)
       .environment(\.rotation, snapshot?.rotation ?? .zero)
       .environment(\.pointerLocation, snapshot?.pointerLocation?.cgPoint)

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import InteractionPrimitives
 
 /// Manages tool selection, spring-loading, and key bindings.
 ///

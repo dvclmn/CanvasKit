@@ -5,13 +5,14 @@
 //  Created by Dave Coleman on 11/3/2026.
 //
 
-//import BasePrimitives
+import InteractionPrimitives
 import SwiftUI
+import GestureKit
 
 struct InteractionModifiers: ViewModifier {
   @Environment(CanvasInteractionState.self) private var interactionState
   @Environment(\.canvasInputPolicy) private var policy
-  @Environment(\.canvasGeometry) private var canvasGeometry
+//  @Environment(\.canvasGeometry) private var canvasGeometry
   @Environment(\.modifierKeys) private var modifierKeys
 
   func body(content: Content) -> some View {

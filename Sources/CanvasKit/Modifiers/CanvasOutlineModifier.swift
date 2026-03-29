@@ -7,6 +7,7 @@
 
 //import BasePrimitives
 import SwiftUI
+import InteractionPrimitives
 
 public struct CanvasOutlineModifier: ViewModifier {
   @Environment(\.zoomLevel) private var zoomLevel
@@ -26,7 +27,7 @@ public struct CanvasOutlineModifier: ViewModifier {
 
 extension CanvasOutlineModifier {
   private var cornerRounding: CGFloat {
-    let base = Styles.sizeTiny
+    let base = 5.0
     return base.removingZoom(zoomLevel)
   }
 

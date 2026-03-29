@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 8/3/2026.
 //
 
-import SwiftUI
 import InteractionPrimitives
+import SwiftUI
 
 /// `CanvasInteractionState`'s state is owned outside of CanvasKit,
 /// by the project *using* CanvasKit. E.g. in the case of DrawString,
@@ -73,9 +73,9 @@ extension CanvasInteractionState {
       context: InteractionContext(
         source: source,
         phase: phase,
-        modifiers: modifiers
+        modifiers: modifiers,
       ),
-      currentTransform: transform
+      currentTransform: transform,
     )
 
     self.lastToolAction = resolution.action
@@ -117,7 +117,7 @@ extension CanvasInteractionState {
     /// Each point contributes up to 0.5% zoom change at sensitivity = 1.0
     let factor = ZoomComputation.factorFromDelta(
       CGSize(width: 0, height: delta.cgSize.height),
-      weights: .vertical
+      weights: .vertical,
     )
 
     //    let newScale = transform.scale * factor
@@ -166,7 +166,7 @@ extension CanvasInteractionState {
       isPointerInsideCanvas: isInside,
       zoom: transform.scale,
       pan: transform.translation.cgSize,
-      rotation: transform.rotation
+      rotation: transform.rotation,
     )
   }
 
@@ -174,9 +174,15 @@ extension CanvasInteractionState {
   public var coordinateSpaceMapper: CoordinateSpaceMapper? {
     guard let geometry, let zoomRange else { return nil }
     return .init(
-      geometry: geometry,
-      transform: transform,
-      zoomRange: zoomRange
+      canvasSize: geometry.canvasSize,
+      artworkFrame: geometry.artworkFrameInViewport,
+      zoom: transform.scale,
+      zoomRange: zoomRange,
     )
+    //    return .init(
+    //      geometry: geometry,
+    //      transform: transform,
+    //      zoomRange: zoomRange
+    //    )
   }
 }

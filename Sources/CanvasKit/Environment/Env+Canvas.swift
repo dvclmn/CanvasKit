@@ -24,24 +24,6 @@ extension EnvironmentValues {
   @Entry public var canvasInputPolicy: CanvasInputPolicy = .standard
   @Entry public var activeTool: (any CanvasTool)?
 
-  public var canvasGeometry: CanvasGeometry? {
-    guard let viewportRect,
-      let artworkFrameInViewport,
-      let canvasSize
-    else {
-      //      print(
-      //        "For canvasGeometry, missing one of:\nviewportRect: \(String(describing: viewportRect)), artworkFrameInViewport: \(String(describing: artworkFrameInViewport)), or canvasSize: \(String(describing: canvasSize))\n\n"
-      //      )
-      return nil
-    }
-    return CanvasGeometry(
-      viewportRect: Rect<ScreenSpace>(fromRect: viewportRect),
-      artworkFrameInViewport: artworkFrameInViewport,
-      canvasSize: canvasSize,
-      anchor: canvasAnchor,
-    )
-  }
-
   /// The hover location in resolved CanvasSpace (before pan/zoom)
   @Entry public var pointerLocation: CGPoint?
   @Entry public var pointerStyle: PointerStyleCompatible?

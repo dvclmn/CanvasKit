@@ -10,8 +10,10 @@ import SwiftUI
 
 public struct HitAreaRectModifier: ViewModifier {
 
-  @Environment(\.isDebugMode) private var isDebugMode
+//  @Environment(\.isDebugMode) private var isDebugMode
 
+  private let isDebugMode: Bool = false
+  
   @State private var isHovering: Bool = false
   private let shouldIncludeCorners: Bool = true
 
@@ -29,14 +31,15 @@ public struct HitAreaRectModifier: ViewModifier {
             maxWidth: layout.fillSizeMax.width,
             maxHeight: layout.fillSizeMax.height,
           )
-          .background(rectColour.opacityMid)
+          .background(rectColour.opacity(0.4))
           .border(rectColour)
 
           .onHover { hovering in
             guard !store.isDragging else { return }
             isHovering = hovering
           }
-          .pointerStyleCompatible(resizePoint.toCompatPointerStyle)
+          .pointerStyleCompatible(controlPoint.toCompatPointerStyle)
+//          .pointerStyleCompatible(resizePoint.toCompatPointerStyle)
           .modifier(
             ResizeDragModifier(
               store: $store,
@@ -47,7 +50,7 @@ public struct HitAreaRectModifier: ViewModifier {
           .offset(layout.rectOffset)
           .overlay(alignment: controlPoint.toAlignment) {
             ControlPointView(
-              point: resizePoint.toUnitPoint,
+              point: controlPoint.toUnitPoint,
               length: store.controlLength,
               strokeWidth: store.controlStrokeWeight,
               isHovered: isHovering
@@ -59,14 +62,14 @@ public struct HitAreaRectModifier: ViewModifier {
 }
 extension HitAreaRectModifier {
 
-  private var resizePoint: GridBoundaryPoint {
-    GridBoundaryPoint(fromUnitPoint: controlPoint)
-  }
+//  private var resizePoint: GridBoundaryPoint {
+//    GridBoundaryPoint(fromUnitPoint: controlPoint)
+//  }
 
   private var rectColour: Color {
     let colour = controlPoint.debugColour
     switch (isDebugMode, isHovering) {
-      case (true, false): return colour.opacityLow
+      case (true, false): return colour.opacity(0.2)
       case (true, true): return colour
       case (false, _): return .clear
     }
