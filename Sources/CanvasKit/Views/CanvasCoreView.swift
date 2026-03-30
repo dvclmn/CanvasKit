@@ -7,6 +7,7 @@
 
 //import BasePrimitives
 import SwiftUI
+import InteractionPrimitives
 
 struct CanvasCoreView<Content: View>: View {
   @Environment(\.canvasBackground) private var canvasBackground
@@ -15,12 +16,13 @@ struct CanvasCoreView<Content: View>: View {
 
   @ViewBuilder var content: () -> Content
 
+  #warning("Need to bring back the GridFont modifier")
   var body: some View {
     Color.clear
       .overlay {
         CanvasArtwork(content: content)
           /// Should probably set this up to be clearer for *non* Grid domain contexts
-          .gridFont(for: .canvas)
+//          .gridFont(for: .canvas)
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       .background(canvasBackground)

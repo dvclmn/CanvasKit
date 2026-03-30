@@ -5,13 +5,15 @@
 //  Created by Dave Coleman on 24/6/2025.
 //
 
+import InteractionPrimitives
+import GeometryPrimitives
 //import BasePrimitives
 import SwiftUI
 
 public struct CanvasView<Content: View>: View {
   @Environment(CanvasInteractionState.self) private var interactionState
   @Environment(\.zoomRange) private var zoomRange
-//  @Environment(\.shouldShowInfoBarItems) private var shouldShowInfoBarItems
+  //  @Environment(\.shouldShowInfoBarItems) private var shouldShowInfoBarItems
 
   /// Optional to allow GirdCanvasRect to take advantage of `CanvasCoreView`s
   /// optional unwrapping presentation
