@@ -5,15 +5,16 @@
 //  Created by Dave Coleman on 30/7/2025.
 //
 
+import InteractionPrimitives
 //import BasePrimitives
 import SwiftUI
 
 public struct HitAreaRectModifier: ViewModifier {
 
-//  @Environment(\.isDebugMode) private var isDebugMode
+  //  @Environment(\.isDebugMode) private var isDebugMode
 
   private let isDebugMode: Bool = false
-  
+
   @State private var isHovering: Bool = false
   private let shouldIncludeCorners: Bool = true
 
@@ -39,7 +40,7 @@ public struct HitAreaRectModifier: ViewModifier {
             isHovering = hovering
           }
           .pointerStyleCompatible(controlPoint.toCompatPointerStyle)
-//          .pointerStyleCompatible(resizePoint.toCompatPointerStyle)
+          //          .pointerStyleCompatible(resizePoint.toCompatPointerStyle)
           .modifier(
             ResizeDragModifier(
               store: $store,
@@ -50,10 +51,10 @@ public struct HitAreaRectModifier: ViewModifier {
           .offset(layout.rectOffset)
           .overlay(alignment: controlPoint.toAlignment) {
             ControlPointView(
-              point: controlPoint.toUnitPoint,
+              point: controlPoint,
               length: store.controlLength,
               strokeWidth: store.controlStrokeWeight,
-              isHovered: isHovering
+              isHovered: isHovering,
             )
           }
       }
@@ -62,9 +63,9 @@ public struct HitAreaRectModifier: ViewModifier {
 }
 extension HitAreaRectModifier {
 
-//  private var resizePoint: GridBoundaryPoint {
-//    GridBoundaryPoint(fromUnitPoint: controlPoint)
-//  }
+  //  private var resizePoint: GridBoundaryPoint {
+  //    GridBoundaryPoint(fromUnitPoint: controlPoint)
+  //  }
 
   private var rectColour: Color {
     let colour = controlPoint.debugColour
@@ -80,7 +81,7 @@ extension HitAreaRectModifier {
       controlPoint: controlPoint,
       thickness: store.hitAreaThickness,
       offset: store.boundaryOffset,
-      shouldIncludeCorners: shouldIncludeCorners
+      shouldIncludeCorners: shouldIncludeCorners,
     )
   }
 }

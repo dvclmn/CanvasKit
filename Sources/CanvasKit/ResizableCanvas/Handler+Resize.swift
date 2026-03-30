@@ -5,6 +5,7 @@
 //  Created by Dave Coleman on 5/8/2025.
 //
 
+import GeometryPrimitives
 //import BasePrimitives
 import SwiftUI
 
@@ -17,8 +18,10 @@ public struct ResizeHandler {
   /// heavier work for when the resize event is complete
   var transientCanvasSize: CGSize?
 
-  var hoveredResizePoint: GridBoundaryPoint?
-  var draggedResizePoint: GridBoundaryPoint?
+  var hoveredResizePoint: UnitPoint?
+  //  var hoveredResizePoint: GridBoundaryPoint?
+  var draggedResizePoint: UnitPoint?
+  //  var draggedResizePoint: GridBoundaryPoint?
   /// The Canvas anchor point, around which resizing is oriented
   var canvasAnchor: UnitPoint = .center
   var hitAreaThickness: CGFloat = 30
@@ -35,11 +38,15 @@ public struct ResizeHandler {
 }
 
 extension ResizeHandler {
-  mutating func triggerDidEndResize(_ point: GridBoundaryPoint, _ size: CGSize) {
+  mutating func triggerDidEndResize(
+    _ point: UnitPoint,
+    //    _ point: GridBoundaryPoint,
+    _ size: CGSize,
+  ) {
     didEndResize?(point, size)
   }
 
-  mutating func triggerDidChangeResize(_ point: GridBoundaryPoint, _ size: CGSize) {
+  mutating func triggerDidChangeResize(_ point: UnitPoint, _ size: CGSize) {
     didChangeResize?(point, size)
   }
 
@@ -51,8 +58,8 @@ extension ResizeHandler {
 extension ResizeHandler: CustomStringConvertible {
   public var description: String {
     """
-      Transient (local) size: \(transientCanvasSize?.displayString ?? "nil")
-      Is Dragging? \(isDragging)
-      """
+    Transient (local) size: \(transientCanvasSize, default: "nil")
+    Is Dragging? \(isDragging)
+    """
   }
 }
