@@ -45,17 +45,18 @@ public struct CanvasResizeView: View {
 //            .frameFromSize(transientSize.addingZoom(zoomLevel))
         }
 
+        Text("Need to bring this back")
         //          ForEach([ResizePoint.bottomLeading]) { point in
-        ForEach(GridBoundaryPoint.allCases) { point in
-          Rectangle()
-            .fill(.clear)
-            .modifier(
-              HitAreaRectModifier(
-                store: $store,
-                controlPoint: point.toUnitPoint,
-              )
-            )
-        }  // END foreach
+//        ForEach(GridBoundaryPoint.allCases) { point in
+//          Rectangle()
+//            .fill(.clear)
+//            .modifier(
+//              HitAreaRectModifier(
+//                store: $store,
+//                controlPoint: point.toUnitPoint,
+//              )
+//            )
+//        }  // END foreach
 
         /// The hit areas need a stable positioning so they don't move
         /// during a drag?

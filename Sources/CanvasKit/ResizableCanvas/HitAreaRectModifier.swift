@@ -40,13 +40,14 @@ public struct HitAreaRectModifier: ViewModifier {
             isHovering = hovering
           }
           .pointerStyleCompatible(controlPoint.toCompatPointerStyle)
-          //          .pointerStyleCompatible(resizePoint.toCompatPointerStyle)
-          .modifier(
-            ResizeDragModifier(
-              store: $store,
-              draggedPoint: controlPoint,
-            )
-          )
+        
+        // TODO: Need to bring this back
+//          .modifier(
+//            ResizeDragModifier(
+//              store: $store,
+//              draggedPoint: controlPoint,
+//            )
+//          )
           .padding(layout.edgePadding)
           .offset(layout.rectOffset)
           .overlay(alignment: controlPoint.toAlignment) {
