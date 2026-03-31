@@ -7,6 +7,7 @@
 
 import SwiftUI
 import InteractionPrimitives
+import GeometryPrimitives
 
 /// The output of a tool's `resolve()` method.
 ///

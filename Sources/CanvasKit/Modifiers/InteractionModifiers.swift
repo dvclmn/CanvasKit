@@ -7,6 +7,7 @@
 
 import InteractionPrimitives
 import SwiftUI
+import GeometryPrimitives
 import GestureKit
 
 struct InteractionModifiers: ViewModifier {

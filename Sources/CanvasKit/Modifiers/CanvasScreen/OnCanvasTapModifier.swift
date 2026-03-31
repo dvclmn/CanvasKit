@@ -8,6 +8,7 @@
 //import BasePrimitives
 import SwiftUI
 import InteractionPrimitives
+import GeometryPrimitives
 
 /// Observes pointer tap events and delivers them in the requested coordinate space.
 struct OnCanvasTapModifier<Space: CanvasCoordinateSpace>: ViewModifier {

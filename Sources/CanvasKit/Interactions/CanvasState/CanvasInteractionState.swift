@@ -6,6 +6,7 @@
 //
 
 import InteractionPrimitives
+import GeometryPrimitives
 import SwiftUI
 
 /// `CanvasInteractionState`'s state is owned outside of CanvasKit,

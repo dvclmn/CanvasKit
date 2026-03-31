@@ -8,6 +8,7 @@
 //import BasePrimitives
 import SwiftUI
 import InteractionPrimitives
+import GeometryPrimitives
 
 struct CanvasCoreView<Content: View>: View {
   @Environment(\.canvasBackground) private var canvasBackground

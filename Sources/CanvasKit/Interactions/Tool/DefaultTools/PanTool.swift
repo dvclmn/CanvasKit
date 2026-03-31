@@ -7,6 +7,7 @@
 
 import SwiftUI
 import InteractionPrimitives
+import GeometryPrimitives
 
 // MARK: - Pan Tool
 

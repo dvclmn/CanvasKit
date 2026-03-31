@@ -32,6 +32,6 @@ struct OnCanvasDragModifier<Space: CanvasCoordinateSpace>: ViewModifier {
 }
 
 public struct CanvasDragEvent<Space> {
-  let rect: Rect<Space>
-  let phase: InteractionPhase
+  public let rect: Rect<Space>
+  public let phase: InteractionPhase
 }

@@ -8,6 +8,7 @@
 //import BasePrimitives
 import SwiftUI
 import InteractionPrimitives
+import GeometryPrimitives
 
 struct CanvasArtwork<Content: View>: View {
 
