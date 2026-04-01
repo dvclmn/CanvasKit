@@ -21,7 +21,7 @@ extension EnvironmentValues {
 //  @Entry public var artworkFrameInViewport: Rect<ScreenSpace>?
   @Entry public var canvasBackground: Color = Color(white: 0.04)
 
-  @Entry public var canvasInputPolicy: CanvasInputPolicy = .standard
+  @Entry public var canvasInputPolicy: CanvasInputPolicy?
   @Entry public var activeTool: (any CanvasTool)?
 
   /// The hover location in resolved CanvasSpace (before pan/zoom)

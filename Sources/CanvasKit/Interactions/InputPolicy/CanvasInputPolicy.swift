@@ -26,11 +26,9 @@ public struct CanvasInputPolicy: Equatable, Sendable {
   ) {
     self.activeInputs = activeInputs
     self.dragBehaviour = dragBehaviour
-
   }
 
-  /// Default idle policy: gestures enabled, no pointer-drag pan, hover on.
-  public static let standard = CanvasInputPolicy()
+  public static let initial = CanvasInputPolicy()
 }
 
 //extension CanvasInputPolicy: CustomStringConvertible {

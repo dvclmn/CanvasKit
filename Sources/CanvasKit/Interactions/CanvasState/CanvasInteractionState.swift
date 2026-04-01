@@ -32,7 +32,6 @@ public final class CanvasInteractionState {
   /// The most recent interaction context.
   public var phase: InteractionPhase = .none
   public var source: InteractionSource?
-  //  public var adjustment: CanvasAdjustment?
 
   public init() {}
 }
@@ -40,10 +39,6 @@ public final class CanvasInteractionState {
 // MARK: - Input handling (two-tier resolution)
 
 extension CanvasInteractionState {
-
-  public func updateTool(to tool: (any CanvasTool)?) {
-    self.activeTool = tool
-  }
 
   /// Entry point for all raw input events from gesture modifiers.
   ///
@@ -60,18 +55,16 @@ extension CanvasInteractionState {
     self.source = source
     self.phase = phase
 
-    /// 1 – Global gestures,
-    if let globalAdjustment = handleGlobalInteraction() {
-      executeAdjustment(globalAdjustment)
-    }
+    /// 1 – Global gestures
+    executeAdjustment(globalAdjustment)
 
     /// 2 – Tool-specific pointer interactions
-    let pointerAdjustment = handlePointerInteraction()
+    //    let pointerAdjustment = pointerAdjustment()
     executeAdjustment(pointerAdjustment)
 
   }
+  private var pointerAdjustment: CanvasAdjustment {
 
-  private func handlePointerInteraction() -> CanvasAdjustment {
     guard let activeTool else { return .none }
 
     let resolution = activeTool.resolvePointerInteraction(
@@ -86,25 +79,44 @@ extension CanvasInteractionState {
     self.lastToolAction = resolution.action
     return resolution.adjustment
   }
-}
 
-extension CanvasInteractionState {
-  private func handleGlobalInteraction() -> CanvasAdjustment? {
-
-    guard let source else { return nil }
+  private var globalAdjustment: CanvasAdjustment {
+    guard let source else { return .none }
 
     return switch source {
       case .swipeGesture(let delta, _): handleGlobalSwipe(delta: delta)
       case .pinchGesture(let scale): .updateScale(scale)
       case .continuousHover(let point): .updatePointerHover(point)
-
-      /// Pointer events are handled on a per-Tool basis.
-      /// Returning nil here to fall through to `handlePointerInteraction`
-      /// in `CanvasInteractionState` for tap and drag gestures.
-      case .pointerTapGesture, .pointerDragGesture: nil
-
+      case .pointerTapGesture, .pointerDragGesture:
+        // Pointer events are handled by the active tool
+        .none
     }
   }
+
+}
+
+extension CanvasInteractionState {
+
+  public func updateTool(to tool: (any CanvasTool)?) {
+    self.activeTool = tool
+  }
+
+  //  private func handleGlobalInteraction() -> CanvasAdjustment? {
+  //
+  //    guard let source else { return nil }
+  //
+  //    return switch source {
+  //      case .swipeGesture(let delta, _): handleGlobalSwipe(delta: delta)
+  //      case .pinchGesture(let scale): .updateScale(scale)
+  //      case .continuousHover(let point): .updatePointerHover(point)
+  //
+  //      /// Pointer events are handled on a per-Tool basis.
+  //      /// Returning nil here to fall through to `handlePointerInteraction`
+  //      /// in `CanvasInteractionState` for tap and drag gestures.
+  //      case .pointerTapGesture, .pointerDragGesture: nil
+  //
+  //    }
+  //  }
 
   private func handleGlobalSwipe(delta: Size<ScreenSpace>) -> CanvasAdjustment {
 

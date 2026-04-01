@@ -9,8 +9,6 @@ import SwiftUI
 import InteractionPrimitives
 import GeometryPrimitives
 
-// MARK: - Pan Tool
-
 /// When selected, pointer click-drag pans the canvas.
 public struct PanTool: CanvasTool {
   public let kind: CanvasToolKind = .pan
