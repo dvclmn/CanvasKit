@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 8/3/2026.
 //
 
-import InteractionPrimitives
 import GeometryPrimitives
+import InteractionPrimitives
 import SwiftUI
 
 /// `CanvasInteractionState`'s state is owned outside of CanvasKit,
@@ -40,6 +40,10 @@ public final class CanvasInteractionState {
 // MARK: - Input handling (two-tier resolution)
 
 extension CanvasInteractionState {
+
+  public func updateTool(to tool: (any CanvasTool)?) {
+    self.activeTool = tool
+  }
 
   /// Entry point for all raw input events from gesture modifiers.
   ///
@@ -89,21 +93,16 @@ extension CanvasInteractionState {
 
     guard let source else { return nil }
 
-    switch source {
-      case .swipeGesture(let delta, _):
-        return handleGlobalSwipe(delta: delta)
+    return switch source {
+      case .swipeGesture(let delta, _): handleGlobalSwipe(delta: delta)
+      case .pinchGesture(let scale): .updateScale(scale)
+      case .continuousHover(let point): .updatePointerHover(point)
 
-      case .pinchGesture(let scale):
-        return .updateScale(scale)
+      /// Pointer events are handled on a per-Tool basis.
+      /// Returning nil here to fall through to `handlePointerInteraction`
+      /// in `CanvasInteractionState` for tap and drag gestures.
+      case .pointerTapGesture, .pointerDragGesture: nil
 
-      case .continuousHover(let point):
-        return .updatePointerHover(point)
-
-      case .pointerTapGesture, .pointerDragGesture:
-        /// Pointer events are handled on a per-Tool basis, so break here
-        /// to fall through to `handlePointerInteraction`
-        /// in `CanvasInteractionState`
-        return nil
     }
   }
 
