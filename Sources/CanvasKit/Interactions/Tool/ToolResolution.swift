@@ -7,6 +7,7 @@
 
 import Foundation
 import InteractionPrimitives
+
 //import GeometryPrimitives
 
 /// The combined result of a tool resolving a pointer interaction.
@@ -20,7 +21,7 @@ public struct ToolResolution: Sendable {
 
   public init(
     adjustment: CanvasAdjustment = .none,
-    action: ToolAction = .none
+    action: ToolAction = .none,
   ) {
     self.adjustment = adjustment
     self.action = action
@@ -29,15 +30,6 @@ public struct ToolResolution: Sendable {
   /// Convenience for returning just a canvas adjustment with no domain action.
   public static func canvasAdjustment(_ adjustment: CanvasAdjustment) -> Self {
     .init(adjustment: adjustment)
-  }
-
-  public static func zoomAdjustment(
-    for transform: TransformState,
-    by factor: CGFloat,
-  ) -> Self {
-    .init(adjustment: .zoomAdjustment(for: transform, by: factor))
-    //    let new = transform.scale * factor
-    //    return .init(adjustment: .updateScale(new), action: .none)
   }
 
   /// Convenience for returning just a domain action with no canvas change.

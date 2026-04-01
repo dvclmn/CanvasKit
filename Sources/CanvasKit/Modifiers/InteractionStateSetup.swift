@@ -26,12 +26,11 @@ struct InteractionStateSetupModifier: ViewModifier {
   func body(content: Content) -> some View {
     content
       .environment(interactionState)
-//      .environment(\.canvasInputPolicy, toolHandler.effectiveTool.inputPolicy)
       .environment(\.zoomLevel, snapshot.map { Double($0.zoom) } ?? 1.0)
       .environment(\.panOffset, snapshot?.pan ?? .zero)
       .environment(\.rotation, snapshot?.rotation ?? .zero)
       .environment(\.pointerLocation, snapshot?.pointerLocation?.cgPoint)
-      .environment(\.pointerStyle, interactionState.pointerStyle(with: modifierKeys))
+      .environment(\.pointerStyle, interactionState.pointerStyle)
       .environment(\.activeTool, toolHandler.effectiveTool)
 
       .task(id: modifierKeys) {
@@ -39,7 +38,6 @@ struct InteractionStateSetupModifier: ViewModifier {
       }
       .task(id: toolHandler.toolKind) {
         interactionState.updateTool(to: toolHandler.effectiveTool)
-        //        interactionState.activeTool = toolHandler.effectiveTool
       }
   }
 }

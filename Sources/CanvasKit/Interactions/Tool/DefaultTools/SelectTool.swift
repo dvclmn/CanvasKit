@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 12/3/2026.
 //
 
-import SwiftUI
 import InteractionPrimitives
+import SwiftUI
 
 // MARK: - Select Tool
 
@@ -19,9 +19,6 @@ public struct SelectTool: CanvasTool {
   public let pointerStyle: PointerStyleCompatible = .default
 
   public var dragBehaviour: DragBehavior { .marquee }
-//  public var inputPolicy: CanvasInputPolicy {
-//    .init(dragBehaviour: .marquee)
-//  }
 
   public init() {}
 
@@ -31,7 +28,7 @@ public struct SelectTool: CanvasTool {
 
   public func resolvePointerInteraction(
     context: InteractionContext,
-    currentTransform: TransformState
+    currentTransform: TransformState,
   ) -> ToolResolution {
     switch context.source {
       case .pointerTapGesture(_, let location):

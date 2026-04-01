@@ -49,7 +49,6 @@ public struct CanvasView<Content: View>: View {
 
       /// This is passed in via the CanvasView initialiser. Adding it to the Env here.
       .environment(\.canvasSize, canvasSize)
-
       .task(id: zoomRange) { interactionState.zoomRange = zoomRange }
 
   }
