@@ -90,6 +90,7 @@ extension ToolHandler {
 
 extension ToolHandler {
 
+  /// Feeds the `activeTool` Environment value.
   /// The currently effective tool, considering pending and armed activations.
   /// If there is any activation on the stack, its tool is effective immediately.
   /// Otherwise the base tool is effective.

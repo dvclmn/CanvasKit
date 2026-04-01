@@ -26,7 +26,8 @@ public protocol CanvasTool: Sendable, Identifiable where ID == CanvasToolKind {
 
   /// The input policy active when this tool is selected.
   /// Controls drag behaviour, pointer-drag-pan, etc.
-  var inputPolicy: CanvasInputPolicy { get }
+  var dragBehaviour: DragBehavior { get }
+//  var inputPolicy: CanvasInputPolicy { get }
 
   /// Resolve the pointer style for the current interaction context.
   func resolvePointerStyle(context: InteractionContext) -> PointerStyleCompatible

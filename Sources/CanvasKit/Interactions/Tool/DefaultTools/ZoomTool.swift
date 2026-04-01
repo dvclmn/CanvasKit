@@ -18,9 +18,10 @@ public struct ZoomTool: CanvasTool {
   public let icon = "magnifyingglass"
   public let pointerStyle: PointerStyleCompatible = .zoomIn
 
-  public var inputPolicy: CanvasInputPolicy {
-    .init(dragBehaviour: .continuous(axes: .vertical))
-  }
+  public var dragBehaviour: DragBehavior { .continuous(axes: .vertical)}
+//  public var inputPolicy: CanvasInputPolicy {
+//    .init(dragBehaviour: .continuous(axes: .vertical))
+//  }
 
   public init() {}
 }

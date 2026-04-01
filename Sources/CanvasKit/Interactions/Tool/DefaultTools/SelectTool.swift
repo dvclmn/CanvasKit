@@ -18,9 +18,10 @@ public struct SelectTool: CanvasTool {
   public let icon = "cursorarrow"
   public let pointerStyle: PointerStyleCompatible = .default
 
-  public var inputPolicy: CanvasInputPolicy {
-    .init(dragBehaviour: .marquee)
-  }
+  public var dragBehaviour: DragBehavior { .marquee }
+//  public var inputPolicy: CanvasInputPolicy {
+//    .init(dragBehaviour: .marquee)
+//  }
 
   public init() {}
 

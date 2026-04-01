@@ -12,7 +12,8 @@ import GestureKit
 
 struct InteractionModifiers: ViewModifier {
   @Environment(CanvasInteractionState.self) private var interactionState
-  @Environment(\.canvasInputPolicy) private var policy
+  @Environment(\.activeTool) private var activeTool
+//  @Environment(\.canvasInputPolicy) private var policy
 //  @Environment(\.canvasGeometry) private var canvasGeometry
   @Environment(\.modifierKeys) private var modifierKeys
 
@@ -21,7 +22,8 @@ struct InteractionModifiers: ViewModifier {
 
     content
       .onSwipeGesture(
-        isEnabled: policy.activeInputs.contains(.swipe)
+        isEnabled: true
+//        isEnabled: policy.activeInputs.contains(.swipe)
       ) { event in
         interactionState.handleInput(
           .swipeGesture(
@@ -35,7 +37,8 @@ struct InteractionModifiers: ViewModifier {
 
       .onPinchGesture(
         initial: interactionState.transform.scale,
-        isEnabled: policy.activeInputs.contains(.pinch)
+        isEnabled: true
+//        isEnabled: policy.activeInputs.contains(.pinch)
       ) { zoom, phase in
         interactionState.handleInput(
           .pinchGesture(scale: zoom),
@@ -48,7 +51,7 @@ struct InteractionModifiers: ViewModifier {
       }
 
       .onContinuousHover(coordinateSpace: .named(ScreenSpace.screen)) { phase in
-        guard policy.activeInputs.contains(.pointerHover) else { return }
+//        guard policy.activeInputs.contains(.pointerHover) else { return }
         guard let location = phase.location else { return }
         interactionState.handleInput(
           .continuousHover(location.screenPoint),
@@ -60,7 +63,7 @@ struct InteractionModifiers: ViewModifier {
         count: 1,
         coordinateSpace: .named(ScreenSpace.screen)
       ) { location in
-        guard policy.activeInputs.contains(.pointerTap) else { return }
+//        guard policy.activeInputs.contains(.pointerTap) else { return }
         interactionState.handleInput(
           .pointerTapGesture(.primary, location: location.screenPoint),
           phase: .ended,
@@ -68,7 +71,8 @@ struct InteractionModifiers: ViewModifier {
       }
 
       .onPointerDragGesture(
-        behaviour: policy.dragBehaviour
+        behaviour: activeTool?.dragBehaviour ?? .none
+//        behaviour: policy.dragBehaviour
       ) { payload, phase in
         guard let payload else { return }
         interactionState.handleInput(.pointerDragGesture(payload), phase: phase)

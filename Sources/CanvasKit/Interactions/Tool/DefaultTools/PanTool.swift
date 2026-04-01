@@ -16,9 +16,10 @@ public struct PanTool: CanvasTool {
   public let icon = "hand.raised"
   public let pointerStyle: PointerStyleCompatible = .grabIdle
 
-  public var inputPolicy: CanvasInputPolicy {
-    .init(dragBehaviour: .continuous)
-  }
+  public var dragBehaviour: DragBehavior { .continuous }
+//  public var inputPolicy: CanvasInputPolicy {
+//    .init(dragBehaviour: .continuous)
+//  }
 
   public init() {}
 
