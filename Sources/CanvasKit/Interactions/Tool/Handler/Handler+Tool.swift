@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 8/7/2025.
 //
 
-import SwiftUI
 import InteractionPrimitives
+import SwiftUI
 
 /// Manages tool selection, spring-loading, and key bindings.
 ///
@@ -48,7 +48,7 @@ public struct ToolHandler {
     baseTool: (any CanvasTool)? = nil,
     tools: [any CanvasTool] = .defaultTools,
     bindings: [ToolBinding] = ToolBinding.defaultBindings(),
-    springLoadDelay: TimeInterval = 0.15
+    springLoadDelay: TimeInterval = 0.15,
   ) {
     self.baseTool = baseTool ?? tools.first ?? SelectTool()
     self.bindings = bindings
@@ -100,8 +100,6 @@ extension ToolHandler {
 
   /// The Kind of the effective tool
   public var toolKind: CanvasToolKind { effectiveTool.kind }
-//
-//  public var pointerStyle: PointerStyleCompatible { effectiveTool.pointerStyle }
 
   /// The spring-loaded tool if one is armed, or `nil`.
   public var springLoadedTool: (any CanvasTool)? {
@@ -209,7 +207,7 @@ extension ToolHandler {
 
   private mutating func apply(
     binding: ToolBinding,
-    onKeyDown key: KeyEquivalent
+    onKeyDown key: KeyEquivalent,
   ) {
     let targetTool = resolveTool(for: binding.target)
     switch binding.mode {
@@ -220,7 +218,7 @@ extension ToolHandler {
           binding: binding,
           startedAt: Date(),
           key: key,
-          isArmed: true
+          isArmed: true,
         )
         activations.append(act)
 
@@ -231,7 +229,7 @@ extension ToolHandler {
           binding: binding,
           startedAt: Date(),
           key: key,
-          isArmed: false
+          isArmed: false,
         )
         activations.append(act)
 

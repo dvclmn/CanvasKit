@@ -20,8 +20,14 @@ struct CanvasArtwork<Content: View>: View {
   @ViewBuilder var content: () -> Content
 
   var body: some View {
-    /// Note: Hit testing, background and drawing group are all handled in Canvas Core view
+    /// Note: canvas background, drawing group etc are handled in `CanvasCoreView`
     CanvasDecomposed()
+      .overlay {
+        RoundedRectangle(cornerRadius: cornerRounding)
+          .fill(.clear)
+          .stroke(.white.opacity(0.07), lineWidth: outlineThickness)
+          .allowsHitTesting(false)
+      }
       .animation(.easeInOut(duration: 0.15)) { content in
         content.opacity(isCanvasReady ? 1.0 : 0.0)
       }
@@ -55,11 +61,8 @@ extension CanvasArtwork {
       ZStack {
         content()
       }
-      .modifier(CanvasOutlineModifier())
     }
   }
-
-  private var isCanvasReady: Bool { zoomRange != nil && activeTool != nil }
 
   @available(macOS 15.0, iOS 18.0, *)
   @ViewBuilder
@@ -74,20 +77,17 @@ extension CanvasArtwork {
         }
       }
     }
-//    .overlay {
-//      RoundedRectangle(cornerRadius: cornerRounding)
-//        .fill(.clear)
-//        .stroke(.white.opacity(0.07), lineWidth: outlineThickness)
-//    }
   }
-//
-//  private var cornerRounding: CGFloat {
-//    let base = 5.0
-//    return base.removingZoom(zoomClamped)
-//  }
-//
-//  private var outlineThickness: CGFloat {
-//    let base = 1.0
-//    return base.removingZoom(zoomClamped, across: zoomRange)
-//  }
+
+  private var isCanvasReady: Bool { zoomRange != nil && activeTool != nil }
+
+  private var cornerRounding: CGFloat {
+    let base = 5.0
+    return base.removingZoom(zoomClamped)
+  }
+
+  private var outlineThickness: CGFloat {
+    let base = 1.0
+    return base.removingZoom(zoomClamped, across: zoomRange)
+  }
 }

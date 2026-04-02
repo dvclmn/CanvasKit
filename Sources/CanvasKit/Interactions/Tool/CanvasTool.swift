@@ -13,7 +13,7 @@ import SwiftUI
 /// Global gestures (swipe→pan, pinch→zoom, hover) are handled centrally
 /// by `CanvasInteractionState` and never reach `resolvePointerInteraction()`.
 /// Tools only receive pointer events: taps and drags.
-public protocol CanvasTool: Sendable, Identifiable where ID == CanvasToolKind {
+public protocol CanvasTool: Sendable, Equatable, Identifiable where ID == CanvasToolKind {
 
   /// The tool's identity, used for keyboard binding lookups and registry.
   var kind: CanvasToolKind { get }
@@ -27,7 +27,6 @@ public protocol CanvasTool: Sendable, Identifiable where ID == CanvasToolKind {
   /// The input policy active when this tool is selected.
   /// Controls drag behaviour, pointer-drag-pan, etc.
   var dragBehaviour: DragBehavior { get }
-  //  var inputPolicy: CanvasInputPolicy { get }
 
   /// Input sources this tool opts into for resolution.
   /// Defaults to `.pointerOnly`.
@@ -51,6 +50,8 @@ public protocol CanvasTool: Sendable, Identifiable where ID == CanvasToolKind {
 
 extension CanvasTool {
   public var id: CanvasToolKind { kind }
+
+  /// Tool capability defaults to pointer only
   public var inputCapabilities: InteractionKinds { .pointerOnly }
 }
 

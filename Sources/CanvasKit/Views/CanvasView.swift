@@ -11,9 +11,8 @@ import SwiftUI
 
 public struct CanvasView<Content: View>: View {
   //  @Environment(CanvasInteractionState.self) private var interactionState
-  @Environment(\.zoomRange) private var zoomRange
 
-//  @State private var interactionState: CanvasInteractionState = .init()
+  //  @State private var interactionState: CanvasInteractionState = .init()
   //  @Environment(\.shouldShowInfoBarItems) private var shouldShowInfoBarItems
 
   let canvasSize: Size<CanvasSpace>
@@ -44,12 +43,9 @@ public struct CanvasView<Content: View>: View {
       /// Canvas size is passed in via the initialiser. Adding it to the Env here.
       .environment(\.canvasSize, canvasSize)
 
-      /// Provides interaction state with updated zoom range
-      .task(id: zoomRange) { interactionState.zoomRange = zoomRange }
-
       .modifier(
         InteractionStateSetupModifier(
-          state: interactionState,
+          //          state: interactionState,
           toolHandler: $toolHandler,
           canvasSize: canvasSize,
         )
