@@ -13,47 +13,40 @@ import SwiftUI
 /// hierarchy as is needed for access.
 struct InteractionStateSetupModifier: ViewModifier {
   @Environment(\.modifierKeys) private var modifierKeys
-  @Environment(\.zoomRange) private var zoomRange
+//  @Environment(\.zoomRange) private var zoomRange
   @State private var interactionState: CanvasInteractionState = .init()
 
   @Binding var toolHandler: ToolHandler
   let canvasSize: Size<CanvasSpace>
 
-  //  init(
-  //    state: CanvasInteractionState? = nil,
-  //    toolHandler: Binding<ToolHandler>,
-  //    canvasSize: Size<CanvasSpace>,
-  //  ) {
-  //    self._interactionState = State(initialValue: state ?? .init())
-  //    self._toolHandler = toolHandler
-  //    self.canvasSize = canvasSize
-  //  }
-
   func body(content: Content) -> some View {
     content
       .environment(interactionState)
-      .setSnapshotValues(snapshot)
+
+      .setSnapshotValues(
+        interactionState.snapshot(in: canvasSize)
+      )
 
       .environment(\.pointerStyle, interactionState.pointerStyle)
-      .environment(\.activeTool, toolHandler.effectiveTool)
 
       .task(id: modifierKeys) {
         toolHandler.updateModifiers(modifierKeys)
       }
-
+    
+    // MARK: -
+      .environment(\.activeTool, toolHandler.effectiveTool)
+      .syncEnvironment(\.activeTool, to: $interactionState.activeTool)
       /// Watches tool kind rather than the tool itself, as `any CanvasTool`
       /// can't conform to Equatable
-      .task(id: toolHandler.effectiveTool.kind) {
-        interactionState.updateTool(to: toolHandler.effectiveTool)
-      }
+//      .task(id: toolHandler.effectiveTool.kind) {
+//        interactionState.updateTool(to: toolHandler.effectiveTool)
+//      }
+    
+
       /// Provides interaction state with updated zoom range
-      .task(id: zoomRange) {
-        interactionState.zoomRange = zoomRange
-      }
-
+//      .task(id: zoomRange) {
+//        interactionState.zoomRange = zoomRange
+//      }
+      .syncEnvironment(\.zoomRange, to: $interactionState.zoomRange)
   }
-}
-
-extension InteractionStateSetupModifier {
-  private var snapshot: CanvasSnapshot? { interactionState.snapshot(canvasSize: canvasSize) }
 }

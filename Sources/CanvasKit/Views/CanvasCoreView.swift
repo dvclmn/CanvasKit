@@ -5,25 +5,25 @@
 //  Created by Dave Coleman on 6/8/2025.
 //
 
-//import BasePrimitives
-import SwiftUI
-import InteractionPrimitives
 import GeometryPrimitives
+import InteractionPrimitives
+import SwiftUI
 
 struct CanvasCoreView<Content: View>: View {
+  @Environment(CanvasInteractionState.self) private var interactionState
   @Environment(\.canvasBackground) private var canvasBackground
-
-  @State private var canvasFrame: Rect<ScreenSpace>?
+  //  @State private var artworkFrame: Rect<ScreenSpace>?
 
   @ViewBuilder var content: () -> Content
 
-  #warning("Need to bring back the GridFont modifier")
   var body: some View {
     Color.clear
       .overlay {
         CanvasArtwork(content: content)
-          /// Should probably set this up to be clearer for *non* Grid domain contexts
-//          .gridFont(for: .canvas)
+        // TODO: Need to bring back the GridFont modifier.
+        // Maybe expose an additional Viewbuilder closure for
+        // targeting the Artwork itself?
+        //          .gridFont(for: .canvas)
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       .background(canvasBackground)
@@ -31,13 +31,11 @@ struct CanvasCoreView<Content: View>: View {
       .allowsHitTesting(false)
       .ignoresSafeArea(edges: .top)
       .coordinateSpace(.named(ScreenSpace.screen))
-
       .overlayPreferenceValue(ArtworkBoundsAnchorKey.self) { anchor in
         ArtworkGeometry(anchor)
       }
 
-      .environment(\.artworkFrameInViewport, canvasFrame)
-      .canvasTransformations()
+      .modifier(InteractionModifiers())
   }
 }
 
@@ -48,7 +46,10 @@ extension CanvasCoreView {
       let frame = anchor.map { proxy[$0] }
       Color.clear
         .allowsHitTesting(false)
-        .task(id: frame) { canvasFrame = frame.map { .init(fromRect: $0) } }
+        .task(id: frame) {
+          let frameRect = frame.map { Rect<ScreenSpace>(fromRect: $0) }
+          interactionState.updateArtworkFrame(to: frameRect)
+        }
     }
   }
 }

@@ -9,11 +9,7 @@ import GeometryPrimitives
 import InteractionPrimitives
 import SwiftUI
 
-public struct CanvasView<Content: View>: View {
-  //  @Environment(CanvasInteractionState.self) private var interactionState
-
-  //  @State private var interactionState: CanvasInteractionState = .init()
-  //  @Environment(\.shouldShowInfoBarItems) private var shouldShowInfoBarItems
+public struct CanvasView<Content: View>: View, ZoomRangeProvidable {
 
   let canvasSize: Size<CanvasSpace>
   @Binding var toolHandler: ToolHandler
@@ -45,10 +41,22 @@ public struct CanvasView<Content: View>: View {
 
       .modifier(
         InteractionStateSetupModifier(
-          //          state: interactionState,
           toolHandler: $toolHandler,
           canvasSize: canvasSize,
         )
       )
+  }
+}
+
+//extension CanvasView {
+//
+//}
+
+public protocol ZoomRangeProvidable {}
+
+extension View where Self: ZoomRangeProvidable {
+  public func zoomRange(_ range: ClosedRange<Double>) -> some View {
+    self.environment(\.zoomRange, range)
+    //    self.modifier(ExampleModifier())
   }
 }

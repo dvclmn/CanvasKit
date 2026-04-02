@@ -15,13 +15,14 @@ import SwiftUI
 @Observable
 public final class CanvasInteractionState {
 
+  /// Internal state
   public var transform: TransformState = .identity
   public var pointer: PointerState = .initial
-  public var geometry: CanvasGeometry?
+
+  /// Values synced to here from the Environment
+  public var artworkFrame: Rect<ScreenSpace>?
   public var zoomRange: ClosedRange<Double>?
   public var modifiers: Modifiers = []
-
-  /// Synced here via the Env
   public var activeTool: (any CanvasTool)?
 
   /// The most recent domain action produced by a tool resolution.
@@ -29,7 +30,8 @@ public final class CanvasInteractionState {
   /// (e.g. "select at point", "commit stroke").
   public var lastToolAction: ToolAction = .none
 
-  /// The most recent interaction context.
+  /// The most recent interaction context, provided when
+  /// `handleInput(_:phase:)` is called.
   public var phase: InteractionPhase = .none
   public var source: InteractionSource?
 
@@ -85,6 +87,9 @@ extension CanvasInteractionState {
   public func updateTool(to tool: (any CanvasTool)?) {
     self.activeTool = tool
   }
+  public func updateArtworkFrame(to frame: Rect<ScreenSpace>?) {
+    self.artworkFrame = frame
+  }
 
 }
 extension CanvasInteractionState {
@@ -107,7 +112,7 @@ extension CanvasInteractionState {
 
 extension CanvasInteractionState {
 
-  public func snapshot(canvasSize: Size<CanvasSpace>) -> CanvasSnapshot? {
+  public func snapshot(in canvasSize: Size<CanvasSpace>) -> CanvasSnapshot? {
     guard let hover = pointer.hover,
       let hoverMapped = coordinateSpaceMapper?.canvasPoint(from: hover),
       let isInside = coordinateSpaceMapper?.isInsideCanvas(hoverMapped, in: canvasSize)
@@ -124,10 +129,9 @@ extension CanvasInteractionState {
 
   /// Exposed for event modifiers that need to convert coordinates.
   package var coordinateSpaceMapper: CoordinateSpaceMapper? {
-    guard let geometry, let zoomRange else { return nil }
+    guard let artworkFrame, let zoomRange else { return nil }
     return .init(
-//      canvasSize: geometry.canvasSize,
-      artworkFrame: geometry.artworkFrameInViewport,
+      artworkFrame: artworkFrame,
       zoom: transform.scale,
       zoomRange: zoomRange,
     )

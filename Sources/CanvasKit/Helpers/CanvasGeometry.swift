@@ -10,45 +10,27 @@ import SwiftUI
 import InteractionPrimitives
 import GeometryPrimitives
 
-public struct CanvasGeometry: Sendable, Equatable {
-  public var viewportRect: Rect<ScreenSpace>
-  public var artworkFrameInViewport: Rect<ScreenSpace>
-  public var anchor: UnitPoint
-  public var canvasSize: Size<CanvasSpace>
-
-  public static var zero: Self { .init() }
-
-  public init(
-    viewportRect: Rect<ScreenSpace> = .zero,
-    artworkFrameInViewport: Rect<ScreenSpace> = .zero,
-    canvasSize: Size<CanvasSpace> = .zero,
-    anchor: UnitPoint = .center
-  ) {
-    self.viewportRect = viewportRect
-    self.artworkFrameInViewport = artworkFrameInViewport
-    self.canvasSize = canvasSize
-    self.anchor = anchor
-  }
-}
-
-extension CanvasGeometry {
-  public var viewportSize: CGSize { viewportRect.cgRect.size }
-}
-
-//public var canvasGeometry: CanvasGeometry? {
-//  guard let viewportRect,
-//        let artworkFrameInViewport,
-//        let canvasSize
-//  else {
-//    //      print(
-//    //        "For canvasGeometry, missing one of:\nviewportRect: \(String(describing: viewportRect)), artworkFrameInViewport: \(String(describing: artworkFrameInViewport)), or canvasSize: \(String(describing: canvasSize))\n\n"
-//    //      )
-//    return nil
+//public struct CanvasGeometry: Sendable, Equatable {
+//  public var viewportRect: Rect<ScreenSpace>
+//  public var artworkFrameInViewport: Rect<ScreenSpace>
+//  public var anchor: UnitPoint
+//  public var canvasSize: Size<CanvasSpace>
+//
+//  public static var zero: Self { .init() }
+//
+//  public init(
+//    viewportRect: Rect<ScreenSpace> = .zero,
+//    artworkFrameInViewport: Rect<ScreenSpace> = .zero,
+//    canvasSize: Size<CanvasSpace> = .zero,
+//    anchor: UnitPoint = .center
+//  ) {
+//    self.viewportRect = viewportRect
+//    self.artworkFrameInViewport = artworkFrameInViewport
+//    self.canvasSize = canvasSize
+//    self.anchor = anchor
 //  }
-//  return CanvasGeometry(
-//    viewportRect: Rect<ScreenSpace>(fromRect: viewportRect),
-//    artworkFrameInViewport: artworkFrameInViewport,
-//    canvasSize: canvasSize,
-//    anchor: canvasAnchor,
-//  )
-//  }
+//}
+//
+//extension CanvasGeometry {
+//  public var viewportSize: CGSize { viewportRect.cgRect.size }
+//}
