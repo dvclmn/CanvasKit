@@ -13,7 +13,7 @@ import SwiftUI
 /// hierarchy as is needed for access.
 struct InteractionStateSetupModifier: ViewModifier {
   @Environment(\.modifierKeys) private var modifierKeys
-//  @Environment(\.zoomRange) private var zoomRange
+  //  @Environment(\.zoomRange) private var zoomRange
   @State private var interactionState: CanvasInteractionState = .init()
 
   @Binding var toolHandler: ToolHandler
@@ -32,21 +32,22 @@ struct InteractionStateSetupModifier: ViewModifier {
       .task(id: modifierKeys) {
         toolHandler.updateModifiers(modifierKeys)
       }
-    
-    // MARK: -
+
+      // MARK: -
       .environment(\.activeTool, toolHandler.effectiveTool)
-      .syncEnvironment(\.activeTool, to: $interactionState.activeTool)
+
+      //      .syncEnvironment(\.activeTool) { interactionState.activeTool = $0 }
+      //      .syncEnvironment(\.activeTool, to: $interactionState.activeTool)
       /// Watches tool kind rather than the tool itself, as `any CanvasTool`
       /// can't conform to Equatable
-//      .task(id: toolHandler.effectiveTool.kind) {
-//        interactionState.updateTool(to: toolHandler.effectiveTool)
-//      }
-    
+      .task(id: toolHandler.effectiveTool.kind) {
+        interactionState.updateTool(to: toolHandler.effectiveTool)
+      }
 
       /// Provides interaction state with updated zoom range
-//      .task(id: zoomRange) {
-//        interactionState.zoomRange = zoomRange
-//      }
+      //      .task(id: zoomRange) {
+      //        interactionState.zoomRange = zoomRange
+      //      }
       .syncEnvironment(\.zoomRange, to: $interactionState.zoomRange)
   }
 }

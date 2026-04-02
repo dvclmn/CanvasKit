@@ -90,6 +90,9 @@ extension CanvasInteractionState {
   public func updateArtworkFrame(to frame: Rect<ScreenSpace>?) {
     self.artworkFrame = frame
   }
+  public func updateModifiers(to modifiers: Modifiers) {
+    self.modifiers = modifiers
+  }
 
 }
 extension CanvasInteractionState {
@@ -98,14 +101,12 @@ extension CanvasInteractionState {
       case .updateTranslation(let size): self.transform.translation = size
       case .updateScale(let scale): self.transform.scale = scale.clampedIfNeeded(to: zoomRange)
       case .updateRotation(let angle): self.transform.rotation = angle
-
       case .updatePointerDrag(let rect): self.pointer.drag = rect
       case .updatePointerTap(let point): self.pointer.tap = point
       case .updatePointerHover(let point): self.pointer.hover = point
       case .none: break
     }
   }
-
 }
 
 // MARK: - Mapping and Snapshot

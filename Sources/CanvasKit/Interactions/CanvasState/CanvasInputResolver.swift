@@ -11,26 +11,11 @@ import SwiftUI
 
 /// Centralises input resolution for `CanvasInteractionState`.
 struct CanvasInputResolver {
-
   let source: InteractionSource?
   let phase: InteractionPhase
   let modifiers: Modifiers
   let activeTool: (any CanvasTool)?
   let transform: TransformState
-
-  init(
-    source: InteractionSource?,
-    phase: InteractionPhase,
-    modifiers: Modifiers,
-    activeTool: (any CanvasTool)?,
-    transform: TransformState,
-  ) {
-    self.source = source
-    self.phase = phase
-    self.modifiers = modifiers
-    self.activeTool = activeTool
-    self.transform = transform
-  }
 
   var pointerStyle: PointerStyleCompatible? {
     activeTool?.resolvePointerStyle(context: interactionContext)
@@ -49,7 +34,7 @@ struct CanvasInputResolver {
 
   private var toolResolution: ToolResolution {
     guard shouldResolveTool else { return .none }
-    activeTool?.resolvePointerInteraction(
+    return activeTool?.resolvePointerInteraction(
       context: interactionContext,
       currentTransform: transform,
     ) ?? .none
@@ -95,18 +80,5 @@ struct CanvasInputResolver {
       weights: .vertical,
     )
     return .zoomAdjustment(for: transform, by: factor)
-  }
-}
-
-struct CanvasInputResolution {
-  let globalAdjustment: CanvasAdjustment
-  let toolResolution: ToolResolution
-
-  var pointerAdjustment: CanvasAdjustment {
-    toolResolution.adjustment
-  }
-
-  var toolAction: ToolAction {
-    toolResolution.action
   }
 }

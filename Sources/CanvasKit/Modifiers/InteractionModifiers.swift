@@ -41,7 +41,7 @@ struct InteractionModifiers: ViewModifier {
       .onPinchGesture(
         initial: interactionState.transform.scale,
         isEnabled: true,
-          //        isEnabled: policy.activeInputs.contains(.pinch)
+        //        isEnabled: policy.activeInputs.contains(.pinch)
       ) { zoom, phase in
         interactionState.handleInput(
           .pinchGesture(scale: zoom),
@@ -83,6 +83,7 @@ struct InteractionModifiers: ViewModifier {
 
       /// Make sure `CanvasInteractionState` gets modifier key updates
       //      .task(id: modifierKeys) { interactionState.modifiers = modifierKeys }
-      .syncModifiers(to: $interactionState.modifiers)
+      .syncModifiers { interactionState.updateModifiers(to: $0) }
+    //      .syncModifiers(to: $interactionState.modifiers)
   }
 }
