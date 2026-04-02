@@ -5,25 +5,28 @@
 //  Created by Dave Coleman on 24/6/2025.
 //
 
-import InteractionPrimitives
 import GeometryPrimitives
+import InteractionPrimitives
 import SwiftUI
 
 public struct CanvasView<Content: View>: View {
-  @Environment(CanvasInteractionState.self) private var interactionState
+  //  @Environment(CanvasInteractionState.self) private var interactionState
   @Environment(\.zoomRange) private var zoomRange
+
+  @State private var interactionState: CanvasInteractionState = .init()
   //  @Environment(\.shouldShowInfoBarItems) private var shouldShowInfoBarItems
 
-  /// Optional to allow GirdCanvasRect to take advantage of `CanvasCoreView`s
-  /// optional unwrapping presentation
   let canvasSize: Size<CanvasSpace>
+  @Binding var toolHandler: ToolHandler
   let content: () -> Content
 
   public init(
     canvasSize: Size<CanvasSpace>,
+    toolHandler: Binding<ToolHandler> = .constant(.init()),
     @ViewBuilder content: @escaping () -> Content,
   ) {
     self.canvasSize = canvasSize
+    self._toolHandler = toolHandler
     self.content = content
   }
 
@@ -38,17 +41,17 @@ public struct CanvasView<Content: View>: View {
 
     CanvasCoreView(content: content)
 
-      //      .addInfoBarItems {
-      //        if let zoomRange {
-      //          InfoItems(zoomRange)
-      //        }
-      //      }
-
-      //      .toolbar { CanvasToolbarView() }
-
       /// This is passed in via the CanvasView initialiser. Adding it to the Env here.
       .environment(\.canvasSize, canvasSize)
       .task(id: zoomRange) { interactionState.zoomRange = zoomRange }
+
+      .modifier(
+        InteractionStateSetupModifier(
+          state: interactionState,
+          toolHandler: $toolHandler,
+          canvasSize: canvasSize,
+        )
+      )
 
   }
 }

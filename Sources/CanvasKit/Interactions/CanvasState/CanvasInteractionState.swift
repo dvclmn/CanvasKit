@@ -107,10 +107,10 @@ extension CanvasInteractionState {
 
 extension CanvasInteractionState {
 
-  public var snapshot: CanvasSnapshot? {
+  public func snapshot(canvasSize: Size<CanvasSpace>) -> CanvasSnapshot? {
     guard let hover = pointer.hover,
       let hoverMapped = coordinateSpaceMapper?.canvasPoint(from: hover),
-      let isInside = coordinateSpaceMapper?.isInsideCanvas(hoverMapped)
+      let isInside = coordinateSpaceMapper?.isInsideCanvas(hoverMapped, in: canvasSize)
     else { return nil }
 
     return CanvasSnapshot(
@@ -126,7 +126,7 @@ extension CanvasInteractionState {
   package var coordinateSpaceMapper: CoordinateSpaceMapper? {
     guard let geometry, let zoomRange else { return nil }
     return .init(
-      canvasSize: geometry.canvasSize,
+//      canvasSize: geometry.canvasSize,
       artworkFrame: geometry.artworkFrameInViewport,
       zoom: transform.scale,
       zoomRange: zoomRange,
