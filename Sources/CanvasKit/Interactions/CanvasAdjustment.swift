@@ -40,15 +40,12 @@ extension CanvasAdjustment {
     let new = transform.scale * factor
     return .updateScale(new)
   }
-  
+
   public static func panAdjustment(
     for transform: TransformState,
     delta: Size<ScreenSpace>,
-//    by delta: CGSize
   ) -> Self {
     let new = transform.translation + delta
     return .updateTranslation(new)
-//    return .canvasAdjustment(.updateTranslation(new))
-//    .updateTranslation(delta.toGridCount(for: transform))
   }
 }

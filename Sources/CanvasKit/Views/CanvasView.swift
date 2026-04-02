@@ -7,7 +7,6 @@
 
 import InteractionPrimitives
 import GeometryPrimitives
-//import BasePrimitives
 import SwiftUI
 
 public struct CanvasView<Content: View>: View {
