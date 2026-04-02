@@ -13,7 +13,7 @@ public struct CanvasView<Content: View>: View {
   //  @Environment(CanvasInteractionState.self) private var interactionState
   @Environment(\.zoomRange) private var zoomRange
 
-  @State private var interactionState: CanvasInteractionState = .init()
+//  @State private var interactionState: CanvasInteractionState = .init()
   //  @Environment(\.shouldShowInfoBarItems) private var shouldShowInfoBarItems
 
   let canvasSize: Size<CanvasSpace>
@@ -41,8 +41,10 @@ public struct CanvasView<Content: View>: View {
 
     CanvasCoreView(content: content)
 
-      /// This is passed in via the CanvasView initialiser. Adding it to the Env here.
+      /// Canvas size is passed in via the initialiser. Adding it to the Env here.
       .environment(\.canvasSize, canvasSize)
+
+      /// Provides interaction state with updated zoom range
       .task(id: zoomRange) { interactionState.zoomRange = zoomRange }
 
       .modifier(
@@ -52,24 +54,5 @@ public struct CanvasView<Content: View>: View {
           canvasSize: canvasSize,
         )
       )
-
   }
 }
-
-//extension CanvasView {
-//
-//  @DisplayStringBuilder
-//  private func InfoItems(
-//    _ zoomRange: ClosedRange<Double>
-//  ) -> [DisplayBlock] {
-//    if shouldShowInfoBarItems {
-//
-//      Labeled(
-//        "Zoom",
-//        value: interactionState.transform.zoom.value
-//          .toPercentString(within: zoomRange.toCGFloatRange)
-//      )
-//
-//    }
-//  }
-//}
