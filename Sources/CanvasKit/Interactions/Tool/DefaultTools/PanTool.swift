@@ -14,7 +14,7 @@ public struct PanTool: CanvasTool {
   public let kind: CanvasToolKind = .pan
   public let name = "Pan"
   public let icon = "hand.raised"
-  public let pointerStyle: PointerStyleCompatible = .grabIdle
+//  public let pointerStyle: PointerStyleCompatible = .grabIdle
 
   public var dragBehaviour: DragBehavior { .continuous }
 

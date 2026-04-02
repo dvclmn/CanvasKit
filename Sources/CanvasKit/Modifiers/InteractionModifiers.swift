@@ -13,8 +13,6 @@ import GestureKit
 struct InteractionModifiers: ViewModifier {
   @Environment(CanvasInteractionState.self) private var interactionState
   @Environment(\.activeTool) private var activeTool
-//  @Environment(\.canvasInputPolicy) private var policy
-//  @Environment(\.canvasGeometry) private var canvasGeometry
   @Environment(\.modifierKeys) private var modifierKeys
 
   func body(content: Content) -> some View {

@@ -27,15 +27,19 @@ public protocol CanvasTool: Sendable, Identifiable where ID == CanvasToolKind {
   /// The input policy active when this tool is selected.
   /// Controls drag behaviour, pointer-drag-pan, etc.
   var dragBehaviour: DragBehavior { get }
-//  var inputPolicy: CanvasInputPolicy { get }
+  //  var inputPolicy: CanvasInputPolicy { get }
+
+  /// Input sources this tool opts into for resolution.
+  /// Defaults to `.pointerOnly`.
+  var inputCapabilities: InteractionKinds { get }
 
   /// Resolve the pointer style for the current interaction context.
   func resolvePointerStyle(context: InteractionContext) -> PointerStyleCompatible
 
-  /// Resolve a pointer interaction into a canvas adjustment and optional domain action.
+  /// Resolve an interaction into a canvas adjustment and optional domain action.
   ///
-  /// Only called for pointer events (`.pointerTapGesture`, `.pointerDragGesture`).
-  /// Global gestures are handled before this is reached.
+  /// Only called for sources the tool opted into via `inputCapabilities`.
+  /// Global gestures are still handled separately before this is reached.
   ///
   /// This allows a Tool to declare what should happen when it is selected,
   /// and certain interaction events happen
@@ -47,6 +51,7 @@ public protocol CanvasTool: Sendable, Identifiable where ID == CanvasToolKind {
 
 extension CanvasTool {
   public var id: CanvasToolKind { kind }
+  public var inputCapabilities: InteractionKinds { .pointerOnly }
 }
 
 extension CanvasTool where Self == SelectTool {

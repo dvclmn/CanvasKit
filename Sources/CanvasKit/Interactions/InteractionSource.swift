@@ -20,7 +20,10 @@ import GeometryPrimitives
 ///
 /// Under two-tier resolution:
 /// - Swipe, pinch, and hover are handled globally by `CanvasInteractionState`
-/// - Pointer tap and drag are forwarded to the active `CanvasTool.resolve()`
+/// - Pointer tap and drag are forwarded to the active `CanvasTool`
+///
+/// Tools can opt into additional sources via `CanvasInputCapabilities`,
+/// but global handling still occurs separately.
 
 public enum InteractionSource: Sendable {
   case swipeGesture(

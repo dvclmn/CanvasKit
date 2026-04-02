@@ -36,8 +36,6 @@ public final class CanvasInteractionState {
   public init() {}
 }
 
-// MARK: - Input handling (two-tier resolution)
-
 extension CanvasInteractionState {
 
   /// Entry point for all raw input events from gesture modifiers.
@@ -46,7 +44,7 @@ extension CanvasInteractionState {
   /// via `GlobalInteraction`. Tools never see these events.
   ///
   /// Pointer interactions (tap, drag) are forwarded to the active tool's
-  /// `resolvePointerInteraction()` method.
+  /// `resolvePointerInteraction()` method, subject to `inputCapabilities`.
   public func handleInput(
     _ source: InteractionSource,
     phase: InteractionPhase,
@@ -55,52 +53,29 @@ extension CanvasInteractionState {
     self.source = source
     self.phase = phase
 
+    let resolution = inputResolver.resolve()
+
     /// 1 – Global gestures
-    executeAdjustment(globalAdjustment)
+    executeAdjustment(resolution.globalAdjustment)
 
     /// 2 – Tool-specific pointer interactions
-    //    let pointerAdjustment = pointerAdjustment()
-    executeAdjustment(pointerAdjustment)
+    executeAdjustment(resolution.pointerAdjustment)
 
-  }
-  private var pointerAdjustment: CanvasAdjustment {
-
-    guard let activeTool else { return .none }
-
-    self.lastToolAction = toolResolution.action
-    return toolResolution.adjustment
+    lastToolAction = resolution.toolAction
   }
 
-  private var globalAdjustment: CanvasAdjustment {
-    guard let source else { return .none }
-
-    return switch source {
-      case .swipeGesture(let delta, _): handleGlobalSwipe(delta: delta)
-      case .pinchGesture(let scale): .updateScale(scale)
-      case .continuousHover(let point): .updatePointerHover(point)
-      case .pointerTapGesture, .pointerDragGesture:
-        /// Pointer events are handled by the active tool
-        .none
-    }
-  }
-  
   public var pointerStyle: PointerStyleCompatible? {
-    activeTool?.resolvePointerStyle(context: interactionContext)
+    inputResolver.pointerStyle
   }
-  
-  var toolResolution: ToolResolution {
-    activeTool?.resolvePointerInteraction(
-      context: InteractionContext(
-        source: source,
-        phase: phase,
-        modifiers: modifiers,
-      ),
-      currentTransform: transform,
-    ) ?? .none
-  }
-  
-  private var interactionContext: InteractionContext {
-    .init(source: source, phase: phase, modifiers: modifiers)
+
+  private var inputResolver: CanvasInputResolver {
+    .init(
+      source: source,
+      phase: phase,
+      modifiers: modifiers,
+      activeTool: activeTool,
+      transform: transform,
+    )
   }
 
 }
@@ -111,25 +86,6 @@ extension CanvasInteractionState {
     self.activeTool = tool
   }
 
-  private func handleGlobalSwipe(delta: Size<ScreenSpace>) -> CanvasAdjustment {
-
-    /// If Option is held during a Swipe, it is interpreted as Zoom, not Pan
-    guard modifiers.contains(.option) else {
-      let newTranslation = transform.translation + delta
-      return .updateTranslation(newTranslation)
-    }
-
-    /// Each point contributes up to 0.5% zoom change at sensitivity = 1.0
-    let factor = ZoomComputation.factorFromDelta(
-      CGSize(width: 0, height: delta.cgSize.height),
-      weights: .vertical,
-    )
-
-    //    let newScale = transform.scale * factor
-    //    return .updateScale(newScale)
-    return .zoomAdjustment(for: transform, by: factor)
-
-  }
 }
 extension CanvasInteractionState {
   private func executeAdjustment(_ adjustment: CanvasAdjustment) {
@@ -144,7 +100,6 @@ extension CanvasInteractionState {
       case .none: break
     }
   }
-
 
 }
 
@@ -168,7 +123,7 @@ extension CanvasInteractionState {
   }
 
   /// Exposed for event modifiers that need to convert coordinates.
-  public var coordinateSpaceMapper: CoordinateSpaceMapper? {
+  package var coordinateSpaceMapper: CoordinateSpaceMapper? {
     guard let geometry, let zoomRange else { return nil }
     return .init(
       canvasSize: geometry.canvasSize,
@@ -176,10 +131,5 @@ extension CanvasInteractionState {
       zoom: transform.scale,
       zoomRange: zoomRange,
     )
-    //    return .init(
-    //      geometry: geometry,
-    //      transform: transform,
-    //      zoomRange: zoomRange
-    //    )
   }
 }

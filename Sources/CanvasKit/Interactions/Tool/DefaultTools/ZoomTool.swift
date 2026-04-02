@@ -16,7 +16,7 @@ public struct ZoomTool: CanvasTool {
   public let kind: CanvasToolKind = .zoom
   public let name = "Zoom"
   public let icon = "magnifyingglass"
-  public let pointerStyle: PointerStyleCompatible = .zoomIn
+//  public let pointerStyle: PointerStyleCompatible = .zoomIn
 
   public var dragBehaviour: DragBehavior { .continuous(axes: .vertical) }
 

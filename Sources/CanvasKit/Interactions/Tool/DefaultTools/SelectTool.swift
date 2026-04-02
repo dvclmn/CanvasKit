@@ -16,7 +16,7 @@ public struct SelectTool: CanvasTool {
   public let kind: CanvasToolKind = .select
   public let name = "Select"
   public let icon = "cursorarrow"
-  public let pointerStyle: PointerStyleCompatible = .default
+//  public let pointerStyle: PointerStyleCompatible = .default
 
   public var dragBehaviour: DragBehavior { .marquee }
 

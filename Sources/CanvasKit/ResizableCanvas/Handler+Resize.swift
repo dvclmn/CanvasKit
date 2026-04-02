@@ -6,7 +6,6 @@
 //
 
 import GeometryPrimitives
-//import BasePrimitives
 import SwiftUI
 
 public struct ResizeHandler {
