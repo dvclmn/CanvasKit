@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 12/3/2026.
 //
 
-import InteractionPrimitives
+import InteractionKit
 import SwiftUI
 
 /// A canvas tool defines how pointer interactions (tap, drag) are interpreted.
@@ -52,7 +52,7 @@ extension CanvasTool {
   public var id: CanvasToolKind { kind }
 
   /// Tool capability defaults to pointer only
-  public var inputCapabilities: InteractionKinds { .pointerOnly }
+  public var inputCapabilities: InteractionKinds { .tapAndDrag }
 }
 
 extension CanvasTool where Self == SelectTool {

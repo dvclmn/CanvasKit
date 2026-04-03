@@ -6,9 +6,9 @@
 //
 
 import Foundation
-import InteractionPrimitives
+import InteractionKit
 
-//import GeometryPrimitives
+//import InteractionKit
 
 /// The combined result of a tool resolving a pointer interaction.
 ///

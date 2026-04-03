@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 8/3/2026.
 //
 
-import GeometryPrimitives
-import InteractionPrimitives
+import InteractionKit
+import InteractionKit
 import SwiftUI
 
 /// `CanvasInteractionState`'s state is owned outside of CanvasKit,

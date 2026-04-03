@@ -6,8 +6,8 @@
 //
 
 import SwiftUI
-import InteractionPrimitives
-import GeometryPrimitives
+import InteractionKit
+import InteractionKit
 
 /// The raw input source from a SwiftUI gesture modifier.
 ///

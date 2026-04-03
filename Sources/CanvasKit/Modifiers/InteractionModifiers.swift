@@ -5,9 +5,7 @@
 //  Created by Dave Coleman on 11/3/2026.
 //
 
-import GeometryPrimitives
-import GestureKit
-import InteractionPrimitives
+import InteractionKit
 import SwiftUI
 
 struct InteractionModifiers: ViewModifier {

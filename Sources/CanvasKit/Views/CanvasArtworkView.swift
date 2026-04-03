@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 28/2/2026.
 //
 
-import GeometryPrimitives
-import InteractionPrimitives
+import InteractionKit
+import InteractionKit
 import SwiftUI
 
 struct CanvasArtwork<Content: View>: View {

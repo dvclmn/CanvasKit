@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 8/3/2026.
 //
 
-import GeometryPrimitives
+import InteractionKit
 import SwiftUI
 
 /// Bundles up the necessary parts for callers to initialise state

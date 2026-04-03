@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 12/3/2026.
 //
 
-import GeometryPrimitives
-import InteractionPrimitives
+import InteractionKit
+import InteractionKit
 import SwiftUI
 
 /// When selected, pointer click-drag pans the canvas.

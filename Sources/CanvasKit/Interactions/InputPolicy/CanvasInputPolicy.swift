@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 10/3/2026.
 //
 
-//import InteractionPrimitives
+//import InteractionKit
 
 /// Controls which input modifiers and gestures are active on the canvas.
 ///

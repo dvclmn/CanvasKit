@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 24/6/2025.
 //
 
-import GeometryPrimitives
-import InteractionPrimitives
+import InteractionKit
+import InteractionKit
 import SwiftUI
 
 public struct CanvasView<Content: View>: View, ZoomRangeProvidable {

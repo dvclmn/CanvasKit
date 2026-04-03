@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import InteractionPrimitives
+import InteractionKit
 
 /// Whether a binding applies everywhere or only when a specific tool is active.
 public enum BindingScope: Sendable, Hashable {

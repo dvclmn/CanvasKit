@@ -6,8 +6,8 @@
 //
 
 import SwiftUI
-import InteractionPrimitives
-import GeometryPrimitives
+import InteractionKit
+import InteractionKit
 //import BasePrimitives
 
 extension View {

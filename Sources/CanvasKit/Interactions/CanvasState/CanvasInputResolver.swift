@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 2/4/2026.
 //
 
-import GeometryPrimitives
-import InteractionPrimitives
+import InteractionKit
+import InteractionKit
 import SwiftUI
 
 /// Centralises input resolution for `CanvasInteractionState`.

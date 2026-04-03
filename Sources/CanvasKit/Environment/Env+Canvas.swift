@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 25/2/2026.
 //
 
-import InteractionPrimitives
+import InteractionKit
 import SwiftUI
 
 extension EnvironmentValues {
@@ -17,5 +17,4 @@ extension EnvironmentValues {
   @Entry public var canvasAnchor: UnitPoint = .center
   @Entry public var canvasBackground: Color = Color(white: 0.04)
   @Entry public var activeTool: (any CanvasTool)?
-
 }

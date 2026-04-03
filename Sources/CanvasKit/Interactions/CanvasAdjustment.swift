@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 17/3/2026.
 //
 
-import GeometryPrimitives
-import InteractionPrimitives
+import InteractionKit
+import InteractionKit
 import SwiftUI
 
 /// These are **canvas-level state mutations** only — things that

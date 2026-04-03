@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import InteractionPrimitives
+import InteractionKit
 
 /// Context used by tools to resolve a pointer style for the current interaction state.
 public struct InteractionContext: Sendable {
