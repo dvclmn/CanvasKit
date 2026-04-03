@@ -6,7 +6,6 @@
 //
 
 import InteractionKit
-import InteractionKit
 import SwiftUI
 
 /// `CanvasInteractionState`'s state is owned outside of CanvasKit,
@@ -19,8 +18,10 @@ public final class CanvasInteractionState {
   public var transform: TransformState = .identity
   public var pointer: PointerState = .initial
 
-  /// Values synced to here from the Environment
+  /// Synced here from `CanvasCoreView`
   private var artworkFrame: Rect<ScreenSpace>?
+
+  /// Values synced here from the Environment
   private var zoomRange: ClosedRange<Double>?
   private var modifiers: Modifiers = []
   private var activeTool: (any CanvasTool)?
@@ -131,13 +132,13 @@ extension CanvasInteractionState {
     )
   }
 
-  /// Exposed for event modifiers that need to convert coordinates.
-  package var coordinateSpaceMapper: CoordinateSpaceMapper? {
-    guard let artworkFrame, let zoomRange else { return nil }
-    return .init(
-      artworkFrame: artworkFrame,
-      zoom: transform.scale,
-      zoomRange: zoomRange,
-    )
-  }
+//  /// Exposed for event modifiers that need to convert coordinates.
+//  package var coordinateSpaceMapper: CoordinateSpaceMapper? {
+//    guard let artworkFrame, let zoomRange else { return nil }
+//    return .init(
+//      artworkFrame: artworkFrame,
+//      zoom: transform.scale,
+//      zoomRange: zoomRange,
+//    )
+//  }
 }

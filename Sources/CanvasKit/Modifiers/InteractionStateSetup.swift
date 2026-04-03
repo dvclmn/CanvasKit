@@ -32,8 +32,9 @@ struct InteractionStateSetupModifier: ViewModifier {
         toolHandler.updateModifiers(modifierKeys)
       }
 
-      // MARK: -
       .environment(\.activeTool, toolHandler.effectiveTool)
+    
+//      .environment(\.coordinateSpaceMapper, interactionState.coordinateSpaceMapper)
 
       //      .syncEnvironment(\.activeTool) { interactionState.activeTool = $0 }
       //      .syncEnvironment(\.activeTool, to: $interactionState.activeTool)

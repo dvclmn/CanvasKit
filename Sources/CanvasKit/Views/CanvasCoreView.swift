@@ -6,7 +6,6 @@
 //
 
 import InteractionKit
-import InteractionKit
 import SwiftUI
 
 struct CanvasCoreView<Content: View>: View {
@@ -31,10 +30,29 @@ struct CanvasCoreView<Content: View>: View {
       .allowsHitTesting(false)
       .ignoresSafeArea(edges: .top)
       .coordinateSpace(.named(ScreenSpace.screen))
+
       .overlayPreferenceValue(ArtworkBoundsAnchorKey.self) { anchor in
         ArtworkGeometry(anchor)
       }
 
+      /// ```
+      /// .onGeometryChange(for: Bool.self) { proxy in
+      ///     let frame = proxy.frame(in: .scrollView)
+      ///     let bounds = proxy.bounds(of: .scrollView) ?? .zero
+      ///     let intersection = frame.intersection(
+      ///         CGRect(origin: .zero, size: bounds.size))
+      ///     let visibleHeight = intersection.size.height
+      ///     return (visibleHeight / frame.size.height) > 0.75
+      /// } action: { isVisible in
+      ///     video.updateAutoplayingState(
+      ///         isVisible: isVisible)
+      /// }
+      /// ```
+
+      //      .onGeometryChange(for: Rect<ScreenSpace>.self) { proxy in
+      //        let frame = anchor.map { proxy[$0] }
+      //      } action: { newValue in
+      //      }
       .modifier(InteractionModifiers())
   }
 }
@@ -46,10 +64,12 @@ extension CanvasCoreView {
       let frame = anchor.map { proxy[$0] }
       Color.clear
         .allowsHitTesting(false)
-        .task(id: frame) {
-          let frameRect = frame.map { Rect<ScreenSpace>(fromRect: $0) }
-          interactionState.updateArtworkFrame(to: frameRect)
-        }
+        //      let frameRect =
+        .environment(\.artworkFrameInViewport, frame.map { Rect<ScreenSpace>(fromRect: $0) })
+      //        .task(id: frame) {
+      //          let frameRect = frame.map { Rect<ScreenSpace>(fromRect: $0) }
+      //          interactionState.updateArtworkFrame(to: frameRect)
+      //        }
     }
   }
 }
