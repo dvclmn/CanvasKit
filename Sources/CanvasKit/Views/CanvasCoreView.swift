@@ -12,14 +12,14 @@ import SwiftUI
 struct CanvasCoreView<Content: View>: View {
   @Environment(CanvasInteractionState.self) private var interactionState
   @Environment(\.canvasBackground) private var canvasBackground
-  //  @State private var artworkFrame: Rect<ScreenSpace>?
 
+  let canvasSize: Size<CanvasSpace>
   @ViewBuilder var content: () -> Content
 
   var body: some View {
     Color.clear
       .overlay {
-        CanvasArtwork(content: content)
+        CanvasArtwork(canvasSize: canvasSize, content: content)
         // TODO: Need to bring back the GridFont modifier.
         // Maybe expose an additional Viewbuilder closure for
         // targeting the Artwork itself?

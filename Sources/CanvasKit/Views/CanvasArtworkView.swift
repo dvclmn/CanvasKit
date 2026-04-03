@@ -14,9 +14,9 @@ struct CanvasArtwork<Content: View>: View {
   @Environment(CanvasInteractionState.self) private var interactionState
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.zoomClamped) private var zoomClamped
-  @Environment(\.canvasSize) private var canvasSize
   @Environment(\.activeTool) private var activeTool
 
+  let canvasSize: Size<CanvasSpace>
   @ViewBuilder var content: () -> Content
 
   var body: some View {
@@ -33,8 +33,8 @@ struct CanvasArtwork<Content: View>: View {
       }
 
       .frame(
-        width: canvasSize?.width,
-        height: canvasSize?.height,
+        width: canvasSize.width,
+        height: canvasSize.height,
       )
       .coordinateSpace(.named(CanvasSpace.canvas))
       .anchorPreference(key: ArtworkBoundsAnchorKey.self, value: .bounds) { $0 }

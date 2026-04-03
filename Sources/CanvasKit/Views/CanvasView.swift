@@ -16,28 +16,18 @@ public struct CanvasView<Content: View>: View, ZoomRangeProvidable {
   let content: () -> Content
 
   public init(
-    size: Size<CanvasSpace>,
+    size: CGSize,  // Canvas size
     toolHandler: Binding<ToolHandler> = .constant(.init()),
     @ViewBuilder content: @escaping () -> Content,
   ) {
-    self.canvasSize = size
+    self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
     self._toolHandler = toolHandler
     self.content = content
   }
 
-  public init(
-    size: CGSize,  // Canvas size
-    @ViewBuilder content: @escaping () -> Content,
-  ) {
-    self.init(size: .init(fromCGSize: size), content: content)
-  }
-
   public var body: some View {
 
-    CanvasCoreView(content: content)
-
-      /// Canvas size is passed in via the initialiser. Adding it to the Env here.
-      .environment(\.canvasSize, canvasSize)
+    CanvasCoreView(canvasSize: canvasSize, content: content)
 
       .modifier(
         InteractionStateSetupModifier(
