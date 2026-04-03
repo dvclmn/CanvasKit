@@ -13,7 +13,6 @@ import SwiftUI
 /// hierarchy as is needed for access.
 struct InteractionStateSetupModifier: ViewModifier {
   @Environment(\.modifierKeys) private var modifierKeys
-  //  @Environment(\.zoomRange) private var zoomRange
   @State private var interactionState: CanvasInteractionState = .init()
 
   @Binding var toolHandler: ToolHandler
@@ -45,9 +44,9 @@ struct InteractionStateSetupModifier: ViewModifier {
       }
 
       /// Provides interaction state with updated zoom range
-      //      .task(id: zoomRange) {
-      //        interactionState.zoomRange = zoomRange
-      //      }
-      .syncEnvironment(\.zoomRange, to: $interactionState.zoomRange)
+      .syncEnvironment(\.zoomRange) { interactionState.updateZoomRange(to: $0) }
+      
+//      .syncEnvironment(\.activeTool, using: \.?.kind, apply: <#T##(Value) -> Void#>)
+//      .syncEnvironment(\.activeTool, using: \.kind, to: $interactionState.activeTool)
   }
 }

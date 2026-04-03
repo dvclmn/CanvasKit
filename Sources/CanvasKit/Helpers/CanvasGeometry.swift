@@ -5,10 +5,10 @@
 //  Created by Dave Coleman on 9/1/2026.
 //
 
-import CoreGraphics
-import SwiftUI
-import InteractionPrimitives
-import GeometryPrimitives
+//import CoreGraphics
+//import SwiftUI
+//import InteractionPrimitives
+//import GeometryPrimitives
 
 //public struct CanvasGeometry: Sendable, Equatable {
 //  public var viewportRect: Rect<ScreenSpace>

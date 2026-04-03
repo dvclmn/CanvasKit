@@ -16,20 +16,20 @@ public struct CanvasView<Content: View>: View, ZoomRangeProvidable {
   let content: () -> Content
 
   public init(
-    canvasSize: Size<CanvasSpace>,
+    size: Size<CanvasSpace>,
     toolHandler: Binding<ToolHandler> = .constant(.init()),
     @ViewBuilder content: @escaping () -> Content,
   ) {
-    self.canvasSize = canvasSize
+    self.canvasSize = size
     self._toolHandler = toolHandler
     self.content = content
   }
 
   public init(
-    canvasSize: CGSize,
+    size: CGSize,  // Canvas size
     @ViewBuilder content: @escaping () -> Content,
   ) {
-    self.init(canvasSize: .init(fromCGSize: canvasSize), content: content)
+    self.init(size: .init(fromCGSize: size), content: content)
   }
 
   public var body: some View {
@@ -48,15 +48,10 @@ public struct CanvasView<Content: View>: View, ZoomRangeProvidable {
   }
 }
 
-//extension CanvasView {
-//
-//}
-
 public protocol ZoomRangeProvidable {}
 
 extension View where Self: ZoomRangeProvidable {
   public func zoomRange(_ range: ClosedRange<Double>) -> some View {
     self.environment(\.zoomRange, range)
-    //    self.modifier(ExampleModifier())
   }
 }

@@ -20,10 +20,10 @@ public final class CanvasInteractionState {
   public var pointer: PointerState = .initial
 
   /// Values synced to here from the Environment
-  public var artworkFrame: Rect<ScreenSpace>?
-  public var zoomRange: ClosedRange<Double>?
-  public var modifiers: Modifiers = []
-  public var activeTool: (any CanvasTool)?
+  private var artworkFrame: Rect<ScreenSpace>?
+  private var zoomRange: ClosedRange<Double>?
+  private var modifiers: Modifiers = []
+  private var activeTool: (any CanvasTool)?
 
   /// The most recent domain action produced by a tool resolution.
   /// Consuming apps can observe this to react to tool-specific events
@@ -92,6 +92,9 @@ extension CanvasInteractionState {
   }
   public func updateModifiers(to modifiers: Modifiers) {
     self.modifiers = modifiers
+  }
+  public func updateZoomRange(to range: ClosedRange<Double>?) {
+    self.zoomRange = range
   }
 
 }

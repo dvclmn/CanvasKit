@@ -83,7 +83,8 @@ struct InteractionModifiers: ViewModifier {
 
       /// Make sure `CanvasInteractionState` gets modifier key updates
       //      .task(id: modifierKeys) { interactionState.modifiers = modifierKeys }
-      .syncModifiers { interactionState.updateModifiers(to: $0) }
+      .syncEnvironment(\.modifierKeys) { interactionState.updateModifiers(to: $0) }
+      .syncEnvironment(\.activeTool, using: \.?.kind) { interactionState.updateTool(to: $0) }
     //      .syncModifiers(to: $interactionState.modifiers)
   }
 }
