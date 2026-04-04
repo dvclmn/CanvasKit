@@ -19,7 +19,7 @@ public final class CanvasInteractionState {
   public var pointer: PointerState = .initial
 
   /// Synced here from `CanvasCoreView`
-  private var artworkFrame: Rect<ScreenSpace>?
+//  private var artworkFrame: Rect<ScreenSpace>?
 
   /// Values synced here from the Environment
   private var zoomRange: ClosedRange<Double>?
@@ -88,9 +88,9 @@ extension CanvasInteractionState {
   public func updateTool(to tool: (any CanvasTool)?) {
     self.activeTool = tool
   }
-  public func updateArtworkFrame(to frame: Rect<ScreenSpace>?) {
-    self.artworkFrame = frame
-  }
+//  public func updateArtworkFrame(to frame: Rect<ScreenSpace>?) {
+//    self.artworkFrame = frame
+//  }
   public func updateModifiers(to modifiers: Modifiers) {
     self.modifiers = modifiers
   }
@@ -117,11 +117,15 @@ extension CanvasInteractionState {
 
 extension CanvasInteractionState {
 
-  public func snapshot(in canvasSize: Size<CanvasSpace>) -> CanvasSnapshot? {
-    guard let hover = pointer.hover,
-      let hoverMapped = coordinateSpaceMapper?.canvasPoint(from: hover),
-      let isInside = coordinateSpaceMapper?.isInsideCanvas(hoverMapped, in: canvasSize)
-    else { return nil }
+  public func snapshot(
+    in canvasSize: Size<CanvasSpace>,
+    artworkFrame: Rect<CanvasSpace>,
+//    mapper: CoordinateSpaceMapper,
+  ) -> CanvasSnapshot? {
+    
+    guard let hover = pointer.hover else { return nil }
+    let hoverMapped = mapper.canvasPoint(from: hover)
+    let isInside = mapper.isInsideCanvas(hoverMapped, in: canvasSize)
 
     return CanvasSnapshot(
       pointerLocation: hoverMapped,
@@ -132,13 +136,13 @@ extension CanvasInteractionState {
     )
   }
 
-//  /// Exposed for event modifiers that need to convert coordinates.
-//  package var coordinateSpaceMapper: CoordinateSpaceMapper? {
-//    guard let artworkFrame, let zoomRange else { return nil }
-//    return .init(
-//      artworkFrame: artworkFrame,
-//      zoom: transform.scale,
-//      zoomRange: zoomRange,
-//    )
-//  }
+  //  /// Exposed for event modifiers that need to convert coordinates.
+  //  package var coordinateSpaceMapper: CoordinateSpaceMapper? {
+  //    guard let artworkFrame, let zoomRange else { return nil }
+  //    return .init(
+  //      artworkFrame: artworkFrame,
+  //      zoom: transform.scale,
+  //      zoomRange: zoomRange,
+  //    )
+  //  }
 }

@@ -22,9 +22,13 @@ struct InteractionStateSetupModifier: ViewModifier {
     content
       .environment(interactionState)
 
-      .setSnapshotValues(
-        interactionState.snapshot(in: canvasSize)
-      )
+//      .setSnapshotValues(
+//        interactionState.snapshot(in: canvasSize)
+//      )
+      .environment(\.zoomLevel, interactionState.transform.scale)
+      .environment(\.panOffset, interactionState.transform.translation.cgSize)
+      .environment(\.rotation, interactionState.transform.rotation)
+          .environment(\.pointerLocation, snapshot?.pointerLocation?.cgPoint)
 
       .environment(\.pointerStyle, interactionState.pointerStyle)
 
@@ -49,5 +53,24 @@ struct InteractionStateSetupModifier: ViewModifier {
       
 //      .syncEnvironment(\.activeTool, using: \.?.kind, apply: <#T##(Value) -> Void#>)
 //      .syncEnvironment(\.activeTool, using: \.kind, to: $interactionState.activeTool)
+  }
+}
+
+extension InteractionStateSetupModifier {
+  private func snapshot(
+    in canvasSize: Size<CanvasSpace>,
+    //    mapper: CoordinateSpaceMapper,
+  ) -> CanvasSnapshot? {
+    guard let hover = pointer.hover else { return nil }
+    let hoverMapped = mapper.canvasPoint(from: hover)
+    let isInside = mapper.isInsideCanvas(hoverMapped, in: canvasSize)
+    
+    return CanvasSnapshot(
+      pointerLocation: hoverMapped,
+      isPointerInsideCanvas: isInside,
+      zoom: transform.scale,
+      pan: transform.translation.cgSize,
+      rotation: transform.rotation,
+    )
   }
 }

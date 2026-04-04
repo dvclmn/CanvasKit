@@ -53,6 +53,7 @@ struct CanvasCoreView<Content: View>: View {
       //        let frame = anchor.map { proxy[$0] }
       //      } action: { newValue in
       //      }
+    
       .modifier(InteractionModifiers())
   }
 }

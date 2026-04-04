@@ -16,7 +16,7 @@ struct InteractionModifiers: ViewModifier {
   func body(content: Content) -> some View {
     @Bindable var interactionState = interactionState
 
-    // TODO: Need to determine whether a CanvasTool might
+    // TODO: Need to determine whether a CanvasTool might:
     // a) Need to be given scoped-down interaction capabilities
     // (aka *can't* use swipe, or pinch)
     //
