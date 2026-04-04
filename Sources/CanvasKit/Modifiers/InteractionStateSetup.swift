@@ -13,6 +13,7 @@ import SwiftUI
 /// hierarchy as is needed for access.
 struct InteractionStateSetupModifier: ViewModifier {
   @Environment(\.modifierKeys) private var modifierKeys
+  @Environment(\.zoomRange) private var zoomRange
   @State private var interactionState: CanvasInteractionState = .init()
 
   @Binding var toolHandler: ToolHandler
@@ -23,10 +24,7 @@ struct InteractionStateSetupModifier: ViewModifier {
       .environment(interactionState)
 
       .setSnapshotValues(
-        interactionState.snapshot(
-          artworkFrame: <#T##Rect<ScreenSpace>#>,
-          zoomClamped: <#T##Double#>
-        )
+        interactionState.snapshot(zoomRange: zoomRange)
       )
       
 //      .environment(\.zoomLevel, interactionState.transform.scale)

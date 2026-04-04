@@ -12,8 +12,6 @@ struct CanvasCoreView<Content: View>: View {
   @Environment(CanvasInteractionState.self) private var interactionState
   @Environment(\.canvasBackground) private var canvasBackground
 
-  @State private var artworkFrame: Rect<ScreenSpace>?
-
   let canvasSize: Size<CanvasSpace>
   @ViewBuilder var content: () -> Content
 
@@ -32,22 +30,21 @@ struct CanvasCoreView<Content: View>: View {
       .allowsHitTesting(false)
       .ignoresSafeArea(edges: .top)
 
-    /// View now covers full width/height provided to it,
-    /// so is considered `ScreenSpace`
+      /// View now covers full width/height provided to it,
+      /// so is considered `ScreenSpace`
       .coordinateSpace(.named(ScreenSpace.screen))
-    
-    /// This resolves the `CanvasSpace`
+
+      /// This resolves the `CanvasSpace`
       .overlayPreferenceValue(ArtworkBoundsAnchorKey.self) { anchor in
         Color.clear
           .allowsHitTesting(false)
           .onGeometryChange(for: CGRect?.self) { proxy in
             anchor.map { proxy[$0] }
           } action: { frame in
-            self.artworkFrame = frame.map { Rect<ScreenSpace>(fromRect: $0) }
+            let artworkFrame = frame.map { Rect<ScreenSpace>(fromRect: $0) }
+            interactionState.updateArtworkFrame(to: artworkFrame)
           }
       }
-
-      .environment(\.artworkFrameInViewport, artworkFrame)
 
       /// Holds user input modifiers, `onSwipeGesture`, `onTapGesture`, etc
       .gestureModifiers()

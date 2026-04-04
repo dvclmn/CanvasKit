@@ -16,17 +16,18 @@ import SwiftUI
 ///
 /// Note: `artworkFrame` is not handled in snapshot.
 /// It's added to the Env in `CanvasCoreView`
-public struct CanvasSnapshot: Sendable {
-  public let pointerLocation: Point<CanvasSpace>?
-  public let pointerDrag: Rect<CanvasSpace>?
-  public let isPointerInsideCanvas: Bool
-
+struct CanvasSnapshot: Sendable {
+  let pointerLocation: Point<CanvasSpace>?
+  let pointerDrag: Rect<CanvasSpace>?
+  let isPointerInsideCanvas: Bool
+  let artworkFrame: Rect<ScreenSpace>?
   /// There is a zoom clamped property already in the Env,
   /// so this doesn't need to come in clamped.
-  public let zoom: Double
-  public let pan: Size<ScreenSpace>
-  public let rotation: Angle
-  
+  let zoom: Double
+  let pan: Size<ScreenSpace>
+  let rotation: Angle
+
+  let phase: InteractionPhase
 }
 
 struct CanvasSnapshotModifier: ViewModifier {
@@ -36,14 +37,16 @@ struct CanvasSnapshotModifier: ViewModifier {
     content
       .environment(\.pointerLocation, snapshot?.pointerLocation)
       .environment(\.pointerDrag, snapshot?.pointerDrag)
+      .environment(\.artworkFrameInViewport, snapshot?.artworkFrame)
       .environment(\.zoomLevel, snapshot?.zoom ?? 1.0)
       .environment(\.panOffset, snapshot?.pan ?? .zero)
       .environment(\.rotation, snapshot?.rotation ?? .zero)
+      .environment(\.interactionPhase, snapshot?.phase ?? .none)
   }
 }
 
 extension View {
-  public func setSnapshotValues(_ snapshot: CanvasSnapshot?) -> some View {
+  func setSnapshotValues(_ snapshot: CanvasSnapshot?) -> some View {
     self.modifier(CanvasSnapshotModifier(snapshot: snapshot))
   }
 }

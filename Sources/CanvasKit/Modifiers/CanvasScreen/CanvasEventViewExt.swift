@@ -23,9 +23,10 @@ extension View {
   ///     showPopover(at: point)
   ///   }
   /// ```
-  public func onCanvasTap<Space: CanvasCoordinateSpace>(
-    in space: Space.Type = CanvasSpace.self,
-    perform action: @escaping (Point<Space>) -> Void
+  public func onCanvasTap(
+//  public func onCanvasTap<Space: CanvasCoordinateSpace>(
+//    in space: Space.Type = CanvasSpace.self,
+    perform action: @escaping (Point<CanvasSpace>) -> Void
   ) -> some View {
     self.modifier(OnCanvasTapModifier<Space>(action: action))
   }
