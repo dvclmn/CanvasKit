@@ -6,7 +6,6 @@
 //
 
 import InteractionKit
-import InteractionKit
 import SwiftUI
 
 struct CanvasArtwork<Content: View>: View {
@@ -15,17 +14,21 @@ struct CanvasArtwork<Content: View>: View {
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.zoomClamped) private var zoomClamped
   @Environment(\.activeTool) private var activeTool
+  @Environment(\.canvasArtworkOutline) private var outline
 
   let canvasSize: Size<CanvasSpace>
+
   @ViewBuilder var content: () -> Content
 
   var body: some View {
-    /// Note: canvas background, drawing group etc are handled in `CanvasCoreView`
+
     CanvasDecomposed()
+
+      /// Visual indication of Canvas artwork bounds
       .overlay {
         RoundedRectangle(cornerRadius: cornerRounding)
           .fill(.clear)
-          .stroke(.white.opacity(0.07), lineWidth: outlineThickness)
+          .stroke(outline.colour, lineWidth: outlineThickness)
           .allowsHitTesting(false)
       }
       .animation(.easeInOut(duration: 0.15)) { content in
@@ -36,7 +39,11 @@ struct CanvasArtwork<Content: View>: View {
         width: canvasSize.width,
         height: canvasSize.height,
       )
+
+      /// `CanvasSpace` namespace declared *before* pan/zoom applied
       .coordinateSpace(.named(CanvasSpace.canvas))
+
+      /// Artwork bounds captured
       .anchorPreference(key: ArtworkBoundsAnchorKey.self, value: .bounds) { $0 }
 
       /// Important: Keep the order 1. Scale, 2. Rotate, 3. Offset
@@ -48,6 +55,16 @@ struct CanvasArtwork<Content: View>: View {
 }
 
 extension CanvasArtwork {
+
+  private var cornerRounding: CGFloat {
+    let base = outline.rounding
+    return base.removingZoom(zoomClamped)
+  }
+
+  private var outlineThickness: CGFloat {
+    let base = Double(outline.lineWidth)
+    return base.removingZoom(zoomClamped, across: zoomRange)
+  }
 
   /// This allows Views to specifcy whether they should be clipped
   /// by the Canvas bounds or not
@@ -81,13 +98,4 @@ extension CanvasArtwork {
 
   private var isCanvasReady: Bool { zoomRange != nil && activeTool != nil }
 
-  private var cornerRounding: CGFloat {
-    let base = 5.0
-    return base.removingZoom(zoomClamped)
-  }
-
-  private var outlineThickness: CGFloat {
-    let base = 1.0
-    return base.removingZoom(zoomClamped, across: zoomRange)
-  }
 }

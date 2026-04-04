@@ -9,7 +9,7 @@ import InteractionKit
 import InteractionKit
 import SwiftUI
 
-public struct CanvasView<Content: View>: View, ZoomRangeProvidable {
+public struct CanvasView<Content: View>: View, CanvasAddressable {
 
   let canvasSize: Size<CanvasSpace>
   @Binding var toolHandler: ToolHandler
@@ -35,13 +35,5 @@ public struct CanvasView<Content: View>: View, ZoomRangeProvidable {
           canvasSize: canvasSize,
         )
       )
-  }
-}
-
-public protocol ZoomRangeProvidable {}
-
-extension View where Self: ZoomRangeProvidable {
-  public func zoomRange(_ range: ClosedRange<Double>) -> some View {
-    self.environment(\.zoomRange, range)
   }
 }

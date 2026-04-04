@@ -12,6 +12,8 @@ struct CanvasCoreView<Content: View>: View {
   @Environment(CanvasInteractionState.self) private var interactionState
   @Environment(\.canvasBackground) private var canvasBackground
 
+  @State private var artworkFrame: Rect<ScreenSpace>?
+
   let canvasSize: Size<CanvasSpace>
   @ViewBuilder var content: () -> Content
 
@@ -29,48 +31,25 @@ struct CanvasCoreView<Content: View>: View {
       .drawingGroup(opaque: true)
       .allowsHitTesting(false)
       .ignoresSafeArea(edges: .top)
-      .coordinateSpace(.named(ScreenSpace.screen))
 
+    /// View now covers full width/height provided to it,
+    /// so is considered `ScreenSpace`
+      .coordinateSpace(.named(ScreenSpace.screen))
+    
+    /// This resolves the `CanvasSpace`
       .overlayPreferenceValue(ArtworkBoundsAnchorKey.self) { anchor in
-        ArtworkGeometry(anchor)
+        Color.clear
+          .allowsHitTesting(false)
+          .onGeometryChange(for: CGRect?.self) { proxy in
+            anchor.map { proxy[$0] }
+          } action: { frame in
+            self.artworkFrame = frame.map { Rect<ScreenSpace>(fromRect: $0) }
+          }
       }
 
-      /// ```
-      /// .onGeometryChange(for: Bool.self) { proxy in
-      ///     let frame = proxy.frame(in: .scrollView)
-      ///     let bounds = proxy.bounds(of: .scrollView) ?? .zero
-      ///     let intersection = frame.intersection(
-      ///         CGRect(origin: .zero, size: bounds.size))
-      ///     let visibleHeight = intersection.size.height
-      ///     return (visibleHeight / frame.size.height) > 0.75
-      /// } action: { isVisible in
-      ///     video.updateAutoplayingState(
-      ///         isVisible: isVisible)
-      /// }
-      /// ```
+      .environment(\.artworkFrameInViewport, artworkFrame)
 
-      //      .onGeometryChange(for: Rect<ScreenSpace>.self) { proxy in
-      //        let frame = anchor.map { proxy[$0] }
-      //      } action: { newValue in
-      //      }
-    
-      .modifier(InteractionModifiers())
-  }
-}
-
-extension CanvasCoreView {
-  @ViewBuilder
-  private func ArtworkGeometry(_ anchor: Anchor<CGRect>?) -> some View {
-    GeometryReader { proxy in
-      let frame = anchor.map { proxy[$0] }
-      Color.clear
-        .allowsHitTesting(false)
-        //      let frameRect =
-        .environment(\.artworkFrameInViewport, frame.map { Rect<ScreenSpace>(fromRect: $0) })
-      //        .task(id: frame) {
-      //          let frameRect = frame.map { Rect<ScreenSpace>(fromRect: $0) }
-      //          interactionState.updateArtworkFrame(to: frameRect)
-      //        }
-    }
+      /// Holds user input modifiers, `onSwipeGesture`, `onTapGesture`, etc
+      .gestureModifiers()
   }
 }

@@ -32,7 +32,6 @@ struct InteractionModifiers: ViewModifier {
             location: event.location,
           ),
           phase: event.phase,
-          //          modifiers: event.modifiers
         )
       }
 
@@ -84,5 +83,11 @@ struct InteractionModifiers: ViewModifier {
       .syncEnvironment(\.modifierKeys) { interactionState.updateModifiers(to: $0) }
       .syncEnvironment(\.activeTool, using: \.?.kind) { interactionState.updateTool(to: $0) }
     //      .syncModifiers(to: $interactionState.modifiers)
+  }
+}
+
+extension View {
+  public func gestureModifiers() -> some View {
+    self.modifier(InteractionModifiers())
   }
 }
