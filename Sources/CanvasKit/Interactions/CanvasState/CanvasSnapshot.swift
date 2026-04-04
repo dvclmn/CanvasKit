@@ -17,6 +17,7 @@ import SwiftUI
 /// Note: `artworkFrame` is not handled in snapshot.
 /// It's added to the Env in `CanvasCoreView`
 struct CanvasSnapshot: Sendable {
+  let pointerTap: Point<CanvasSpace>?
   let pointerLocation: Point<CanvasSpace>?
   let pointerDrag: Rect<CanvasSpace>?
   let isPointerInsideCanvas: Bool
@@ -35,6 +36,7 @@ struct CanvasSnapshotModifier: ViewModifier {
   let snapshot: CanvasSnapshot?
   func body(content: Content) -> some View {
     content
+      .environment(\.pointerTap, snapshot?.pointerTap)
       .environment(\.pointerLocation, snapshot?.pointerLocation)
       .environment(\.pointerDrag, snapshot?.pointerDrag)
       .environment(\.artworkFrameInViewport, snapshot?.artworkFrame)

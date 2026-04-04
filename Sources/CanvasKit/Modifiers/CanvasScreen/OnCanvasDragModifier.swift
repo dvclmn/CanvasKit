@@ -21,7 +21,7 @@ struct OnCanvasDragModifier: ViewModifier {
 
   func body(content: Content) -> some View {
     content
-      .onChange(of: pointerDrag ?? .zero) {
+      .onChange(of: pointerDrag) {
         guard let pointerDrag else { return }
 
         let event = CanvasDragEvent<CanvasSpace>(

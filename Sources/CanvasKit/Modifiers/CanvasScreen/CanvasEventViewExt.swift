@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 23/3/2026.
 //
 
-import SwiftUI
 import InteractionKit
+import SwiftUI
 
 extension View {
   // MARK: - Tap
@@ -24,11 +24,11 @@ extension View {
   ///   }
   /// ```
   public func onCanvasTap(
-//  public func onCanvasTap<Space: CanvasCoordinateSpace>(
-//    in space: Space.Type = CanvasSpace.self,
+    //  public func onCanvasTap<Space: CanvasCoordinateSpace>(
+    //    in space: Space.Type = CanvasSpace.self,
     perform action: @escaping (Point<CanvasSpace>) -> Void
   ) -> some View {
-    self.modifier(OnCanvasTapModifier<Space>(action: action))
+    self.modifier(OnCanvasTapModifier(action: action))
   }
 
   // MARK: - Drag
@@ -46,10 +46,11 @@ extension View {
   ///     drawOverlay(at: rect)
   ///   }
   /// ```
-  public func onCanvasDrag<Space: CanvasCoordinateSpace>(
-    in space: Space.Type = CanvasSpace.self,
-    perform action: @escaping (CanvasDragEvent<Space>) -> Void
+  public func onCanvasDrag(
+    //  public func onCanvasDrag<Space: CanvasCoordinateSpace>(
+    //    in space: Space.Type = CanvasSpace.self,
+    perform action: @escaping (CanvasDragEvent<CanvasSpace>) -> Void
   ) -> some View {
-    self.modifier(OnCanvasDragModifier<Space>(action: action))
+    self.modifier(OnCanvasDragModifier(action: action))
   }
 }

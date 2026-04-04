@@ -5,26 +5,22 @@
 //  Created by Dave Coleman on 20/3/2026.
 //
 
-//import BasePrimitives
+import InteractionKit
 import SwiftUI
-import InteractionKit
-import InteractionKit
 
 /// Observes pointer tap events and delivers them in the requested coordinate space.
-struct OnCanvasTapModifier<Space: CanvasCoordinateSpace>: ViewModifier {
-  @Environment(CanvasInteractionState.self) private var interactionState
+struct OnCanvasTapModifier: ViewModifier {
+  @Environment(\.pointerTap) private var pointerTap
 
-  let action: (Point<Space>) -> Void
+  let action: (Point<CanvasSpace>) -> Void
 
   func body(content: Content) -> some View {
     content
-      .onChange(of: interactionState.pointer.tap) { _, newTap in
-        guard
-          let screenPoint = newTap,
-          let mapper = interactionState.coordinateSpaceMapper
-        else { return }
-        action(Space.convert(screenPoint, using: mapper))
+      .onChange(of: pointerTap) {
+        guard let pointerTap else { return }
+
+        action(pointerTap)
       }
+
   }
 }
-

@@ -121,7 +121,8 @@ extension CanvasInteractionState {
 
   func snapshot(zoomRange: ClosedRange<Double>?) -> CanvasSnapshot? {
 
-    guard let hover = pointer.hover,
+    guard let tap = pointer.tap,
+      let hover = pointer.hover,
       let drag = pointer.drag,
       let artworkFrame
     else { return nil }
@@ -134,11 +135,13 @@ extension CanvasInteractionState {
       zoomClamped: zoomClamped,
     )
 
+    let tapMapped = mapper.canvasPoint(from: tap)
     let hoverMapped = mapper.canvasPoint(from: hover)
     let rectMapped = mapper.canvasRect(from: drag)
     let isInside = mapper.isInsideCanvas(hoverMapped)
 
     return CanvasSnapshot(
+      pointerTap: tapMapped,
       pointerLocation: hoverMapped,
       pointerDrag: rectMapped,
       isPointerInsideCanvas: isInside,
@@ -146,6 +149,7 @@ extension CanvasInteractionState {
       zoom: zoomRaw,
       pan: transform.translation,
       rotation: transform.rotation,
+      phase: phase,
     )
   }
 }
