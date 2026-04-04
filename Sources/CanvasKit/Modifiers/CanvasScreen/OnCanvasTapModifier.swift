@@ -27,3 +27,4 @@ struct OnCanvasTapModifier<Space: CanvasCoordinateSpace>: ViewModifier {
       }
   }
 }
+

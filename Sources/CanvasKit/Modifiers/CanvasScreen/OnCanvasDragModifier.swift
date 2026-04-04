@@ -9,11 +9,15 @@ import SwiftUI
 import InteractionKit
 import InteractionKit
 
-/// Observes pointer drag events and delivers the rect in the requested coordinate space.
-struct OnCanvasDragModifier<Space: CanvasCoordinateSpace>: ViewModifier {
+/// Observes pointer drag events and delivers the rect ~~in the requested coordinate space.~~
+///
+/// Decided for now to keep this as `CanvasSpace` only
+struct OnCanvasDragModifier: ViewModifier {
+//struct OnCanvasDragModifier<Space: CanvasCoordinateSpace>: ViewModifier {
   @Environment(CanvasInteractionState.self) private var interactionState
 
-  let action: (CanvasDragEvent<Space>) -> Void
+  let action: (CanvasDragEvent<CanvasSpace>) -> Void
+//  let action: (CanvasDragEvent<Space>) -> Void
 
   func body(content: Content) -> some View {
     content

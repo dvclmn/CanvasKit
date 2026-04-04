@@ -19,10 +19,10 @@ public final class CanvasInteractionState {
   public var pointer: PointerState = .initial
 
   /// Synced here from `CanvasCoreView`
-//  private var artworkFrame: Rect<ScreenSpace>?
+  //  private var artworkFrame: Rect<ScreenSpace>?
 
   /// Values synced here from the Environment
-  private var zoomRange: ClosedRange<Double>?
+  //  private var zoomRange: ClosedRange<Double>?
   private var modifiers: Modifiers = []
   private var activeTool: (any CanvasTool)?
 
@@ -88,9 +88,9 @@ extension CanvasInteractionState {
   public func updateTool(to tool: (any CanvasTool)?) {
     self.activeTool = tool
   }
-//  public func updateArtworkFrame(to frame: Rect<ScreenSpace>?) {
-//    self.artworkFrame = frame
-//  }
+  //  public func updateArtworkFrame(to frame: Rect<ScreenSpace>?) {
+  //    self.artworkFrame = frame
+  //  }
   public func updateModifiers(to modifiers: Modifiers) {
     self.modifiers = modifiers
   }
@@ -100,10 +100,12 @@ extension CanvasInteractionState {
 
 }
 extension CanvasInteractionState {
+
   private func executeAdjustment(_ adjustment: CanvasAdjustment) {
     switch adjustment {
       case .updateTranslation(let size): self.transform.translation = size
-      case .updateScale(let scale): self.transform.scale = scale.clampedIfNeeded(to: zoomRange)
+      case .updateScale(let scale): self.transform.scale = scale
+      //      case .updateScale(let scale): self.transform.scale = scale.clampedIfNeeded(to: zoomRange)
       case .updateRotation(let angle): self.transform.rotation = angle
       case .updatePointerDrag(let rect): self.pointer.drag = rect
       case .updatePointerTap(let point): self.pointer.tap = point
@@ -118,22 +120,43 @@ extension CanvasInteractionState {
 extension CanvasInteractionState {
 
   public func snapshot(
-    in canvasSize: Size<CanvasSpace>,
-    artworkFrame: Rect<CanvasSpace>,
-//    mapper: CoordinateSpaceMapper,
+    //    in canvasSize: Size<CanvasSpace>,
+    artworkFrame: Rect<ScreenSpace>,
+    zoomRange: ClosedRange<Double>?,
+    //    zoomClamped: Double,
+    //    mapper: CoordinateSpaceMapper,
   ) -> CanvasSnapshot? {
-    
-    guard let hover = pointer.hover else { return nil }
+
+    let zoomRaw = transform.scale
+    let zoomClamped = zoomRaw.clampedIfNeeded(to: zoomRange)
+
+    let mapper = CoordinateSpaceMapper(
+      artworkFrame: artworkFrame,
+      zoomClamped: zoomClamped,
+    )
+    guard let hover = pointer.hover,
+      let drag = pointer.drag
+    else { return nil }
+
     let hoverMapped = mapper.canvasPoint(from: hover)
-    let isInside = mapper.isInsideCanvas(hoverMapped, in: canvasSize)
+    let rectMapped = mapper.canvasRect(from: drag)
+    let isInside = mapper.isInsideCanvas(hoverMapped)
 
     return CanvasSnapshot(
       pointerLocation: hoverMapped,
+      pointerDrag: rectMapped,
       isPointerInsideCanvas: isInside,
-      zoom: transform.scale,
-      pan: transform.translation.cgSize,
+      zoom: zoomRaw,
+      pan: transform.translation,
       rotation: transform.rotation,
     )
+    //    return CanvasSnapshot(
+    //      pointerLocation: hoverMapped,
+    //      isPointerInsideCanvas: isInside,
+    //      zoom: transform.scale,
+    //      pan: transform.translation.cgSize,
+    //      rotation: transform.rotation,
+    //    )
   }
 
   //  /// Exposed for event modifiers that need to convert coordinates.
