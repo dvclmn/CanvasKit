@@ -14,7 +14,7 @@ struct CanvasArtwork<Content: View>: View {
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.zoomClamped) private var zoomClamped
   @Environment(\.activeTool) private var activeTool
-  @Environment(\.canvasArtworkOutline) private var outline
+//  @Environment(\.canvasArtworkOutline) private var outline
 
   let canvasSize: Size<CanvasSpace>
 
@@ -25,6 +25,7 @@ struct CanvasArtwork<Content: View>: View {
     CanvasDecomposed()
 
       /// Visual indication of Canvas artwork bounds
+      
 //      .overlay {
 //        RoundedRectangle(cornerRadius: cornerRounding)
 //          .fill(.clear)
@@ -56,15 +57,15 @@ struct CanvasArtwork<Content: View>: View {
 
 extension CanvasArtwork {
 
-  private var cornerRounding: CGFloat {
-    let base = outline.rounding
-    return base.removingZoom(zoomClamped)
-  }
-
-  private var outlineThickness: CGFloat {
-    let base = Double(outline.lineWidth)
-    return base.removingZoom(zoomClamped, across: zoomRange)
-  }
+//  private var cornerRounding: CGFloat {
+//    let base = outline.rounding
+//    return base.removingZoom(zoomClamped)
+//  }
+//
+//  private var outlineThickness: CGFloat {
+//    let base = Double(outline.lineWidth)
+//    return base.removingZoom(zoomClamped, across: zoomRange)
+//  }
 
   /// This allows Views to specifcy whether they should be clipped
   /// by the Canvas bounds or not
