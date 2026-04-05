@@ -7,6 +7,7 @@
 
 import InteractionKit
 import SwiftUI
+import BasePrimitives
 
 /// `CanvasInteractionState`'s state is owned outside of CanvasKit,
 /// by the project *using* CanvasKit. E.g. in the case of DrawString,

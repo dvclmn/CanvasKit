@@ -25,12 +25,12 @@ struct CanvasArtwork<Content: View>: View {
     CanvasDecomposed()
 
       /// Visual indication of Canvas artwork bounds
-      .overlay {
-        RoundedRectangle(cornerRadius: cornerRounding)
-          .fill(.clear)
-          .stroke(outline.colour, lineWidth: outlineThickness)
-          .allowsHitTesting(false)
-      }
+//      .overlay {
+//        RoundedRectangle(cornerRadius: cornerRounding)
+//          .fill(.clear)
+//          .stroke(outline.colour, lineWidth: outlineThickness)
+//          .allowsHitTesting(false)
+//      }
       .animation(.easeInOut(duration: 0.15)) { content in
         content.opacity(isCanvasReady ? 1.0 : 0.0)
       }

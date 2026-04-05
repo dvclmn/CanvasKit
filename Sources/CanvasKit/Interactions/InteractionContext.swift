@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import BasePrimitives
 import InteractionKit
 
 /// Context used by tools to resolve a pointer style for the current interaction state.

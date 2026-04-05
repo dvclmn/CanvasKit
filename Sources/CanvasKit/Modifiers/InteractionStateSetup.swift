@@ -7,6 +7,7 @@
 
 import InteractionKit
 import SwiftUI
+import BasePrimitives
 
 /// Bundles up the necessary parts for callers to initialise state
 /// outside of CanvasView. This should be placed as high up the

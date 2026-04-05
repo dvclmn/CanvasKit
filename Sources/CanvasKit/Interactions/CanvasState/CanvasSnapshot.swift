@@ -41,7 +41,7 @@ struct CanvasSnapshotModifier: ViewModifier {
       .environment(\.pointerDrag, snapshot?.pointerDrag)
       .environment(\.artworkFrameInViewport, snapshot?.artworkFrame)
       .environment(\.zoomLevel, snapshot?.zoom ?? 1.0)
-      .environment(\.panOffset, snapshot?.pan ?? .zero)
+      .environment(\.panOffset, snapshot?.pan.cgSize ?? .zero)
       .environment(\.rotation, snapshot?.rotation ?? .zero)
       .environment(\.interactionPhase, snapshot?.phase ?? .none)
   }

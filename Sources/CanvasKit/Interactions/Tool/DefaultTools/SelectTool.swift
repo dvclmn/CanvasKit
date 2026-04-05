@@ -7,6 +7,7 @@
 
 import InteractionKit
 import SwiftUI
+import BasePrimitives
 
 // MARK: - Select Tool
 
