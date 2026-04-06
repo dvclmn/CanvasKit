@@ -19,7 +19,7 @@ import InteractionKit
 /// - `.pointerDragGesture` —> `.onPointerDragGesture(rect:coordinateSpace:...)`
 ///
 /// Under two-tier resolution:
-/// - Swipe, pinch, and hover are handled globally by `CanvasInteractionState`
+/// - Swipe, pinch, and hover are handled globally by `CanvasHandler`
 /// - Pointer tap and drag are forwarded to the active `CanvasTool`
 ///
 /// Tools can opt into additional sources via `CanvasInputCapabilities`,

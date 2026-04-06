@@ -10,7 +10,7 @@ import InteractionKit
 import SwiftUI
 
 /// These are **canvas-level state mutations** only — things that
-/// `CanvasInteractionState` knows how to execute. Domain-level
+/// `CanvasHandler` knows how to execute. Domain-level
 /// outputs (e.g. "place a shape", "commit a stroke") go through
 /// `ToolAction` instead.
 public enum CanvasAdjustment: Sendable {

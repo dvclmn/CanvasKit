@@ -13,7 +13,7 @@ import InteractionKit
 /// The combined result of a tool resolving a pointer interaction.
 ///
 /// Separates canvas-level state changes (`adjustment`) from domain-level
-/// actions (`action`) so that `CanvasInteractionState` can execute the
+/// actions (`action`) so that `CanvasHandler` can execute the
 /// adjustment immediately, while the consuming app handles the action.
 public struct ToolResolution: Sendable {
   public let adjustment: CanvasAdjustment

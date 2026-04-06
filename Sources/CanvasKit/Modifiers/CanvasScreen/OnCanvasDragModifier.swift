@@ -12,7 +12,7 @@ import SwiftUI
 /// Update: Decided for now to keep this as `CanvasSpace` only
 struct OnCanvasDragModifier: ViewModifier {
   //struct OnCanvasDragModifier<Space: CanvasCoordinateSpace>: ViewModifier {
-  //  @Environment(CanvasInteractionState.self) private var interactionState
+  //  @Environment(CanvasHandler.self) private var interactionState
   @Environment(\.pointerDrag) private var pointerDrag
   @Environment(\.interactionPhase) private var interactionPhase
 

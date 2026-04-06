@@ -9,7 +9,7 @@ import InteractionKit
 import SwiftUI
 
 struct CanvasCoreView<Content: View>: View {
-  @Environment(CanvasInteractionState.self) private var interactionState
+  @Environment(CanvasHandler.self) private var store
   @Environment(\.canvasBackground) private var canvasBackground
 
   let canvasSize: Size<CanvasSpace>
@@ -42,7 +42,7 @@ struct CanvasCoreView<Content: View>: View {
             anchor.map { proxy[$0] }
           } action: { frame in
             let artworkFrame = frame.map { Rect<ScreenSpace>(fromRect: $0) }
-            interactionState.updateArtworkFrame(to: artworkFrame)
+            store.updateArtworkFrame(to: artworkFrame)
           }
       }
 

@@ -9,7 +9,7 @@ import BasePrimitives
 import InteractionKit
 import SwiftUI
 
-/// Centralises input resolution for `CanvasInteractionState`.
+/// Centralises input resolution for `CanvasHandler`.
 struct CanvasInputResolver {
   let source: InteractionSource?
   let phase: InteractionPhase

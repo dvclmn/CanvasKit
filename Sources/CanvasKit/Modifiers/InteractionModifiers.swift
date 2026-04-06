@@ -9,12 +9,12 @@ import InteractionKit
 import SwiftUI
 
 struct InteractionModifiers: ViewModifier {
-  @Environment(CanvasInteractionState.self) private var interactionState
+  @Environment(CanvasHandler.self) private var store
   @Environment(\.activeTool) private var activeTool
   @Environment(\.modifierKeys) private var modifierKeys
 
   func body(content: Content) -> some View {
-    @Bindable var interactionState = interactionState
+    @Bindable var store = store
 
     // TODO: Need to determine whether a CanvasTool might:
     // a) Need to be given scoped-down interaction capabilities
@@ -26,7 +26,7 @@ struct InteractionModifiers: ViewModifier {
         isEnabled: true
           //        isEnabled: policy.activeInputs.contains(.swipe)
       ) { event in
-        interactionState.handleInput(
+        store.handleInput(
           .swipeGesture(
             delta: event.delta,
             location: event.location,
@@ -36,24 +36,24 @@ struct InteractionModifiers: ViewModifier {
       }
 
       .onPinchGesture(
-        initial: interactionState.transform.scale,
+        initial: store.transform.scale,
         isEnabled: true,
         //        isEnabled: policy.activeInputs.contains(.pinch)
       ) { zoom, phase in
-        interactionState.handleInput(
+        store.handleInput(
           .pinchGesture(scale: zoom),
           phase: phase,
           //          modifiers: modifierKeys
         )
         /// Return the resolved scale so the modifier's internalZoom
         /// stays in sync with what GlobalInteraction wrote to transform.scale.
-        return interactionState.transform.scale
+        return store.transform.scale
       }
 
       .onContinuousHover(coordinateSpace: .named(ScreenSpace.screen)) { phase in
         //        guard policy.activeInputs.contains(.pointerHover) else { return }
         guard let location = phase.location else { return }
-        interactionState.handleInput(
+        store.handleInput(
           .continuousHover(location.screenPoint),
           phase: phase.interactionPhase,
         )
@@ -64,7 +64,7 @@ struct InteractionModifiers: ViewModifier {
         coordinateSpace: .named(ScreenSpace.screen),
       ) { location in
         //        guard policy.activeInputs.contains(.pointerTap) else { return }
-        interactionState.handleInput(
+        store.handleInput(
           .pointerTapGesture(.primary, location: location.screenPoint),
           phase: .ended,
         )
@@ -75,12 +75,12 @@ struct InteractionModifiers: ViewModifier {
           //        behaviour: policy.dragBehaviour
       ) { payload, phase in
         guard let payload else { return }
-        interactionState.handleInput(.pointerDragGesture(payload), phase: phase)
+        store.handleInput(.pointerDragGesture(payload), phase: phase)
       }
 
-      /// Make sure `CanvasInteractionState` gets modifier key updates
-      .task(id: modifierKeys) { interactionState.updateModifiers(to: modifierKeys) }
-      .task(id: activeTool?.kind) { interactionState.updateTool(to: activeTool) }
+      /// Make sure `CanvasHandler` gets modifier key updates
+      .task(id: modifierKeys) { store.updateModifiers(to: modifierKeys) }
+      .task(id: activeTool?.kind) { store.updateTool(to: activeTool) }
 
     //      .syncEnvironment(\.modifierKeys) { interactionState.updateModifiers(to: $0) }
     //      .syncEnvironment(\.activeTool, using: \.?.kind) { interactionState.updateTool(to: $0) }

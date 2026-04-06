@@ -1,5 +1,5 @@
 //
-//  CanvasInteractionState.swift
+//  CanvasHandler.swift
 //  BaseHelpers
 //
 //  Created by Dave Coleman on 8/3/2026.
@@ -9,11 +9,11 @@ import InteractionKit
 import SwiftUI
 import BasePrimitives
 
-/// `CanvasInteractionState`'s state is owned outside of CanvasKit,
+/// `CanvasHandler`'s state is owned outside of CanvasKit,
 /// by the project *using* CanvasKit. E.g. in the case of DrawString,
 /// this is owned by `BaseContainer` view.
 @Observable
-public final class CanvasInteractionState {
+public final class CanvasHandler {
 
   /// Internal state
   public var transform: TransformState = .identity
@@ -41,7 +41,7 @@ public final class CanvasInteractionState {
   public init() {}
 }
 
-extension CanvasInteractionState {
+extension CanvasHandler {
 
   /// Entry point for all raw input events from gesture modifiers.
   ///
@@ -84,7 +84,7 @@ extension CanvasInteractionState {
   }
 }
 
-extension CanvasInteractionState {
+extension CanvasHandler {
 
   public func updateTool(to tool: (any CanvasTool)?) {
     self.activeTool = tool
@@ -100,7 +100,7 @@ extension CanvasInteractionState {
   //  }
 
 }
-extension CanvasInteractionState {
+extension CanvasHandler {
 
   private func executeAdjustment(_ adjustment: CanvasAdjustment) {
     switch adjustment {
@@ -118,7 +118,7 @@ extension CanvasInteractionState {
 
 // MARK: - Mapping and Snapshot
 
-extension CanvasInteractionState {
+extension CanvasHandler {
 
   func snapshot(zoomRange: ClosedRange<Double>?) -> CanvasSnapshot? {
 

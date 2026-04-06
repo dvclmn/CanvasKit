@@ -10,8 +10,8 @@
 //import SwiftUI
 //
 //struct CanvasToolbarView: ToolbarContent {
-//  @Environment(CanvasInteractionState.self) private var interactionState
-//  //  @Bindable var state: CanvasInteractionState
+//  @Environment(CanvasHandler.self) private var interactionState
+//  //  @Bindable var state: CanvasHandler
 //  @Environment(\.zoomRange) private var zoomRange
 //
 //  var body: some ToolbarContent {

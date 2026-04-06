@@ -10,7 +10,7 @@ import SwiftUI
 
 struct CanvasArtwork<Content: View>: View {
 
-  @Environment(CanvasInteractionState.self) private var interactionState
+  @Environment(CanvasHandler.self) private var store
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.zoomClamped) private var zoomClamped
   @Environment(\.activeTool) private var activeTool
@@ -49,8 +49,8 @@ struct CanvasArtwork<Content: View>: View {
 
       /// Important: Keep the order 1. Scale, 2. Rotate, 3. Offset
       .scaleEffect(zoomClamped, anchor: .center)
-      .rotationEffect(interactionState.transform.rotation, anchor: .center)
-      .offset(interactionState.transform.translation.cgSize)
+      .rotationEffect(store.transform.rotation, anchor: .center)
+      .offset(store.transform.translation.cgSize)
       .frame(maxWidth: .infinity, maxHeight: .infinity)
   }
 }

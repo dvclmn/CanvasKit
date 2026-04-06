@@ -15,17 +15,17 @@ import BasePrimitives
 struct InteractionStateSetupModifier: ViewModifier {
   @Environment(\.modifierKeys) private var modifierKeys
   @Environment(\.zoomRange) private var zoomRange
-  @State private var interactionState: CanvasInteractionState = .init()
+  @State private var store: CanvasHandler = .init()
 
   @Binding var toolHandler: ToolHandler
   let canvasSize: Size<CanvasSpace>
 
   func body(content: Content) -> some View {
     content
-      .environment(interactionState)
+      .environment(store)
 
       .setSnapshotValues(
-        interactionState.snapshot(zoomRange: zoomRange)
+        store.snapshot(zoomRange: zoomRange)
       )
       
 //      .environment(\.zoomLevel, interactionState.transform.scale)
@@ -34,7 +34,7 @@ struct InteractionStateSetupModifier: ViewModifier {
 //          .environment(\.pointerLocation, snapshot?.pointerLocation?.cgPoint)
 //          .environment(\.pointerDrag, snapshot?.pointerLocation?.cgPoint)
 
-      .environment(\.pointerStyle, interactionState.pointerStyle)
+      .environment(\.pointerStyle, store.pointerStyle)
 
       .task(id: modifierKeys) {
         toolHandler.updateModifiers(modifierKeys)
@@ -49,7 +49,7 @@ struct InteractionStateSetupModifier: ViewModifier {
       /// Watches tool kind rather than the tool itself, as `any CanvasTool`
       /// can't conform to Equatable
       .task(id: toolHandler.effectiveTool.kind) {
-        interactionState.updateTool(to: toolHandler.effectiveTool)
+        store.updateTool(to: toolHandler.effectiveTool)
       }
 
       /// Provides interaction state with updated zoom range

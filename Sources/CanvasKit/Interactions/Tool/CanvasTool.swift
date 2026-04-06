@@ -12,7 +12,7 @@ import BasePrimitives
 /// A canvas tool defines how pointer interactions (tap, drag) are interpreted.
 ///
 /// Global gestures (swipe→pan, pinch→zoom, hover) are handled centrally
-/// by `CanvasInteractionState` and never reach `resolvePointerInteraction()`.
+/// by `CanvasHandler` and never reach `resolvePointerInteraction()`.
 /// Tools only receive pointer events: taps and drags.
 public protocol CanvasTool: Sendable, Equatable, Identifiable where ID == CanvasToolKind {
 
