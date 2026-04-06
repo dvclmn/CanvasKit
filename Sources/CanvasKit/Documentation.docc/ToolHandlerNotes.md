@@ -8,7 +8,7 @@ var toolHandler = ToolHandler(
   baseTool: .select,
   tools: CanvasTool.defaultTools + [.text],
   bindings: ToolBinding.defaultBindings() + [
-    .makeToolBinding(for: .text, key: "t")
+    .init(binding: .init(key: "t"), target: .text, mode: .sticky)
   ]
 )
 

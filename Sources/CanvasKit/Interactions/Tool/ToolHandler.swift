@@ -164,9 +164,7 @@ extension ToolHandler {
   public mutating func handleKeyDown(_ key: KeyEquivalent) {
     heldKeys.insert(key)
 
-    guard
-      let best = matchingBindings(for: key)
-        .max(by: { $0.priority < $1.priority })
+    guard let best = matchingBindings(for: key).first
     else { return }
 
     apply(binding: best, onKeyDown: key)

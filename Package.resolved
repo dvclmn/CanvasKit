@@ -1,0 +1,24 @@
+{
+  "originHash" : "45b46f5af463997bb5c11aee14947c393f8340ff9a7743b281e2752fd576ca7e",
+  "pins" : [
+    {
+      "identity" : "baseprimitives",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dvclmn/BasePrimitives",
+      "state" : {
+        "branch" : "main",
+        "revision" : "8ac10e77276a88d4ce727e584a3dc552d84ce96e"
+      }
+    },
+    {
+      "identity" : "interactionkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dvclmn/InteractionKit",
+      "state" : {
+        "branch" : "main",
+        "revision" : "4672aeb476a2ed12fbe74485a98728ff069ed84f"
+      }
+    }
+  ],
+  "version" : 3
+}

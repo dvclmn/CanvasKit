@@ -9,15 +9,6 @@ import SwiftUI
 import InteractionKit
 import BasePrimitives
 
-/// Whether a binding applies everywhere or only when a specific tool is active.
-public enum BindingScope: Sendable, Hashable {
-  /// Applies regardless of current tool.
-  case global
-
-  /// Applies only when the specified tool is active.
-  case tool(CanvasToolKind)
-}
-
 /// A key (with optional modifiers) that can trigger a `ToolBinding`.
 public struct KeyBinding: Hashable, Sendable {
   public let key: KeyEquivalent
