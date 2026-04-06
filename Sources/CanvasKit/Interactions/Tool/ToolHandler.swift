@@ -20,8 +20,8 @@ public struct ToolHandler {
   /// The user's current committed tool selection.
   private(set) public var baseTool: any CanvasTool
 
-  /// Active spring-load / hold activations, most recent last.
-  public private(set) var activations: [ToolActivation] = []
+  /// Active spring-load / hold overrides, most recent last.
+  public private(set) var overrides: [ToolOverride] = []
 
   /// Currently held keyboard keys.
   public private(set) var heldKeys: Set<KeyEquivalent> = []
@@ -63,6 +63,7 @@ extension ToolHandler {
   ///
   /// Use this to populate toolbar UI.
   public var availableTools: [any CanvasTool] {
+    
     var seen: Set<CanvasToolKind> = []
     var result: [any CanvasTool] = []
 
@@ -89,11 +90,12 @@ extension ToolHandler {
 extension ToolHandler {
 
   /// Feeds the `activeTool` Environment value.
-  /// The currently effective tool, considering pending and armed activations.
-  /// If there is any activation on the stack, its tool is effective immediately.
+  /// The currently effective tool, considering pending and armed overrides.
+  /// If there is any override on the stack, its tool is effective immediately.
   /// Otherwise the base tool is effective.
   public var effectiveTool: any CanvasTool {
-    activations.last?.tool ?? baseTool
+    guard let last = overrides.last else { return baseTool }
+    return resolveTool(for: last.binding.target)
   }
 
   /// The Kind of the effective tool
@@ -101,38 +103,38 @@ extension ToolHandler {
 
   /// The spring-loaded tool if one is armed, or `nil`.
   public var springLoadedTool: (any CanvasTool)? {
-    guard let armed = activations.last(where: { $0.isArmed }) else { return nil }
-    return armed.tool
+    guard let armed = overrides.last(where: { $0.isArmed }) else { return nil }
+    return resolveTool(for: armed.binding.target)
   }
 
-  public var isSpringLoaded: Bool { activations.contains { $0.isArmed } }
+  public var isSpringLoaded: Bool { overrides.contains { $0.isArmed } }
 
-  /// The smallest remaining time (in seconds) before any pending `.sticky` activation arms.
-  /// Returns `nil` when there are no pending arming activations.
+  /// The smallest remaining time (in seconds) before any pending `.sticky` override arms.
+  /// Returns `nil` when there are no pending arming overrides.
   public var pendingArmingTimeRemaining: TimeInterval? {
     let now = Date()
-    let remainingTimes = activations.compactMap { a -> TimeInterval? in
-      guard a.binding.mode == .sticky, !a.isArmed, heldKeys.contains(a.key) else { return nil }
-      let elapsed = now.timeIntervalSince(a.startedAt)
+    let remainingTimes = overrides.compactMap { o -> TimeInterval? in
+      guard o.binding.mode == .sticky, !o.isArmed, heldKeys.contains(o.key) else { return nil }
+      let elapsed = now.timeIntervalSince(o.startedAt)
       let remaining = springLoadDelay - elapsed
       return remaining > 0 ? remaining : 0
     }
     return remainingTimes.min()
   }
 
-  /// Arms any pending `.sticky` activations whose hold duration has exceeded `springLoadDelay`
+  /// Arms any pending `.sticky` overrides whose hold duration has exceeded `springLoadDelay`
   /// and whose key is still held. Call this from a reactive context (e.g. a `task(id:)` or
-  /// `onChange(of: activations)`) after sleeping until the earliest pending deadline.
+  /// `onChange(of: overrides)`) after sleeping until the earliest pending deadline.
   public mutating func armSpringLoadsIfReady() {
     let now = Date()
-    for i in activations.indices {
-      let a = activations[i]
-      guard a.binding.mode == .sticky,
-        !a.isArmed,
-        heldKeys.contains(a.key)
+    for i in overrides.indices {
+      let o = overrides[i]
+      guard o.binding.mode == .sticky,
+        !o.isArmed,
+        heldKeys.contains(o.key)
       else { continue }
-      if now.timeIntervalSince(a.startedAt) >= springLoadDelay {
-        activations[i].isArmed = true
+      if now.timeIntervalSince(o.startedAt) >= springLoadDelay {
+        overrides[i].isArmed = true
       }
     }
   }
@@ -144,7 +146,7 @@ extension ToolHandler {
 
   public mutating func setBaseTool(_ tool: any CanvasTool) {
     baseTool = tool
-    activations.removeAll()
+    overrides.removeAll()
   }
 
   /// Set the base tool by kind, looking it up in the registry.
@@ -172,11 +174,11 @@ extension ToolHandler {
 
   public mutating func handleKeyUp(_ key: KeyEquivalent) {
     heldKeys.remove(key)
-    removeActivations(forKey: key)
+    removeOverrides(forKey: key)
   }
 
   public mutating func cancelAllSpringLoads() {
-    activations.removeAll()
+    overrides.removeAll()
   }
 
   public mutating func updateModifiers(_ modifiers: Modifiers) {
@@ -186,9 +188,9 @@ extension ToolHandler {
   /// Returns the first shortcut key bound to the given tool kind, if any.
   ///
   /// Useful for displaying keyboard shortcuts in menus and tooltips.
-  public func shortcutKey(for kind: CanvasToolKind) -> KeyEquivalent? {
-    bindings.first { $0.target == kind && $0.mode == .sticky }?.binding.key
-  }
+//  public func shortcutKey(for kind: CanvasToolKind) -> KeyEquivalent? {
+//    bindings.first { $0.target == kind && $0.mode == .sticky }?.binding.key
+//  }
 }
 
 // MARK: - Private helpers
@@ -209,25 +211,23 @@ extension ToolHandler {
     switch binding.mode {
       case .hold:
         // Always spring-load immediately; never commit.
-        let act = ToolActivation(
-          tool: targetTool,
+        let override = ToolOverride(
           binding: binding,
           startedAt: Date(),
           key: key,
           isArmed: true,
         )
-        activations.append(act)
+        overrides.append(override)
 
       case .sticky:
         // Activate immediately as a pending commit; arming happens after the threshold.
-        let act = ToolActivation(
-          tool: targetTool,
+        let override = ToolOverride(
           binding: binding,
           startedAt: Date(),
           key: key,
           isArmed: false,
         )
-        activations.append(act)
+        overrides.append(override)
 
       case .toggle:
         // Commit immediately on key down.
@@ -235,19 +235,19 @@ extension ToolHandler {
     }
   }
 
-  private mutating func removeActivations(forKey key: KeyEquivalent) {
-    // First, determine if any sticky activation should commit.
-    if let act = activations.last(where: { $0.key == key && $0.binding.mode == .sticky }) {
-      if act.isArmed == false {
-        // Short press: commit to the tool. This clears the activation stack.
-        setBaseTool(act.tool)
+  private mutating func removeOverrides(forKey key: KeyEquivalent) {
+    // First, determine if any sticky override should commit.
+    if let override = overrides.last(where: { $0.key == key && $0.binding.mode == .sticky }) {
+      if override.isArmed == false {
+        // Short press: commit to the tool. This clears the override stack.
+        setBaseTool(kind: override.binding.target)
         return
       }
       // Long hold: spring-loaded only; fall through to removal to revert.
     }
 
-    // Remove any activations tied to this key for both hold and sticky modes.
-    activations.removeAll { $0.key == key && ($0.binding.mode == .hold || $0.binding.mode == .sticky) }
+    // Remove any overrides tied to this key for both hold and sticky modes.
+    overrides.removeAll { $0.key == key && ($0.binding.mode == .hold || $0.binding.mode == .sticky) }
   }
 
   private func resolveTool(for kind: CanvasToolKind) -> any CanvasTool {
