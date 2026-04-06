@@ -7,8 +7,16 @@
 
 import SwiftUI
 
-extension View where Self: CanvasAddressable {
-  public func zoomRange(_ range: ClosedRange<Double>) -> some View {
-    self.environment(\.zoomRange, range)
-  }
-}
+//public struct ZoomRangeModifier: ViewModifier {
+//  let range: ClosedRange<Double>
+//
+//  public func body(content: Content) -> some View {
+//    content.environment(\.zoomRange, range)
+//  }
+//}
+
+//extension View where Self: CanvasAddressable {
+//  public func zoomRange(_ range: ClosedRange<Double>) -> CanvasAddressableModified<Self, ZoomRangeModifier> {
+//    canvasModified(ZoomRangeModifier(range: range))
+//  }
+//}
