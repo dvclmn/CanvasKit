@@ -5,9 +5,9 @@
 //  Created by Dave Coleman on 8/7/2025.
 //
 
+import BasePrimitives
 import InteractionKit
 import SwiftUI
-import BasePrimitives
 
 /// Manages tool selection, spring-loading, and key bindings.
 ///
@@ -63,11 +63,11 @@ extension ToolHandler {
   ///
   /// Use this to populate toolbar UI.
   public var availableTools: [any CanvasTool] {
-    
+
     var seen: Set<CanvasToolKind> = []
     var result: [any CanvasTool] = []
 
-    // Tools referenced by bindings, in binding order.
+    /// Tools referenced by bindings, in binding order.
     for binding in bindings {
       guard !seen.contains(binding.target),
         let tool = toolRegistry[binding.target]
@@ -76,7 +76,7 @@ extension ToolHandler {
       result.append(tool)
     }
 
-    // Remaining registered tools not covered by any binding.
+    /// Remaining registered tools not covered by any binding.
     for (kind, tool) in toolRegistry where !seen.contains(kind) {
       result.append(tool)
     }
@@ -99,7 +99,7 @@ extension ToolHandler {
   }
 
   /// The Kind of the effective tool
-  public var toolKind: CanvasToolKind { effectiveTool.kind }
+  //  public var toolKind: CanvasToolKind { effectiveTool.kind }
 
   /// The spring-loaded tool if one is armed, or `nil`.
   public var springLoadedTool: (any CanvasTool)? {
@@ -113,9 +113,9 @@ extension ToolHandler {
   /// Returns `nil` when there are no pending arming overrides.
   public var pendingArmingTimeRemaining: TimeInterval? {
     let now = Date()
-    let remainingTimes = overrides.compactMap { o -> TimeInterval? in
-      guard o.binding.mode == .sticky, !o.isArmed, heldKeys.contains(o.key) else { return nil }
-      let elapsed = now.timeIntervalSince(o.startedAt)
+    let remainingTimes = overrides.compactMap { ovr -> TimeInterval? in
+      guard ovr.binding.mode == .sticky, !ovr.isArmed, heldKeys.contains(ovr.key) else { return nil }
+      let elapsed = now.timeIntervalSince(ovr.startedAt)
       let remaining = springLoadDelay - elapsed
       return remaining > 0 ? remaining : 0
     }
@@ -188,9 +188,9 @@ extension ToolHandler {
   /// Returns the first shortcut key bound to the given tool kind, if any.
   ///
   /// Useful for displaying keyboard shortcuts in menus and tooltips.
-//  public func shortcutKey(for kind: CanvasToolKind) -> KeyEquivalent? {
-//    bindings.first { $0.target == kind && $0.mode == .sticky }?.binding.key
-//  }
+  //  public func shortcutKey(for kind: CanvasToolKind) -> KeyEquivalent? {
+  //    bindings.first { $0.target == kind && $0.mode == .sticky }?.binding.key
+  //  }
 }
 
 // MARK: - Private helpers
@@ -198,8 +198,8 @@ extension ToolHandler {
 extension ToolHandler {
 
   private func matchingBindings(for key: KeyEquivalent) -> [ToolBinding] {
-    bindings.filter { b in
-      b.binding.key == key && b.binding.requiredModifiers.isSubset(of: modifiers)
+    bindings.filter { binding in
+      binding.shortcut.key == key && binding.modifiers.isSubset(of: modifiers)
     }
   }
 
@@ -210,7 +210,7 @@ extension ToolHandler {
     let targetTool = resolveTool(for: binding.target)
     switch binding.mode {
       case .hold:
-        // Always spring-load immediately; never commit.
+        /// Always spring-load immediately; never commit.
         let override = ToolOverride(
           binding: binding,
           startedAt: Date(),
@@ -220,7 +220,7 @@ extension ToolHandler {
         overrides.append(override)
 
       case .sticky:
-        // Activate immediately as a pending commit; arming happens after the threshold.
+        /// Activate immediately as a pending commit; arming happens after the threshold.
         let override = ToolOverride(
           binding: binding,
           startedAt: Date(),
@@ -230,7 +230,7 @@ extension ToolHandler {
         overrides.append(override)
 
       case .toggle:
-        // Commit immediately on key down.
+        /// Commit immediately on key down.
         setBaseTool(targetTool)
     }
   }

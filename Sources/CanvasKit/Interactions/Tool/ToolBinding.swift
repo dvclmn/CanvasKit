@@ -5,6 +5,7 @@
 //  Created by Dave Coleman on 13/3/2026.
 //
 
+import BasePrimitives
 import SwiftUI
 
 /// Maps a key input to a tool activation with a given mode.
@@ -30,6 +31,8 @@ public struct ToolBinding: Hashable, Sendable {
 }
 
 extension ToolBinding {
+
+  var modifiers: Modifiers { .init(from: shortcut.modifiers) }
 
   /// A minimal set of sensible defaults:
   /// - Sticky shortcuts for Select (V), Pan (H), Zoom (Z)
