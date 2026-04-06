@@ -48,7 +48,8 @@ struct CanvasArtwork<Content: View>: View {
       .anchorPreference(key: ArtworkBoundsAnchorKey.self, value: .bounds) { $0 }
 
       /// Important: Keep the order 1. Scale, 2. Rotate, 3. Offset
-      .scaleEffect(zoomClamped, anchor: .center)
+      .scaleEffect(store.transform.scale.clampedIfNeeded(to: zoomRange), anchor: .center)
+//      .scaleEffect(zoomClamped, anchor: .center)
       .rotationEffect(store.transform.rotation, anchor: .center)
       .offset(store.transform.translation.cgSize)
       .frame(maxWidth: .infinity, maxHeight: .infinity)
