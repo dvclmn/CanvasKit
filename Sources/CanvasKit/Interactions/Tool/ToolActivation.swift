@@ -7,12 +7,18 @@
 
 import SwiftUI
 
-/// A record of a spring-loaded tool activation.
+/// A record of a tool activation in progress (key held down).
 ///
-/// When a `.hold` binding key is pressed, an activation is created with
-/// `isArmed = false`. After the spring-load delay elapses, the activation
-/// is armed and becomes the effective tool. If the key is released before
-/// arming, the activation is silently discarded (brief tap = no tool switch).
+/// Behaviour depends on the binding's `ActivationMode`:
+///
+/// - `.hold` (e.g. Space → Pan): Arms immediately. The tool is active
+///   for as long as the key is held and reverts on release — a brief tap
+///   has no lasting effect.
+///
+/// - `.sticky` (e.g. H → Pan): Starts unarmed. If the key is released
+///   quickly (before `springLoadDelay`), the tool *commits* as the new base
+///   tool. If held longer, it arms as a spring-load and reverts on release —
+///   just like `.hold`.
 public struct ToolActivation: Sendable {
   public let tool: any CanvasTool
   public let binding: ToolBinding
@@ -54,15 +60,4 @@ extension ToolActivation: Hashable {
     hasher.combine(startedAt)
     hasher.combine(isArmed)
   }
-}
-
-public enum ActivationMode: Sendable, Hashable {
-  /// Spring-load while key is held (with debounce delay)
-  case hold
-
-  /// Press to switch tool; remains active until changed
-  case sticky
-
-  /// Press to toggle on/off
-  case toggle
 }

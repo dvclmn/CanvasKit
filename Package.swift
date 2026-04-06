@@ -18,7 +18,6 @@ let package = Package(
       name: "CanvasKit",
       dependencies: [
         .product(name: "InteractionKit", package: "InteractionKit")
-
       ],
     ),
     .testTarget(

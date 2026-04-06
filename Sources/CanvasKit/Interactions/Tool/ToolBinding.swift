@@ -14,16 +14,16 @@ import SwiftUI
 ///
 /// A single tool can have multiple bindings (e.g. Pan has both "H" sticky and Space hold).
 public struct ToolBinding: Hashable, Sendable {
-  public let binding: KeyBinding
+  public let shortcut: KeyboardShortcut
   public let target: CanvasToolKind
   public let mode: ActivationMode
 
   public init(
-    binding: KeyBinding,
+    _ shortcut: KeyboardShortcut,
     target: CanvasToolKind,
-    mode: ActivationMode
+    mode: ActivationMode,
   ) {
-    self.binding = binding
+    self.shortcut = shortcut
     self.target = target
     self.mode = mode
   }
@@ -36,10 +36,16 @@ extension ToolBinding {
   /// - Hold Space → spring-load Pan from any tool
   public static func defaultBindings() -> [ToolBinding] {
     [
-      .init(binding: .init(key: "v"), target: .select, mode: .sticky),
-      .init(binding: .init(key: "h"), target: .pan, mode: .sticky),
-      .init(binding: .init(key: "z"), target: .zoom, mode: .sticky),
-      .init(binding: .init(key: .space), target: .pan, mode: .hold),
+      ToolBinding(.keyOnly("v"), target: .select, mode: .sticky),
+      ToolBinding(.keyOnly("h"), target: .pan, mode: .sticky),
+      ToolBinding(.keyOnly("z"), target: .zoom, mode: .sticky),
+      ToolBinding(.keyOnly(.space), target: .pan, mode: .hold),
     ]
+  }
+}
+
+extension KeyboardShortcut {
+  static func keyOnly(_ key: KeyEquivalent) -> Self {
+    .init(key, modifiers: [])
   }
 }
