@@ -10,7 +10,7 @@ import SwiftUI
 /// Maps a key input to a tool activation with a given mode and priority.
 ///
 /// Bindings are the single source of truth for "which key activates which tool".
-/// `CanvasTool` intentionally does *not* store shortcut keys — that's this type's job.
+/// `CanvasTool` intentionally does not store shortcut keys — that's this type's job.
 public struct ToolBinding: Hashable, Sendable {
   public let scope: BindingScope
   public let binding: KeyBinding

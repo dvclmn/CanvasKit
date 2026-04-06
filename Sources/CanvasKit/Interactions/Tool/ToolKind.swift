@@ -9,7 +9,7 @@ import Foundation
 
 /// An extensible tool identity type — same pattern as `Notification.Name`.
 ///
-/// Define new kinds by extending this type in any module:
+/// Define new tool kinds by extending this type:
 /// ```swift
 /// extension CanvasToolKind {
 ///   public static let brush = Self(rawValue: "brush")

@@ -12,12 +12,9 @@ import BasePrimitives
 /// Manages tool selection, spring-loading, and key bindings.
 ///
 /// `ToolHandler` is the single owner of "which tool is active". It manages:
-/// - **Base tool**: The user's explicitly-selected tool (sticky selection)
-/// - **Spring-loaded tools**: Temporarily active while a key is held
-/// - **Effective tool**: What's actually used right now (spring-load > base)
-///
-/// ``CanvasInteractionState`` reads `effectiveTool` from here rather than
-/// holding `activeTool` directly (once fully wired up).
+/// - Base tool: The user's explicitly-selected tool (sticky/standard selection)
+/// - Spring-loaded tools: Temporarily active while a key is held
+/// - Effective tool: What's actually used right now (spring-load > base)
 public struct ToolHandler {
 
   /// The user's current committed tool selection.

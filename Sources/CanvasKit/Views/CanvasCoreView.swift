@@ -28,7 +28,7 @@ struct CanvasCoreView<Content: View>: View {
       .background(canvasBackground)
       .drawingGroup(opaque: true)
       .allowsHitTesting(false)
-      .ignoresSafeArea(edges: .top)
+//      .ignoresSafeArea(edges: .top)
 
       /// View now covers full width/height provided to it,
       /// so is considered `ScreenSpace`
