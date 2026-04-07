@@ -5,9 +5,9 @@
 //  Created by Dave Coleman on 8/3/2026.
 //
 
+import BasePrimitives
 import InteractionKit
 import SwiftUI
-import BasePrimitives
 
 /// `CanvasHandler`'s state is owned outside of CanvasKit,
 /// by the project *using* CanvasKit. E.g. in the case of DrawString,
@@ -57,7 +57,7 @@ extension CanvasHandler {
     self.source = source
     self.phase = phase
 
-    let resolution = inputResolver.resolve()
+    guard let resolution = inputResolver?.resolve() else { return }
 
     /// 1 – Global gestures
     executeAdjustment(resolution.globalAdjustment)
@@ -69,11 +69,12 @@ extension CanvasHandler {
   }
 
   public var pointerStyle: PointerStyleCompatible? {
-    inputResolver.pointerStyle
+    inputResolver?.pointerStyle
   }
 
-  private var inputResolver: CanvasInputResolver {
-    .init(
+  private var inputResolver: CanvasInputResolver? {
+    guard let source else { return nil }
+    return .init(
       source: source,
       phase: phase,
       modifiers: modifiers,

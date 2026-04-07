@@ -11,7 +11,7 @@ import SwiftUI
 
 /// Centralises input resolution for `CanvasHandler`.
 struct CanvasInputResolver {
-  let source: InteractionSource?
+  let source: InteractionSource
   let phase: InteractionPhase
   let modifiers: Modifiers
   let activeTool: (any CanvasTool)?
@@ -41,7 +41,7 @@ struct CanvasInputResolver {
   }
 
   private var shouldResolveTool: Bool {
-    guard let source else { return false }
+//    guard let source else { return false }
     let capabilities = activeTool?.inputCapabilities ?? []
 
     return switch source {
@@ -54,7 +54,7 @@ struct CanvasInputResolver {
   }
 
   private var globalAdjustment: CanvasAdjustment {
-    guard let source else { return .none }
+//    guard let source else { return .none }
 
     return switch source {
       case .swipeGesture(let delta, _): globalSwipeAdjustment(delta: delta)

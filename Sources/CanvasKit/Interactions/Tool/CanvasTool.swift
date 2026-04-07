@@ -25,8 +25,7 @@ public protocol CanvasTool: Sendable, Equatable, Identifiable where ID == Canvas
   /// SF Symbol name for toolbar UI.
   var icon: String { get }
 
-  /// The input policy active when this tool is selected.
-  /// Controls drag behaviour, pointer-drag-pan, etc.
+  /// The drag input policy active when this tool is selected.
   var dragBehaviour: DragBehavior { get }
 
   /// Input sources this tool opts into for resolution.
