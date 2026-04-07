@@ -82,6 +82,7 @@ struct InteractionModifiers: ViewModifier {
       .task(id: modifierKeys) { store.updateModifiers(to: modifierKeys) }
       .task(id: activeTool?.kind) { store.updateTool(to: activeTool) }
 
+      
     //      .syncEnvironment(\.modifierKeys) { interactionState.updateModifiers(to: $0) }
     //      .syncEnvironment(\.activeTool, using: \.?.kind) { interactionState.updateTool(to: $0) }
     //      .syncModifiers(to: $interactionState.modifiers)

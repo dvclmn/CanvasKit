@@ -95,10 +95,6 @@ extension CanvasHandler {
   public func updateModifiers(to modifiers: Modifiers) {
     self.modifiers = modifiers
   }
-  //  public func updateZoomRange(to range: ClosedRange<Double>?) {
-  //    self.zoomRange = range
-  //  }
-
 }
 extension CanvasHandler {
 

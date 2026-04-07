@@ -45,6 +45,10 @@ struct InteractionStateSetupModifier: ViewModifier {
       .task(id: toolHandler.effectiveTool.kind) {
         store.updateTool(to: toolHandler.effectiveTool)
       }
+    
+    
+    
+    
 
       /// Provides interaction state with updated zoom range
 //      .syncEnvironment(\.zoomRange) { interactionState.updateZoomRange(to: $0) }

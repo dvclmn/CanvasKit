@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 4/4/2026.
 //
 
-import BasePrimitives
+@_spi(Internals) import BasePrimitives
 import SwiftUI
 
 public struct ArtworkOutlineModifier: ViewModifier {
