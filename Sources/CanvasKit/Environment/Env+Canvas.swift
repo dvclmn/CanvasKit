@@ -7,6 +7,7 @@
 
 import InteractionKit
 import SwiftUI
+@_spi(Internals) import BasePrimitives
 
 extension EnvironmentValues {
 
@@ -17,4 +18,9 @@ extension EnvironmentValues {
   @Entry public var canvasAnchor: UnitPoint = .center
   @Entry public var canvasBackground: Color = Color(white: 0.04)
   @Entry public var activeTool: (any CanvasTool)?
+  
+  /// Named `artworkOutline` to indicate this is plumbing
+  /// set up specifically for CanvasKit, to drive easy configuration
+  /// of the artwork outline for users.
+  @Entry var artworkOutline: AreaOutline = .init()
 }

@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 28/2/2026.
 //
 
-import InteractionKit
 @_spi(Internals) import BasePrimitives
+import InteractionKit
 import SwiftUI
 
 struct CanvasArtwork<Content: View>: View {
@@ -15,7 +15,7 @@ struct CanvasArtwork<Content: View>: View {
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.zoomClamped) private var zoomClamped
   @Environment(\.activeTool) private var activeTool
-  @Environment(\.areaOutline) private var areaOutline
+  @Environment(\.artworkOutline) private var artworkOutline
 
   let canvasSize: Size<CanvasSpace>
 
@@ -33,9 +33,13 @@ struct CanvasArtwork<Content: View>: View {
         width: canvasSize.width,
         height: canvasSize.height,
       )
-    
+
       /// Visual indication of Canvas artwork bounds
-      .areaOutline()
+      .areaOutline(
+        colour: artworkOutline.colour,
+        rounding: artworkOutline.rounding,
+        lineWidth: artworkOutline.lineWidth,
+      )
 
       /// `CanvasSpace` namespace declared *before* pan/zoom applied
       .coordinateSpace(.named(CanvasSpace.canvas))
