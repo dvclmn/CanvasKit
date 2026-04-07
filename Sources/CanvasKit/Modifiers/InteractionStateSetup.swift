@@ -27,12 +27,6 @@ struct InteractionStateSetupModifier: ViewModifier {
       .setSnapshotValues(
         store.snapshot(zoomRange: zoomRange)
       )
-      
-//      .environment(\.zoomLevel, interactionState.transform.scale)
-//      .environment(\.panOffset, interactionState.transform.translation.cgSize)
-//      .environment(\.rotation, interactionState.transform.rotation)
-//          .environment(\.pointerLocation, snapshot?.pointerLocation?.cgPoint)
-//          .environment(\.pointerDrag, snapshot?.pointerLocation?.cgPoint)
 
       .environment(\.pointerStyle, store.pointerStyle)
 

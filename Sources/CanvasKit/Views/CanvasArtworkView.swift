@@ -24,14 +24,6 @@ struct CanvasArtwork<Content: View>: View {
 
     CanvasDecomposed()
 
-      /// Visual indication of Canvas artwork bounds
-      .areaOutline()
-      //      .overlay {
-      //        RoundedRectangle(cornerRadius: cornerRounding)
-      //          .fill(.clear)
-      //          .stroke(outline.colour, lineWidth: outlineThickness)
-      //          .allowsHitTesting(false)
-      //      }
       .animation(.easeInOut(duration: 0.15)) { content in
         content.opacity(isCanvasReady ? 1.0 : 0.0)
       }
@@ -40,6 +32,9 @@ struct CanvasArtwork<Content: View>: View {
         width: canvasSize.width,
         height: canvasSize.height,
       )
+    
+      /// Visual indication of Canvas artwork bounds
+      .areaOutline()
 
       /// `CanvasSpace` namespace declared *before* pan/zoom applied
       .coordinateSpace(.named(CanvasSpace.canvas))
@@ -49,7 +44,6 @@ struct CanvasArtwork<Content: View>: View {
 
       /// Important: Keep the order 1. Scale, 2. Rotate, 3. Offset
       .scaleEffect(store.transform.scale.clampedIfNeeded(to: zoomRange), anchor: .center)
-//      .scaleEffect(zoomClamped, anchor: .center)
       .rotationEffect(store.transform.rotation, anchor: .center)
       .offset(store.transform.translation.cgSize)
       .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -62,11 +56,6 @@ extension CanvasArtwork {
     let base = areaOutline.rounding
     return base.removingZoom(zoomClamped)
   }
-  //
-  //  private var outlineThickness: CGFloat {
-  //    let base = Double(outline.lineWidth)
-  //    return base.removingZoom(zoomClamped, across: zoomRange)
-  //  }
 
   /// This allows Views to specifcy whether they should be clipped
   /// by the Canvas bounds or not

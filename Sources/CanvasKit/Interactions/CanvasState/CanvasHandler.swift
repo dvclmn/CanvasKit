@@ -24,7 +24,6 @@ public final class CanvasHandler {
   private var artworkFrame: Rect<ScreenSpace>?
 
   /// Values synced here from the Environment
-  //  private var zoomRange: ClosedRange<Double>?
   private var modifiers: Modifiers = []
   private var activeTool: (any CanvasTool)?
 
@@ -122,11 +121,7 @@ extension CanvasHandler {
 
   func snapshot(zoomRange: ClosedRange<Double>?) -> CanvasSnapshot? {
 
-    guard let tap = pointer.tap,
-      let hover = pointer.hover,
-      let drag = pointer.drag,
-      let artworkFrame
-    else { return nil }
+    guard let artworkFrame else { return nil }
 
     let zoomRaw = transform.scale
     let zoomClamped = zoomRaw.clampedIfNeeded(to: zoomRange)
@@ -136,10 +131,10 @@ extension CanvasHandler {
       zoomClamped: zoomClamped,
     )
 
-    let tapMapped = mapper.canvasPoint(from: tap)
-    let hoverMapped = mapper.canvasPoint(from: hover)
-    let rectMapped = mapper.canvasRect(from: drag)
-    let isInside = mapper.isInsideCanvas(hoverMapped)
+    let tapMapped = pointer.tap.map { mapper.canvasPoint(from: $0) }
+    let hoverMapped = pointer.hover.map { mapper.canvasPoint(from: $0) }
+    let rectMapped = pointer.drag.map { mapper.canvasRect(from: $0) }
+    let isInside = hoverMapped.map { mapper.isInsideCanvas($0) } ?? false
 
     return CanvasSnapshot(
       pointerTap: tapMapped,
