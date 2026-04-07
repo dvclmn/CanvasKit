@@ -7,9 +7,13 @@
 
 import SwiftUI
 
+/// CanvasView conforms to this, allowing view modifiers that
+/// show up only on CanvasView itself, or (see below) modifiers
+/// that return a CanvasAddressable View.
 public protocol CanvasAddressable {}
 
-/// Preserve CanvasAddressable across SwiftUI modifiers.
+/// Preserve CanvasAddressable across SwiftUI modifiers,
+/// rather than losing this context via `some View`
 extension ModifiedContent: CanvasAddressable where Content: CanvasAddressable {}
 
 extension View where Self: CanvasAddressable {
@@ -20,8 +24,8 @@ extension View where Self: CanvasAddressable {
 
   public func artworkOutline(
     colour: Color = .white.opacity(0.07),
-    rounding: CGFloat = 4,
-    lineWidth: CGFloat = 1,
+    rounding: Double = 4,
+    lineWidth: Double = 1,
   ) -> ModifiedContent<Self, ArtworkOutlineModifier> {
     self.modifier(
       ArtworkOutlineModifier(

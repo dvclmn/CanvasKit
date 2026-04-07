@@ -10,8 +10,8 @@ import SwiftUI
 
 public struct ArtworkOutlineModifier: ViewModifier {
   let colour: Color
-  let rounding: CGFloat
-  let lineWidth: CGFloat
+  let rounding: Double
+  let lineWidth: Double
 
   public func body(content: Content) -> some View {
     content.environment(

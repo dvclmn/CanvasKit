@@ -7,10 +7,9 @@
 
 import SwiftUI
 
-
 public struct ZoomRangeModifier: ViewModifier {
   let range: ClosedRange<Double>
-  
+
   public func body(content: Content) -> some View {
     content.environment(\.zoomRange, range)
   }
