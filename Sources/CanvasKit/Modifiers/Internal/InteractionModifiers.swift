@@ -70,22 +70,10 @@ struct InteractionModifiers: ViewModifier {
         )
       }
 
-      .onPointerDragGesture(
-        behaviour: activeTool?.dragBehaviour ?? .none
-          //        behaviour: policy.dragBehaviour
-      ) { payload, phase in
+      .onPointerDragGesture(behaviour: activeTool?.dragBehaviour ?? .none) { payload, phase in
         guard let payload else { return }
         store.handleInteraction(.pointerDragGesture(payload), phase: phase)
       }
-
-      /// Make sure `CanvasHandler` gets modifier key updates
-      .task(id: modifierKeys) { store.updateModifiers(to: modifierKeys) }
-      .task(id: activeTool?.kind) { store.updateTool(to: activeTool) }
-
-      
-    //      .syncEnvironment(\.modifierKeys) { interactionState.updateModifiers(to: $0) }
-    //      .syncEnvironment(\.activeTool, using: \.?.kind) { interactionState.updateTool(to: $0) }
-    //      .syncModifiers(to: $interactionState.modifiers)
   }
 }
 

@@ -53,9 +53,7 @@ struct CanvasInputResolver {
   }
 
   private var globalAdjustment: CanvasAdjustment {
-//    guard let source else { return .none }
-
-    return switch source {
+    switch source {
       case .swipeGesture(let delta, _): globalSwipeAdjustment(delta: delta)
       case .pinchGesture(let scale): .updateScale(scale)
       case .continuousHover(let point): .updatePointerHover(point)

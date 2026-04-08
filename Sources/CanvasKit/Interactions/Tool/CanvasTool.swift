@@ -5,9 +5,9 @@
 //  Created by Dave Coleman on 12/3/2026.
 //
 
+import BasePrimitives
 import InteractionKit
 import SwiftUI
-import BasePrimitives
 
 /// A canvas tool defines how pointer interactions (tap, drag) are interpreted.
 ///
@@ -28,10 +28,6 @@ public protocol CanvasTool: Sendable, Equatable, Identifiable where ID == Canvas
   /// The drag input policy active when this tool is selected.
   var dragBehaviour: PointerDragBehaviour { get }
 
-  /// Input sources this tool opts into for resolution.
-  /// Defaults to `.pointerOnly`.
-  var inputCapabilities: InteractionKinds { get }
-
   /// Resolve the pointer style for the current interaction context.
   func resolvePointerStyle(context: InteractionContext) -> PointerStyleCompatible
 
@@ -51,7 +47,9 @@ public protocol CanvasTool: Sendable, Equatable, Identifiable where ID == Canvas
 extension CanvasTool {
   public var id: CanvasToolKind { kind }
 
-  /// Tool capability defaults to pointer only
+  /// This was previously a stored property for any Canvas Tool,
+  /// however tools seemed only to need Tap and Drag operations,
+  /// so have hard coded this for now.
   public var inputCapabilities: InteractionKinds { .tapAndDrag }
 }
 

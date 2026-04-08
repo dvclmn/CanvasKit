@@ -26,19 +26,18 @@ struct InteractionStateSetupModifier: ViewModifier {
 
       .setSnapshotValues(store.snapshot(zoomRange: zoomRange))
 
+/// Provide the environment with the resolved pointerStyle
       .environment(\.pointerStyle, store.pointerStyle)
-
-      .task(id: modifierKeys) {
-        toolHandler.updateModifiers(modifierKeys)
-      }
+      .environment(\.activeTool, toolHandler.effectiveTool)
 
     /// Provide the effective/active tool to the Environment
-      .environment(\.activeTool, toolHandler.effectiveTool)
+    
     
     /// ... and sync that value to `CanvasHandler`
-      .syncEnvironment(\.activeTool, id: \.?.kind) {
-        store.updateTool(to: $0)
-      }
+      .syncEnvironment(\.activeTool, id: \.?.kind) { store.updateTool(to: $0) }
+
+    /// Provides `CanvasHandler` with modifier keys and current active tool
+      .syncEnvironment(\.modifierKeys) { store.updateModifiers(to: $0) }
     
       //      .environment(\.coordinateSpaceMapper, interactionState.coordinateSpaceMapper)
 
