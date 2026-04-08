@@ -35,7 +35,8 @@ public final class CanvasHandler {
   /// The most recent interaction context, provided when
   /// `handleInteraction(_:phase:)` is called.
   public var phase: InteractionPhase = .none
-  public var source: InteractionSource?
+  public var interaction: Interaction?
+//  public var source: InteractionSource?
 
   public init() {}
 }

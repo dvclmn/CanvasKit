@@ -14,16 +14,17 @@ import InteractionKit
 /// actions (`action`) so that `CanvasHandler` can execute the
 /// adjustment immediately, while the consuming app handles the action.
 public struct ToolResolution: Sendable {
-  public let interaction: Interaction
+  public let transform: TransformAdjustment
+//  public let interaction: Interaction
   //  public let adjustment: CanvasAdjustment
   public let action: ToolAction
 
   public init(
-    interaction: Interaction,
+    transform: TransformAdjustment,
 //    adjustment: CanvasAdjustment = .none,
     action: ToolAction = .none,
   ) {
-    self.interaction = interaction
+    self.transform = transform
     self.action = action
   }
 

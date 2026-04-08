@@ -27,9 +27,9 @@ struct InteractionModifiers: ViewModifier {
           //        isEnabled: policy.activeInputs.contains(.swipe)
       ) { event in
         store.handleInteraction(
-          .swipeGesture(
+          .swipe(
             delta: event.delta,
-            location: event.location,
+//            location: event.location,
           ),
           phase: event.phase,
         )
