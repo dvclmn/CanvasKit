@@ -63,12 +63,14 @@ struct CanvasInputResolver {
     }
   }
 
-  private func globalSwipeAdjustment(delta: Size<ScreenSpace>) -> CanvasAdjustment {
+  private func globalSwipeAdjustment(delta: Size<ScreenSpace>) -> TransformInteraction {
+//  private func globalSwipeAdjustment(delta: Size<ScreenSpace>) -> CanvasAdjustment {
 
     /// If Option is held during a Swipe, it is interpreted as Zoom, not Pan
     guard modifiers.contains(.option) else {
       let newTranslation = transform.translation + delta
-      return .updateTranslation(newTranslation)
+      return .translation(newTranslation)
+//      return .updateTranslation(newTranslation)
     }
 
     /// Each point contributes up to 0.5% zoom change at sensitivity = 1.0
@@ -76,6 +78,7 @@ struct CanvasInputResolver {
       CGSize(width: 0, height: delta.cgSize.height),
       weights: .vertical,
     )
-    return .zoomAdjustment(for: transform, by: factor)
+    return .scale(<#T##Double#>)
+//    return .zoomAdjustment(for: transform, by: factor)
   }
 }

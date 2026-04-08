@@ -8,22 +8,21 @@
 import InteractionKit
 import SwiftUI
 
-public enum TransformInteraction {
-  case translation(Size<ScreenSpace>)
-  case scale(Double)
-  case rotation(Angle)
-}
 
-public enum PointerInteraction {
-  case tap(Point<ScreenSpace>)
-  case hover(Point<ScreenSpace>)
-  case drag(Rect<ScreenSpace>)
 
-}
 
 public enum Interaction {
   case transform(TransformInteraction)
   case pointer(PointerInteraction)
+}
+
+public enum InteractionSource {
+  case swipe  // onSwipeGesture
+  case pinch  // onPinchGesture
+  case hover  // onContinuousHover
+  case tap  // onTapGesture
+  case drag  // onPointerDragGesture
+  case rotation  // Not yet supported
 }
 
 /// The raw input source from a SwiftUI gesture modifier.
@@ -42,14 +41,6 @@ public enum Interaction {
 /// Tools can opt into additional sources via `CanvasInputCapabilities`,
 /// but global handling still occurs separately.
 
-public enum InteractionSource {
-  case swipe  // onSwipeGesture
-  case pinch  // onPinchGesture
-  case hover  // onContinuousHover
-  case tap  // onTapGesture
-  case drag  // onPointerDragGesture
-  case rotation  // Not yet supported
-}
 //public enum InteractionSource: Sendable {
 //  case swipeGesture(
 //    delta: Size<ScreenSpace>,
