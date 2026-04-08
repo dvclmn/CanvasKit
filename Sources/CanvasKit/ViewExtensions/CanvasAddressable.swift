@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+@_spi(Internals) import BasePrimitives
 
 /// CanvasView conforms to this, allowing view modifiers that
 /// show up only on CanvasView itself, or (see below) modifiers
@@ -29,10 +30,17 @@ extension View where Self: CanvasAddressable {
   ) -> ModifiedContent<Self, ArtworkOutlineModifier> {
     self.modifier(
       ArtworkOutlineModifier(
-        colour: colour,
-        rounding: rounding,
-        lineWidth: lineWidth,
+        outline: .init(
+          colour: colour,
+          rounding: rounding,
+          lineWidth: lineWidth
+        )
       )
+//      ArtworkOutlineModifier(
+//        colour: colour,
+//        rounding: rounding,
+//        lineWidth: lineWidth,
+//      )
     )
   }
 }

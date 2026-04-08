@@ -26,7 +26,7 @@ struct InteractionModifiers: ViewModifier {
         isEnabled: true
           //        isEnabled: policy.activeInputs.contains(.swipe)
       ) { event in
-        store.handleInput(
+        store.handleInteraction(
           .swipeGesture(
             delta: event.delta,
             location: event.location,
@@ -40,7 +40,7 @@ struct InteractionModifiers: ViewModifier {
         isEnabled: true,
         //        isEnabled: policy.activeInputs.contains(.pinch)
       ) { zoom, phase in
-        store.handleInput(
+        store.handleInteraction(
           .pinchGesture(scale: zoom),
           phase: phase,
           //          modifiers: modifierKeys
@@ -53,7 +53,7 @@ struct InteractionModifiers: ViewModifier {
       .onContinuousHover(coordinateSpace: .named(ScreenSpace.screen)) { phase in
         //        guard policy.activeInputs.contains(.pointerHover) else { return }
         guard let location = phase.location else { return }
-        store.handleInput(
+        store.handleInteraction(
           .continuousHover(location.screenPoint),
           phase: phase.interactionPhase,
         )
@@ -64,7 +64,7 @@ struct InteractionModifiers: ViewModifier {
         coordinateSpace: .named(ScreenSpace.screen),
       ) { location in
         //        guard policy.activeInputs.contains(.pointerTap) else { return }
-        store.handleInput(
+        store.handleInteraction(
           .pointerTapGesture(.primary, location: location.screenPoint),
           phase: .ended,
         )
@@ -75,7 +75,7 @@ struct InteractionModifiers: ViewModifier {
           //        behaviour: policy.dragBehaviour
       ) { payload, phase in
         guard let payload else { return }
-        store.handleInput(.pointerDragGesture(payload), phase: phase)
+        store.handleInteraction(.pointerDragGesture(payload), phase: phase)
       }
 
       /// Make sure `CanvasHandler` gets modifier key updates

@@ -33,7 +33,7 @@ public final class CanvasHandler {
   public var lastToolAction: ToolAction = .none
 
   /// The most recent interaction context, provided when
-  /// `handleInput(_:phase:)` is called.
+  /// `handleInteraction(_:phase:)` is called.
   public var phase: InteractionPhase = .none
   public var source: InteractionSource?
 
@@ -49,7 +49,7 @@ extension CanvasHandler {
   ///
   /// Pointer interactions (tap, drag) are forwarded to the active tool's
   /// `resolvePointerInteraction()` method, subject to `inputCapabilities`.
-  public func handleInput(
+  public func handleInteraction(
     _ source: InteractionSource,
     phase: InteractionPhase,
   ) {
@@ -102,7 +102,6 @@ extension CanvasHandler {
     switch adjustment {
       case .updateTranslation(let size): self.transform.translation = size
       case .updateScale(let scale): self.transform.scale = scale
-      //      case .updateScale(let scale): self.transform.scale = scale.clampedIfNeeded(to: zoomRange)
       case .updateRotation(let angle): self.transform.rotation = angle
       case .updatePointerDrag(let rect): self.pointer.drag = rect
       case .updatePointerTap(let point): self.pointer.tap = point

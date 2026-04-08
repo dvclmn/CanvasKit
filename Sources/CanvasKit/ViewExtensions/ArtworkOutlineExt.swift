@@ -27,7 +27,7 @@ public struct ArtworkOutlineModifier: ViewModifier {
   let outline: AreaOutline
 
   public func body(content: Content) -> some View {
-    content.environment(\.areaOutline, outline)
+    content.environment(\.artworkOutline, outline)
 //    content.environment(
 //      \.areaOutline,
 //      AreaOutline(

@@ -13,7 +13,7 @@ struct CanvasArtwork<Content: View>: View {
 
   @Environment(CanvasHandler.self) private var store
   @Environment(\.zoomRange) private var zoomRange
-  @Environment(\.zoomClamped) private var zoomClamped
+  @Environment(\.self) private var env
   @Environment(\.activeTool) private var activeTool
   @Environment(\.artworkOutline) private var artworkOutline
 
@@ -56,10 +56,10 @@ struct CanvasArtwork<Content: View>: View {
 }
 
 extension CanvasArtwork {
+  private var isCanvasReady: Bool { zoomRange != nil && activeTool != nil }
 
   private var cornerRounding: CGFloat {
-    let base = areaOutline.rounding
-    return base.removingZoom(zoomClamped)
+    artworkOutline.resolvedOutline(in: env).rounding
   }
 
   /// This allows Views to specifcy whether they should be clipped
@@ -91,7 +91,4 @@ extension CanvasArtwork {
       }
     }
   }
-
-  private var isCanvasReady: Bool { zoomRange != nil && activeTool != nil }
-
 }

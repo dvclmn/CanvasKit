@@ -8,8 +8,6 @@
 import Foundation
 import InteractionKit
 
-//import InteractionKit
-
 /// The combined result of a tool resolving a pointer interaction.
 ///
 /// Separates canvas-level state changes (`adjustment`) from domain-level

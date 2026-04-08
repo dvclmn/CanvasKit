@@ -41,7 +41,6 @@ struct CanvasInputResolver {
   }
 
   private var shouldResolveTool: Bool {
-//    guard let source else { return false }
     let capabilities = activeTool?.inputCapabilities ?? []
 
     return switch source {
