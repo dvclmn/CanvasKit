@@ -14,3 +14,10 @@ public struct ZoomRangeModifier: ViewModifier {
     content.environment(\.zoomRange, range)
   }
 }
+
+extension View where Self: CanvasAddressable {
+  
+  public func zoomRange(_ range: ClosedRange<Double>) -> ModifiedContent<Self, ZoomRangeModifier> {
+    self.modifier(ZoomRangeModifier(range: range))
+  }
+}

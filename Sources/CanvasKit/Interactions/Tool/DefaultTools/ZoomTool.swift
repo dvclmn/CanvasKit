@@ -19,7 +19,7 @@ public struct ZoomTool: CanvasTool {
   public let icon = "magnifyingglass"
 //  public let pointerStyle: PointerStyleCompatible = .zoomIn
 
-  public var dragBehaviour: DragBehavior { .continuous(axes: .vertical) }
+  public var dragBehaviour: PointerDragBehaviour { .continuous(axes: .vertical) }
 
   public init() {}
 
@@ -43,7 +43,7 @@ public struct ZoomTool: CanvasTool {
               size.cgSize,
               weights: .upRight,
             )
-            /// Hold Option to invert the zoom direction during drag, mirroring tap behavior
+            /// Hold Option to invert the zoom direction during drag, mirroring tap behaviour
             if context.modifiers.contains(.option) {
               factor = 1 / max(factor, 0.0001)
             }

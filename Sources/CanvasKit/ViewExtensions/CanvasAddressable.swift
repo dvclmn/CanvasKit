@@ -5,42 +5,22 @@
 //  Created by Dave Coleman on 6/4/2026.
 //
 
-import SwiftUI
 @_spi(Internals) import BasePrimitives
+import SwiftUI
 
-/// CanvasView conforms to this, allowing view modifiers that
-/// show up only on CanvasView itself, or (see below) modifiers
-/// that return a CanvasAddressable View.
+/// ``CanvasView`` declares conformance to this.
+///
+/// Allows CanvasKit-only View modifiers to define View extensions
+/// that will only show in autocomplete results when:
+/// a) Defined directly on `CanvasView` itself
+/// b) Defined after other existing CanvasKit modifiers
+///
+/// This way CanvasKit-specific modifiers do not pollute autocomplete
+/// results for other SwiftUI views.
+///
+/// Example modifiers: `ZoomRangeModifier`, `ArtworkOutlineModifier`
 public protocol CanvasAddressable {}
 
-/// Preserve CanvasAddressable across SwiftUI modifiers,
-/// rather than losing this context via `some View`
+/// Preserve CanvasAddressable across modifiers,
+/// rather than losing this context via opaque `some View`
 extension ModifiedContent: CanvasAddressable where Content: CanvasAddressable {}
-
-extension View where Self: CanvasAddressable {
-
-  public func zoomRange(_ range: ClosedRange<Double>) -> ModifiedContent<Self, ZoomRangeModifier> {
-    self.modifier(ZoomRangeModifier(range: range))
-  }
-
-  public func artworkOutline(
-    colour: Color = .white.opacity(0.07),
-    rounding: Double = 4,
-    lineWidth: Double = 1,
-  ) -> ModifiedContent<Self, ArtworkOutlineModifier> {
-    self.modifier(
-      ArtworkOutlineModifier(
-        outline: .init(
-          colour: colour,
-          rounding: rounding,
-          lineWidth: lineWidth
-        )
-      )
-//      ArtworkOutlineModifier(
-//        colour: colour,
-//        rounding: rounding,
-//        lineWidth: lineWidth,
-//      )
-    )
-  }
-}

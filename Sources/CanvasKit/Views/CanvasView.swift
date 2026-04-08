@@ -10,7 +10,7 @@ import SwiftUI
 
 public struct CanvasView<Content: View>: View, CanvasAddressable {
 
-  @State private var store: CanvasHandler = .init()
+//  @State private var store: CanvasHandler = .init()
   let canvasSize: Size<CanvasSpace>
   @Binding var toolHandler: ToolHandler
   let content: () -> Content

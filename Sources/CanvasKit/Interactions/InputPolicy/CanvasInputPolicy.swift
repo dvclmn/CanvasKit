@@ -17,11 +17,11 @@
 //  public var activeInputs: ActiveInputs
 //
 //  /// The drag interaction mode
-//  public var dragBehaviour: DragBehavior
+//  public var dragBehaviour: PointerDragBehaviour
 //
 //  public init(
 //    activeInputs: ActiveInputs = .all,
-//    dragBehaviour: DragBehavior = .none,
+//    dragBehaviour: PointerDragBehaviour = .none,
 //
 //  ) {
 //    self.activeInputs = activeInputs

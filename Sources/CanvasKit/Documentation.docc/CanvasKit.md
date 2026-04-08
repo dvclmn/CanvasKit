@@ -32,7 +32,7 @@ That handler is the runtime owner of canvas interaction state:
 | `tap` (`TapState`) | `pointerDragGesture` tap callback in ``CanvasCoreView`` |
 | `pointerDrag` (`DragState`) | `dragRectBinding()` when drag behaviour is `.marquee` |
 | `hover` (`HoverState`) | `.onContinuousHover(coordinateSpace: .named(CanvasSpace.viewport))` in ``CanvasCoreView`` |
-| `activeDragType` (`DragBehavior`) | Internal policy (default `.none`) |
+| `activeDragType` (`PointerDragBehaviour`) | Internal policy (default `.none`) |
 | `geometry` (`CanvasGeometry`) | Mirrored from external `viewportRect` + `canvasSize` |
 | `artworkFrameInViewport` (`CGRect?`) | Resolved in ``CanvasCoreView`` from `Anchor<CGRect>` emitted by ``CanvasArtwork`` |
 

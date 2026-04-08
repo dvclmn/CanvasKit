@@ -26,7 +26,7 @@ public protocol CanvasTool: Sendable, Equatable, Identifiable where ID == Canvas
   var icon: String { get }
 
   /// The drag input policy active when this tool is selected.
-  var dragBehaviour: DragBehavior { get }
+  var dragBehaviour: PointerDragBehaviour { get }
 
   /// Input sources this tool opts into for resolution.
   /// Defaults to `.pointerOnly`.
