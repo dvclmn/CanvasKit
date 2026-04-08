@@ -5,20 +5,13 @@
 //  Created by Dave Coleman on 18/3/2026.
 //
 
-import Foundation
 import BasePrimitives
+import Foundation
 import InteractionKit
 
-/// Context used by tools to resolve a pointer style for the current interaction state.
 public struct InteractionContext: Sendable {
-
-  /// The most recent pointer interaction source, if any.
   public let source: InteractionSource?
-
-  /// The most recent pointer interaction phase.
   public let phase: InteractionPhase
-
-  /// Current modifier keys state.
   public let modifiers: Modifiers
 
   public init(
