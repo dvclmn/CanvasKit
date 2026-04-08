@@ -14,7 +14,7 @@ public struct PanTool: CanvasTool {
   public let kind: CanvasToolKind = .pan
   public let name = "Pan"
   public let icon = "hand.raised"
-//  public let pointerStyle: PointerStyleCompatible = .grabIdle
+  //  public let pointerStyle: PointerStyleCompatible = .grabIdle
 
   public var dragBehaviour: PointerDragBehaviour { .continuous }
 
@@ -29,21 +29,21 @@ public struct PanTool: CanvasTool {
   public func resolvePointerInteraction(
     context: InteractionContext,
     currentTransform: TransformState,
-  ) -> ToolResolution {
+  ) -> ToolResolution? {
 
-    switch context.source {
-      case .pointerDragGesture(let payload):
+    switch context.interaction {
+      case .drag(let payload):
         switch payload {
           case .delta(let delta, _):
-            return .canvasAdjustment(.panAdjustment(for: currentTransform, delta: delta))
+            .init(
+              adjustment: .transform(.panAdjustment(for: currentTransform, delta: delta)),
+              action: .none,
+            )
 
-          case .rect(_, _):
-            print("Not sure if this is right?")
-            return .none
+          case .rect(_, _): .none
         }
 
-      default:
-        return .none
+      default: .none
     }
   }
 

@@ -36,7 +36,7 @@ public final class CanvasHandler {
   /// `handleInteraction(_:phase:)` is called.
   public var phase: InteractionPhase = .none
   public var interaction: Interaction?
-//  public var source: InteractionSource?
+  //  public var source: InteractionSource?
 
   public init() {}
 }
@@ -51,11 +51,12 @@ extension CanvasHandler {
   /// Pointer interactions (tap, drag) are forwarded to the active tool's
   /// `resolvePointerInteraction()` method, subject to `inputCapabilities`.
   public func handleInteraction(
-    _ source: InteractionSource,
+    _ interaction: Interaction,
+    //    _ source: InteractionSource,
     phase: InteractionPhase,
   ) {
 
-    self.source = source
+    self.interaction = interaction
     self.phase = phase
 
     guard let resolution = inputResolver?.resolve() else { return }
@@ -74,13 +75,23 @@ extension CanvasHandler {
   }
 
   private var inputResolver: CanvasInputResolver? {
-    guard let source else { return nil }
+    guard let interactionContext else { return nil }
     return .init(
-      source: source,
-      phase: phase,
-      modifiers: modifiers,
+      context: interactionContext,
+      //      source: source,
+      //      phase: phase,
+      //      modifiers: modifiers,
       activeTool: activeTool,
       transform: transform,
+    )
+  }
+
+  private var interactionContext: InteractionContext? {
+    guard let interaction else { return nil }
+    return .init(
+      interaction: interaction,
+      phase: phase,
+      modifiers: modifiers,
     )
   }
 }
@@ -99,15 +110,22 @@ extension CanvasHandler {
 }
 extension CanvasHandler {
 
-  private func executeAdjustment(_ adjustment: CanvasAdjustment) {
+  private func executeAdjustment(_ adjustment: InteractionAdjustment) {
     switch adjustment {
-      case .updateTranslation(let size): self.transform.translation = size
-      case .updateScale(let scale): self.transform.scale = scale
-      case .updateRotation(let angle): self.transform.rotation = angle
-      case .updatePointerDrag(let rect): self.pointer.drag = rect
-      case .updatePointerTap(let point): self.pointer.tap = point
-      case .updatePointerHover(let point): self.pointer.hover = point
-      case .none: break
+      case .transform(let adj):
+        switch adj {
+          case .translation(let size): self.transform.translation = size
+          case .scale(let scale): self.transform.scale = scale
+          case .rotation(let angle): self.transform.rotation = angle
+        }
+
+      case .pointer(let adj):
+        switch adj {
+          case .tap(let point): self.pointer.tap = point
+          case .drag(let rect): self.pointer.drag = rect
+          case .hover(let point): self.pointer.hover = point
+        }
+
     }
   }
 }

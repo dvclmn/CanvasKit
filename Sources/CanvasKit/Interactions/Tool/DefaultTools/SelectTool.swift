@@ -5,9 +5,9 @@
 //  Created by Dave Coleman on 12/3/2026.
 //
 
+import BasePrimitives
 import InteractionKit
 import SwiftUI
-import BasePrimitives
 
 // MARK: - Select Tool
 
@@ -29,16 +29,22 @@ public struct SelectTool: CanvasTool {
   public func resolvePointerInteraction(
     context: InteractionContext,
     currentTransform: TransformState,
-  ) -> ToolResolution {
-    switch context.source {
-      case .pointerTapGesture(_, let location):
-        return .canvasAdjustment(.updatePointerTap(location))
+  ) -> ToolResolution? {
+    switch context.interaction {
+      case .tap(let location):
+        return .init(
+          adjustment: .pointer(.tap(location)),
+          action: .none,
+        )
 
-      case .pointerDragGesture(let payload):
-        return .canvasAdjustment(.updatePointerDrag(payload.boundingRect))
+      case .drag(let payload):
+        guard let rect = payload.boundingRect else { return nil }
+        return .init(
+          adjustment: .pointer(.drag(rect)),
+          action: .none,
+        )
 
-      default:
-        return .none
+      default: return nil
     }
   }
 }

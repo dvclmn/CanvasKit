@@ -32,10 +32,11 @@ public struct ZoomTool: CanvasTool {
   public func resolvePointerInteraction(
     context: InteractionContext,
     currentTransform: TransformState,
-  ) -> ToolResolution {
+  ) -> ToolResolution? {
 
-    switch context.source {
-      case .pointerDragGesture(let payload):
+    switch context.interaction {
+      case .drag(let payload):
+//      case .pointerDragGesture(let payload):
         switch payload {
 
           case .delta(let size, _):
@@ -47,7 +48,12 @@ public struct ZoomTool: CanvasTool {
             if context.modifiers.contains(.option) {
               factor = 1 / max(factor, 0.0001)
             }
-            return .canvasAdjustment(.zoomAdjustment(for: currentTransform, by: factor))
+            
+            return .init(
+              adjustment: .transform(.zoomAdjustment(for: currentTransform, by: factor)),
+              action: .none
+            )
+//            return .canvasAdjustment(.zoomAdjustment(for: currentTransform, by: factor))
 
           case .rect(let from, let current):
 
@@ -56,20 +62,23 @@ public struct ZoomTool: CanvasTool {
               to: current.cgPoint,
               weights: .upRight,
             )
-            return .canvasAdjustment(.zoomAdjustment(for: currentTransform, by: factor))
+            return .init(
+              adjustment: .transform(.zoomAdjustment(for: currentTransform, by: factor)),
+              action: .none
+            )
+//            return .canvasAdjustment(.zoomAdjustment(for: currentTransform, by: factor))
         }
 
-      case .pointerTapGesture(_, _):
+      case .tap(_):
         let step = context.modifiers.contains(.option) ? 0.8 : 1.25
-        return .canvasAdjustment(
-          .zoomAdjustment(
-            for: currentTransform,
-            by: step,
-          )
+        return .init(
+          adjustment: .transform(.zoomAdjustment(for: currentTransform, by: step)),
+          action: .none
         )
+        
+        
 
-      default:
-        return .none
+      default: return nil
     }
   }
 }
