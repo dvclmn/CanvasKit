@@ -8,26 +8,27 @@
 import InteractionKit
 import SwiftUI
 
-/// Computed from `Canvas​Interaction​State` + `Transform​State` + geometry.
+/// Computed from `CanvasHandler` state and geometry.
 /// Holds only already-converted/mapped, consumer-ready values
 ///
-/// I removed this type at one point, but later realised it is useful for centralising
-/// all mapping in the one place, so it's clear.
-///
-/// Note: `artworkFrame` is not handled in snapshot.
-/// It's added to the Env in `CanvasCoreView`
+/// I removed this type at one point, thinking it wasn't doing anything
+/// useful. But soon realised its important for centralising fully mapped
+/// state, and well worth keeping.
 struct CanvasSnapshot: Sendable {
-  let pointerTap: Point<CanvasSpace>?
-  let pointerLocation: Point<CanvasSpace>?
-  let pointerDrag: Rect<CanvasSpace>?
-  let isPointerInsideCanvas: Bool
-  let artworkFrame: Rect<ScreenSpace>?
+
+  /// ## Transform state
   /// There is a zoom clamped property already in the Env,
   /// so this doesn't need to come in clamped.
   let zoom: Double
   let pan: Size<ScreenSpace>
   let rotation: Angle
 
+  /// ## Pointer state
+  let pointerTap: Point<CanvasSpace>?
+  let pointerDrag: Rect<CanvasSpace>?
+  let pointerHover: Point<CanvasSpace>?
+  let isPointerInsideCanvas: Bool
+  let artworkFrame: Rect<ScreenSpace>?
   let phase: InteractionPhase
 }
 
@@ -36,13 +37,15 @@ struct CanvasSnapshotModifier: ViewModifier {
   let snapshot: CanvasSnapshot?
   func body(content: Content) -> some View {
     content
-      .environment(\.pointerTap, snapshot?.pointerTap)
-      .environment(\.pointerLocation, snapshot?.pointerLocation)
-      .environment(\.pointerDrag, snapshot?.pointerDrag)
-      .environment(\.artworkFrameInViewport, snapshot?.artworkFrame)
       .environment(\.zoomLevel, snapshot?.zoom ?? 1.0)
       .environment(\.panOffset, snapshot?.pan.cgSize ?? .zero)
       .environment(\.rotation, snapshot?.rotation ?? .zero)
+
+      .environment(\.pointerTap, snapshot?.pointerTap)
+      .environment(\.pointerDrag, snapshot?.pointerDrag)
+      .environment(\.pointerHover, snapshot?.pointerHover)
+    
+      .environment(\.artworkFrameInViewport, snapshot?.artworkFrame)
       .environment(\.interactionPhase, snapshot?.phase ?? .none)
   }
 }

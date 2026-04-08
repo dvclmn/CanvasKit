@@ -133,14 +133,14 @@ extension CanvasHandler {
     let isInside = hoverMapped.map { mapper.isInsideCanvas($0) } ?? false
 
     return CanvasSnapshot(
-      pointerTap: tapMapped,
-      pointerLocation: hoverMapped,
-      pointerDrag: rectMapped,
-      isPointerInsideCanvas: isInside,
-      artworkFrame: artworkFrame,
       zoom: zoomRaw,
       pan: transform.translation,
       rotation: transform.rotation,
+      pointerTap: tapMapped,
+      pointerDrag: rectMapped,
+      pointerHover: hoverMapped,
+      isPointerInsideCanvas: isInside,
+      artworkFrame: artworkFrame,
       phase: phase,
     )
   }
