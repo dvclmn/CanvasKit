@@ -63,7 +63,7 @@ struct CanvasInputResolver {
     }
   }
 
-  private func globalSwipeAdjustment(delta: Size<ScreenSpace>) -> TransformInteraction {
+  private func globalSwipeAdjustment(delta: Size<ScreenSpace>) -> TransformAdjustment {
 //  private func globalSwipeAdjustment(delta: Size<ScreenSpace>) -> CanvasAdjustment {
 
     /// If Option is held during a Swipe, it is interpreted as Zoom, not Pan
