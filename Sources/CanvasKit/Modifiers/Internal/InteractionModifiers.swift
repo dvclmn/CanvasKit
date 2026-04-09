@@ -40,11 +40,7 @@ struct InteractionModifiers: ViewModifier {
         isEnabled: true,
         //        isEnabled: policy.activeInputs.contains(.pinch)
       ) { zoom, phase in
-        store.handleInteraction(
-          .pinchGesture(scale: zoom),
-          phase: phase,
-          //          modifiers: modifierKeys
-        )
+        store.handleInteraction(.pinch(scale: zoom),phase: phase)
         /// Return the resolved scale so the modifier's internalZoom
         /// stays in sync with what GlobalInteraction wrote to transform.scale.
         return store.transform.scale
@@ -54,7 +50,7 @@ struct InteractionModifiers: ViewModifier {
         //        guard policy.activeInputs.contains(.pointerHover) else { return }
         guard let location = phase.location else { return }
         store.handleInteraction(
-          .continuousHover(location.screenPoint),
+          .hover(location.screenPoint),
           phase: phase.interactionPhase,
         )
       }
@@ -65,14 +61,14 @@ struct InteractionModifiers: ViewModifier {
       ) { location in
         //        guard policy.activeInputs.contains(.pointerTap) else { return }
         store.handleInteraction(
-          .pointerTapGesture(.primary, location: location.screenPoint),
+          .tap(location: location.screenPoint),
           phase: .ended,
         )
       }
 
       .onPointerDragGesture(behaviour: activeTool?.dragBehaviour ?? .none) { payload, phase in
         guard let payload else { return }
-        store.handleInteraction(.pointerDragGesture(payload), phase: phase)
+        store.handleInteraction(.drag(payload), phase: phase)
       }
   }
 }

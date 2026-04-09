@@ -5,15 +5,9 @@
 //  Created by Dave Coleman on 2/4/2026.
 //
 
+import InteractionKit
+
 struct CanvasInputResolution {
-  let globalAdjustment: CanvasAdjustment
-  let toolResolution: ToolResolution
-
-  var pointerAdjustment: CanvasAdjustment {
-    toolResolution.adjustment
-  }
-
-  var toolAction: ToolAction {
-    toolResolution.action
-  }
+  let globalAdjustment: TransformAdjustment?
+  let toolResolution: ToolResolution?
 }

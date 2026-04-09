@@ -59,24 +59,14 @@ struct CanvasInputResolver {
   /// Optional because not all transform adjustments are able to
   /// be created by all Interaction kinds
   private var globalAdjustment: TransformAdjustment? {
-
-    let interaction = context.interaction
-    let adjustment: TransformAdjustment? =
-      switch interaction {
-        case .swipe(let delta): swipeAdjustment(delta: delta)
-        case .pinch(let scale): .scale(scale)
-        case .rotation(let angle): .rotation(angle)
-        case .tap, .drag, .hover: nil
-
-      //      case .tap: .none
-      //      case .drag: .none
-      //      case .hover: .none
-      }
-    guard let adjustment, adjustment.supportedInteractions.contains(interaction.kind) else {
-      return nil
+    switch context.interaction {
+      case .swipe(let delta): swipeAdjustment(delta: delta)
+      case .pinch(let scale): .scale(scale)
+      case .rotation(let angle): .rotation(angle)
+      case .tap, .drag, .hover: nil
     }
-
   }
+  
   //  private var globalAdjustment: CanvasAdjustment {
   //    switch source {
   //      case .swipeGesture(let delta, _): globalSwipeAdjustment(delta: delta)

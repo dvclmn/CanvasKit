@@ -62,12 +62,16 @@ extension CanvasHandler {
     guard let resolution = inputResolver?.resolve() else { return }
 
     /// 1 – Global gestures
-    executeAdjustment(resolution.globalAdjustment)
+    if let global = resolution.globalAdjustment {
+      executeAdjustment(.transform(global))
+    }
 
     /// 2 – Tool-specific pointer interactions
-    executeAdjustment(resolution.pointerAdjustment)
+    if let toolAdjustment = resolution.toolResolution?.adjustment {
+      executeAdjustment(toolAdjustment)
+    }
 
-    lastToolAction = resolution.toolAction
+    lastToolAction = resolution.toolResolution?.action ?? .none
   }
 
   public var pointerStyle: PointerStyleCompatible? {
