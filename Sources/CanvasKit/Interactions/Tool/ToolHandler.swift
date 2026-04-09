@@ -99,7 +99,7 @@ extension ToolHandler {
   }
 
   /// The Kind of the effective tool
-  //  public var toolKind: CanvasToolKind { effectiveTool.kind }
+    public var toolKind: CanvasToolKind { effectiveTool.kind }
 
   /// The spring-loaded tool if one is armed, or `nil`.
   public var springLoadedTool: (any CanvasTool)? {
@@ -188,9 +188,10 @@ extension ToolHandler {
   /// Returns the first shortcut key bound to the given tool kind, if any.
   ///
   /// Useful for displaying keyboard shortcuts in menus and tooltips.
-  //  public func shortcutKey(for kind: CanvasToolKind) -> KeyEquivalent? {
-  //    bindings.first { $0.target == kind && $0.mode == .sticky }?.binding.key
-  //  }
+    public func shortcut(for kind: CanvasToolKind) -> KeyboardShortcut? {
+//    public func shortcutKey(for kind: CanvasToolKind) -> KeyEquivalent? {
+      bindings.first { $0.target == kind && $0.mode == .sticky }?.shortcut
+    }
 }
 
 // MARK: - Private helpers

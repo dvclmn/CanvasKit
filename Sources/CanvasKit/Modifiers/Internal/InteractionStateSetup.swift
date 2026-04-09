@@ -15,8 +15,8 @@ import SwiftUI
 struct InteractionStateSetupModifier: ViewModifier {
   @Environment(\.modifierKeys) private var modifierKeys
   @Environment(\.zoomRange) private var zoomRange
-  @State private var store: CanvasHandler = .init()
 
+  @Bindable var store: CanvasHandler
   @Binding var toolHandler: ToolHandler
   let canvasSize: Size<CanvasSpace>
 
@@ -26,56 +26,10 @@ struct InteractionStateSetupModifier: ViewModifier {
 
       .setSnapshotValues(store.snapshot(zoomRange: zoomRange))
 
-/// Provide the environment with the resolved pointerStyle
-      .environment(\.pointerStyle, store.pointerStyle)
-      .environment(\.activeTool, toolHandler.effectiveTool)
-
-    /// Provide the effective/active tool to the Environment
-    
-    
-    /// ... and sync that value to `CanvasHandler`
       .syncEnvironment(\.activeTool, id: \.?.kind) { store.updateTool(to: $0) }
-
-    /// Provides `CanvasHandler` with modifier keys and current active tool
       .syncEnvironment(\.modifierKeys) { store.updateModifiers(to: $0) }
-    
-      //      .environment(\.coordinateSpaceMapper, interactionState.coordinateSpaceMapper)
 
-      //      .syncEnvironment(\.activeTool) { interactionState.activeTool = $0 }
-      //      .syncEnvironment(\.activeTool, to: $interactionState.activeTool)
-      /// Watches tool kind rather than the tool itself, as `any CanvasTool`
-      /// can't conform to Equatable
-//      .task(id: toolHandler.effectiveTool.kind) {
-//        store.updateTool(to: toolHandler.effectiveTool)
-//      }
-
-
-
-    /// Provides interaction state with updated zoom range
-    //      .syncEnvironment(\.zoomRange) { interactionState.updateZoomRange(to: $0) }
-
-    //      .syncEnvironment(\.activeTool, using: \.?.kind, apply: <#T##(Value) -> Void#>)
-    //      .syncEnvironment(\.activeTool, using: \.kind, to: $interactionState.activeTool)
+      .environment(\.activeTool, toolHandler.effectiveTool)
+      .environment(\.pointerStyle, store.pointerStyle)
   }
 }
-
-extension InteractionStateSetupModifier {
-
-}
-//  private func snapshot(
-//    in canvasSize: Size<CanvasSpace>,
-//    //    mapper: CoordinateSpaceMapper,
-//  ) -> CanvasSnapshot? {
-//    guard let hover = pointer.hover else { return nil }
-//    let hoverMapped = mapper.canvasPoint(from: hover)
-//    let isInside = mapper.isInsideCanvas(hoverMapped, in: canvasSize)
-//
-//    return CanvasSnapshot(
-//      pointerLocation: hoverMapped,
-//      isPointerInsideCanvas: isInside,
-//      zoom: transform.scale,
-//      pan: transform.translation.cgSize,
-//      rotation: transform.rotation,
-//    )
-//  }
-//}

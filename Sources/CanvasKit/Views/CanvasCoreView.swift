@@ -23,10 +23,6 @@ struct CanvasCoreView<Content: View>: View {
     Color.clear
       .overlay {
         CanvasArtwork(canvasSize: canvasSize, content: content)
-        // TODO: Need to bring back the GridFont modifier.
-        // Maybe expose an additional Viewbuilder closure for
-        // targeting the Artwork itself?
-        //          .gridFont(for: .canvas)
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       .background(canvasBackground)
@@ -52,20 +48,14 @@ struct CanvasCoreView<Content: View>: View {
 
       /// Holds user input modifiers, `onSwipeGesture`, `onTapGesture`, etc
 
-      .debugTextOverlay(alignment: .bottomTrailing) {
-
-        Indented("Zoom") {
-          Labeled("Zoom", value: store.transform.scale)
-          Labeled("Zoom (Env)", value: zoomLevel)
-          Labeled("Clamped", value: zoomClamped)
-          Labeled("Range", value: zoomRange)
-
-        }
-      }
-
+//      .debugTextOverlay(alignment: .bottomTrailing) {
+//        Indented("Zoom") {
+//          Labeled("Zoom", value: store.transform.scale)
+//          Labeled("Zoom (Env)", value: zoomLevel)
+//          Labeled("Clamped", value: zoomClamped)
+//          Labeled("Range", value: zoomRange)
+//        }
+//      }
       .gestureModifiers()
-    //      .overlay(alignment: .bottomTrailing) {
-    //        Text("Zoom: \(store.transform.scale)")
-    //      }
   }
 }

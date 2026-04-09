@@ -42,7 +42,7 @@ struct InteractionModifiers: ViewModifier {
       ) { zoom, phase in
         store.handleInteraction(.pinch(scale: zoom),phase: phase)
         /// Return the resolved scale so the modifier's internalZoom
-        /// stays in sync with what GlobalInteraction wrote to transform.scale.
+        /// stays in sync with CanvasHandler's transform state
         return store.transform.scale
       }
 

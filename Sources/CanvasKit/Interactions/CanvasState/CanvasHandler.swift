@@ -25,7 +25,7 @@ public final class CanvasHandler {
 
   /// Values synced here from the Environment
   private var modifiers: Modifiers = []
-  private var activeTool: (any CanvasTool)?
+  package var activeTool: (any CanvasTool)?
 
   /// The most recent domain action produced by a tool resolution.
   /// Consuming apps can observe this to react to tool-specific events
@@ -36,7 +36,6 @@ public final class CanvasHandler {
   /// `handleInteraction(_:phase:)` is called.
   public var phase: InteractionPhase = .none
   public var interaction: Interaction?
-  //  public var source: InteractionSource?
 
   public init() {}
 }
@@ -45,14 +44,13 @@ extension CanvasHandler {
 
   /// Entry point for all raw input events from gesture modifiers.
   ///
-  /// 1. Global gestures (swipe, pinch, hover) are handled centrally here,
-  /// via `GlobalInteraction`. Tools never see these events.
+  /// 1. Global gestures (swipe, pinch, hover) are handled centrally here.
+  /// Tools never see these events.
   ///
   /// Pointer interactions (tap, drag) are forwarded to the active tool's
   /// `resolvePointerInteraction()` method, subject to `inputCapabilities`.
   public func handleInteraction(
     _ interaction: Interaction,
-    //    _ source: InteractionSource,
     phase: InteractionPhase,
   ) {
 
