@@ -23,4 +23,8 @@ extension EnvironmentValues {
   /// set up specifically for CanvasKit, to drive easy configuration
   /// of the artwork outline for users.
   @Entry var artworkOutline: AreaOutline = .init()
+  
+  @Entry package var canvasSize: Size<CanvasSpace> = .zero
+  @Entry package var transform: TransformState = .identity
+  
 }

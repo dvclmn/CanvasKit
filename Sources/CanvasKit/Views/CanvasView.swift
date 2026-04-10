@@ -14,9 +14,17 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
 
   @State private var store: CanvasHandler = .init()
 
+  /// Populated when user wishes to handle their own transform state
   private let externalTransform: Binding<TransformState>?
+  
+  /// Internal-only source of truth for transform state. If user passes in state,
+  /// it is passed to this. If not, this gets a default initial value
   @State private var localTransform: TransformState
+  
+  /// If the user doesn't need Tool functionality, this just stays `nil`
+  /// CanvasKit doesn't require tools be used, it's opt-in
   private let toolHandler: Binding<ToolHandler>?
+  
   let canvasSize: Size<CanvasSpace>
   let content: () -> Content
 
@@ -58,19 +66,6 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
     self.toolHandler = toolHandler
     self.content = content
   }
-
-  /// ToolHandler is required for now, until I implement state management better
-  //  public init(
-  //    size: CGSize,  // Canvas size
-  //    transform: Binding<TransformState> = .constant(.identity),
-  //    toolHandler: Binding<ToolHandler> = .constant(.init()),
-  //    @ViewBuilder content: @escaping () -> Content,
-  //  ) {
-  //    self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
-  //    self._transform = transform
-  //    self._toolHandler = toolHandler
-  //    self.content = content
-  //  }
 
   public var body: some View {
 
