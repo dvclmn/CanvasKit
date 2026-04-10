@@ -18,7 +18,7 @@ struct CanvasArtwork<Content: View>: View {
   @Environment(\.artworkOutline) private var artworkOutline
 
   let canvasSize: Size<CanvasSpace>
-
+  let transform: TransformState
   @ViewBuilder var content: () -> Content
 
   var body: some View {
@@ -48,9 +48,9 @@ struct CanvasArtwork<Content: View>: View {
       .anchorPreference(key: ArtworkBoundsAnchorKey.self, value: .bounds) { $0 }
 
       /// Important: Keep the order 1. Scale, 2. Rotate, 3. Offset
-      .scaleEffect(store.transform.scale.clampedIfNeeded(to: zoomRange), anchor: .center)
-      .rotationEffect(store.transform.rotation, anchor: .center)
-      .offset(store.transform.translation.cgSize)
+      .scaleEffect(transform.scale.clampedIfNeeded(to: zoomRange), anchor: .center)
+      .rotationEffect(transform.rotation, anchor: .center)
+      .offset(transform.translation.cgSize)
       .frame(maxWidth: .infinity, maxHeight: .infinity)
   }
 }

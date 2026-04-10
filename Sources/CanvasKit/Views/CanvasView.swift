@@ -16,15 +16,15 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
 
   /// Populated when user wishes to handle their own transform state
   private let externalTransform: Binding<TransformState>?
-  
+
   /// Internal-only source of truth for transform state. If user passes in state,
   /// it is passed to this. If not, this gets a default initial value
   @State private var localTransform: TransformState
-  
+
   /// If the user doesn't need Tool functionality, this just stays `nil`
   /// CanvasKit doesn't require tools be used, it's opt-in
   private let toolHandler: Binding<ToolHandler>?
-  
+
   let canvasSize: Size<CanvasSpace>
   let content: () -> Content
 
@@ -69,29 +69,33 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
 
   public var body: some View {
 
-    CanvasCoreView(canvasSize: canvasSize, content: content)
-      .debugTextOverlay(alignment: .bottomTrailing) {
-        Indented("Tool") {
-          Labeled("Tool (from ToolHandler)", value: toolHandler?.wrappedValue.effectiveTool.name)
-          Labeled("Tool (from CanvasHandler)", value: store.activeTool?.name)
-        }
+    CanvasCoreView(
+      canvasSize: canvasSize,
+      transform: $localTransform,
+      content: content,
+    )
+    .debugTextOverlay(alignment: .bottomTrailing) {
+      Indented("Tool") {
+        Labeled("Tool (from ToolHandler)", value: toolHandler?.wrappedValue.effectiveTool.name)
+        Labeled("Tool (from CanvasHandler)", value: store.activeTool?.name)
       }
-      .environment(store)
+    }
+    .environment(store)
 
-      .setSnapshotValues(
-        store.snapshot(
-          zoomRange: zoomRange,
-          transform: transform,
-        )
+    .setSnapshotValues(
+      store.snapshot(
+        zoomRange: zoomRange,
+        transform: transform,
       )
-      //      .setSnapshotValues(store.snapshot(zoomRange: zoomRange))
+    )
+    //      .setSnapshotValues(store.snapshot(zoomRange: zoomRange))
 
-      .onEnvironmentChange(\.activeTool, id: \.?.kind) { store.updateTool(to: $0) }
-      .onEnvironmentChange(\.modifierKeys) { store.updateModifiers(to: $0) }
+    .onEnvironmentChange(\.activeTool, id: \.?.kind) { store.updateTool(to: $0) }
+    .onEnvironmentChange(\.modifierKeys) { store.updateModifiers(to: $0) }
 
-      .environment(\.activeTool, toolHandler?.wrappedValue.effectiveTool)
-      .environment(\.pointerStyle, pointerStyle)
-      .pointerStyleCompatible(pointerStyle)
+    .environment(\.activeTool, toolHandler?.wrappedValue.effectiveTool)
+    .environment(\.pointerStyle, pointerStyle)
+    .pointerStyleCompatible(pointerStyle)
   }
 }
 

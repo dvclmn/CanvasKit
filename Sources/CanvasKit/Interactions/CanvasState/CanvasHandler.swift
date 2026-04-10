@@ -72,7 +72,6 @@ extension CanvasHandler {
     /// 2 – Tool-specific pointer interactions
     if let toolAdjustment = resolution.toolResolution?.adjustment {
       return handleAdjustment(toolAdjustment, currentTransform: currentTransform)
-      //      updatePointer()
     }
 
     lastToolAction = resolution.toolResolution?.action ?? .none
@@ -90,11 +89,6 @@ extension CanvasHandler {
     switch adjustment {
       case .transform(let adj):
         return adj.updatedState(currentTransform)
-      //        switch adj {
-      //          case .translation(let size): self.transform.translation = size
-      //          case .scale(let scale): self.transform.scale = scale
-      //          case .rotation(let angle): self.transform.rotation = angle
-      //        }
 
       case .pointer(let adj):
         switch adj {
@@ -106,23 +100,6 @@ extension CanvasHandler {
 
     }
   }
-
-  //  private func updateTransform(
-  //    current transform: TransformState,
-  //    adjustment: TransformAdjustment,
-  //  ) -> TransformState {
-  //    adjustment.updatedState(transform)
-  //
-  //  }
-  //
-  //  private func updatePointer(_ adjustment: PointerAdjustment) {
-  //    //  private func updatePointer(_ adjustment: InteractionAdjustment) -> PointerState {
-  //    switch adjustment {
-  //      case .tap(let point): self.pointer.tap = point
-  //      case .drag(let rect): self.pointer.drag = rect
-  //      case .hover(let point): self.pointer.hover = point
-  //    }
-  //  }
 }
 
 extension CanvasHandler {
@@ -142,23 +119,17 @@ extension CanvasHandler {
   }
 
   private func inputResolver(transform: TransformState) -> CanvasInputResolver? {
-    guard let interactionContext else { return nil }
-    return .init(
-      context: interactionContext,
-      //      source: source,
-      //      phase: phase,
-      //      modifiers: modifiers,
-      activeTool: activeTool,
-      transform: transform,
-    )
-  }
-
-  private var interactionContext: InteractionContext? {
     guard let interaction else { return nil }
-    return .init(
+
+    let context = InteractionContext(
       interaction: interaction,
       phase: phase,
       modifiers: modifiers,
+    )
+    return .init(
+      context: context,
+      activeTool: activeTool,
+      transform: transform,
     )
   }
 }
@@ -169,7 +140,7 @@ extension CanvasHandler {
 
   func snapshot(
     zoomRange: ClosedRange<Double>?,
-    transform: TransformState
+    transform: TransformState,
   ) -> CanvasSnapshot? {
 
     guard let artworkFrame else { return nil }

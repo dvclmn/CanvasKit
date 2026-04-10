@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		F67418912F10DF3D004B8381 /* CanvasKit in Frameworks */ = {isa = PBXBuildFile; productRef = F67418902F10DF3D004B8381 /* CanvasKit */; };
-		F6CE9C042F1181AA00341392 /* ToolKit in Frameworks */ = {isa = PBXBuildFile; productRef = F6CE9C032F1181AA00341392 /* ToolKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,7 +41,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F67418912F10DF3D004B8381 /* CanvasKit in Frameworks */,
-				F6CE9C042F1181AA00341392 /* ToolKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,7 +92,6 @@
 			name = CanvasDemo;
 			packageProductDependencies = (
 				F67418902F10DF3D004B8381 /* CanvasKit */,
-				F6CE9C032F1181AA00341392 /* ToolKit */,
 			);
 			productName = CanvasDemo;
 			productReference = F67418692F10DEC9004B8381 /* CanvasDemo.app */;
@@ -370,10 +367,6 @@
 		F67418902F10DF3D004B8381 /* CanvasKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CanvasKit;
-		};
-		F6CE9C032F1181AA00341392 /* ToolKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ToolKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

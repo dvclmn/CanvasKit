@@ -15,11 +15,6 @@ struct CanvasCoreView<Content: View>: View {
   @Environment(\.zoomLevel) private var zoomLevel
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.zoomClamped) private var zoomClamped
-  
-  /// Internal Env values
-//  @Environment(\.transform) private var transform
-//  @Environment(\.canvasSize) private var canvasSize
-  
 
   let canvasSize: Size<CanvasSpace>
   @Binding var transform: TransformState
@@ -29,7 +24,11 @@ struct CanvasCoreView<Content: View>: View {
   var body: some View {
     Color.clear
       .overlay {
-        CanvasArtwork(canvasSize: canvasSize, content: content)
+        CanvasArtwork(
+          canvasSize: canvasSize,
+          transform: transform,
+          content: content
+        )
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       .background(canvasBackground)
@@ -63,6 +62,6 @@ struct CanvasCoreView<Content: View>: View {
 //          Labeled("Range", value: zoomRange)
 //        }
 //      }
-      .gestureModifiers()
+      .gestureModifiers($transform)
   }
 }

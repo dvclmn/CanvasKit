@@ -25,7 +25,7 @@ struct CanvasInputResolver {
 
   func resolve() -> CanvasInputResolution {
     .init(
-      globalAdjustment: globalAdjustment,
+      baseAdjustment: globalAdjustment,
       toolResolution: toolResolution,
     )
   }
@@ -66,7 +66,7 @@ struct CanvasInputResolver {
       case .tap, .drag, .hover: nil
     }
   }
-  
+
   //  private var globalAdjustment: CanvasAdjustment {
   //    switch source {
   //      case .swipeGesture(let delta, _): globalSwipeAdjustment(delta: delta)
