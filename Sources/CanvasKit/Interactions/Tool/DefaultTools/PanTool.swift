@@ -33,25 +33,25 @@ extension PanTool {
     currentTransform: TransformState,
   ) -> ToolResolution? {
 
-    let interactionKind = context.interaction.kind
+    let adjustment: InteractionAdjustment =
+      switch context.interaction {
+        case .drag(let payload):
+          switch payload {
+            case .delta(let delta, _):
+              .transform(.panAdjustment(for: currentTransform, delta: delta))
+
+            case .rect(_, _): .none
+          }
+
+        default: .none
+      }
+
+    let toolAction: ToolAction = .none
     
-    let adjustment: TransformAdjustment
-    let toolAction
-    guard
-    switch context.interaction {
-      case .drag(let payload):
-        switch payload {
-          case .delta(let delta, _):
-            .init(
-              adjustment: .transform(.panAdjustment(for: currentTransform, delta: delta)),
-              action: .none,
-            )
-
-          case .rect(_, _): .none
-        }
-
-      default: .none
-    }
+    return .init(
+      for: context.interaction,
+      adjustment: adjustment,
+      action: toolAction,
+    )
   }
-
 }

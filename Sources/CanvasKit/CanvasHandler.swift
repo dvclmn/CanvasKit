@@ -80,6 +80,7 @@ extension CanvasHandler {
 }
 
 extension CanvasHandler {
+  
 
   private func handleAdjustment(
     _ adjustment: InteractionAdjustment,

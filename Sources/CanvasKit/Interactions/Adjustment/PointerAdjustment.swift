@@ -18,12 +18,12 @@ import InteractionKit
 /// Whereas `TransformAdjustment` doesn't describe
 /// a device at all, just the *transformation* from a device.
 /// Be it a pointer device, or via multi-touch trackpad gesture.
-//public enum PointerAdjustment: Sendable {
-//  case tap(Point<ScreenSpace>)
-//  case hover(Point<ScreenSpace>)
-//  case drag(Rect<ScreenSpace>)
-//}
-//
+public enum PointerAdjustment: Sendable {
+  case tap(Point<ScreenSpace>)
+  case hover(Point<ScreenSpace>)
+  case drag(Rect<ScreenSpace>)
+}
+
 //extension PointerAdjustment {
 //  public var supportedInteractions: InteractionKinds {
 //    switch self {
