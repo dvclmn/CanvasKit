@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 1/3/2026.
 //
 
-import SwiftUI
 import InteractionKit
+import SwiftUI
 
 public struct TransformState: Sendable, Equatable {
   public var translation: Size<ScreenSpace>
@@ -31,5 +31,3 @@ public struct TransformState: Sendable, Equatable {
 extension TransformState {
   public mutating func reset() { self = Self.identity }
 }
-
-

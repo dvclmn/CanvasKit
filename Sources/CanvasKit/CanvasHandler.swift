@@ -16,7 +16,6 @@ import SwiftUI
 final class CanvasHandler {
 
   /// Internal state
-  //  var transform: TransformState = .identity
   var pointer: PointerState = .initial
 
   /// Synced here from `CanvasCoreView`. This then gets added

@@ -5,33 +5,28 @@
 //  Created by Dave Coleman on 8/4/2026.
 //
 
-import SwiftUI
 import InteractionKit
-
-//struct TransformOperation {
-//  let adjustment: TransformAdjustment
-//  let interaction: Interaction
-//
-//  var isValidInteraction: Bool {
-//
-//  }
-//}
+import SwiftUI
 
 /// Previously held by `CanvasAdjustment`
-/// Considering rename to `TransformAdjustment`
 ///
-/// This is distinct from Pointer, because a `TransformAdjustment`
-/// can come from *both* a Pointer and a Gesture.
+/// `TransformAdjustment` is distinct from `PointerAdjustment`.
+/// A transform adjustment can come from either a pointer or a gesture interaction.
 ///
-/// Modeled here as an enum alongside existing `TransformState`,
-/// as this is part of the Tool resolution pipeline, which needs to be able
-/// to express a single Transform, not all three at once.
+/// E.g. a pointer drag can express a zoom in/out, thus adjusting transform's scale.
 ///
-/// Important: Default application for these is for the `offset`,
-/// `scaleEffect` and `rotationEffect` modifiers
-/// on the Canvas artwork View. *However*, these transformations
+/// This enum corresponds to `TransformState`. Useful for expressing
+/// a *single* adjustment, rather than all three.
+///
+/// Important: Property names `translation`, `scale` and `rotation`
+/// are intentionally generic, to discourage direct association with e.g. pan/zoom/rotate.
+/// Whilst the default usage for these is providing values to `offset`,
+/// `scaleEffect` and `rotationEffect` SwiftUI modifiers, that is not
+/// the only way they can be used. These transformations
 /// can be applied in a range of other scenarios, such as
+///
 // TODO: List more examples for above
+// I'm thinking of the different ways gestures can be used
 public enum TransformAdjustment: Sendable {
   case translation(Size<ScreenSpace>)
   case scale(Double)
@@ -41,26 +36,19 @@ extension TransformAdjustment {
 
   public func updatedState(_ current: TransformState) -> TransformState {
     var new = current
-
     switch self {
       case .translation(let val): new.translation = val
       case .scale(let val): new.scale = val
       case .rotation(let val): new.rotation = val
     }
-
     return new
-
   }
 
   public var supportedInteractions: InteractionKinds {
     switch self {
-
-      /// Swipe is the default. Drag is typically via e.g. a Pan Tool
       case .translation: [.swipe, .drag]
-
-      ///
-      case .scale: []
-      case .rotation: []
+      case .scale: [.swipe, .pinch, .tap, .drag]
+      case .rotation: [.swipe, .rotation, .drag]
     }
   }
 
