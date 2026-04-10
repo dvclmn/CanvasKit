@@ -14,16 +14,50 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
 
   @State private var store: CanvasHandler = .init()
 
-  //  @State private var transform: TransformState
-  // Always a binding internally
-  @Binding private var transform: TransformState
-
-  // Only used when we "self-own"
-  @State private var internalTransform: TransformState = .identity
-
+  private let externalTransform: Binding<TransformState>?
+  @State private var localTransform: TransformState
+  private let toolHandler: Binding<ToolHandler>?
   let canvasSize: Size<CanvasSpace>
-  @Binding var toolHandler: ToolHandler
   let content: () -> Content
+
+  // MARK: - Simple init — CanvasView owns everything
+  public init(
+    size: CGSize,
+    @ViewBuilder content: @escaping () -> Content,
+  ) {
+    self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
+    self._localTransform = State(initialValue: .identity)
+    self.externalTransform = nil
+    self.toolHandler = nil
+    self.content = content
+  }
+
+  // MARK: - External transform
+  public init(
+    size: CGSize,
+    transform: Binding<TransformState>,
+    @ViewBuilder content: @escaping () -> Content,
+  ) {
+    self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
+    self._localTransform = State(initialValue: transform.wrappedValue)
+    self.externalTransform = transform
+    self.toolHandler = nil
+    self.content = content
+  }
+
+  // MARK: - Full external control
+  public init(
+    size: CGSize,
+    transform: Binding<TransformState>,
+    toolHandler: Binding<ToolHandler>,
+    @ViewBuilder content: @escaping () -> Content,
+  ) {
+    self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
+    self._localTransform = State(initialValue: transform.wrappedValue)
+    self.externalTransform = transform
+    self.toolHandler = toolHandler
+    self.content = content
+  }
 
   /// ToolHandler is required for now, until I implement state management better
   //  public init(
@@ -38,36 +72,46 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   //    self.content = content
   //  }
 
-  public init(
-
-    size canvasSize: Size<CanvasSpace>,
-    transform: Binding<TransformState>,
-    @ViewBuilder content: @escaping () -> Content,
-  ) {
-    self.canvasSize = canvasSize
-    self._transform = transform
-    self._toolHandler = .constant(.init())
-    self.content = content
-  }
-
   public var body: some View {
 
     CanvasCoreView(canvasSize: canvasSize, content: content)
       .debugTextOverlay(alignment: .bottomTrailing) {
         Indented("Tool") {
-          Labeled("Tool (from ToolHandler)", value: toolHandler.effectiveTool.name)
+          Labeled("Tool (from ToolHandler)", value: toolHandler?.wrappedValue.effectiveTool.name)
           Labeled("Tool (from CanvasHandler)", value: store.activeTool?.name)
         }
       }
       .environment(store)
 
-      .setSnapshotValues(store.snapshot(zoomRange: zoomRange))
+      .setSnapshotValues(
+        store.snapshot(
+          zoomRange: zoomRange,
+          transform: transform,
+        )
+      )
+      //      .setSnapshotValues(store.snapshot(zoomRange: zoomRange))
 
       .onEnvironmentChange(\.activeTool, id: \.?.kind) { store.updateTool(to: $0) }
       .onEnvironmentChange(\.modifierKeys) { store.updateModifiers(to: $0) }
 
-      .environment(\.activeTool, toolHandler.effectiveTool)
-      .environment(\.pointerStyle, store.pointerStyle)
-      .pointerStyleCompatible(store.)
+      .environment(\.activeTool, toolHandler?.wrappedValue.effectiveTool)
+      .environment(\.pointerStyle, pointerStyle)
+      .pointerStyleCompatible(pointerStyle)
+  }
+}
+
+extension CanvasView {
+  private var pointerStyle: PointerStyleCompatible? {
+    store.pointerStyle(transform: transform)
+  }
+  private var transform: TransformState {
+    get { externalTransform?.wrappedValue ?? localTransform }
+    nonmutating set {
+      if let external = externalTransform {
+        external.wrappedValue = newValue
+      } else {
+        localTransform = newValue
+      }
+    }
   }
 }

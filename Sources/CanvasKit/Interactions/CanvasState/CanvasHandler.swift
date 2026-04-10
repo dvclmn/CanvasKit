@@ -65,19 +65,78 @@ extension CanvasHandler {
 
     /// 1 – Global gestures
     if let global = resolution.globalAdjustment {
-      executeAdjustment(.transform(global))
+      return handleAdjustment(.transform(global), currentTransform: currentTransform)
     }
 
     /// 2 – Tool-specific pointer interactions
     if let toolAdjustment = resolution.toolResolution?.adjustment {
-      executeAdjustment(toolAdjustment)
+      return handleAdjustment(toolAdjustment, currentTransform: currentTransform)
+      //      updatePointer()
     }
 
     lastToolAction = resolution.toolResolution?.action ?? .none
   }
 
-  var pointerStyle: PointerStyleCompatible? {
-    inputResolver?.pointerStyle
+}
+
+extension CanvasHandler {
+
+  private func handleAdjustment(
+    _ adjustment: InteractionAdjustment,
+    currentTransform: TransformState,
+  ) -> TransformState {
+    switch adjustment {
+      case .transform(let adj):
+        return adj.updatedState(currentTransform)
+      //        switch adj {
+      //          case .translation(let size): self.transform.translation = size
+      //          case .scale(let scale): self.transform.scale = scale
+      //          case .rotation(let angle): self.transform.rotation = angle
+      //        }
+
+      case .pointer(let adj):
+        switch adj {
+          case .tap(let point): self.pointer.tap = point
+          case .drag(let rect): self.pointer.drag = rect
+          case .hover(let point): self.pointer.hover = point
+        }
+        return currentTransform
+
+    }
+  }
+
+  //  private func updateTransform(
+  //    current transform: TransformState,
+  //    adjustment: TransformAdjustment,
+  //  ) -> TransformState {
+  //    adjustment.updatedState(transform)
+  //
+  //  }
+  //
+  //  private func updatePointer(_ adjustment: PointerAdjustment) {
+  //    //  private func updatePointer(_ adjustment: InteractionAdjustment) -> PointerState {
+  //    switch adjustment {
+  //      case .tap(let point): self.pointer.tap = point
+  //      case .drag(let rect): self.pointer.drag = rect
+  //      case .hover(let point): self.pointer.hover = point
+  //    }
+  //  }
+}
+
+extension CanvasHandler {
+
+  func updateTool(to tool: (any CanvasTool)?) {
+    self.activeTool = tool
+  }
+  func updateArtworkFrame(to frame: Rect<ScreenSpace>?) {
+    self.artworkFrame = frame
+  }
+  func updateModifiers(to modifiers: Modifiers) {
+    self.modifiers = modifiers
+  }
+
+  func pointerStyle(transform: TransformState) -> PointerStyleCompatible? {
+    inputResolver(transform: transform)?.pointerStyle
   }
 
   private func inputResolver(transform: TransformState) -> CanvasInputResolver? {
@@ -102,47 +161,14 @@ extension CanvasHandler {
   }
 }
 
-extension CanvasHandler {
-
-  func updateTool(to tool: (any CanvasTool)?) {
-    self.activeTool = tool
-  }
-  func updateArtworkFrame(to frame: Rect<ScreenSpace>?) {
-    self.artworkFrame = frame
-  }
-  func updateModifiers(to modifiers: Modifiers) {
-    self.modifiers = modifiers
-  }
-}
-extension CanvasHandler {
-
-  private func updateTransform(_ adjustment: InteractionAdjustment) -> TransformState {
-    switch adjustment {
-      case .transform(let adj):
-        switch adj {
-          case .translation(let size): self.transform.translation = size
-          case .scale(let scale): self.transform.scale = scale
-          case .rotation(let angle): self.transform.rotation = angle
-        }
-
-    }
-  }
-
-  private func updatePointer(_ adjustment: PointerAdjustment) {
-    //  private func updatePointer(_ adjustment: InteractionAdjustment) -> PointerState {
-    switch adjustment {
-      case .tap(let point): self.pointer.tap = point
-      case .drag(let rect): self.pointer.drag = rect
-      case .hover(let point): self.pointer.hover = point
-    }
-  }
-}
-
 // MARK: - Mapping and Snapshot
 
 extension CanvasHandler {
 
-  func snapshot(zoomRange: ClosedRange<Double>?) -> CanvasSnapshot? {
+  func snapshot(
+    zoomRange: ClosedRange<Double>?,
+    transform: TransformState
+  ) -> CanvasSnapshot? {
 
     guard let artworkFrame else { return nil }
 
