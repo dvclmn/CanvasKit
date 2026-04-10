@@ -20,7 +20,6 @@ let package = Package(
       dependencies: [
         "InteractionKit",
         "BasePrimitives",
-//        .product(name: "InteractionKit", package: "InteractionKit"),
       ],
     ),
     .testTarget(

@@ -10,7 +10,7 @@ import InteractionKit
 import SwiftUI
 
 public struct CanvasView<Content: View>: View, CanvasAddressable {
-
+  @Environment(\.zoomRange) private var zoomRange
   @State private var store: CanvasHandler = .init()
   let canvasSize: Size<CanvasSpace>
   @Binding var toolHandler: ToolHandler
@@ -36,12 +36,14 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
           Labeled("Tool (from CanvasHandler)", value: store.activeTool?.name)
         }
       }
-      .modifier(
-        InteractionStateSetupModifier(
-          store: store,
-          toolHandler: $toolHandler,
-          canvasSize: canvasSize,
-        )
-      )
+      .environment(store)
+
+      .setSnapshotValues(store.snapshot(zoomRange: zoomRange))
+
+      .onEnvironmentChange(\.activeTool, id: \.?.kind) { store.updateTool(to: $0) }
+      .onEnvironmentChange(\.modifierKeys) { store.updateModifiers(to: $0) }
+
+      .environment(\.activeTool, toolHandler.effectiveTool)
+      .environment(\.pointerStyle, store.pointerStyle)
   }
 }
