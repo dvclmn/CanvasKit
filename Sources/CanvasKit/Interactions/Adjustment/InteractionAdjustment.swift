@@ -7,7 +7,7 @@
 
 /// Was first `CanvasAdjustment`, then `Interaction`,
 /// now `InteractionAdjustment`
-public enum InteractionAdjustment: Sendable {
-  case transform(TransformAdjustment)
-  case pointer(PointerAdjustment)
-}
+//public enum InteractionAdjustment: Sendable {
+//  case transform(TransformAdjustment)
+//  case pointer(PointerAdjustment)
+//}

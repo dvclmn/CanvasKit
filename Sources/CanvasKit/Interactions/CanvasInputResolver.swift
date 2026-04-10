@@ -12,10 +12,6 @@ import SwiftUI
 /// Centralises input resolution for `CanvasHandler`.
 struct CanvasInputResolver {
   let context: InteractionContext
-  //  let interaction: Interaction
-  //  let source: InteractionSource
-  //  let phase: InteractionPhase
-  //  let modifiers: Modifiers
   let activeTool: (any CanvasTool)?
   let transform: TransformState
 
@@ -25,14 +21,10 @@ struct CanvasInputResolver {
 
   func resolve() -> CanvasInputResolution {
     .init(
-      baseAdjustment: globalAdjustment,
+      baseAdjustment: baseAdjustment,
       toolResolution: toolResolution,
     )
   }
-
-  //  private var interactionContext: InteractionContext {
-  //    .init(source: source, phase: phase, modifiers: modifiers)
-  //  }
 
   /// Current tool may not declare any resolution
   private var toolResolution: ToolResolution? {
@@ -58,7 +50,7 @@ struct CanvasInputResolver {
 
   /// Optional because not all transform adjustments are able to
   /// be created by all Interaction kinds
-  private var globalAdjustment: TransformAdjustment? {
+  private var baseAdjustment: TransformAdjustment? {
     switch context.interaction {
       case .swipe(let delta): swipeAdjustment(delta: delta)
       case .pinch(let scale): .scale(scale)
@@ -66,17 +58,6 @@ struct CanvasInputResolver {
       case .tap, .drag, .hover: nil
     }
   }
-
-  //  private var globalAdjustment: CanvasAdjustment {
-  //    switch source {
-  //      case .swipeGesture(let delta, _): globalSwipeAdjustment(delta: delta)
-  //      case .pinchGesture(let scale): .updateScale(scale)
-  //      case .continuousHover(let point): .updatePointerHover(point)
-  //      case .pointerTapGesture, .pointerDragGesture:
-  //        /// Pointer events are handled by the active tool
-  //        .none
-  //    }
-  //  }
 
   private func swipeAdjustment(delta: Size<ScreenSpace>) -> TransformAdjustment {
 
@@ -92,6 +73,5 @@ struct CanvasInputResolver {
       weights: .vertical,
     )
     return .zoomAdjustment(for: transform, by: factor)
-    //    return .zoomAdjustment(for: transform, by: factor)
   }
 }
