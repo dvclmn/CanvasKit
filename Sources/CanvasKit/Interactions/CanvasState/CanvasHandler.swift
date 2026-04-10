@@ -16,7 +16,7 @@ import SwiftUI
 final class CanvasHandler {
 
   /// Internal state
-  var transform: TransformState = .identity
+  //  var transform: TransformState = .identity
   var pointer: PointerState = .initial
 
   /// Synced here from `CanvasCoreView`. This then gets added
@@ -52,12 +52,16 @@ extension CanvasHandler {
   func handleInteraction(
     _ interaction: Interaction,
     phase: InteractionPhase,
-  ) {
+    currentTransform: TransformState,
+  ) -> TransformState {
 
     self.interaction = interaction
     self.phase = phase
 
-    guard let resolution = inputResolver?.resolve() else { return }
+    let resolver = inputResolver(transform: currentTransform)
+    guard let resolution = resolver?.resolve() else {
+      return currentTransform
+    }
 
     /// 1 – Global gestures
     if let global = resolution.globalAdjustment {
@@ -76,7 +80,7 @@ extension CanvasHandler {
     inputResolver?.pointerStyle
   }
 
-  private var inputResolver: CanvasInputResolver? {
+  private func inputResolver(transform: TransformState) -> CanvasInputResolver? {
     guard let interactionContext else { return nil }
     return .init(
       context: interactionContext,
@@ -112,7 +116,7 @@ extension CanvasHandler {
 }
 extension CanvasHandler {
 
-  private func executeAdjustment(_ adjustment: InteractionAdjustment) {
+  private func updateTransform(_ adjustment: InteractionAdjustment) -> TransformState {
     switch adjustment {
       case .transform(let adj):
         switch adj {
@@ -121,13 +125,15 @@ extension CanvasHandler {
           case .rotation(let angle): self.transform.rotation = angle
         }
 
-      case .pointer(let adj):
-        switch adj {
-          case .tap(let point): self.pointer.tap = point
-          case .drag(let rect): self.pointer.drag = rect
-          case .hover(let point): self.pointer.hover = point
-        }
+    }
+  }
 
+  private func updatePointer(_ adjustment: PointerAdjustment) {
+    //  private func updatePointer(_ adjustment: InteractionAdjustment) -> PointerState {
+    switch adjustment {
+      case .tap(let point): self.pointer.tap = point
+      case .drag(let rect): self.pointer.drag = rect
+      case .hover(let point): self.pointer.hover = point
     }
   }
 }

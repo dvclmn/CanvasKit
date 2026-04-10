@@ -11,19 +11,42 @@ import SwiftUI
 
 public struct CanvasView<Content: View>: View, CanvasAddressable {
   @Environment(\.zoomRange) private var zoomRange
+
   @State private var store: CanvasHandler = .init()
+
+  //  @State private var transform: TransformState
+  // Always a binding internally
+  @Binding private var transform: TransformState
+
+  // Only used when we "self-own"
+  @State private var internalTransform: TransformState = .identity
+
   let canvasSize: Size<CanvasSpace>
   @Binding var toolHandler: ToolHandler
   let content: () -> Content
 
   /// ToolHandler is required for now, until I implement state management better
+  //  public init(
+  //    size: CGSize,  // Canvas size
+  //    transform: Binding<TransformState> = .constant(.identity),
+  //    toolHandler: Binding<ToolHandler> = .constant(.init()),
+  //    @ViewBuilder content: @escaping () -> Content,
+  //  ) {
+  //    self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
+  //    self._transform = transform
+  //    self._toolHandler = toolHandler
+  //    self.content = content
+  //  }
+
   public init(
-    size: CGSize,  // Canvas size
-    toolHandler: Binding<ToolHandler>,
+
+    size canvasSize: Size<CanvasSpace>,
+    transform: Binding<TransformState>,
     @ViewBuilder content: @escaping () -> Content,
   ) {
-    self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
-    self._toolHandler = toolHandler
+    self.canvasSize = canvasSize
+    self._transform = transform
+    self._toolHandler = .constant(.init())
     self.content = content
   }
 
@@ -45,5 +68,6 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
 
       .environment(\.activeTool, toolHandler.effectiveTool)
       .environment(\.pointerStyle, store.pointerStyle)
+      .pointerStyleCompatible(store.)
   }
 }
