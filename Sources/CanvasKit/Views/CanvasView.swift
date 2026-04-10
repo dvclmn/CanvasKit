@@ -75,9 +75,18 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       content: content,
     )
     .debugTextOverlay(alignment: .bottomTrailing) {
-      Indented("Tool") {
-        Labeled("Tool (from ToolHandler)", value: toolHandler?.wrappedValue.effectiveTool.name)
-        Labeled("Tool (from CanvasHandler)", value: store.activeTool?.name)
+      if let toolHandler {
+        Indented("Tool") {
+          Labeled("Tool (from ToolHandler)", value: toolHandler.wrappedValue.effectiveTool.name)
+          Labeled("Tool (from CanvasHandler)", value: store.activeTool?.name)
+        }
+      } else {
+        "Tools not available"
+      }
+
+      Indented("Transform") {
+        Labeled("Internal", value: localTransform.description)
+        Labeled("External", value: externalTransform?.wrappedValue.description)
       }
     }
     .environment(store)
@@ -85,32 +94,43 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
     .setSnapshotValues(
       store.snapshot(
         zoomRange: zoomRange,
-        transform: transform,
+        transform: localTransform,
       )
     )
     //      .setSnapshotValues(store.snapshot(zoomRange: zoomRange))
 
     .onEnvironmentChange(\.activeTool, id: \.?.kind) { store.updateTool(to: $0) }
     .onEnvironmentChange(\.modifierKeys) { store.updateModifiers(to: $0) }
+    .task(id: toolHandler != nil) { store.updateAreToolsInUse(to: toolHandler != nil) }
 
     .environment(\.activeTool, toolHandler?.wrappedValue.effectiveTool)
     .environment(\.pointerStyle, pointerStyle)
     .pointerStyleCompatible(pointerStyle)
+
+    .onChange(of: localTransform) { _, newValue in
+      guard externalTransform != nil else { return }
+      self.externalTransform?.wrappedValue = newValue
+    }
+
+    .onChange(of: externalTransform?.wrappedValue) { _, newValue in
+      guard let newValue else { return }
+      localTransform = newValue
+    }
   }
 }
 
 extension CanvasView {
   private var pointerStyle: PointerStyleCompatible? {
-    store.pointerStyle(transform: transform)
+    store.pointerStyle(transform: localTransform)
   }
-  private var transform: TransformState {
-    get { externalTransform?.wrappedValue ?? localTransform }
-    nonmutating set {
-      if let external = externalTransform {
-        external.wrappedValue = newValue
-      } else {
-        localTransform = newValue
-      }
-    }
-  }
+  //  private var transform: TransformState {
+  //    get { externalTransform?.wrappedValue ?? localTransform }
+  //    nonmutating set {
+  //      if let external = externalTransform {
+  //        external.wrappedValue = newValue
+  //      } else {
+  //        localTransform = newValue
+  //      }
+  //    }
+  //  }
 }

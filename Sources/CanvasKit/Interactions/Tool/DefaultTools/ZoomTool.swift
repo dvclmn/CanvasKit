@@ -5,9 +5,9 @@
 //  Created by Dave Coleman on 12/3/2026.
 //
 
+import BasePrimitives
 import InteractionKit
 import SwiftUI
-import BasePrimitives
 
 // MARK: - Zoom Tool
 
@@ -17,11 +17,13 @@ public struct ZoomTool: CanvasTool {
   public let kind: CanvasToolKind = .zoom
   public let name = "Zoom"
   public let icon = "magnifyingglass"
-//  public let pointerStyle: PointerStyleCompatible = .zoomIn
 
   public var dragBehaviour: PointerDragBehaviour { .continuous(axes: .vertical) }
 
   public init() {}
+}
+
+extension ZoomTool {
 
   public func resolvePointerStyle(
     context: InteractionContext
@@ -34,51 +36,67 @@ public struct ZoomTool: CanvasTool {
     currentTransform: TransformState,
   ) -> ToolResolution? {
 
-    switch context.interaction {
-      case .drag(let payload):
-//      case .pointerDragGesture(let payload):
-        switch payload {
+    let adjustment: InteractionAdjustment =
+      switch context.interaction {
+        case .drag(let payload):
+          switch payload {
+            case .delta(let delta, _):
+              deltaDrag(
+                delta,
+                modifiers: context.modifiers,
+                transform: currentTransform,
+              )
 
-          case .delta(let size, _):
-            var factor = ZoomComputation.factorFromDelta(
-              size.cgSize,
-              weights: .upRight,
+            case .rect(let from, let current):
+              rectDrag(from: from, current: current, transform: currentTransform)
+
+          }
+
+        case .tap(_):
+          .transform(
+            .zoomAdjustment(
+              for: currentTransform,
+              by: context.modifiers.isHoldingOption ? 0.8 : 1.25,
             )
-            /// Hold Option to invert the zoom direction during drag, mirroring tap behaviour
-            if context.modifiers.contains(.option) {
-              factor = 1 / max(factor, 0.0001)
-            }
-            
-            return .init(
-              adjustment: .transform(.zoomAdjustment(for: currentTransform, by: factor)),
-              action: .none
-            )
-//            return .canvasAdjustment(.zoomAdjustment(for: currentTransform, by: factor))
+          )
 
-          case .rect(let from, let current):
+        default: .none
+      }
+    
+    return .init(
+      for: context.interaction,
+      adjustment: adjustment,
+      action: .none
+    )
+  }
 
-            let factor = ZoomComputation.factorFromPoints(
-              from: from.cgPoint,
-              to: current.cgPoint,
-              weights: .upRight,
-            )
-            return .init(
-              adjustment: .transform(.zoomAdjustment(for: currentTransform, by: factor)),
-              action: .none
-            )
-//            return .canvasAdjustment(.zoomAdjustment(for: currentTransform, by: factor))
-        }
-
-      case .tap(_):
-        let step = context.modifiers.contains(.option) ? 0.8 : 1.25
-        return .init(
-          adjustment: .transform(.zoomAdjustment(for: currentTransform, by: step)),
-          action: .none
-        )
-        
-        
-
-      default: return nil
+  private func deltaDrag(
+    _ delta: Size<ScreenSpace>,
+    modifiers: Modifiers,
+    transform: TransformState,
+  ) -> InteractionAdjustment {
+    var factor = ZoomComputation.factorFromDelta(
+      delta.cgSize,
+      weights: .upRight,
+    )
+    /// Hold Option to invert the zoom direction during drag, mirroring tap behaviour
+    if modifiers.contains(.option) {
+      factor = 1 / max(factor, 0.0001)
     }
+    return .transform(.zoomAdjustment(for: transform, by: factor))
+  }
+
+  private func rectDrag(
+    from: Point<ScreenSpace>,
+    current: Point<ScreenSpace>,
+    transform: TransformState,
+  ) -> InteractionAdjustment {
+
+    let factor = ZoomComputation.factorFromPoints(
+      from: from.cgPoint,
+      to: current.cgPoint,
+      weights: .upRight,
+    )
+    return .transform(.zoomAdjustment(for: transform, by: factor))
   }
 }

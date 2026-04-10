@@ -17,7 +17,7 @@ The goal is to keep a single source of truth per state value.
 | `viewportRect` | `EnvironmentValues.viewportRect` (typically set by `viewportCapture`) | ``CanvasView`` via `.task(id: canvasGeometry)` -> `store.geometry = canvasGeometry` | Used for fallback legacy global mapping and zoom focus policy. |
 | `canvasSize` | ``CanvasView`` initialiser argument | ``CanvasView`` via `.task(id: canvasGeometry)` -> `store.geometry = canvasGeometry` | Treated as caller-owned input, mirrored into handler geometry. |
 | `zoomRange` | `EnvironmentValues.zoomRange` | ``CanvasView`` via `.task(id: zoomRange)` -> `store.zoomRange = ...` | Range policy is external; current zoom value is internal. |
-| `modifierKeys` | `EnvironmentValues.modifierKeys` | Consumed in GestureKit's `ZoomModifier` | Not currently stored on `CanvasHandler`. Used to stabilise pinch tracking when modifiers change. |
+| `modifierKeys` | `EnvironmentValues.modifierKeys` | Consumed in GestureKit's `PinchGestureModifier` | Not currently stored on `CanvasHandler`. Used to stabilise pinch tracking when modifiers change. |
 
 ## Canvas-owned state (source of truth is inside CanvasKit)
 

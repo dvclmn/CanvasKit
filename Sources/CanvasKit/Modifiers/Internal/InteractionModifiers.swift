@@ -78,8 +78,13 @@ struct InteractionModifiers: ViewModifier {
 
 extension InteractionModifiers {
   private func isEnabled(_ interaction: InteractionKinds.Element) -> Bool {
-    guard let tool = store.activeTool else { return false }
-    return tool.inputCapabilities.contains(interaction)
+    /// No need to gate any modifiers if Tools are not active
+    guard store.areToolsInUse else {
+      let tool = store.activeTool ?? .default
+      return tool.inputCapabilities.contains(interaction)
+    }
+    return true
+
   }
 }
 

@@ -6,6 +6,7 @@
 //
 
 import InteractionKit
+import BasePrimitives
 import SwiftUI
 
 public struct TransformState: Sendable, Equatable {
@@ -30,4 +31,14 @@ public struct TransformState: Sendable, Equatable {
 
 extension TransformState {
   public mutating func reset() { self = Self.identity }
+}
+
+extension TransformState: CustomStringConvertible {
+  public var description: String {
+    DisplayString {
+      Labeled("Translation", value: translation.cgSize.displayString(.concise))
+      Labeled("Scale", value: scale.displayString(.concise))
+      Labeled("Rotation (Degrees)", value: rotation.degrees.displayString(.concise))
+    }.text
+  }
 }

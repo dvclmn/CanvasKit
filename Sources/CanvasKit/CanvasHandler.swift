@@ -24,6 +24,7 @@ final class CanvasHandler {
 
   /// Values synced here from the Environment
   private var modifiers: Modifiers = []
+  package var areToolsInUse: Bool = false
   package var activeTool: (any CanvasTool)?
 
   /// The most recent domain action produced by a tool resolution.
@@ -48,16 +49,21 @@ extension CanvasHandler {
   ///
   /// Pointer interactions (tap, drag) are forwarded to the active tool's
   /// `resolvePointerInteraction()` method, subject to `inputCapabilities`.
+  ///
+  /// Returns an optional to allow a no-op in ``InteractionModifiers``,
+  /// so that interaction modifiers that don't need to touch Transform state
+  /// don't inadvertantly write it to `identity`.
   func processedTransform(
     _ interaction: Interaction,
     phase: InteractionPhase,
     currentTransform: TransformState,
-  ) -> TransformState {
+  ) -> TransformState? {
 
     self.interaction = interaction
     self.phase = phase
 
     let resolver = inputResolver(transform: currentTransform)
+    
     guard let resolution = resolver?.resolve() else {
       return currentTransform
     }
@@ -80,7 +86,6 @@ extension CanvasHandler {
 }
 
 extension CanvasHandler {
-  
 
   private func handleAdjustment(
     _ adjustment: InteractionAdjustment,
@@ -98,6 +103,7 @@ extension CanvasHandler {
         }
         return currentTransform
 
+      case .none: return currentTransform
     }
   }
 }
@@ -112,6 +118,9 @@ extension CanvasHandler {
   }
   func updateModifiers(to modifiers: Modifiers) {
     self.modifiers = modifiers
+  }
+  func updateAreToolsInUse(to inUse: Bool) {
+    self.areToolsInUse = inUse
   }
 
   func pointerStyle(transform: TransformState) -> PointerStyleCompatible? {

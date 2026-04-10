@@ -30,21 +30,17 @@ public struct SelectTool: CanvasTool {
     context: InteractionContext,
     currentTransform: TransformState,
   ) -> ToolResolution? {
-    switch context.interaction {
-      case .tap(let location):
-        return .init(
-          adjustment: .pointer(.tap(location)),
-          action: .none,
-        )
-
-      case .drag(let payload):
-        guard let rect = payload.boundingRect else { return nil }
-        return .init(
-          adjustment: .pointer(.drag(rect)),
-          action: .none,
-        )
-
-      default: return nil
+    
+    let adjustment: InteractionAdjustment = switch context.interaction {
+      case .tap(let location): .pointer(.tap(location))
+      case .drag(let payload): .pointer(from: payload)
+      default: .none
     }
+
+    return .init(
+      for: context.interaction,
+      adjustment: adjustment,
+      action: .none
+    )
   }
 }

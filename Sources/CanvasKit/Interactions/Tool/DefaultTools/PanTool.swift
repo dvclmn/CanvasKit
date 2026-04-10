@@ -46,12 +46,10 @@ extension PanTool {
         default: .none
       }
 
-    let toolAction: ToolAction = .none
-    
     return .init(
       for: context.interaction,
       adjustment: adjustment,
-      action: toolAction,
+      action: .none,
     )
   }
 }

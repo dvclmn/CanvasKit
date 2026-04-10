@@ -16,12 +16,18 @@ public enum InteractionAdjustment: Sendable {
 }
 
 extension InteractionAdjustment {
+
+  static func pointer(from drag: PointerDragPayload) -> Self {
+    guard let rect = drag.boundingRect else { return .none }
+    return .pointer(.drag(rect))
+  }
+
   func isSupported(by interaction: InteractionKinds.Element) -> Bool {
     switch self {
-      case .transform(let transformAdjustment):
-        transformAdjustment.supportedInteractions.contains(interaction)
+      case .transform(let adjustment):
+        adjustment.supportedInteractions.contains(interaction)
 
-      case .pointer(let pointerAdjustment):
+      case .pointer:
         /// Pointer adjustments have no support limitations
         true
 
