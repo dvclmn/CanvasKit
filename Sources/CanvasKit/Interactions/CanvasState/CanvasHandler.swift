@@ -49,7 +49,7 @@ extension CanvasHandler {
   ///
   /// Pointer interactions (tap, drag) are forwarded to the active tool's
   /// `resolvePointerInteraction()` method, subject to `inputCapabilities`.
-  func handleInteraction(
+  func processedTransform(
     _ interaction: Interaction,
     phase: InteractionPhase,
     currentTransform: TransformState,
@@ -63,9 +63,10 @@ extension CanvasHandler {
       return currentTransform
     }
 
-    /// 1 – Global gestures
-    if let global = resolution.globalAdjustment {
-      return handleAdjustment(.transform(global), currentTransform: currentTransform)
+    /// 1 – Base gestures, updates transform state regardless
+    /// of whether Canvas Tools are in use
+    if let base = resolution.baseAdjustment {
+      return handleAdjustment(.transform(base), currentTransform: currentTransform)
     }
 
     /// 2 – Tool-specific pointer interactions
@@ -75,6 +76,7 @@ extension CanvasHandler {
     }
 
     lastToolAction = resolution.toolResolution?.action ?? .none
+    return .identity
   }
 
 }

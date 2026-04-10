@@ -13,68 +13,78 @@ struct InteractionModifiers: ViewModifier {
   @Environment(\.activeTool) private var activeTool
   @Environment(\.modifierKeys) private var modifierKeys
 
+  @Binding var transform: TransformState
+
   func body(content: Content) -> some View {
     @Bindable var store = store
 
-    // TODO: Need to determine whether a CanvasTool might:
-    // a) Need to be given scoped-down interaction capabilities
-    // (aka *can't* use swipe, or pinch)
-    //
-    // or b) Might want to enable/disable these inputs itself
     content
       .onSwipeGesture(
-        isEnabled: true
-          //        isEnabled: policy.activeInputs.contains(.swipe)
+        isEnabled: isEnabled(.swipe)
       ) { event in
-        store.handleInteraction(
-          .swipe(
-            delta: event.delta,
-//            location: event.location,
-          ),
+        self.transform = store.processedTransform(
+          .swipe(delta: event.delta),
           phase: event.phase,
+          currentTransform: transform,
         )
       }
 
       .onPinchGesture(
-        initial: store.transform.scale,
-        isEnabled: true,
-        //        isEnabled: policy.activeInputs.contains(.pinch)
+        initial: transform.scale,
+        isEnabled: isEnabled(.pinch),
       ) { zoom, phase in
-        store.handleInteraction(.pinch(scale: zoom),phase: phase)
-        /// Return the resolved scale so the modifier's internalZoom
-        /// stays in sync with CanvasHandler's transform state
-        return store.transform.scale
+        let transformResult = store.processedTransform(
+          .pinch(scale: zoom),
+          phase: phase,
+          currentTransform: transform,
+        )
+        self.transform = transformResult
+        /// Returns the scale so the modifier's internal Zoom
+        /// stays in sync with transform state
+        return transformResult.scale
       }
 
       .onContinuousHover(coordinateSpace: .named(ScreenSpace.screen)) { phase in
-        //        guard policy.activeInputs.contains(.pointerHover) else { return }
-        guard let location = phase.location else { return }
-        store.handleInteraction(
+        guard isEnabled(.hover), let location = phase.location else { return }
+        self.transform = store.processedTransform(
           .hover(location.screenPoint),
           phase: phase.interactionPhase,
+          currentTransform: transform,
         )
       }
 
-      .onTapGesture(
-        count: 1,
-        coordinateSpace: .named(ScreenSpace.screen),
-      ) { location in
-        //        guard policy.activeInputs.contains(.pointerTap) else { return }
-        store.handleInteraction(
+      .onTapGesture(coordinateSpace: .named(ScreenSpace.screen)) { location in
+        guard isEnabled(.tap) else { return }
+        self.transform = store.processedTransform(
           .tap(location: location.screenPoint),
           phase: .ended,
+          currentTransform: transform,
         )
       }
 
-      .onPointerDragGesture(behaviour: activeTool?.dragBehaviour ?? .none) { payload, phase in
+      .onPointerDragGesture(
+        behaviour: activeTool?.dragBehaviour ?? .none,
+        isEnabled: isEnabled(.drag),
+      ) { payload, phase in
         guard let payload else { return }
-        store.handleInteraction(.drag(payload), phase: phase)
+        self.transform = store.processedTransform(
+          .drag(payload),
+          phase: phase,
+          currentTransform: transform,
+        )
       }
   }
 }
 
+extension InteractionModifiers {
+  private func isEnabled(_ interaction: InteractionKinds.Element) -> Bool {
+    guard let tool = store.activeTool else { return false }
+    return tool.inputCapabilities.contains(interaction)
+  }
+}
+
 extension View {
-  public func gestureModifiers() -> some View {
-    self.modifier(InteractionModifiers())
+  public func gestureModifiers(_ transform: Binding<TransformState>) -> some View {
+    self.modifier(InteractionModifiers(transform: transform))
   }
 }

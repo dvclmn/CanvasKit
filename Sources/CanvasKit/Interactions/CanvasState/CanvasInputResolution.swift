@@ -8,6 +8,6 @@
 import InteractionKit
 
 struct CanvasInputResolution {
-  let globalAdjustment: TransformAdjustment?
+  let baseAdjustment: TransformAdjustment?
   let toolResolution: ToolResolution?
 }
