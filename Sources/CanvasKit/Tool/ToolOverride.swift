@@ -31,7 +31,7 @@ public struct ToolOverride: Hashable, Sendable {
     binding: ToolBinding,
     startedAt: Date = Date(),
     key: KeyEquivalent,
-    isArmed: Bool = false
+    isArmed: Bool = false,
   ) {
     self.binding = binding
     self.startedAt = startedAt

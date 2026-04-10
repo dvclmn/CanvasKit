@@ -76,11 +76,11 @@ extension CanvasHandler {
 
     /// 2 – Tool-specific pointer interactions
     if let toolAdjustment = resolution.toolResolution?.adjustment {
+      lastToolAction = resolution.toolResolution?.action ?? .none
       return handleAdjustment(toolAdjustment, currentTransform: currentTransform)
     }
 
-    lastToolAction = resolution.toolResolution?.action ?? .none
-    return .identity
+    return nil
   }
 
 }

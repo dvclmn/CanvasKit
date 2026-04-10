@@ -23,7 +23,4 @@ extension EnvironmentValues {
   /// of the artwork outline for users.
   @Entry var artworkOutline: AreaOutline = .init()
 
-  //  @Entry package var canvasSize: Size<CanvasSpace> = .zero
-  //  @Entry package var transform: Binding<TransformState>?
-
 }

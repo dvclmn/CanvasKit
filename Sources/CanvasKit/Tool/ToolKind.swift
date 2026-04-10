@@ -20,8 +20,3 @@ public struct CanvasToolKind: RawRepresentable, Hashable, Sendable {
   public init(rawValue: String) { self.rawValue = rawValue }
 }
 
-extension CanvasToolKind {
-  public static let select = Self(rawValue: "select")
-  public static let pan = Self(rawValue: "pan")
-  public static let zoom = Self(rawValue: "zoom")
-}

@@ -22,44 +22,60 @@ struct InteractionModifiers: ViewModifier {
       .onSwipeGesture(
         isEnabled: isEnabled(.swipe)
       ) { event in
-        self.transform = store.processedTransform(
+
+        let adjustment = store.processedTransform(
           .swipe(delta: event.delta),
           phase: event.phase,
           currentTransform: transform,
         )
+        guard let adjustment else { return }
+        self.transform = adjustment
+
       }
 
       .onPinchGesture(
         initial: transform.scale,
         isEnabled: isEnabled(.pinch),
       ) { zoom, phase in
-        let transformResult = store.processedTransform(
+
+        let adjustment = store.processedTransform(
           .pinch(scale: zoom),
           phase: phase,
           currentTransform: transform,
         )
-        self.transform = transformResult
+
         /// Returns the scale so the modifier's internal Zoom
         /// stays in sync with transform state
-        return transformResult.scale
+        guard let adjustment else {
+          return adjustment?.scale
+        }
+        self.transform = adjustment
+        return adjustment.scale
+
       }
 
       .onContinuousHover(coordinateSpace: .named(ScreenSpace.screen)) { phase in
         guard isEnabled(.hover), let location = phase.location else { return }
-        self.transform = store.processedTransform(
+        let adjustment = store.processedTransform(
           .hover(location.screenPoint),
           phase: phase.interactionPhase,
           currentTransform: transform,
         )
+        guard let adjustment else { return }
+        self.transform = adjustment
+
       }
 
       .onTapGesture(coordinateSpace: .named(ScreenSpace.screen)) { location in
         guard isEnabled(.tap) else { return }
-        self.transform = store.processedTransform(
+        let adjustment = store.processedTransform(
           .tap(location: location.screenPoint),
           phase: .ended,
           currentTransform: transform,
         )
+        guard let adjustment else { return }
+        self.transform = adjustment
+
       }
 
       .onPointerDragGesture(
@@ -67,11 +83,13 @@ struct InteractionModifiers: ViewModifier {
         isEnabled: isEnabled(.drag),
       ) { payload, phase in
         guard let payload else { return }
-        self.transform = store.processedTransform(
+        let adjustment = store.processedTransform(
           .drag(payload),
           phase: phase,
           currentTransform: transform,
         )
+        guard let adjustment else { return }
+        self.transform = adjustment
       }
   }
 }
@@ -84,7 +102,6 @@ extension InteractionModifiers {
       return tool.inputCapabilities.contains(interaction)
     }
     return true
-
   }
 }
 
