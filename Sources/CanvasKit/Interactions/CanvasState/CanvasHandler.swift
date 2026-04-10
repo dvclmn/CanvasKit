@@ -13,11 +13,11 @@ import SwiftUI
 /// by the project *using* CanvasKit. E.g. in the case of DrawString,
 /// this is owned by `BaseContainer` view.
 @Observable
-public final class CanvasHandler {
+final class CanvasHandler {
 
   /// Internal state
-  public var transform: TransformState = .identity
-  public var pointer: PointerState = .initial
+  var transform: TransformState = .identity
+  var pointer: PointerState = .initial
 
   /// Synced here from `CanvasCoreView`. This then gets added
   /// to the Environment by CanvasSnapshot
@@ -30,12 +30,12 @@ public final class CanvasHandler {
   /// The most recent domain action produced by a tool resolution.
   /// Consuming apps can observe this to react to tool-specific events
   /// (e.g. "select at point", "commit stroke").
-  public var lastToolAction: ToolAction = .none
+  var lastToolAction: ToolAction = .none
 
   /// The most recent interaction context, provided when
   /// `handleInteraction(_:phase:)` is called.
-  public var phase: InteractionPhase = .none
-  public var interaction: Interaction?
+  var phase: InteractionPhase = .none
+  var interaction: Interaction?
 
   public init() {}
 }
@@ -49,7 +49,7 @@ extension CanvasHandler {
   ///
   /// Pointer interactions (tap, drag) are forwarded to the active tool's
   /// `resolvePointerInteraction()` method, subject to `inputCapabilities`.
-  public func handleInteraction(
+  func handleInteraction(
     _ interaction: Interaction,
     phase: InteractionPhase,
   ) {
@@ -72,7 +72,7 @@ extension CanvasHandler {
     lastToolAction = resolution.toolResolution?.action ?? .none
   }
 
-  public var pointerStyle: PointerStyleCompatible? {
+  var pointerStyle: PointerStyleCompatible? {
     inputResolver?.pointerStyle
   }
 
@@ -100,13 +100,13 @@ extension CanvasHandler {
 
 extension CanvasHandler {
 
-  public func updateTool(to tool: (any CanvasTool)?) {
+  func updateTool(to tool: (any CanvasTool)?) {
     self.activeTool = tool
   }
-  public func updateArtworkFrame(to frame: Rect<ScreenSpace>?) {
+  func updateArtworkFrame(to frame: Rect<ScreenSpace>?) {
     self.artworkFrame = frame
   }
-  public func updateModifiers(to modifiers: Modifiers) {
+  func updateModifiers(to modifiers: Modifiers) {
     self.modifiers = modifiers
   }
 }
@@ -157,11 +157,11 @@ extension CanvasHandler {
       zoom: zoomRaw,
       pan: transform.translation,
       rotation: transform.rotation,
+      artworkFrame: artworkFrame,
       pointerTap: tapMapped,
       pointerDrag: rectMapped,
       pointerHover: hoverMapped,
       isPointerInsideCanvas: isInside,
-      artworkFrame: artworkFrame,
       phase: phase,
     )
   }

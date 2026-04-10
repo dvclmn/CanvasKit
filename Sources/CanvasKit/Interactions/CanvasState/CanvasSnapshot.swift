@@ -11,9 +11,9 @@ import SwiftUI
 /// Computed from `CanvasHandler` state and geometry.
 /// Holds only already-converted/mapped, consumer-ready values
 ///
-/// I removed this type at one point, thinking it wasn't doing anything
-/// useful. But soon realised its important for centralising fully mapped
-/// state, and well worth keeping.
+/// Note to self: I removed this type at one point, thinking it wasn't
+/// doing anything useful. But soon realised its really helpful for
+/// centralising fully mapped state unambiguously, well worth keeping.
 struct CanvasSnapshot: Sendable {
 
   /// ## Transform state
@@ -23,12 +23,15 @@ struct CanvasSnapshot: Sendable {
   let pan: Size<ScreenSpace>
   let rotation: Angle
 
+  let artworkFrame: Rect<ScreenSpace>?
+
   /// ## Pointer state
   let pointerTap: Point<CanvasSpace>?
   let pointerDrag: Rect<CanvasSpace>?
   let pointerHover: Point<CanvasSpace>?
   let isPointerInsideCanvas: Bool
-  let artworkFrame: Rect<ScreenSpace>?
+
+  /// Phase of any in-progress gesture
   let phase: InteractionPhase
 }
 
@@ -44,7 +47,7 @@ struct CanvasSnapshotModifier: ViewModifier {
       .environment(\.pointerTap, snapshot?.pointerTap)
       .environment(\.pointerDrag, snapshot?.pointerDrag)
       .environment(\.pointerHover, snapshot?.pointerHover)
-    
+
       .environment(\.artworkFrameInViewport, snapshot?.artworkFrame)
       .environment(\.interactionPhase, snapshot?.phase ?? .none)
   }
