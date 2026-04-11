@@ -119,9 +119,6 @@ extension CanvasHandler {
   func updateModifiers(to modifiers: Modifiers) {
     self.modifiers = modifiers
   }
-  func updateAreToolsInUse(to inUse: Bool) {
-    self.areToolsInUse = inUse
-  }
 
   func pointerStyle(
     tool: any CanvasTool,

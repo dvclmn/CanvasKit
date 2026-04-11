@@ -74,21 +74,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       transform: $localTransform,
       content: content,
     )
-    //    .debugTextOverlay(alignment: .bottomTrailing) {
-    //      if let toolHandler {
-    //        Indented("Tool") {
-    //          Labeled("Tool (from ToolHandler)", value: toolHandler.wrappedValue.effectiveTool.name)
-    //          Labeled("Tool (from CanvasHandler)", value: store.activeTool?.name)
-    //        }
-    //      } else {
-    //        "Tools not available"
-    //      }
-    //
-    //      Indented("Transform") {
-    //        Labeled("Internal", value: localTransform.description)
-    //        Labeled("External", value: externalTransform?.wrappedValue.description)
-    //      }
-    //    }
+
     .environment(store)
 
     .setSnapshotValues(
@@ -98,24 +84,19 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       )
     )
 
-    /// Provide CanvasHandler with modifiers
     .onEnvironmentChange(\.modifierKeys) { store.updateModifiers(to: $0) }
-    .task(id: toolHandler != nil) { store.updateAreToolsInUse(to: toolHandler != nil) }
-
+    .task(id: toolHandler != nil) { store.areToolsInUse = toolHandler != nil }
     .environment(\.activeTool, toolHandler?.wrappedValue.effectiveTool)
-
     .environment(\.pointerStyle, pointerStyle)
     .pointerStyleCompatible(pointerStyle)
 
-    .onChange(of: localTransform) { _, newValue in
-      guard externalTransform != nil else { return }
-      self.externalTransform?.wrappedValue = newValue
-    }
-
-    .onChange(of: externalTransform?.wrappedValue) { _, newValue in
-      guard let newValue else { return }
-      localTransform = newValue
-    }
+    /// In cases where transform state is handled externally,
+    /// ensures both local and external are kept in sync
+    .bindModel(
+      debounce: .noDebounce,
+      $localTransform,
+      to: externalTransform
+    )
   }
 }
 
