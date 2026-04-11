@@ -7,8 +7,12 @@
 
 import InteractionKit
 
-/// Was first `CanvasAdjustment`, then `Interaction`,
-/// now `InteractionAdjustment`
+/// Provides an interface for a Canvas Tool to describe how it
+/// should mutate Canvas state when it performs some action.
+///
+/// Additional context is passed to the tool using ``Inter``
+///
+/// See ``CanvasTool/resolvePointerInteraction(context:currentTransform:)``
 public enum InteractionAdjustment: Sendable {
   case transform(TransformAdjustment)
   case pointer(PointerAdjustment)
