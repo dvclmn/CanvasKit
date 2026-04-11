@@ -8,16 +8,28 @@
 import InteractionKit
 import SwiftUI
 
-struct CanvasTapModifier: ViewModifier {
+public struct CanvasTapModifier: ViewModifier {
   @Environment(\.pointerTap) private var pointerTap
 
   let action: (Point<CanvasSpace>) -> Void
   
-  func body(content: Content) -> some View {
+  public func body(content: Content) -> some View {
     content
       .onChange(of: pointerTap) {
         guard let pointerTap else { return }
         action(pointerTap)
       }
   }
+}
+
+extension View where Self: CanvasAddressable {
+  
+  /// Respond to `CanvasView` pointer taps. Provides the
+  /// location of the tap in `CanvasSpace`.
+  public func onCanvasTap(
+    perform action: @escaping (Point<CanvasSpace>) -> Void
+  ) -> ModifiedContent<Self, CanvasTapModifier> {
+    self.modifier(CanvasTapModifier(action: action))
+  }
+
 }

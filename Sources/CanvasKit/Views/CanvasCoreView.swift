@@ -12,13 +12,14 @@ import SwiftUI
 struct CanvasCoreView<Content: View>: View {
   @Environment(CanvasHandler.self) private var store
   @Environment(\.canvasBackground) private var canvasBackground
+  @Environment(\.canvasAnchor) private var canvasAnchor
   @Environment(\.zoomLevel) private var zoomLevel
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.zoomClamped) private var zoomClamped
 
   let canvasSize: Size<CanvasSpace>
   @Binding var transform: TransformState
-  
+
   @ViewBuilder var content: () -> Content
 
   var body: some View {
@@ -27,21 +28,28 @@ struct CanvasCoreView<Content: View>: View {
         CanvasArtwork(
           canvasSize: canvasSize,
           transform: transform,
-          content: content
+          content: content,
         )
       }
-      .frame(maxWidth: .infinity, maxHeight: .infinity)
+      .frame(
+        maxWidth: .infinity,
+        maxHeight: .infinity,
+        alignment: canvasAnchor.toAlignment,
+      )
       .background(canvasBackground)
       .drawingGroup(opaque: true)
       .allowsHitTesting(false)
       //      .ignoresSafeArea(edges: .top)
 
-      /// View now covers full width/height provided to it,
-      /// so is considered `ScreenSpace`
+      /// View now covers full width/height provided to it, no longer
+      /// cares about pan zoom etc, so is considered `ScreenSpace`
       .coordinateSpace(.named(ScreenSpace.screen))
 
       /// This resolves the `CanvasSpace`
-      .overlayPreferenceValue(ArtworkBoundsAnchorKey.self) { anchor in
+      .overlayPreferenceValue(
+        ArtworkBoundsAnchorKey.self,
+        alignment: canvasAnchor.toAlignment,
+      ) { anchor in
         Color.clear
           .allowsHitTesting(false)
           .onGeometryChange(for: CGRect?.self) { proxy in
@@ -52,16 +60,7 @@ struct CanvasCoreView<Content: View>: View {
           }
       }
 
-      /// Holds user input modifiers, `onSwipeGesture`, `onTapGesture`, etc
-
-//      .debugTextOverlay(alignment: .bottomTrailing) {
-//        Indented("Zoom") {
-//          Labeled("Zoom", value: store.transform.scale)
-//          Labeled("Zoom (Env)", value: zoomLevel)
-//          Labeled("Clamped", value: zoomClamped)
-//          Labeled("Range", value: zoomRange)
-//        }
-//      }
+      /// Handles user input modifiers, `onSwipeGesture`, `onTapGesture`, etc
       .gestureModifiers($transform)
   }
 }

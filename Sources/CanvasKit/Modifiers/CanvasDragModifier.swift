@@ -8,12 +8,12 @@
 import InteractionKit
 import SwiftUI
 
-struct CanvasDragModifier: ViewModifier {
+public struct CanvasDragModifier: ViewModifier {
   @Environment(\.pointerDrag) private var pointerDrag
   @Environment(\.interactionPhase) private var interactionPhase
 
   let action: (CanvasDragEvent<CanvasSpace>) -> Void
-  func body(content: Content) -> some View {
+  public func body(content: Content) -> some View {
     content
       .onChange(of: pointerDrag) {
         guard let pointerDrag else { return }
@@ -30,4 +30,16 @@ struct CanvasDragModifier: ViewModifier {
 public struct CanvasDragEvent<Space> {
   public let rect: Rect<Space>
   public let phase: InteractionPhase
+}
+
+extension View where Self: CanvasAddressable {
+
+  /// Respond to a `CanvasView` pointer drag operation.
+  /// Provides the rectangle of the drag in `CanvasSpace`,
+  /// along with the interaction's phase.
+  public func onCanvasDrag(
+    perform action: @escaping (CanvasDragEvent<CanvasSpace>) -> Void
+  ) -> ModifiedContent<Self, CanvasDragModifier> {
+    self.modifier(CanvasDragModifier(action: action))
+  }
 }

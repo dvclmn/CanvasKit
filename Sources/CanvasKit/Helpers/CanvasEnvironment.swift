@@ -14,7 +14,7 @@ extension EnvironmentValues {
   /// `canvasAnchor` is useful for both Canvas and Grid domains.
   /// Describes the anchor point for layout in ``CanvasArtworkView``.
   /// Important for coordinate space calculations.
-  @Entry public var canvasAnchor: UnitPoint = .center
+  @Entry var canvasAnchor: UnitPoint = .center
   @Entry public var canvasBackground: Color = Color(white: 0.04)
   @Entry public var activeTool: (any CanvasTool)?
 

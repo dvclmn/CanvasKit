@@ -18,17 +18,17 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   private let externalTransform: Binding<TransformState>?
 
   /// Internal-only source of truth for transform state. If user passes in state,
-  /// it is passed to this. If not, this gets a default initial value
+  /// it is passed to this. If not, this gets a default initial value.
+  /// External and internal state is kept in sync via ``
   @State private var localTransform: TransformState
 
-  /// If the user doesn't need Tool functionality, this just stays `nil`
-  /// CanvasKit doesn't require tools be used, it's opt-in
+  /// Canvas Tool use is opt-in. If the user doesn't need tools, this stays nil
   private let toolHandler: Binding<ToolHandler>?
 
   let canvasSize: Size<CanvasSpace>
   let content: () -> Content
 
-  // MARK: - Simple init — CanvasView owns everything
+  /// Basic usage, CanvasKit manages transform state internally
   public init(
     size: CGSize,
     @ViewBuilder content: @escaping () -> Content,
@@ -40,7 +40,8 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
     self.content = content
   }
 
-  // MARK: - External transform
+  /// Externally-owned transform state, enabling programmatic
+  /// control outside the CanvasKit view hierarchy
   public init(
     size: CGSize,
     transform: Binding<TransformState>,
@@ -53,7 +54,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
     self.content = content
   }
 
-  // MARK: - Full external control
+  /// Externally-owned transform state and Canvas Tool usage
   public init(
     size: CGSize,
     transform: Binding<TransformState>,
@@ -74,28 +75,27 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       transform: $localTransform,
       content: content,
     )
-
-    .environment(store)
-
+    .pointerStyleCompatible(pointerStyle)
+    
     .setSnapshotValues(
       store.snapshot(
         zoomRange: zoomRange,
         transform: localTransform,
       )
     )
-
+    
     .onEnvironmentChange(\.modifierKeys) { store.updateModifiers(to: $0) }
     .task(id: toolHandler != nil) { store.areToolsInUse = toolHandler != nil }
     .environment(\.activeTool, toolHandler?.wrappedValue.effectiveTool)
     .environment(\.pointerStyle, pointerStyle)
-    .pointerStyleCompatible(pointerStyle)
+    .environment(store)
 
-    /// In cases where transform state is handled externally,
+    /// In cases where transform state is owned externally,
     /// ensures both local and external are kept in sync
     .bindModel(
       debounce: .noDebounce,
       $localTransform,
-      to: externalTransform
+      to: externalTransform,
     )
   }
 }

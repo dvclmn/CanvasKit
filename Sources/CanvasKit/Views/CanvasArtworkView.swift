@@ -10,15 +10,14 @@ import InteractionKit
 import SwiftUI
 
 struct CanvasArtwork<Content: View>: View {
-
-  @Environment(CanvasHandler.self) private var store
   @Environment(\.zoomRange) private var zoomRange
-  @Environment(\.self) private var env
   @Environment(\.activeTool) private var activeTool
   @Environment(\.artworkOutline) private var artworkOutline
+  @Environment(\.canvasAnchor) private var canvasAnchor
 
   let canvasSize: Size<CanvasSpace>
   let transform: TransformState
+
   @ViewBuilder var content: () -> Content
 
   var body: some View {
@@ -48,24 +47,39 @@ struct CanvasArtwork<Content: View>: View {
       .anchorPreference(key: ArtworkBoundsAnchorKey.self, value: .bounds) { $0 }
 
       /// Important: Keep the order 1. Scale, 2. Rotate, 3. Offset
-      .scaleEffect(transform.scale.clampedIfNeeded(to: zoomRange), anchor: .center)
+      .scaleEffect(
+        transform.scale.clampedIfNeeded(to: zoomRange),
+        anchor: canvasAnchor,
+      )
       .rotationEffect(transform.rotation, anchor: .center)
       .offset(transform.translation.cgSize)
-      .frame(maxWidth: .infinity, maxHeight: .infinity)
+      .frame(
+        maxWidth: .infinity,
+        maxHeight: .infinity,
+        alignment: canvasAnchor.toAlignment,
+      )
   }
 }
 
 extension CanvasArtwork {
   private var isCanvasReady: Bool { zoomRange != nil && activeTool != nil }
 
-  private var cornerRounding: CGFloat {
-    artworkOutline.resolvedOutline(in: env).rounding
-  }
-
-  /// This allows Views to specifcy whether they should be clipped
-  /// by the Canvas bounds or not
+  /// This allows the embedded View to specify whether it should be
+  /// clipped by the Canvas artwork dimensions or not
   @ViewBuilder
   private func CanvasDecomposed() -> some View {
+
+  }
+}
+
+// MARK: - Canvas clipping View
+private struct CanvasDecomposed<Content: View>: View {
+  @Environment(\.self) private var env
+  @Environment(\.artworkOutline) private var artworkOutline
+
+  @ViewBuilder var content: () -> Content
+  var body: some View {
+
     if #available(macOS 15.0, iOS 18.0, *) {
       Group(subviews: content()) { subviewCollection in
         SubViews(subviewCollection)
@@ -75,8 +89,11 @@ extension CanvasArtwork {
         content()
       }
     }
-  }
 
+  }
+}
+
+extension CanvasDecomposed {
   @available(macOS 15.0, iOS 18.0, *)
   @ViewBuilder
   private func SubViews(_ subviews: SubviewsCollection) -> some View {
@@ -90,5 +107,9 @@ extension CanvasArtwork {
         }
       }
     }
+  }
+
+  private var cornerRounding: CGFloat {
+    artworkOutline.resolvedOutline(in: env).rounding
   }
 }
