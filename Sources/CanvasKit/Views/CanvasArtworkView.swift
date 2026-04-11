@@ -89,7 +89,6 @@ private struct CanvasDecomposed<Content: View>: View {
         content()
       }
     }
-
   }
 }
 

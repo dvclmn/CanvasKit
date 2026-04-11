@@ -6,6 +6,7 @@
 //
 
 import InteractionKit
+import BasePrimitives
 import SwiftUI
 
 /// Computed from `CanvasHandler` state and geometry.

@@ -6,6 +6,7 @@
 //
 
 import InteractionKit
+import BasePrimitives
 import SwiftUI
 
 public struct CanvasDragModifier: ViewModifier {
