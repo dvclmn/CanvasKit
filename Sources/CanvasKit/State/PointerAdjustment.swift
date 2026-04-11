@@ -23,14 +23,3 @@ public enum PointerAdjustment: Sendable {
   case hover(Point<ScreenSpace>)
   case drag(Rect<ScreenSpace>)
 }
-
-//extension PointerAdjustment {
-//  public var supportedInteractions: InteractionKinds {
-//    switch self {
-//      case .tap: [.swipe, .drag]
-//      case .hover: [.swipe, .pinch, .tap, .drag]
-//      case .drag: [.swipe, .rotation, .drag]
-//    }
-//  }
-//}
-//
