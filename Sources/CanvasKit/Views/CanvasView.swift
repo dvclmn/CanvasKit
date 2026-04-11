@@ -98,13 +98,12 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       )
     )
 
-    /// Provide CanvasHandler with the active tool and modifiers
-    .onEnvironmentChange(\.activeTool, id: \.?.kind) { store.updateTool(to: $0) }
+    /// Provide CanvasHandler with modifiers
     .onEnvironmentChange(\.modifierKeys) { store.updateModifiers(to: $0) }
     .task(id: toolHandler != nil) { store.updateAreToolsInUse(to: toolHandler != nil) }
 
     .environment(\.activeTool, toolHandler?.wrappedValue.effectiveTool)
-    
+
     .environment(\.pointerStyle, pointerStyle)
     .pointerStyleCompatible(pointerStyle)
 
@@ -122,6 +121,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
 
 extension CanvasView {
   private var pointerStyle: PointerStyleCompatible? {
-    store.pointerStyle(transform: localTransform)
+    guard let tool = toolHandler?.wrappedValue.effectiveTool else { return nil }
+    return store.pointerStyle(tool: tool, transform: localTransform)
   }
 }

@@ -25,7 +25,6 @@ final class CanvasHandler {
   /// Values synced here from the Environment
   private var modifiers: Modifiers = []
   package var areToolsInUse: Bool = false
-  package var activeTool: (any CanvasTool)?
 
   /// The most recent domain action produced by a tool resolution.
   /// Consuming apps can observe this to react to tool-specific events
@@ -55,6 +54,7 @@ extension CanvasHandler {
   /// don't inadvertantly write it to `identity`.
   func processedTransform(
     _ interaction: Interaction,
+    tool: (any CanvasTool)?,
     phase: InteractionPhase,
     currentTransform: TransformState,
   ) -> TransformState? {
@@ -62,8 +62,11 @@ extension CanvasHandler {
     self.interaction = interaction
     self.phase = phase
 
-    let resolver = inputResolver(transform: currentTransform)
-    
+    let resolver = inputResolver(
+      tool: tool,
+      transform: currentTransform,
+    )
+
     guard let resolution = resolver?.resolve() else {
       return currentTransform
     }
@@ -110,9 +113,6 @@ extension CanvasHandler {
 
 extension CanvasHandler {
 
-  func updateTool(to tool: (any CanvasTool)?) {
-    self.activeTool = tool
-  }
   func updateArtworkFrame(to frame: Rect<ScreenSpace>?) {
     self.artworkFrame = frame
   }
@@ -123,11 +123,17 @@ extension CanvasHandler {
     self.areToolsInUse = inUse
   }
 
-  func pointerStyle(transform: TransformState) -> PointerStyleCompatible? {
-    inputResolver(transform: transform)?.pointerStyle
+  func pointerStyle(
+    tool: any CanvasTool,
+    transform: TransformState,
+  ) -> PointerStyleCompatible? {
+    inputResolver(tool: tool, transform: transform)?.pointerStyle
   }
 
-  private func inputResolver(transform: TransformState) -> CanvasInputResolver? {
+  private func inputResolver(
+    tool: (any CanvasTool)?,
+    transform: TransformState,
+  ) -> CanvasInputResolver? {
     guard let interaction else { return nil }
 
     let context = InteractionContext(
@@ -137,7 +143,7 @@ extension CanvasHandler {
     )
     return .init(
       context: context,
-      activeTool: activeTool,
+      activeTool: tool,
       transform: transform,
     )
   }

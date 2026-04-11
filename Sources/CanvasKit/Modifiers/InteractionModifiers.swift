@@ -25,6 +25,7 @@ struct InteractionModifiers: ViewModifier {
 
         let adjustment = store.processedTransform(
           .swipe(delta: event.delta),
+          tool: activeTool,
           phase: event.phase,
           currentTransform: transform,
         )
@@ -40,6 +41,7 @@ struct InteractionModifiers: ViewModifier {
 
         let adjustment = store.processedTransform(
           .pinch(scale: zoom),
+          tool: activeTool,
           phase: phase,
           currentTransform: transform,
         )
@@ -58,6 +60,7 @@ struct InteractionModifiers: ViewModifier {
         guard isEnabled(.hover), let location = phase.location else { return }
         let adjustment = store.processedTransform(
           .hover(location.screenPoint),
+          tool: activeTool,
           phase: phase.interactionPhase,
           currentTransform: transform,
         )
@@ -70,6 +73,7 @@ struct InteractionModifiers: ViewModifier {
         guard isEnabled(.tap) else { return }
         let adjustment = store.processedTransform(
           .tap(location: location.screenPoint),
+          tool: activeTool,
           phase: .ended,
           currentTransform: transform,
         )
@@ -85,6 +89,7 @@ struct InteractionModifiers: ViewModifier {
         guard let payload else { return }
         let adjustment = store.processedTransform(
           .drag(payload),
+          tool: activeTool,
           phase: phase,
           currentTransform: transform,
         )
@@ -98,7 +103,7 @@ extension InteractionModifiers {
   private func isEnabled(_ interaction: InteractionKinds.Element) -> Bool {
     /// No need to gate any modifiers if Tools are not active
     guard store.areToolsInUse else {
-      let tool = store.activeTool ?? .default
+      let tool = activeTool ?? .default
       return tool.inputCapabilities.contains(interaction)
     }
     return true
