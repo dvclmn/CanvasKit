@@ -58,6 +58,21 @@ struct CanvasCoreView<Content: View>: View {
 //            store.updateArtworkFrame(to: artworkFrame)
           }
       }
+      .modifier(
+        CanvasSnapshotModifier(
+          mapper: mapper,
+          transform: transform,
+          pointer: store.pointer,
+          phase: <#T##InteractionPhase#>
+        )
+      )
+//      .setSnapshotValues(.in)
+//      .setSnapshotValues(
+//        store.snapshot(
+//          zoomRange: zoomRange,
+//          transform: localTransform,
+//        )
+//      )
   }
 }
 

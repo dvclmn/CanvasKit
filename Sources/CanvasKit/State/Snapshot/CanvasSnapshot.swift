@@ -24,7 +24,7 @@ struct CanvasSnapshot: Sendable {
   let pan: Size<ScreenSpace>
   let rotation: Angle
 
-  let artworkFrame: Rect<ScreenSpace>?
+//  let artworkFrame: Rect<ScreenSpace>?
 
   /// ## Pointer state
   let pointerTap: Point<CanvasSpace>?

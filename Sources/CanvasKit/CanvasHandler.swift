@@ -6,7 +6,6 @@
 //
 
 import BasePrimitives
-//import InteractionKit
 import SwiftUI
 
 /// `CanvasHandler`'s state is owned outside of CanvasKit,
@@ -20,10 +19,10 @@ final class CanvasHandler {
 
   /// Synced here from `CanvasCoreView`. This then gets added
   /// to the Environment by CanvasSnapshot
-//  private var artworkFrame: Rect<ScreenSpace>?
+  //  private var artworkFrame: Rect<ScreenSpace>?
 
   /// Values synced here from the Environment
-//  private var modifiers: Modifiers = []
+  //  private var modifiers: Modifiers = []
   package var areToolsInUse: Bool = false
 
   /// The most recent domain action produced by a tool resolution.
@@ -33,9 +32,9 @@ final class CanvasHandler {
 
   /// The most recent interaction context, provided when
   /// `handleInteraction(_:phase:)` is called.
-//  var phase: InteractionPhase = .none
-//  var interaction: Interaction?
-  
+  //  var phase: InteractionPhase = .none
+  //  var interaction: Interaction?
+
   var interactionContext: InteractionContext?
 
   public init() {}
@@ -58,16 +57,18 @@ extension CanvasHandler {
     _ interaction: Interaction,
     tool: (any CanvasTool)?,
     phase: InteractionPhase,
+    modifiers: Modifiers,
     currentTransform: TransformState,
   ) -> TransformState? {
 
-//    self.interaction = interaction
-//    self.phase = phase
+    //    self.interaction = interaction
+    //    self.phase = phase
     let context = InteractionContext(
       interaction: interaction,
       phase: phase,
-      modifiers: <#T##Modifiers#>
+      modifiers: modifiers,
     )
+    self.interactionContext = context
 
     let resolver = inputResolver(
       tool: tool,
@@ -120,37 +121,32 @@ extension CanvasHandler {
 
 extension CanvasHandler {
 
-//  func updateArtworkFrame(to frame: Rect<ScreenSpace>?) {
-//    self.artworkFrame = frame
-//  }
-  func updateModifiers(to modifiers: Modifiers) {
-    self.modifiers = modifiers
-  }
+  //  func updateArtworkFrame(to frame: Rect<ScreenSpace>?) {
+  //    self.artworkFrame = frame
+  //  }
+  //  func updateModifiers(to modifiers: Modifiers) {
+  //    self.modifiers = modifiers
+  //  }
 
-  func pointerStyle(
-    tool: any CanvasTool,
-    transform: TransformState,
-    phase: InteractionPhase,
-  ) -> PointerStyleCompatible? {
-    inputResolver(
-      tool: tool,
-      transform: transform,
-    )?.pointerStyle
+  func pointerStyle(for tool: any CanvasTool) -> PointerStyleCompatible? {
+    guard let interactionContext else { return nil }
+    return tool.resolvePointerStyle(context: interactionContext)
   }
 
   private func inputResolver(
     tool: (any CanvasTool)?,
     transform: TransformState,
   ) -> CanvasInputResolver? {
-    guard let interaction else { return nil }
-
-    let context = InteractionContext(
-      interaction: interaction,
-      phase: phase,
-      modifiers: modifiers,
-    )
+    guard let interactionContext else { return nil }
+    //    guard let interaction else { return nil }
+    //
+    //    let context = InteractionContext(
+    //      interaction: interaction,
+    //      phase: phase,
+    //      modifiers: modifiers,
+    //    )
     return .init(
-      context: context,
+      context: interactionContext,
       activeTool: tool,
       transform: transform,
     )

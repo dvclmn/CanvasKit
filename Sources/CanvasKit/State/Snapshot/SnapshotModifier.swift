@@ -11,9 +11,10 @@ import BasePrimitives
 struct CanvasSnapshotModifier: ViewModifier {
   @Environment(\.zoomRange) private var zoomRange
 //  let snapshot: CanvasSnapshot?
-  let mapper: CoordinateSpaceMapper
+  let mapper: CoordinateSpaceMapper?
   let transform: TransformState
   let pointer: PointerState
+  let phase: InteractionPhase
   
   func body(content: Content) -> some View {
     content
@@ -25,29 +26,29 @@ struct CanvasSnapshotModifier: ViewModifier {
       .environment(\.pointerDrag, snapshot?.pointerDrag)
       .environment(\.pointerHover, snapshot?.pointerHover)
 
-      .environment(\.artworkFrameInViewport, snapshot?.artworkFrame)
+//      .environment(\.artworkFrameInViewport, snapshot?.artworkFrame)
       .environment(\.interactionPhase, snapshot?.phase ?? .none)
   }
 }
 
 extension CanvasSnapshotModifier {
-  private func snapshot(
+  private var snapshot: CanvasSnapshot? {
 //    zoomRange: ClosedRange<Double>?,
 //    transform: TransformState,
 //    pointer: PointerState,
-    phase: InteractionPhase,
-  ) -> CanvasSnapshot? {
+//    phase: InteractionPhase,
+//  ) -> CanvasSnapshot? {
     
-    guard let artworkFrame else { return nil }
+//    guard let artworkFrame else { return nil }
     
     /// Raw zoom for snapshot, clamped zoom for mapper
     let zoomRaw = transform.scale
     let zoomClamped = zoomRaw.clampedIfNeeded(to: zoomRange)
     
-    let mapper = CoordinateSpaceMapper(
-      artworkFrame: artworkFrame,
-      zoomClamped: zoomClamped,
-    )
+//    let mapper = CoordinateSpaceMapper(
+//      artworkFrame: artworkFrame,
+//      zoomClamped: zoomClamped,
+//    )
     
     let tapMapped = pointer.tap.map { mapper.canvasPoint(from: $0) }
     let hoverMapped = pointer.hover.map { mapper.canvasPoint(from: $0) }
@@ -58,7 +59,7 @@ extension CanvasSnapshotModifier {
       zoom: zoomRaw,
       pan: transform.translation,
       rotation: transform.rotation,
-      artworkFrame: artworkFrame,
+//      artworkFrame: artworkFrame,
       pointerTap: tapMapped,
       pointerDrag: rectMapped,
       pointerHover: hoverMapped,
@@ -68,8 +69,8 @@ extension CanvasSnapshotModifier {
   }
 }
 
-extension View {
-  func setSnapshotValues(_ snapshot: CanvasSnapshot?) -> some View {
-    self.modifier(CanvasSnapshotModifier(snapshot: snapshot))
-  }
-}
+//extension View {
+//  func setSnapshotValues(_ snapshot: CanvasSnapshot?) -> some View {
+//    self.modifier(CanvasSnapshotModifier(snapshot: snapshot))
+//  }
+//}

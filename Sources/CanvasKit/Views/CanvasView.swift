@@ -86,14 +86,8 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
     )
     .pointerStyleCompatible(pointerStyle)
 
-    .setSnapshotValues(
-      store.snapshot(
-        zoomRange: zoomRange,
-        transform: localTransform,
-      )
-    )
 
-    .onEnvironmentChange(\.modifierKeys) { store.updateModifiers(to: $0) }
+//    .onEnvironmentChange(\.modifierKeys) { store.updateModifiers(to: $0) }
     .task(id: toolHandler != nil) { store.areToolsInUse = toolHandler != nil }
     //    .environment(\.activeTool, toolHandler?.wrappedValue.effectiveTool)
     .environment(\.pointerStyle, pointerStyle)
@@ -112,6 +106,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
 extension CanvasView {
   private var pointerStyle: PointerStyleCompatible? {
     guard let tool = toolHandler?.wrappedValue.effectiveTool else { return nil }
-    return store.pointerStyle(tool: tool, transform: localTransform)
+//    return store.pointerStyle(tool: tool, transform: localTransform)
+    return store.pointerStyle(for: tool)
   }
 }
