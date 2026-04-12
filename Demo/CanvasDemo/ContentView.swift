@@ -11,9 +11,14 @@ import SwiftUI
 struct ContentView: View {
   let canvasSize: CGSize = CGSize(width: 380, height: 300)
   @State private var transform: TransformState = .identity
+  @State private var toolHandler: ToolHandler = .init()
   var body: some View {
 
-    CanvasView(size: canvasSize, transform: $transform) {
+    CanvasView(
+      size: canvasSize,
+      transform: $transform,
+      toolHandler: $toolHandler
+    ) {
       Canvas { context, size in
         context.fill(
           Path(

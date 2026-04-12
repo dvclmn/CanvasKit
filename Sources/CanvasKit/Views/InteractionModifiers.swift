@@ -32,8 +32,6 @@ struct InteractionModifiers: ViewModifier {
         )
         guard let adjustment else { return }
         self.transform = adjustment
-
-        print("Adjustment: \(adjustment)")
       }
 
       .onPinchGesture(
@@ -108,16 +106,7 @@ struct InteractionModifiers: ViewModifier {
 extension InteractionModifiers {
   private func isEnabled(_ interaction: InteractionKinds.Element) -> Bool {
     /// No need to gate any modifiers if Tools are not active
-    guard store.areToolsInUse else {
-      let tool = self.tool ?? .default
-      return tool.inputCapabilities.contains(interaction)
-    }
-    return true
+    guard let tool else { return true }
+    return tool.inputCapabilities.contains(interaction)
   }
 }
-
-//extension View {
-//  public func gestureModifiers(_ transform: Binding<TransformState>) -> some View {
-//    self.modifier(InteractionModifiers(transform: transform))
-//  }
-//}

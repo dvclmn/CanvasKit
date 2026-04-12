@@ -27,48 +27,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   let canvasSize: Size<CanvasSpace>
   let content: () -> Content
 
-  /// Basic usage, CanvasKit manages transform state internally
-  public init(
-    size: CGSize,
-    @ViewBuilder content: @escaping () -> Content,
-  ) {
-    self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
-    self._localTransform = State(initialValue: .identity)
-    self.externalTransform = nil
-    self.toolHandler = nil
-    self.content = content
-  }
-
-  /// Externally-owned transform state, enabling programmatic
-  /// control outside the CanvasKit view hierarchy
-  public init(
-    size: CGSize,
-    transform: Binding<TransformState>,
-    @ViewBuilder content: @escaping () -> Content,
-  ) {
-    self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
-    self._localTransform = State(initialValue: transform.wrappedValue)
-    self.externalTransform = transform
-    self.toolHandler = nil
-    self.content = content
-  }
-
-  /// Externally-owned transform state and Canvas Tool usage
-  public init(
-    size: CGSize,
-    transform: Binding<TransformState>,
-    toolHandler: Binding<ToolHandler>,
-    @ViewBuilder content: @escaping () -> Content,
-  ) {
-    self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
-    self._localTransform = State(initialValue: transform.wrappedValue)
-    self.externalTransform = transform
-    self.toolHandler = toolHandler
-    self.content = content
-  }
-
   public var body: some View {
-
     
     CanvasCoreView(
       canvasSize: canvasSize,
@@ -88,7 +47,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
     
 
 //    .onEnvironmentChange(\.modifierKeys) { store.updateModifiers(to: $0) }
-    .task(id: toolHandler != nil) { store.areToolsInUse = toolHandler != nil }
+//    .task(id: toolHandler != nil) { store.toolHandlingActive = toolHandler != nil }
     //    .environment(\.activeTool, toolHandler?.wrappedValue.effectiveTool)
     .environment(\.pointerStyle, pointerStyle)
     .environment(store)
@@ -109,4 +68,49 @@ extension CanvasView {
 //    return store.pointerStyle(tool: tool, transform: localTransform)
     return store.pointerStyle(for: tool)
   }
+}
+
+// MARK: - Inits
+extension CanvasView {
+  
+  /// Basic usage, CanvasKit manages transform state internally
+  public init(
+    size: CGSize,
+    @ViewBuilder content: @escaping () -> Content,
+  ) {
+    self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
+    self._localTransform = State(initialValue: .identity)
+    self.externalTransform = nil
+    self.toolHandler = nil
+    self.content = content
+  }
+  
+  /// Externally-owned transform state, enabling programmatic
+  /// control outside the CanvasKit view hierarchy
+  public init(
+    size: CGSize,
+    transform: Binding<TransformState>,
+    @ViewBuilder content: @escaping () -> Content,
+  ) {
+    self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
+    self._localTransform = State(initialValue: transform.wrappedValue)
+    self.externalTransform = transform
+    self.toolHandler = nil
+    self.content = content
+  }
+  
+  /// Externally-owned transform state and Canvas Tool usage
+  public init(
+    size: CGSize,
+    transform: Binding<TransformState>,
+    toolHandler: Binding<ToolHandler>,
+    @ViewBuilder content: @escaping () -> Content,
+  ) {
+    self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
+    self._localTransform = State(initialValue: transform.wrappedValue)
+    self.externalTransform = transform
+    self.toolHandler = toolHandler
+    self.content = content
+  }
+
 }

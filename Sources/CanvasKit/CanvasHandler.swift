@@ -23,7 +23,7 @@ final class CanvasHandler {
 
   /// Values synced here from the Environment
   //  private var modifiers: Modifiers = []
-  package var areToolsInUse: Bool = false
+  package var toolHandlingActive: Bool = false
 
   /// The most recent domain action produced by a tool resolution.
   /// Consuming apps can observe this to react to tool-specific events
