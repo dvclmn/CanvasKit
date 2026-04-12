@@ -35,27 +35,3 @@ struct CanvasSnapshot: Sendable {
   /// Phase of any in-progress gesture
   let phase: InteractionPhase
 }
-
-struct CanvasSnapshotModifier: ViewModifier {
-
-  let snapshot: CanvasSnapshot?
-  func body(content: Content) -> some View {
-    content
-      .environment(\.zoomLevel, snapshot?.zoom ?? 1.0)
-      .environment(\.panOffset, snapshot?.pan.cgSize ?? .zero)
-      .environment(\.rotation, snapshot?.rotation ?? .zero)
-
-      .environment(\.pointerTap, snapshot?.pointerTap)
-      .environment(\.pointerDrag, snapshot?.pointerDrag)
-      .environment(\.pointerHover, snapshot?.pointerHover)
-
-      .environment(\.artworkFrameInViewport, snapshot?.artworkFrame)
-      .environment(\.interactionPhase, snapshot?.phase ?? .none)
-  }
-}
-
-extension View {
-  func setSnapshotValues(_ snapshot: CanvasSnapshot?) -> some View {
-    self.modifier(CanvasSnapshotModifier(snapshot: snapshot))
-  }
-}

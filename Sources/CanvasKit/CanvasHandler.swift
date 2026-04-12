@@ -150,36 +150,39 @@ extension CanvasHandler {
 
 extension CanvasHandler {
 
-  func snapshot(
-    zoomRange: ClosedRange<Double>?,
-    transform: TransformState,
-  ) -> CanvasSnapshot? {
-
-    guard let artworkFrame else { return nil }
-
-    let zoomRaw = transform.scale
-    let zoomClamped = zoomRaw.clampedIfNeeded(to: zoomRange)
-
-    let mapper = CoordinateSpaceMapper(
-      artworkFrame: artworkFrame,
-      zoomClamped: zoomClamped,
-    )
-
-    let tapMapped = pointer.tap.map { mapper.canvasPoint(from: $0) }
-    let hoverMapped = pointer.hover.map { mapper.canvasPoint(from: $0) }
-    let rectMapped = pointer.drag.map { mapper.canvasRect(from: $0) }
-    let isInside = hoverMapped.map { mapper.isInsideCanvas($0) } ?? false
-
-    return CanvasSnapshot(
-      zoom: zoomRaw,
-      pan: transform.translation,
-      rotation: transform.rotation,
-      artworkFrame: artworkFrame,
-      pointerTap: tapMapped,
-      pointerDrag: rectMapped,
-      pointerHover: hoverMapped,
-      isPointerInsideCanvas: isInside,
-      phase: phase,
-    )
-  }
+//  func snapshot(
+//    zoomRange: ClosedRange<Double>?,
+//    transform: TransformState,
+//    pointer: PointerState,
+//    phase: InteractionPhase,
+//  ) -> CanvasSnapshot? {
+//
+//    guard let artworkFrame else { return nil }
+//
+//    /// Raw zoom for snapshot, clamped zoom for mapper
+//    let zoomRaw = transform.scale
+//    let zoomClamped = zoomRaw.clampedIfNeeded(to: zoomRange)
+//
+//    let mapper = CoordinateSpaceMapper(
+//      artworkFrame: artworkFrame,
+//      zoomClamped: zoomClamped,
+//    )
+//
+//    let tapMapped = pointer.tap.map { mapper.canvasPoint(from: $0) }
+//    let hoverMapped = pointer.hover.map { mapper.canvasPoint(from: $0) }
+//    let rectMapped = pointer.drag.map { mapper.canvasRect(from: $0) }
+//    let isInside = hoverMapped.map { mapper.isInsideCanvas($0) } ?? false
+//
+//    return CanvasSnapshot(
+//      zoom: zoomRaw,
+//      pan: transform.translation,
+//      rotation: transform.rotation,
+//      artworkFrame: artworkFrame,
+//      pointerTap: tapMapped,
+//      pointerDrag: rectMapped,
+//      pointerHover: hoverMapped,
+//      isPointerInsideCanvas: isInside,
+//      phase: phase,
+//    )
+//  }
 }

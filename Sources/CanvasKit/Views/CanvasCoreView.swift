@@ -12,13 +12,12 @@ struct CanvasCoreView<Content: View>: View {
   @Environment(CanvasHandler.self) private var store
   @Environment(\.canvasBackground) private var canvasBackground
   @Environment(\.canvasAnchor) private var canvasAnchor
-  @Environment(\.zoomLevel) private var zoomLevel
   @Environment(\.zoomRange) private var zoomRange
-  @Environment(\.zoomClamped) private var zoomClamped
+  
+  @State private var artworkFrame: Rect<ScreenSpace>?
 
   let canvasSize: Size<CanvasSpace>
   let transform: TransformState
-//  @Binding var transform: TransformState
 
   @ViewBuilder var content: () -> Content
 
@@ -55,9 +54,18 @@ struct CanvasCoreView<Content: View>: View {
           .onGeometryChange(for: CGRect?.self) { proxy in
             anchor.map { proxy[$0] }
           } action: { frame in
-            let artworkFrame = frame.map { Rect<ScreenSpace>(fromRect: $0) }
-            store.updateArtworkFrame(to: artworkFrame)
+            self.artworkFrame = frame.map { Rect<ScreenSpace>(fromRect: $0) }
+//            store.updateArtworkFrame(to: artworkFrame)
           }
       }
   }
+}
+
+extension CanvasCoreView {
+  private var zoomClamped: Double { transform.scale.clampedIfNeeded(to: zoomRange) }
+  private var mapper: CoordinateSpaceMapper? {
+    guard let artworkFrame else { return nil }
+    return .init(artworkFrame: artworkFrame, zoomClamped: zoomClamped)
+  }
+  
 }

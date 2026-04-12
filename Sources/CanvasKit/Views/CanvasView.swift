@@ -95,7 +95,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
 
     .onEnvironmentChange(\.modifierKeys) { store.updateModifiers(to: $0) }
     .task(id: toolHandler != nil) { store.areToolsInUse = toolHandler != nil }
-//    .environment(\.activeTool, toolHandler?.wrappedValue.effectiveTool)
+    //    .environment(\.activeTool, toolHandler?.wrappedValue.effectiveTool)
     .environment(\.pointerStyle, pointerStyle)
     .environment(store)
 

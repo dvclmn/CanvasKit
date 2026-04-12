@@ -10,7 +10,6 @@ import SwiftUI
 
 struct InteractionModifiers: ViewModifier {
   @Environment(CanvasHandler.self) private var store
-//  @Environment(\.activeTool) private var activeTool
   @Environment(\.modifierKeys) private var modifierKeys
 
   @Binding var transform: TransformState
