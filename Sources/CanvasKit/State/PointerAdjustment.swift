@@ -24,3 +24,14 @@ public enum PointerAdjustment: Sendable {
   case hover(Point<ScreenSpace>)
   case drag(Rect<ScreenSpace>)
 }
+
+
+extension PointerAdjustment: CustomStringConvertible {
+  public var description: String {
+    switch self {
+      case .tap(let point): "Tap \(point)"
+      case .hover(let point): "Hover \(point)"
+      case .drag(let rect): "Drag \(rect)"
+    }
+  }
+}

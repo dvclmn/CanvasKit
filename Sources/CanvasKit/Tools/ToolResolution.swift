@@ -14,6 +14,8 @@ import Foundation
 /// adjustment immediately, while the consuming app handles the action.
 public struct ToolResolution: Sendable {
 
+  /// While support/usage is kinda murky at this stage, Tools may declare both
+  /// a Pointer *and* a Transform adjustment in response to an Interaction
   public let adjustment: InteractionAdjustment
   public let action: ToolAction
 
@@ -22,7 +24,10 @@ public struct ToolResolution: Sendable {
     adjustment: InteractionAdjustment,
     action: ToolAction,
   ) {
-    guard adjustment.isSupported(by: interaction.kind) else { return nil }
+    guard adjustment.isSupported(by: interaction.kind) else {
+      print("Adjustment \(adjustment)")
+      return nil
+    }
     self.adjustment = adjustment
     self.action = action
   }

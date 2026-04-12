@@ -40,3 +40,13 @@ extension InteractionAdjustment {
     }
   }
 }
+
+extension InteractionAdjustment: CustomStringConvertible {
+  public var description: String {
+    switch self {
+      case .transform(let adj): "Transform: \(adj)"
+      case .pointer(let adj): "Pointer: \(adj)"
+      case .none: "None"
+    }
+  }
+}

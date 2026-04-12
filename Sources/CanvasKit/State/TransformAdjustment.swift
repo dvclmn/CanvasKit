@@ -45,7 +45,7 @@ extension TransformAdjustment {
     return new
   }
 
-  public var supportedInteractions: InteractionKinds {
+  var supportedInteractions: InteractionKinds {
     switch self {
       case .translation: [.swipe, .drag]
       case .scale: [.swipe, .pinch, .tap, .drag]
@@ -67,5 +67,15 @@ extension TransformAdjustment {
   ) -> Self {
     let new = transform.translation + delta
     return .translation(new)
+  }
+}
+
+extension TransformAdjustment: CustomStringConvertible {
+  public var description: String {
+    switch self {
+      case .translation(let size): "Translation: \(size)"
+      case .scale(let double): "Scale: \(double)"
+      case .rotation(let angle): "Rotation: \(angle)"
+    }
   }
 }

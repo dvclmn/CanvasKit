@@ -5,9 +5,8 @@
 //  Created by Dave Coleman on 16/3/2026.
 //
 
-import SwiftUI
-//import InteractionKit
 import BasePrimitives
+import SwiftUI
 
 /// Previously called `InteractionSource`
 public enum Interaction: Sendable {
@@ -20,7 +19,7 @@ public enum Interaction: Sendable {
 }
 
 extension Interaction {
-  public var kind: InteractionKinds {
+  var kind: InteractionKinds.Element {
     switch self {
       case .swipe: .swipe
       case .pinch: .pinch

@@ -9,9 +9,9 @@ import Foundation
 
 struct InteractionKinds: OptionSet, Sendable {
 
-  public let rawValue: Int
+  let rawValue: Int
 
-  public init(rawValue: Int) {
+  init(rawValue: Int) {
     self.rawValue = rawValue
   }
 
@@ -23,11 +23,29 @@ struct InteractionKinds: OptionSet, Sendable {
   static let hover = Self(rawValue: 1 << 5)
 
   /// Default for `CanvasTool` input capabilities
-  public static let tapAndDrag: Self = [.tap, .drag]
+  static let tapAndDrag: Self = [.tap, .drag]
 
-  public static let noToolsMode: Self = [.swipe, .pinch, .rotation]
+  static let noToolsMode: Self = [.swipe, .pinch, .rotation]
 
-  public static let all: Self = [
+  static let all: Self = [
     .swipe, .pinch, .rotation, .tap, .drag, .hover,
   ]
+}
+
+extension InteractionKinds: CustomStringConvertible {
+  static let debugDescriptions: [(Self, String)] = [
+    (.swipe, "Swipe"),
+    (.pinch, "Pinch"),
+    (.rotation, "Rotation"),
+    (.tap, "Tap"),
+    (.drag, "Drag"),
+    (.hover, "Hover"),
+  ]
+
+  public var description: String {
+    let result: [String] = Self.debugDescriptions.filter { contains($0.0) }.map { $0.1 }
+    let printable = result.joined(separator: ", ")
+
+    return "\(printable)"
+  }
 }

@@ -9,6 +9,7 @@ import BasePrimitives
 import SwiftUI
 
 /// Centralises input resolution for `CanvasHandler`.
+/// 
 struct CanvasInputResolver {
   let context: InteractionContext
   let activeTool: (any CanvasTool)?
@@ -19,10 +20,10 @@ struct CanvasInputResolver {
   }
 
   func resolve() -> CanvasInputResolution {
-    .init(
-      baseAdjustment: baseAdjustment,
-      toolResolution: toolResolution,
-    )
+//    .init(
+//      baseAdjustment: baseAdjustment,
+//      toolResolution: toolResolution,
+//    )
   }
 
   /// Current tool may not declare any resolution
@@ -51,10 +52,12 @@ struct CanvasInputResolver {
   /// be created by all Interaction kinds
   private var baseAdjustment: TransformAdjustment? {
     switch context.interaction {
-      case .swipe(let delta): swipeAdjustment(delta: delta)
-      case .pinch(let scale): .scale(scale)
-      case .rotation(let angle): .rotation(angle)
-      case .tap, .drag, .hover: nil
+      case .swipe(let delta): return swipeAdjustment(delta: delta)
+      case .pinch(let scale): return .scale(scale)
+      case .rotation(let angle): return .rotation(angle)
+      case .tap, .drag, .hover:
+        print("Interaction of type \"\(context.interaction.kind.description)\" invalid for Base transform. Tap, Drag and Hover Interactions are typically not used unless CanvasTool use is active.")
+        return nil
     }
   }
 

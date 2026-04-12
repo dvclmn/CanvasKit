@@ -72,28 +72,39 @@ extension CanvasHandler {
     )
     self.interactionContext = context
 
-    let resolver = inputResolver(
-      tool: tool,
-      transform: currentTransform,
+//    let resolver = inputResolver(
+//      tool: tool,
+//      transform: currentTransform,
+//    )
+    let resolver = CanvasInputResolver(
+      context: context,
+      activeTool: tool,
+      transform: currentTransform
     )
-
-    guard let resolution = resolver?.resolve() else {
-      return currentTransform
-    }
+    
+    let resolution = resolver.resolve()
 
     /// 1 – Base gestures, updates transform state regardless
     /// of whether Canvas Tools are in use
-    if let base = resolution.baseAdjustment {
-      return handleAdjustment(.transform(base), currentTransform: currentTransform)
+    switch resolution {
+      case .base(let transformAdjustment):
+        <#code#>
+      case .tool(let toolResolution):
+        <#code#>
+      case nil:
+        <#code#>
     }
-
-    /// 2 – Tool-specific pointer interactions
-    if let toolAdjustment = resolution.toolResolution?.adjustment {
-      lastToolAction = resolution.toolResolution?.action ?? .none
-      return handleAdjustment(toolAdjustment, currentTransform: currentTransform)
-    }
-
-    return nil
+//    if let base = resolution.baseAdjustment {
+//      return handleAdjustment(.transform(base), currentTransform: currentTransform)
+//    }
+//
+//    /// 2 – Tool-specific pointer interactions
+//    if let toolAdjustment = resolution.toolResolution?.adjustment {
+//      lastToolAction = resolution.toolResolution?.action ?? .none
+//      return handleAdjustment(toolAdjustment, currentTransform: currentTransform)
+//    }
+//
+//    return nil
   }
 
 }
@@ -138,22 +149,5 @@ extension CanvasHandler {
     return tool.resolvePointerStyle(context: interactionContext)
   }
 
-  private func inputResolver(
-    tool: (any CanvasTool)?,
-    transform: TransformState,
-  ) -> CanvasInputResolver? {
-    guard let interactionContext else { return nil }
-    //    guard let interaction else { return nil }
-    //
-    //    let context = InteractionContext(
-    //      interaction: interaction,
-    //      phase: phase,
-    //      modifiers: modifiers,
-    //    )
-    return .init(
-      context: interactionContext,
-      activeTool: tool,
-      transform: transform,
-    )
-  }
+
 }
