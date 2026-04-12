@@ -5,11 +5,16 @@
 //  Created by Dave Coleman on 24/6/2025.
 //
 
-import SwiftUI
 import BasePrimitives
+import SwiftUI
 
 struct SwipeGestureModifier: ViewModifier {
 
+  /// My usual approach for modifiers is that they are captured higher up the
+  /// hierarchy, and available in the environment. However the way swipe
+  /// (scrollwheel) events are captured for this modifier (see `SwipeTrackingNSView`)
+  /// disrupts that process, so any modifiers detected during the swipe events are
+  /// held here and added to the Environment.
   @State private var modifiers: Modifiers = []
 
   let isEnabled: Bool

@@ -14,7 +14,7 @@ struct InteractionModifiers: ViewModifier {
 
   @Binding var transform: TransformState
   let tool: (any CanvasTool)?
-  
+
   func body(content: Content) -> some View {
     @Bindable var store = store
 

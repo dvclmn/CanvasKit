@@ -20,10 +20,10 @@ final class CanvasHandler {
 
   /// Synced here from `CanvasCoreView`. This then gets added
   /// to the Environment by CanvasSnapshot
-  private var artworkFrame: Rect<ScreenSpace>?
+//  private var artworkFrame: Rect<ScreenSpace>?
 
   /// Values synced here from the Environment
-  private var modifiers: Modifiers = []
+//  private var modifiers: Modifiers = []
   package var areToolsInUse: Bool = false
 
   /// The most recent domain action produced by a tool resolution.
@@ -33,8 +33,10 @@ final class CanvasHandler {
 
   /// The most recent interaction context, provided when
   /// `handleInteraction(_:phase:)` is called.
-  var phase: InteractionPhase = .none
-  var interaction: Interaction?
+//  var phase: InteractionPhase = .none
+//  var interaction: Interaction?
+  
+  var interactionContext: InteractionContext?
 
   public init() {}
 }
@@ -59,8 +61,13 @@ extension CanvasHandler {
     currentTransform: TransformState,
   ) -> TransformState? {
 
-    self.interaction = interaction
-    self.phase = phase
+//    self.interaction = interaction
+//    self.phase = phase
+    let context = InteractionContext(
+      interaction: interaction,
+      phase: phase,
+      modifiers: <#T##Modifiers#>
+    )
 
     let resolver = inputResolver(
       tool: tool,
@@ -113,9 +120,9 @@ extension CanvasHandler {
 
 extension CanvasHandler {
 
-  func updateArtworkFrame(to frame: Rect<ScreenSpace>?) {
-    self.artworkFrame = frame
-  }
+//  func updateArtworkFrame(to frame: Rect<ScreenSpace>?) {
+//    self.artworkFrame = frame
+//  }
   func updateModifiers(to modifiers: Modifiers) {
     self.modifiers = modifiers
   }
@@ -123,8 +130,12 @@ extension CanvasHandler {
   func pointerStyle(
     tool: any CanvasTool,
     transform: TransformState,
+    phase: InteractionPhase,
   ) -> PointerStyleCompatible? {
-    inputResolver(tool: tool, transform: transform)?.pointerStyle
+    inputResolver(
+      tool: tool,
+      transform: transform,
+    )?.pointerStyle
   }
 
   private func inputResolver(
@@ -150,39 +161,39 @@ extension CanvasHandler {
 
 extension CanvasHandler {
 
-//  func snapshot(
-//    zoomRange: ClosedRange<Double>?,
-//    transform: TransformState,
-//    pointer: PointerState,
-//    phase: InteractionPhase,
-//  ) -> CanvasSnapshot? {
-//
-//    guard let artworkFrame else { return nil }
-//
-//    /// Raw zoom for snapshot, clamped zoom for mapper
-//    let zoomRaw = transform.scale
-//    let zoomClamped = zoomRaw.clampedIfNeeded(to: zoomRange)
-//
-//    let mapper = CoordinateSpaceMapper(
-//      artworkFrame: artworkFrame,
-//      zoomClamped: zoomClamped,
-//    )
-//
-//    let tapMapped = pointer.tap.map { mapper.canvasPoint(from: $0) }
-//    let hoverMapped = pointer.hover.map { mapper.canvasPoint(from: $0) }
-//    let rectMapped = pointer.drag.map { mapper.canvasRect(from: $0) }
-//    let isInside = hoverMapped.map { mapper.isInsideCanvas($0) } ?? false
-//
-//    return CanvasSnapshot(
-//      zoom: zoomRaw,
-//      pan: transform.translation,
-//      rotation: transform.rotation,
-//      artworkFrame: artworkFrame,
-//      pointerTap: tapMapped,
-//      pointerDrag: rectMapped,
-//      pointerHover: hoverMapped,
-//      isPointerInsideCanvas: isInside,
-//      phase: phase,
-//    )
-//  }
+  //  func snapshot(
+  //    zoomRange: ClosedRange<Double>?,
+  //    transform: TransformState,
+  //    pointer: PointerState,
+  //    phase: InteractionPhase,
+  //  ) -> CanvasSnapshot? {
+  //
+  //    guard let artworkFrame else { return nil }
+  //
+  //    /// Raw zoom for snapshot, clamped zoom for mapper
+  //    let zoomRaw = transform.scale
+  //    let zoomClamped = zoomRaw.clampedIfNeeded(to: zoomRange)
+  //
+  //    let mapper = CoordinateSpaceMapper(
+  //      artworkFrame: artworkFrame,
+  //      zoomClamped: zoomClamped,
+  //    )
+  //
+  //    let tapMapped = pointer.tap.map { mapper.canvasPoint(from: $0) }
+  //    let hoverMapped = pointer.hover.map { mapper.canvasPoint(from: $0) }
+  //    let rectMapped = pointer.drag.map { mapper.canvasRect(from: $0) }
+  //    let isInside = hoverMapped.map { mapper.isInsideCanvas($0) } ?? false
+  //
+  //    return CanvasSnapshot(
+  //      zoom: zoomRaw,
+  //      pan: transform.translation,
+  //      rotation: transform.rotation,
+  //      artworkFrame: artworkFrame,
+  //      pointerTap: tapMapped,
+  //      pointerDrag: rectMapped,
+  //      pointerHover: hoverMapped,
+  //      isPointerInsideCanvas: isInside,
+  //      phase: phase,
+  //    )
+  //  }
 }
