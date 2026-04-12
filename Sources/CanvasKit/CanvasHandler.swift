@@ -34,6 +34,7 @@ final class CanvasHandler {
   /// `handleInteraction(_:phase:)` is called.
   //  var phase: InteractionPhase = .none
   //  var interaction: Interaction?
+  private var activeTool: (any CanvasTool)?
 
   var interactionContext: InteractionContext?
 
@@ -61,6 +62,7 @@ extension CanvasHandler {
     currentTransform: TransformState,
   ) -> TransformState? {
 
+    self.activeTool = tool
     //    self.interaction = interaction
     //    self.phase = phase
     let context = InteractionContext(
@@ -120,15 +122,18 @@ extension CanvasHandler {
 }
 
 extension CanvasHandler {
+  private func isEnabled(
+    for interaction: InteractionKinds.Element
+  ) -> Bool {
+    let inputCapabilities: InteractionKinds = {
+      guard let activeTool else { return .noToolsMode }
+      return activeTool.inputCapabilities
+    }()
+    return inputCapabilities.contains(interaction)
+  }
 
-  //  func updateArtworkFrame(to frame: Rect<ScreenSpace>?) {
-  //    self.artworkFrame = frame
-  //  }
-  //  func updateModifiers(to modifiers: Modifiers) {
-  //    self.modifiers = modifiers
-  //  }
-
-  func pointerStyle(for tool: any CanvasTool) -> PointerStyleCompatible? {
+  var pointerStyle: PointerStyleCompatible? {
+//  func pointerStyle(for tool: any CanvasTool) -> PointerStyleCompatible? {
     guard let interactionContext else { return nil }
     return tool.resolvePointerStyle(context: interactionContext)
   }
@@ -151,45 +156,4 @@ extension CanvasHandler {
       transform: transform,
     )
   }
-}
-
-// MARK: - Mapping and Snapshot
-
-extension CanvasHandler {
-
-  //  func snapshot(
-  //    zoomRange: ClosedRange<Double>?,
-  //    transform: TransformState,
-  //    pointer: PointerState,
-  //    phase: InteractionPhase,
-  //  ) -> CanvasSnapshot? {
-  //
-  //    guard let artworkFrame else { return nil }
-  //
-  //    /// Raw zoom for snapshot, clamped zoom for mapper
-  //    let zoomRaw = transform.scale
-  //    let zoomClamped = zoomRaw.clampedIfNeeded(to: zoomRange)
-  //
-  //    let mapper = CoordinateSpaceMapper(
-  //      artworkFrame: artworkFrame,
-  //      zoomClamped: zoomClamped,
-  //    )
-  //
-  //    let tapMapped = pointer.tap.map { mapper.canvasPoint(from: $0) }
-  //    let hoverMapped = pointer.hover.map { mapper.canvasPoint(from: $0) }
-  //    let rectMapped = pointer.drag.map { mapper.canvasRect(from: $0) }
-  //    let isInside = hoverMapped.map { mapper.isInsideCanvas($0) } ?? false
-  //
-  //    return CanvasSnapshot(
-  //      zoom: zoomRaw,
-  //      pan: transform.translation,
-  //      rotation: transform.rotation,
-  //      artworkFrame: artworkFrame,
-  //      pointerTap: tapMapped,
-  //      pointerDrag: rectMapped,
-  //      pointerHover: hoverMapped,
-  //      isPointerInsideCanvas: isInside,
-  //      phase: phase,
-  //    )
-  //  }
 }

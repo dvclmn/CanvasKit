@@ -20,7 +20,7 @@ struct InteractionModifiers: ViewModifier {
 
     content
       .onSwipeGesture(
-        isEnabled: isEnabled(.swipe)
+        isEnabled: isEnabled(for: .swipe)
       ) { event in
 
         let adjustment = store.processedTransform(
@@ -36,7 +36,7 @@ struct InteractionModifiers: ViewModifier {
 
       .onPinchGesture(
         initial: transform.scale,
-        isEnabled: isEnabled(.pinch),
+        isEnabled: isEnabled(for: .pinch),
       ) { zoom, phase in
 
         let adjustment = store.processedTransform(
@@ -58,7 +58,7 @@ struct InteractionModifiers: ViewModifier {
       }
 
       .onContinuousHover(coordinateSpace: .named(ScreenSpace.screen)) { phase in
-        guard isEnabled(.hover), let location = phase.location else { return }
+        guard isEnabled(for: .hover), let location = phase.location else { return }
         let adjustment = store.processedTransform(
           .hover(location.screenPoint),
           tool: tool,
@@ -72,7 +72,7 @@ struct InteractionModifiers: ViewModifier {
       }
 
       .onTapGesture(coordinateSpace: .named(ScreenSpace.screen)) { location in
-        guard isEnabled(.tap) else { return }
+        guard isEnabled(for: .tap) else { return }
         let adjustment = store.processedTransform(
           .tap(location: location.screenPoint),
           tool: tool,
@@ -87,7 +87,7 @@ struct InteractionModifiers: ViewModifier {
 
       .onPointerDragGesture(
         behaviour: tool?.dragBehaviour ?? .none,
-        isEnabled: isEnabled(.drag),
+        isEnabled: isEnabled(for: .drag),
       ) { payload, phase in
         guard let payload else { return }
         let adjustment = store.processedTransform(
@@ -104,9 +104,5 @@ struct InteractionModifiers: ViewModifier {
 }
 
 extension InteractionModifiers {
-  private func isEnabled(_ interaction: InteractionKinds.Element) -> Bool {
-    /// No need to gate any modifiers if Tools are not active
-    guard let tool else { return true }
-    return tool.inputCapabilities.contains(interaction)
-  }
+  
 }

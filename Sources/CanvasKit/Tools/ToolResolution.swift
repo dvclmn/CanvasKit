@@ -6,7 +6,6 @@
 //
 
 import Foundation
-//import InteractionKit
 
 /// The combined result of a tool resolving a pointer interaction.
 ///
@@ -15,8 +14,6 @@ import Foundation
 /// adjustment immediately, while the consuming app handles the action.
 public struct ToolResolution: Sendable {
 
-  /// Optional as not every ``Interaction`` always
-  /// produces an adjustment
   public let adjustment: InteractionAdjustment
   public let action: ToolAction
 
