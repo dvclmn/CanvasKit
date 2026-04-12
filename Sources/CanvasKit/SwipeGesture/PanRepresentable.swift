@@ -9,16 +9,16 @@
 import SwiftUI
 
 struct SwipeGestureView: NSViewRepresentable {
-  let onSwipeGesture: SwipeOutputInternal
+  let onSwipeGesture: SwipeOutput
 
-  init(_ onSwipeGesture: @escaping SwipeOutputInternal) {
+  init(_ onSwipeGesture: @escaping SwipeOutput) {
     self.onSwipeGesture = onSwipeGesture
   }
 
   func makeNSView(context: Context) -> SwipeTrackingNSView {
     let view = SwipeTrackingNSView()
-    view.onSwipeGesture = { event, modifiers in
-      self.onSwipeGesture(event, modifiers)
+    view.onSwipeGesture = { event in
+      self.onSwipeGesture(event)
     }
     return view
   }

@@ -7,12 +7,17 @@
 
 import BasePrimitives
 
-public typealias SwipeOutputInternal = (SwipeEvent, Modifiers) -> Void
+//public typealias SwipeOutputInternal = (SwipeEvent, Modifiers) -> Void
+public typealias SwipeOutput = (SwipeEvent) -> Void
 
 public struct SwipeEvent {
   public let delta: Size<ScreenSpace>
   public let location: Point<ScreenSpace>
   public let phase: InteractionPhase
+  
+  /// Will be added to the environment, but also included
+  /// here in case direct access is needed
+  public let modifiers: Modifiers
 }
 
 extension SwipeEvent {

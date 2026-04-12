@@ -27,6 +27,7 @@ struct InteractionModifiers: ViewModifier {
           .swipe(delta: event.delta),
           tool: tool,
           phase: event.phase,
+          modifiers: event.modifiers,
           currentTransform: transform,
         )
         guard let adjustment else { return }
@@ -43,6 +44,7 @@ struct InteractionModifiers: ViewModifier {
           .pinch(scale: zoom),
           tool: tool,
           phase: phase,
+          modifiers: modifierKeys,
           currentTransform: transform,
         )
 
@@ -62,6 +64,7 @@ struct InteractionModifiers: ViewModifier {
           .hover(location.screenPoint),
           tool: tool,
           phase: phase.interactionPhase,
+          modifiers: modifierKeys,
           currentTransform: transform,
         )
         guard let adjustment else { return }
@@ -75,6 +78,7 @@ struct InteractionModifiers: ViewModifier {
           .tap(location: location.screenPoint),
           tool: tool,
           phase: .ended,
+          modifiers: modifierKeys,
           currentTransform: transform,
         )
         guard let adjustment else { return }
@@ -91,6 +95,7 @@ struct InteractionModifiers: ViewModifier {
           .drag(payload),
           tool: tool,
           phase: phase,
+          modifiers: modifierKeys,
           currentTransform: transform,
         )
         guard let adjustment else { return }

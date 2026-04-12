@@ -15,7 +15,7 @@ import BasePrimitives
 /// - I was getting confused when trying to model Interactions, Gesture, State
 ///   etc for CanvasKit and InteractionKit. Removing the word Pan helped
 class SwipeTrackingNSView: NSView {
-  var onSwipeGesture: SwipeOutputInternal?
+  var onSwipeGesture: SwipeOutput?
 
   override func scrollWheel(with event: NSEvent) {
     let locationInView = convert(event.locationInWindow, from: nil)
@@ -27,8 +27,9 @@ class SwipeTrackingNSView: NSView {
       delta: delta.screenSize,
       location: locationInView.screenPoint,
       phase: phase,
+      modifiers: modifiers
     )
-    onSwipeGesture?(eventData, modifiers)
+    onSwipeGesture?(eventData)
   }
 }
 #endif

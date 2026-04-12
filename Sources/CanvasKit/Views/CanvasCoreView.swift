@@ -63,7 +63,7 @@ struct CanvasCoreView<Content: View>: View {
           mapper: mapper,
           transform: transform,
           pointer: store.pointer,
-          phase: <#T##InteractionPhase#>
+          phase: store.interactionContext?.phase ?? .none
         )
       )
 //      .setSnapshotValues(.in)

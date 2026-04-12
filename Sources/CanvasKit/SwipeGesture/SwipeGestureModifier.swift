@@ -18,14 +18,14 @@ struct SwipeGestureModifier: ViewModifier {
   @State private var modifiers: Modifiers = []
 
   let isEnabled: Bool
-  let action: (SwipeEvent) -> Void
+  let action: SwipeOutput
 
   func body(content: Content) -> some View {
     content
       .overlay {
         if isEnabled {
-          SwipeGestureView { event, modifiers in
-            self.modifiers = modifiers
+          SwipeGestureView { event in
+            self.modifiers = event.modifiers
             action(event)
           }
           /// This adds the modifiers to the Environment. This is also done separately
@@ -44,7 +44,7 @@ extension View {
   /// Typically used for Pan, but useful for other swipe-y things too.
   public func onSwipeGesture(
     isEnabled: Bool = true,
-    perform action: @escaping (SwipeEvent) -> Void,
+    perform action: @escaping SwipeOutput
   ) -> some View {
     self.modifier(
       SwipeGestureModifier(
