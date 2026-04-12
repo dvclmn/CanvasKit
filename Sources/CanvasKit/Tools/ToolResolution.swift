@@ -19,16 +19,31 @@ public struct ToolResolution: Sendable {
   public let adjustment: InteractionAdjustment
   public let action: ToolAction
 
-  public init?(
+  init(
+    adjustment: InteractionAdjustment,
+    action: ToolAction,
+  ) {
+    self.adjustment = adjustment
+    self.action = action
+  }
+
+  public static let none: Self = .init(
+    adjustment: .none,
+    action: .none,
+  )
+}
+
+extension ToolResolution {
+  public init(
     for interaction: Interaction,
     adjustment: InteractionAdjustment,
     action: ToolAction,
   ) {
-    guard adjustment.isSupported(by: interaction.kind) else {
-      print("Adjustment \(adjustment)")
-      return nil
+    if adjustment.isSupported(by: interaction.kind) {
+      self.init(adjustment: adjustment, action: action)
+    } else {
+      print("Adjustment \(adjustment) not supported by \(interaction.kind.description)")
+      self = .none
     }
-    self.adjustment = adjustment
-    self.action = action
   }
 }

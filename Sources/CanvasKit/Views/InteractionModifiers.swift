@@ -104,5 +104,14 @@ struct InteractionModifiers: ViewModifier {
 }
 
 extension InteractionModifiers {
-  
+  private func isEnabled(for interaction: InteractionKinds.Element) -> Bool {
+    let capabilities: InteractionKinds = tool?.inputCapabilities ?? .noToolsMode
+    let enabled = capabilities.contains(interaction)
+    if !enabled {
+      print("Interaction \(interaction) is not enabled for \(capabilities)")
+    }
+    return enabled
+//    guard let tool else { return true }
+//    return tool.inputCapabilities.contains(interaction)
+  }
 }

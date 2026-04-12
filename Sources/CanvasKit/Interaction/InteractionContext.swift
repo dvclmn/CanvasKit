@@ -31,3 +31,9 @@ extension InteractionContext {
     return phase.isActive
   }
 }
+
+extension InteractionContext: CustomStringConvertible {
+  public var description: String {
+    "Interaction: \(interaction), Phase: \(phase.name), Modifiers: \(modifiers)"
+  }
+}

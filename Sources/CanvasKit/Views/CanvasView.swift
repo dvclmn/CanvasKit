@@ -66,7 +66,8 @@ extension CanvasView {
   private var pointerStyle: PointerStyleCompatible? {
     guard let tool = toolHandler?.wrappedValue.effectiveTool else { return nil }
 //    return store.pointerStyle(tool: tool, transform: localTransform)
-    return store.pointerStyle(for: tool)
+//    return store.pointerStyle(for: tool)
+    return store.pointerStyle
   }
 }
 

@@ -41,7 +41,7 @@ public protocol CanvasTool: Sendable, Equatable, Identifiable where ID == Canvas
   func resolvePointerInteraction(
     context: InteractionContext,
     currentTransform: TransformState,
-  ) -> ToolResolution?
+  ) -> ToolResolution
 }
 
 extension CanvasTool {

@@ -28,7 +28,8 @@ final class CanvasHandler {
   /// The most recent domain action produced by a tool resolution.
   /// Consuming apps can observe this to react to tool-specific events
   /// (e.g. "select at point", "commit stroke").
-  var lastToolAction: ToolAction = .none
+  var lastToolAction: ToolAction?
+//  var lastToolAction: ToolAction = .none
 
   /// The most recent interaction context, provided when
   /// `handleInteraction(_:phase:)` is called.
@@ -82,17 +83,24 @@ extension CanvasHandler {
       transform: currentTransform
     )
     
-    let resolution = resolver.resolve()
+    guard let resolution = resolver.resolve() else {
+      print("No resolution for provided interaction context: \(context)")
+      return nil
+    }
 
     /// 1 – Base gestures, updates transform state regardless
     /// of whether Canvas Tools are in use
     switch resolution {
-      case .base(let transformAdjustment):
-        <#code#>
-      case .tool(let toolResolution):
-        <#code#>
-      case nil:
-        <#code#>
+      case .base(let adjustment):
+        return handleAdjustment(.transform(adjustment), currentTransform: currentTransform)
+        
+      case .tool(let resolution):
+        lastToolAction = resolution.action
+        return handleAdjustment(resolution.adjustment, currentTransform: currentTransform)
+//        if let toolAdjustment = resolution.toolResolution?.adjustment {
+//                lastToolAction = resolution.toolResolution?.action
+//                return handleAdjustment(toolAdjustment, currentTransform: currentTransform)
+          //    }
     }
 //    if let base = resolution.baseAdjustment {
 //      return handleAdjustment(.transform(base), currentTransform: currentTransform)
@@ -133,20 +141,20 @@ extension CanvasHandler {
 }
 
 extension CanvasHandler {
-  private func isEnabled(
-    for interaction: InteractionKinds.Element
-  ) -> Bool {
-    let inputCapabilities: InteractionKinds = {
-      guard let activeTool else { return .noToolsMode }
-      return activeTool.inputCapabilities
-    }()
-    return inputCapabilities.contains(interaction)
-  }
+//  private func isEnabled(
+//    for interaction: InteractionKinds.Element
+//  ) -> Bool {
+//    let inputCapabilities: InteractionKinds = {
+//      guard let activeTool else { return .noToolsMode }
+//      return activeTool.inputCapabilities
+//    }()
+//    return inputCapabilities.contains(interaction)
+//  }
 
   var pointerStyle: PointerStyleCompatible? {
 //  func pointerStyle(for tool: any CanvasTool) -> PointerStyleCompatible? {
     guard let interactionContext else { return nil }
-    return tool.resolvePointerStyle(context: interactionContext)
+    return activeTool?.resolvePointerStyle(context: interactionContext)
   }
 
 

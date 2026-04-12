@@ -32,7 +32,7 @@ extension ZoomTool {
   public func resolvePointerInteraction(
     context: InteractionContext,
     currentTransform: TransformState,
-  ) -> ToolResolution? {
+  ) -> ToolResolution {
 
     let adjustment: InteractionAdjustment =
       switch context.interaction {

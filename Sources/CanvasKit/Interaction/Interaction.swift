@@ -31,6 +31,19 @@ extension Interaction {
   }
 }
 
+extension Interaction: CustomStringConvertible {
+  public var description: String {
+    switch self {
+      case .swipe(let delta): "Swipe delta: \(delta)"
+      case .pinch(let scale): "Pinch scale: \(scale)"
+      case .rotation(let angle): "Rotation angle: \(angle)"
+      case .tap(let location): "Tap at: \(location)"
+      case .drag(let pointerDragPayload): "Drag: \(pointerDragPayload)"
+      case .hover(let point): "Hover location: \(point)"
+    }
+  }
+}
+
 public enum PointerButton: String, Sendable {
   case primary
   case secondary

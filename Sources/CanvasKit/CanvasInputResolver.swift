@@ -9,7 +9,7 @@ import BasePrimitives
 import SwiftUI
 
 /// Centralises input resolution for `CanvasHandler`.
-/// 
+///
 struct CanvasInputResolver {
   let context: InteractionContext
   let activeTool: (any CanvasTool)?
@@ -19,34 +19,46 @@ struct CanvasInputResolver {
     activeTool?.resolvePointerStyle(context: context)
   }
 
-  func resolve() -> CanvasInputResolution {
-//    .init(
-//      baseAdjustment: baseAdjustment,
-//      toolResolution: toolResolution,
-//    )
+  func resolve() -> CanvasInputResolution? {
+    guard let activeTool else {
+      return baseAdjustment.map { .base($0) }
+    }
+    return .resolution(
+      for: activeTool,
+      context: context,
+      transform: transform,
+    )
+    //      return baseAdjustment.map { .base($0) }
+    //      //      guard let baseAdjustment else {
+    //      //        return nil
+    //      //      }
+    //      //      return .base(baseAdjustment)
+    //
+    //    }
+    //    return .tool()
+    //    .init(
+    //      baseAdjustment: baseAdjustment,
+    //      toolResolution: toolResolution,
+    //    )
   }
+}
+
+// MARK: - Tool resolution (Tool use mode only)
+extension CanvasInputResolver {
 
   /// Current tool may not declare any resolution
-  private var toolResolution: ToolResolution? {
-    guard shouldResolveTool else { return nil }
-    return activeTool?.resolvePointerInteraction(
-      context: context,
-      currentTransform: transform,
-    ) ?? .none
-  }
+//  private func toolResolution(for tool: any CanvasTool) -> ToolResolution? {
+//    guard shouldResolveTool(tool) else { return nil }
+//    return tool.resolvePointerInteraction(
+//      context: context,
+//      currentTransform: transform,
+//    ) ?? .none
+//  }
 
-  private var shouldResolveTool: Bool {
-    let capabilities = activeTool?.inputCapabilities ?? []
+}
 
-    return switch context.interaction {
-      case .swipe: capabilities.contains(.swipe)
-      case .pinch: capabilities.contains(.pinch)
-      case .rotation: capabilities.contains(.rotation)
-      case .tap: capabilities.contains(.tap)
-      case .drag: capabilities.contains(.drag)
-      case .hover: capabilities.contains(.hover)
-    }
-  }
+// MARK: - Base Adjustment (Tool Use inactive)
+extension CanvasInputResolver {
 
   /// Optional because not all transform adjustments are able to
   /// be created by all Interaction kinds
@@ -56,7 +68,9 @@ struct CanvasInputResolver {
       case .pinch(let scale): return .scale(scale)
       case .rotation(let angle): return .rotation(angle)
       case .tap, .drag, .hover:
-        print("Interaction of type \"\(context.interaction.kind.description)\" invalid for Base transform. Tap, Drag and Hover Interactions are typically not used unless CanvasTool use is active.")
+        print(
+          "Interaction of type \"\(context.interaction.kind.description)\" invalid for Base transform. Tap, Drag and Hover Interactions are typically not used unless CanvasTool use is active."
+        )
         return nil
     }
   }

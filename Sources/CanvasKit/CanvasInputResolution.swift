@@ -16,6 +16,40 @@ enum CanvasInputResolution {
   case tool(ToolResolution)
 }
 
+extension CanvasInputResolution {
+  /// Returns optional as Tool may not be eligible to
+  /// make an adjustment given the provided context
+  static func resolution(
+    for tool: any CanvasTool,
+    context: InteractionContext,
+    transform: TransformState,
+  ) -> Self? {
+
+    guard tool.shouldResolve(with: context) else {
+      return nil
+    }
+
+    let resolution = tool.resolvePointerInteraction(
+      context: context,
+      currentTransform: transform,
+    )
+    return .tool(resolution)
+  }
+}
+
+extension CanvasTool {
+  fileprivate func shouldResolve(with context: InteractionContext) -> Bool {
+    return switch context.interaction {
+      case .swipe: inputCapabilities.contains(.swipe)
+      case .pinch: inputCapabilities.contains(.pinch)
+      case .rotation: inputCapabilities.contains(.rotation)
+      case .tap: inputCapabilities.contains(.tap)
+      case .drag: inputCapabilities.contains(.drag)
+      case .hover: inputCapabilities.contains(.hover)
+    }
+  }
+}
+
 /// Whether in Tools mode or not, there will be an adjustment to be made,
 /// based on some interaction. So Base should probably not be optional
 ///

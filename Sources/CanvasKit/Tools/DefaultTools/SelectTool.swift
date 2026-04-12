@@ -29,11 +29,11 @@ public struct SelectTool: CanvasTool {
   public func resolvePointerInteraction(
     context: InteractionContext,
     currentTransform: TransformState,
-  ) -> ToolResolution? {
+  ) -> ToolResolution {
     
     let adjustment: InteractionAdjustment = switch context.interaction {
       case .tap(let location): .pointer(.tap(location))
-      case .drag(let payload): .pointer(from: payload)
+      case .drag(let payload): .pointerAdjustment(from: payload)
       default: .none
     }
 

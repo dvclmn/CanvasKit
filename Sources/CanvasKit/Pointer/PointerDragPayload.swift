@@ -19,17 +19,23 @@ public enum PointerDragPayload: Sendable, Equatable {
 
 extension PointerDragPayload {
 
-  public var name: String {
-    switch self {
-      case .delta(let size, let location): "Delta[size: \(size), location: \(location)]"
-      case .rect(let from, let current): "Rect[from: \(from), current: \(current)]"
-    }
-  }
+//  public var name: String {
+//    
+//  }
 
   public var boundingRect: Rect<ScreenSpace>? {
     switch self {
       case .delta: nil
       case .rect(let from, let current): Rect<ScreenSpace>(from: from, to: current)
+    }
+  }
+}
+
+extension PointerDragPayload: CustomStringConvertible {
+  public var description: String {
+    switch self {
+      case .delta(let size, let location): "Delta[size: \(size), location: \(location)]"
+      case .rect(let from, let current): "Rect[from: \(from), current: \(current)]"
     }
   }
 }

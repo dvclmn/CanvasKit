@@ -5,7 +5,6 @@
 //  Created by Dave Coleman on 8/4/2026.
 //
 
-//import InteractionKit
 import BasePrimitives
 
 /// Provides an interface for a Canvas Tool to describe how it
@@ -22,7 +21,7 @@ public enum InteractionAdjustment: Sendable {
 
 extension InteractionAdjustment {
 
-  static func pointer(from drag: PointerDragPayload) -> Self {
+  static func pointerAdjustment(from drag: PointerDragPayload) -> Self {
     guard let rect = drag.boundingRect else { return .none }
     return .pointer(.drag(rect))
   }
