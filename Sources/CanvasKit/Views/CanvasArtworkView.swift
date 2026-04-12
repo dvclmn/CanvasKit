@@ -6,12 +6,10 @@
 //
 
 @_spi(Internals) import BasePrimitives
-//import InteractionKit
 import SwiftUI
 
 struct CanvasArtwork<Content: View>: View {
   @Environment(\.zoomRange) private var zoomRange
-  @Environment(\.activeTool) private var activeTool
   @Environment(\.artworkOutline) private var artworkOutline
   @Environment(\.canvasAnchor) private var canvasAnchor
 
@@ -62,7 +60,7 @@ struct CanvasArtwork<Content: View>: View {
 }
 
 extension CanvasArtwork {
-  private var isCanvasReady: Bool { zoomRange != nil && activeTool != nil }
+  private var isCanvasReady: Bool { zoomRange != nil }
 
   /// This allows the embedded View to specify whether it should be
   /// clipped by the Canvas artwork dimensions or not

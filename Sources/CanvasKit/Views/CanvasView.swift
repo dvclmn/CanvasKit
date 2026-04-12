@@ -72,21 +72,30 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
 
     CanvasCoreView(
       canvasSize: canvasSize,
-      transform: $localTransform,
+      transform: localTransform,
       content: content,
     )
+
+    /// Handles user input modifiers, `onSwipeGesture`, `onTapGesture`, etc
+    //      .gestureModifiers($transform)
+    .modifier(
+      InteractionModifiers(
+        transform: $localTransform,
+        tool: toolHandler?.wrappedValue.effectiveTool,
+      )
+    )
     .pointerStyleCompatible(pointerStyle)
-    
+
     .setSnapshotValues(
       store.snapshot(
         zoomRange: zoomRange,
         transform: localTransform,
       )
     )
-    
+
     .onEnvironmentChange(\.modifierKeys) { store.updateModifiers(to: $0) }
     .task(id: toolHandler != nil) { store.areToolsInUse = toolHandler != nil }
-    .environment(\.activeTool, toolHandler?.wrappedValue.effectiveTool)
+//    .environment(\.activeTool, toolHandler?.wrappedValue.effectiveTool)
     .environment(\.pointerStyle, pointerStyle)
     .environment(store)
 

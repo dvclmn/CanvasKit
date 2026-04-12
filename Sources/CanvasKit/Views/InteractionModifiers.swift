@@ -5,17 +5,17 @@
 //  Created by Dave Coleman on 11/3/2026.
 //
 
-//import InteractionKit
 import BasePrimitives
 import SwiftUI
 
 struct InteractionModifiers: ViewModifier {
   @Environment(CanvasHandler.self) private var store
-  @Environment(\.activeTool) private var activeTool
+//  @Environment(\.activeTool) private var activeTool
   @Environment(\.modifierKeys) private var modifierKeys
 
   @Binding var transform: TransformState
-
+  let tool: (any CanvasTool)?
+  
   func body(content: Content) -> some View {
     @Bindable var store = store
 
@@ -26,7 +26,7 @@ struct InteractionModifiers: ViewModifier {
 
         let adjustment = store.processedTransform(
           .swipe(delta: event.delta),
-          tool: activeTool,
+          tool: tool,
           phase: event.phase,
           currentTransform: transform,
         )
@@ -42,7 +42,7 @@ struct InteractionModifiers: ViewModifier {
 
         let adjustment = store.processedTransform(
           .pinch(scale: zoom),
-          tool: activeTool,
+          tool: tool,
           phase: phase,
           currentTransform: transform,
         )
@@ -61,7 +61,7 @@ struct InteractionModifiers: ViewModifier {
         guard isEnabled(.hover), let location = phase.location else { return }
         let adjustment = store.processedTransform(
           .hover(location.screenPoint),
-          tool: activeTool,
+          tool: tool,
           phase: phase.interactionPhase,
           currentTransform: transform,
         )
@@ -74,7 +74,7 @@ struct InteractionModifiers: ViewModifier {
         guard isEnabled(.tap) else { return }
         let adjustment = store.processedTransform(
           .tap(location: location.screenPoint),
-          tool: activeTool,
+          tool: tool,
           phase: .ended,
           currentTransform: transform,
         )
@@ -84,13 +84,13 @@ struct InteractionModifiers: ViewModifier {
       }
 
       .onPointerDragGesture(
-        behaviour: activeTool?.dragBehaviour ?? .none,
+        behaviour: tool?.dragBehaviour ?? .none,
         isEnabled: isEnabled(.drag),
       ) { payload, phase in
         guard let payload else { return }
         let adjustment = store.processedTransform(
           .drag(payload),
-          tool: activeTool,
+          tool: tool,
           phase: phase,
           currentTransform: transform,
         )
@@ -104,15 +104,15 @@ extension InteractionModifiers {
   private func isEnabled(_ interaction: InteractionKinds.Element) -> Bool {
     /// No need to gate any modifiers if Tools are not active
     guard store.areToolsInUse else {
-      let tool = activeTool ?? .default
+      let tool = self.tool ?? .default
       return tool.inputCapabilities.contains(interaction)
     }
     return true
   }
 }
 
-extension View {
-  public func gestureModifiers(_ transform: Binding<TransformState>) -> some View {
-    self.modifier(InteractionModifiers(transform: transform))
-  }
-}
+//extension View {
+//  public func gestureModifiers(_ transform: Binding<TransformState>) -> some View {
+//    self.modifier(InteractionModifiers(transform: transform))
+//  }
+//}

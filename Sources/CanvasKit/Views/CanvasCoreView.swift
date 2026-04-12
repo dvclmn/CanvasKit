@@ -6,7 +6,6 @@
 //
 
 import BasePrimitives
-//import InteractionKit
 import SwiftUI
 
 struct CanvasCoreView<Content: View>: View {
@@ -18,7 +17,8 @@ struct CanvasCoreView<Content: View>: View {
   @Environment(\.zoomClamped) private var zoomClamped
 
   let canvasSize: Size<CanvasSpace>
-  @Binding var transform: TransformState
+  let transform: TransformState
+//  @Binding var transform: TransformState
 
   @ViewBuilder var content: () -> Content
 
@@ -59,8 +59,5 @@ struct CanvasCoreView<Content: View>: View {
             store.updateArtworkFrame(to: artworkFrame)
           }
       }
-
-      /// Handles user input modifiers, `onSwipeGesture`, `onTapGesture`, etc
-      .gestureModifiers($transform)
   }
 }

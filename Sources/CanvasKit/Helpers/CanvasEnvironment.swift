@@ -6,8 +6,6 @@
 //
 
 @_spi(Internals) import BasePrimitives
-//import InteractionKit
-
 import SwiftUI
 
 extension EnvironmentValues {
@@ -16,12 +14,12 @@ extension EnvironmentValues {
   /// Describes the anchor point for layout in ``CanvasArtworkView``.
   /// Important for coordinate space calculations.
   @Entry var canvasAnchor: UnitPoint = .center
-  @Entry public var canvasBackground: Color = Color(white: 0.04)
-  @Entry public var activeTool: (any CanvasTool)?
+  @Entry var canvasBackground: Color = Color(white: 0.04)
+  
+  /// Not sure whether to make this public, or whether to let the user
+  /// just access their own ToolHandler instance. Probably the latter
+//  @Entry public var activeTool: (any CanvasTool)?
 
-  /// Named `artworkOutline` to indicate this is plumbing
-  /// set up specifically for CanvasKit, to drive easy configuration
-  /// of the artwork outline for users.
   @Entry var artworkOutline: AreaOutline = .init()
 
 }
