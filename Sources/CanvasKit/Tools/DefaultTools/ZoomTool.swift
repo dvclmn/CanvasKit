@@ -6,10 +6,8 @@
 //
 
 import BasePrimitives
-import InteractionKit
+//import InteractionKit
 import SwiftUI
-
-// MARK: - Zoom Tool
 
 /// When selected, pointer click-drag zooms (vertical axis).
 /// Tap to zoom in, Option+tap to zoom out.

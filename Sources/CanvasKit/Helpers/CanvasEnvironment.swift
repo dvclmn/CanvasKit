@@ -6,7 +6,8 @@
 //
 
 @_spi(Internals) import BasePrimitives
-import InteractionKit
+//import InteractionKit
+
 import SwiftUI
 
 extension EnvironmentValues {

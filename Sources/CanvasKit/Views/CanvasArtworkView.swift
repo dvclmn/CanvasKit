@@ -6,7 +6,7 @@
 //
 
 @_spi(Internals) import BasePrimitives
-import InteractionKit
+//import InteractionKit
 import SwiftUI
 
 struct CanvasArtwork<Content: View>: View {

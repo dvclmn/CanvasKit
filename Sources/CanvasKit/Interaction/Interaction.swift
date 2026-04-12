@@ -6,7 +6,8 @@
 //
 
 import SwiftUI
-import InteractionKit
+//import InteractionKit
+import BasePrimitives
 
 /// Previously called `InteractionSource`
 public enum Interaction: Sendable {

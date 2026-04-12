@@ -6,7 +6,7 @@
 //
 
 import BasePrimitives
-import InteractionKit
+//import InteractionKit
 import SwiftUI
 
 struct CanvasCoreView<Content: View>: View {

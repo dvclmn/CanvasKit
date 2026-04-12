@@ -6,7 +6,8 @@
 //
 
 import CoreGraphics
-import InteractionKit
+//import InteractionKit
+import BasePrimitives
 
 /// Raw locations/geometry in screen space, no
 /// coordinate space mapping applied

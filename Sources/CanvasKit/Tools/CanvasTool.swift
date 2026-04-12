@@ -6,7 +6,7 @@
 //
 
 import BasePrimitives
-import InteractionKit
+//import InteractionKit
 import SwiftUI
 
 /// A canvas tool defines how pointer interactions (tap, drag) are interpreted.

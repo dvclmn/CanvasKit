@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 2/4/2026.
 //
 
-import InteractionKit
+//import InteractionKit
 
 struct CanvasInputResolution {
   let baseAdjustment: TransformAdjustment?

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import InteractionKit
+//import InteractionKit
 
 /// The combined result of a tool resolving a pointer interaction.
 ///
