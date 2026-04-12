@@ -6,7 +6,6 @@
 //
 
 import BasePrimitives
-//import InteractionKit
 import SwiftUI
 
 public struct CanvasView<Content: View>: View, CanvasAddressable {
@@ -70,6 +69,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
 
   public var body: some View {
 
+    
     CanvasCoreView(
       canvasSize: canvasSize,
       transform: localTransform,
@@ -85,7 +85,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       )
     )
     .pointerStyleCompatible(pointerStyle)
-
+    
 
 //    .onEnvironmentChange(\.modifierKeys) { store.updateModifiers(to: $0) }
     .task(id: toolHandler != nil) { store.areToolsInUse = toolHandler != nil }

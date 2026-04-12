@@ -20,8 +20,7 @@ struct CanvasArtwork<Content: View>: View {
 
   var body: some View {
 
-    CanvasDecomposed()
-
+    CanvasDecomposed(content: content)
       .animation(.easeInOut(duration: 0.15)) { content in
         content.opacity(isCanvasReady ? 1.0 : 0.0)
       }
@@ -61,13 +60,6 @@ struct CanvasArtwork<Content: View>: View {
 
 extension CanvasArtwork {
   private var isCanvasReady: Bool { zoomRange != nil }
-
-  /// This allows the embedded View to specify whether it should be
-  /// clipped by the Canvas artwork dimensions or not
-  @ViewBuilder
-  private func CanvasDecomposed() -> some View {
-
-  }
 }
 
 // MARK: - Canvas clipping View

@@ -33,6 +33,7 @@ struct InteractionModifiers: ViewModifier {
         guard let adjustment else { return }
         self.transform = adjustment
 
+        print("Adjustment: \(adjustment)")
       }
 
       .onPinchGesture(
