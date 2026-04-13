@@ -5,8 +5,6 @@
 //  Created by Dave Coleman on 20/3/2026.
 //
 
-import Foundation
-
 enum InteractionKind: CaseIterable {
   case swipe
   case pinch
@@ -14,9 +12,7 @@ enum InteractionKind: CaseIterable {
   case tap
   case drag
   case hover
-}
 
-extension InteractionKind {
   var displayName: String {
     switch self {
       case .swipe: "Swipe"
@@ -27,15 +23,25 @@ extension InteractionKind {
       case .hover: "Hover"
     }
   }
+
+  var asSet: Set {
+    switch self {
+      case .swipe: .swipe
+      case .pinch: .pinch
+      case .rotation: .rotation
+      case .tap: .tap
+      case .drag: .drag
+      case .hover: .hover
+    }
+  }
+
 }
 
 // MARK: - Set
 extension InteractionKind {
 
   struct Set: OptionSet, Sendable {
-
     let rawValue: Int
-
     init(rawValue: Int) {
       self.rawValue = rawValue
     }
@@ -56,11 +62,20 @@ extension InteractionKind {
 }
 
 extension InteractionKind.Set {
+  init(_ kind: InteractionKind) {
+    self = kind.asSet
+  }
+
+  init<S: Sequence>(_ kinds: S) where S.Element == InteractionKind {
+    self = kinds.reduce(into: []) { $0.formUnion($1.asSet) }
+  }
+
+  func contains(_ kind: InteractionKind) -> Bool {
+    contains(kind.asSet)
+  }
+
   var kinds: [InteractionKind] {
-    InteractionKind.allCases.enumerated().compactMap { (index, kind) in
-      let bit = Self(rawValue: 1 << index)
-      return contains(bit) ? kind : nil
-    }
+    InteractionKind.allCases.filter(self.contains)
   }
 }
 

@@ -45,7 +45,7 @@ extension TransformAdjustment {
     return new
   }
 
-  var supportedInteractions: InteractionKinds {
+  var supportedInteractions: InteractionKind.Set {
     switch self {
       case .translation: [.swipe, .drag]
       case .scale: [.swipe, .pinch, .tap, .drag]

@@ -26,7 +26,7 @@ extension InteractionAdjustment {
     return .pointer(.drag(rect))
   }
 
-  func isSupported(by interaction: InteractionKinds.Element) -> Bool {
+  func isSupported(by interaction: InteractionKind) -> Bool {
     switch self {
       case .transform(let adjustment):
         adjustment.supportedInteractions.contains(interaction)

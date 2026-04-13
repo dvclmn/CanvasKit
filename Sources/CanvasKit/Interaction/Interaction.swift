@@ -19,7 +19,7 @@ public enum Interaction: Sendable {
 }
 
 extension Interaction {
-  var kind: InteractionKinds.Element {
+  var kind: InteractionKind {
     switch self {
       case .swipe: .swipe
       case .pinch: .pinch
