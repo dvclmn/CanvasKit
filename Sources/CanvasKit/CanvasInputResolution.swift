@@ -39,13 +39,13 @@ extension CanvasInputResolution {
 
 extension CanvasTool {
   fileprivate func shouldResolve(with context: InteractionContext) -> Bool {
-    return switch context.interaction {
-      case .swipe: inputCapabilities.contains(.swipe)
-      case .pinch: inputCapabilities.contains(.pinch)
-      case .rotation: inputCapabilities.contains(.rotation)
-      case .tap: inputCapabilities.contains(.tap)
-      case .drag: inputCapabilities.contains(.drag)
-      case .hover: inputCapabilities.contains(.hover)
+    switch context.interaction.kind {
+      case .swipe: inputCapabilities.
+//      case .pinch: inputCapabilities.contains(.pinch)
+//      case .rotation: inputCapabilities.contains(.rotation)
+//      case .tap: inputCapabilities.contains(.tap)
+//      case .drag: inputCapabilities.contains(.drag)
+//      case .hover: inputCapabilities.contains(.hover)
     }
   }
 }

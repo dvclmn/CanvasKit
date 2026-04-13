@@ -6,27 +6,28 @@
 //
 
 struct ToolCapability {
-  let interactionKind: InteractionKinds.Element
-  let adjustmentKind: AdjustmentKinds.Element
+  let interactionKind: InteractionKind
+  let adjustmentKind: AdjustmentKind
   
   init(
-    interaction: InteractionKinds.Element,
-    adjustment: AdjustmentKinds.Element
+    interaction: InteractionKind,
+    adjustment: AdjustmentKind
   ) {
     self.interactionKind = interaction
     self.adjustmentKind = adjustment
   }
 }
 
-extension ToolCapability {
-  /// Where Select is the default tool
-  static let `default`: Self = .init(
-    /// A tool will need to *explicitly* opt out of these standard
-    /// permitted interaction kinds, to disable them.
-    interaction: [.swipe, .pinch, .rotation],
-    adjustment: [.t]
-  )
-}
+//extension ToolCapability {
+//  /// Where Select is the default tool
+//  static let `default`: Self = .init(
+//    /// A tool will need to *explicitly* opt out of these standard
+//    /// permitted interaction kinds, to disable them.
+////    interaction: [.swipe, .pinch, .rotation],
+////    adjustment: [.t]
+//    interaction: <#T##InteractionKind#>, adjustment: <#T##AdjustmentKind#>
+//  )
+//}
 
 
 

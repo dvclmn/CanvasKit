@@ -69,7 +69,7 @@ extension CanvasInputResolver {
       case .rotation(let angle): return .rotation(angle)
       case .tap, .drag, .hover:
         print(
-          "Interaction of type \"\(context.interaction.kind.description)\" invalid for Base transform. Tap, Drag and Hover Interactions are typically not used unless CanvasTool use is active."
+          "Interaction of type \"\(context.interaction.kind.displayName)\" invalid for Base transform. Tap, Drag and Hover Interactions are typically not used unless CanvasTool use is active."
         )
         return nil
     }

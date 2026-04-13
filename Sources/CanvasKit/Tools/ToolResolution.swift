@@ -42,7 +42,7 @@ extension ToolResolution {
     if adjustment.isSupported(by: interaction.kind) {
       self.init(adjustment: adjustment, action: action)
     } else {
-      print("Adjustment \(adjustment) not supported by \(interaction.kind.description)")
+      print("Adjustment \(adjustment) not supported by \(interaction.kind.displayName)")
       self = .none
     }
   }

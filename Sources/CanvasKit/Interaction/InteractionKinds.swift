@@ -34,7 +34,6 @@ enum InteractionKind: CaseIterable {
       case .hover: .hover
     }
   }
-
 }
 
 // MARK: - Set
