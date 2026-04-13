@@ -23,7 +23,7 @@ extension Interaction {
     switch self {
       case .swipe: .swipe
       case .pinch: .pinch
-      case .rotation: .rotation
+      case .rotation: .rotate
       case .tap: .tap
       case .drag: .drag
       case .hover: .hover

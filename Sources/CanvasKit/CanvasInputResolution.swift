@@ -16,36 +16,26 @@ enum CanvasInputResolution {
   case tool(ToolResolution)
 }
 
-extension CanvasInputResolution {
-  /// Returns optional as Tool may not be eligible to
-  /// make an adjustment given the provided context
-  static func resolution(
-    for tool: any CanvasTool,
-    context: InteractionContext,
-    transform: TransformState,
-  ) -> Self? {
+extension CanvasTool {
+  func shouldResolve(
+    with context: InteractionContext,
+    resolution: ToolResolution,
+  ) -> Bool {
+    let interaction = context.interaction.kind
 
-    guard tool.shouldResolve(with: context) else {
-      return nil
+    if let adjustment = resolution.adjustment.kind {
+      return inputCapabilities.contains { capability in
+        capability.matches(
+          interaction: interaction,
+          adjustment: adjustment,
+        )
+      }
     }
 
-    let resolution = tool.resolvePointerInteraction(
-      context: context,
-      currentTransform: transform,
-    )
-    return .tool(resolution)
-  }
-}
+    guard !resolution.action.isNone else { return false }
 
-extension CanvasTool {
-  fileprivate func shouldResolve(with context: InteractionContext) -> Bool {
-    switch context.interaction.kind {
-      case .swipe: inputCapabilities.
-//      case .pinch: inputCapabilities.contains(.pinch)
-//      case .rotation: inputCapabilities.contains(.rotation)
-//      case .tap: inputCapabilities.contains(.tap)
-//      case .drag: inputCapabilities.contains(.drag)
-//      case .hover: inputCapabilities.contains(.hover)
+    return inputCapabilities.contains { capability in
+      capability.interactionKind == interaction
     }
   }
 }

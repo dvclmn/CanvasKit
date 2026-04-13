@@ -5,10 +5,10 @@
 //  Created by Dave Coleman on 20/3/2026.
 //
 
-enum InteractionKind: CaseIterable {
+public enum InteractionKind: CaseIterable, Hashable, Sendable {
   case swipe
   case pinch
-  case rotation
+  case rotate
   case tap
   case drag
   case hover
@@ -17,7 +17,7 @@ enum InteractionKind: CaseIterable {
     switch self {
       case .swipe: "Swipe"
       case .pinch: "Pinch"
-      case .rotation: "Rotation"
+      case .rotate: "Rotate"
       case .tap: "Tap"
       case .drag: "Drag"
       case .hover: "Hover"
@@ -28,7 +28,7 @@ enum InteractionKind: CaseIterable {
     switch self {
       case .swipe: .swipe
       case .pinch: .pinch
-      case .rotation: .rotation
+      case .rotate: .rotate
       case .tap: .tap
       case .drag: .drag
       case .hover: .hover
@@ -47,15 +47,13 @@ extension InteractionKind {
 
     static let swipe = Self(rawValue: 1 << 0)
     static let pinch = Self(rawValue: 1 << 1)
-    static let rotation = Self(rawValue: 1 << 2)
+    static let rotate = Self(rawValue: 1 << 2)
     static let tap = Self(rawValue: 1 << 3)
     static let drag = Self(rawValue: 1 << 4)
     static let hover = Self(rawValue: 1 << 5)
 
-    static let tapAndDrag: Self = [.tap, .drag]
-    static let noToolsMode: Self = [.swipe, .pinch, .rotation]
     static let all: Self = [
-      .swipe, .pinch, .rotation, .tap, .drag, .hover,
+      .swipe, .pinch, .rotate, .tap, .drag, .hover,
     ]
   }
 }

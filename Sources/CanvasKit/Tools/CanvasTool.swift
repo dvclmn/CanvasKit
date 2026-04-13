@@ -6,7 +6,6 @@
 //
 
 import BasePrimitives
-//import InteractionKit
 import SwiftUI
 
 /// A canvas tool defines how pointer interactions (tap, drag) are interpreted.
@@ -28,13 +27,16 @@ public protocol CanvasTool: Sendable, Equatable, Identifiable where ID == Canvas
   /// The drag input policy active when this tool is selected.
   var dragBehaviour: PointerDragBehaviour { get }
 
+  /// The interaction/adjustment pairs this tool can claim.
+  var inputCapabilities: [ToolCapability] { get }
+
   /// Resolve the pointer style for the current interaction context.
   func resolvePointerStyle(context: InteractionContext) -> PointerStyleCompatible
 
   /// Resolve an interaction into a canvas adjustment and optional domain action.
   ///
   /// Only called for sources the tool opted into via `inputCapabilities`.
-  /// Global gestures are still handled separately before this is reached.
+  /// Global canvas gestures remain available even when a tool omits them.
   ///
   /// This allows a Tool to declare what should happen when it is selected,
   /// and certain interaction events happen
@@ -48,15 +50,11 @@ public protocol CanvasTool: Sendable, Equatable, Identifiable where ID == Canvas
 extension CanvasTool {
   public var id: CanvasToolKind { kind }
 
-  /// This was previously a stored property on the tool, however tools seem to only
-  /// need Tap and Drag operations, so have hard coded this for now.
-  var inputCapabilities: [ToolCapability] {
-    [
-      .init(interaction: .swipe, adjustment: .translation),
-      .init(interaction: .pinch, adjustment: .scale),
-    ]
+  /// This is the default capability contract for a tool that has not opted into
+  /// anything more specific.
+  public var inputCapabilities: [ToolCapability] {
+    ToolCapability.canvasBasics
   }
-  //  var inputCapabilities: InteractionKinds { .tapAndDrag }
 }
 
 extension CanvasTool where Self == SelectTool {

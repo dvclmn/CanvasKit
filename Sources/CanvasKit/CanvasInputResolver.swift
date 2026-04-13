@@ -23,38 +23,18 @@ struct CanvasInputResolver {
     guard let activeTool else {
       return baseAdjustment.map { .base($0) }
     }
-    return .resolution(
-      for: activeTool,
+
+    let resolution = activeTool.resolvePointerInteraction(
       context: context,
-      transform: transform,
+      currentTransform: transform,
     )
-    //      return baseAdjustment.map { .base($0) }
-    //      //      guard let baseAdjustment else {
-    //      //        return nil
-    //      //      }
-    //      //      return .base(baseAdjustment)
-    //
-    //    }
-    //    return .tool()
-    //    .init(
-    //      baseAdjustment: baseAdjustment,
-    //      toolResolution: toolResolution,
-    //    )
+
+    guard activeTool.shouldResolve(with: context, resolution: resolution) else {
+      return baseAdjustment.map { .base($0) }
+    }
+
+    return .tool(resolution)
   }
-}
-
-// MARK: - Tool resolution (Tool use mode only)
-extension CanvasInputResolver {
-
-  /// Current tool may not declare any resolution
-//  private func toolResolution(for tool: any CanvasTool) -> ToolResolution? {
-//    guard shouldResolveTool(tool) else { return nil }
-//    return tool.resolvePointerInteraction(
-//      context: context,
-//      currentTransform: transform,
-//    ) ?? .none
-//  }
-
 }
 
 // MARK: - Base Adjustment (Tool Use inactive)

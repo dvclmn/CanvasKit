@@ -34,7 +34,8 @@ extension CanvasHandler {
   /// Tools never see these events.
   ///
   /// Pointer interactions (tap, drag) are forwarded to the active tool's
-  /// `resolvePointerInteraction()` method, subject to `inputCapabilities`.
+  /// `resolvePointerInteraction()` method when the tool claims that
+  /// interaction/adjustment pair via `inputCapabilities`.
   ///
   /// Returns an optional to allow a no-op in ``InteractionModifiers``,
   /// so that interaction modifiers that don't need to touch Transform state

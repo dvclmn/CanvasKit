@@ -49,7 +49,7 @@ extension TransformAdjustment {
     switch self {
       case .translation: [.swipe, .drag]
       case .scale: [.swipe, .pinch, .tap, .drag]
-      case .rotation: [.swipe, .rotation, .drag]
+      case .rotation: [.swipe, .rotate, .drag]
     }
   }
 

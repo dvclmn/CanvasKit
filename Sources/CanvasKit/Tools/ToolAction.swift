@@ -33,3 +33,9 @@ public enum ToolAction: Sendable {
   case none
 }
 
+extension ToolAction {
+  var isNone: Bool {
+    if case .none = self { return true }
+    return false
+  }
+}

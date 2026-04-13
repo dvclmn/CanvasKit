@@ -104,11 +104,27 @@ struct InteractionModifiers: ViewModifier {
 }
 
 extension InteractionModifiers {
-  private func isEnabled(for interaction: InteractionKinds.Element) -> Bool {
-    let capabilities: InteractionKinds = tool?.inputCapabilities ?? .noToolsMode
-    let enabled = capabilities.contains(interaction)
+  private func isEnabled(for interaction: InteractionKind) -> Bool {
+    let enabled: Bool
+
+    switch interaction {
+      case .swipe, .pinch, .rotate:
+        enabled = true
+
+      case .tap, .drag, .hover:
+        guard let tool else {
+          enabled = false
+          break
+        }
+
+        enabled = tool.inputCapabilities.contains { capability in
+          capability.interactionKind == interaction
+        }
+    }
+
     if !enabled {
-      print("Interaction \(interaction) is not enabled for \(capabilities)")
+      let capabilities = tool?.inputCapabilities.map(\.description).joined(separator: ", ") ?? "no tool"
+      print("Interaction \(interaction.displayName) is not enabled for \(capabilities)")
     }
     return enabled
 //    guard let tool else { return true }

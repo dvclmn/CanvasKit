@@ -16,6 +16,7 @@ public struct PanTool: CanvasTool {
   public let icon = "hand.raised"
 
   public var dragBehaviour: PointerDragBehaviour { .continuous }
+  public var inputCapabilities: [ToolCapability] { ToolCapability.pan }
 
   public init() {}
 }

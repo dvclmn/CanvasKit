@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 12/4/2026.
 //
 
-enum AdjustmentKind: CaseIterable {
+public enum AdjustmentKind: CaseIterable, Hashable, Sendable {
   case translation
   case scale
   case rotation

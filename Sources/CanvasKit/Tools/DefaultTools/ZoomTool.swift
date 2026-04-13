@@ -17,6 +17,7 @@ public struct ZoomTool: CanvasTool {
   public let icon = "magnifyingglass"
 
   public var dragBehaviour: PointerDragBehaviour { .continuous(axes: .vertical) }
+  public var inputCapabilities: [ToolCapability] { ToolCapability.zoom }
 
   public init() {}
 }
