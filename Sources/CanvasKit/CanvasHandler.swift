@@ -14,32 +14,16 @@ import SwiftUI
 @Observable
 final class CanvasHandler {
 
-  /// Internal state
   var pointer: PointerState = .initial
-
-  /// Synced here from `CanvasCoreView`. This then gets added
-  /// to the Environment by CanvasSnapshot
-  //  private var artworkFrame: Rect<ScreenSpace>?
-
-  /// Values synced here from the Environment
-  //  private var modifiers: Modifiers = []
-  package var toolHandlingActive: Bool = false
 
   /// The most recent domain action produced by a tool resolution.
   /// Consuming apps can observe this to react to tool-specific events
   /// (e.g. "select at point", "commit stroke").
   var lastToolAction: ToolAction?
-//  var lastToolAction: ToolAction = .none
-
-  /// The most recent interaction context, provided when
-  /// `handleInteraction(_:phase:)` is called.
-  //  var phase: InteractionPhase = .none
-  //  var interaction: Interaction?
   private var activeTool: (any CanvasTool)?
+  package var interactionContext: InteractionContext?
 
-  var interactionContext: InteractionContext?
-
-  public init() {}
+  init() {}
 }
 
 extension CanvasHandler {
@@ -64,8 +48,6 @@ extension CanvasHandler {
   ) -> TransformState? {
 
     self.activeTool = tool
-    //    self.interaction = interaction
-    //    self.phase = phase
     let context = InteractionContext(
       interaction: interaction,
       phase: phase,
@@ -73,59 +55,45 @@ extension CanvasHandler {
     )
     self.interactionContext = context
 
-//    let resolver = inputResolver(
-//      tool: tool,
-//      transform: currentTransform,
-//    )
     let resolver = CanvasInputResolver(
       context: context,
       activeTool: tool,
-      transform: currentTransform
+      transform: currentTransform,
     )
-    
+
     guard let resolution = resolver.resolve() else {
       print("No resolution for provided interaction context: \(context)")
       return nil
     }
 
-    /// 1 – Base gestures, updates transform state regardless
-    /// of whether Canvas Tools are in use
     switch resolution {
+      /// Base gestures, updates transform state regardless
+      /// of whether Canvas Tools are in use
       case .base(let adjustment):
-        return handleAdjustment(.transform(adjustment), currentTransform: currentTransform)
-        
+        return handleAdjustment(
+          .transform(adjustment),
+          transform: currentTransform,
+        )
+
       case .tool(let resolution):
         lastToolAction = resolution.action
-        return handleAdjustment(resolution.adjustment, currentTransform: currentTransform)
-//        if let toolAdjustment = resolution.toolResolution?.adjustment {
-//                lastToolAction = resolution.toolResolution?.action
-//                return handleAdjustment(toolAdjustment, currentTransform: currentTransform)
-          //    }
+        return handleAdjustment(
+          resolution.adjustment,
+          transform: currentTransform,
+        )
     }
-//    if let base = resolution.baseAdjustment {
-//      return handleAdjustment(.transform(base), currentTransform: currentTransform)
-//    }
-//
-//    /// 2 – Tool-specific pointer interactions
-//    if let toolAdjustment = resolution.toolResolution?.adjustment {
-//      lastToolAction = resolution.toolResolution?.action ?? .none
-//      return handleAdjustment(toolAdjustment, currentTransform: currentTransform)
-//    }
-//
-//    return nil
   }
-
 }
 
 extension CanvasHandler {
 
   private func handleAdjustment(
     _ adjustment: InteractionAdjustment,
-    currentTransform: TransformState,
+    transform: TransformState,
   ) -> TransformState {
     switch adjustment {
       case .transform(let adj):
-        return adj.updatedState(currentTransform)
+        return adj.updatedState(transform)
 
       case .pointer(let adj):
         switch adj {
@@ -133,29 +101,17 @@ extension CanvasHandler {
           case .drag(let rect): self.pointer.drag = rect
           case .hover(let point): self.pointer.hover = point
         }
-        return currentTransform
+        return transform
 
-      case .none: return currentTransform
+      case .none: return transform
     }
   }
 }
 
 extension CanvasHandler {
-//  private func isEnabled(
-//    for interaction: InteractionKinds.Element
-//  ) -> Bool {
-//    let inputCapabilities: InteractionKinds = {
-//      guard let activeTool else { return .noToolsMode }
-//      return activeTool.inputCapabilities
-//    }()
-//    return inputCapabilities.contains(interaction)
-//  }
-
   var pointerStyle: PointerStyleCompatible? {
-//  func pointerStyle(for tool: any CanvasTool) -> PointerStyleCompatible? {
     guard let interactionContext else { return nil }
     return activeTool?.resolvePointerStyle(context: interactionContext)
   }
-
 
 }

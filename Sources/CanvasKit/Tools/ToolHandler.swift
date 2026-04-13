@@ -6,7 +6,6 @@
 //
 
 import BasePrimitives
-//import InteractionKit
 import SwiftUI
 
 /// Manages tool selection, spring-loading, and key bindings.
@@ -23,16 +22,13 @@ public struct ToolHandler {
   /// Active spring-load / hold overrides, most recent last.
   public private(set) var overrides: [ToolOverride] = []
 
-  /// Currently held keyboard keys.
   public private(set) var heldKeys: Set<KeyEquivalent> = []
-
-  /// Current modifier key state.
   public private(set) var modifiers: Modifiers = []
 
-  /// Key-to-tool mappings.
+  /// Key-to-tool mappings
   public private(set) var bindings: [ToolBinding]
 
-  /// All registered tools, keyed by kind.
+  /// All registered tools, keyed by kind
   public private(set) var toolRegistry: [CanvasToolKind: any CanvasTool]
 
   /// Sticky threshold: holding a sticky key longer than this arms it as a spring-load.

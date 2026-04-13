@@ -42,6 +42,9 @@ public protocol CanvasTool: Sendable, Equatable, Identifiable where ID == Canvas
     context: InteractionContext,
     currentTransform: TransformState,
   ) -> ToolResolution
+  
+  
+  
 }
 
 extension CanvasTool {
@@ -49,7 +52,8 @@ extension CanvasTool {
 
   /// This was previously a stored property on the tool, however tools seem to only
   /// need Tap and Drag operations, so have hard coded this for now.
-  var inputCapabilities: InteractionKinds { .tapAndDrag }
+  var inputCapabilities: ToolCapability {  }
+//  var inputCapabilities: InteractionKinds { .tapAndDrag }
 }
 
 extension CanvasTool where Self == SelectTool {

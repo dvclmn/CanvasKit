@@ -24,9 +24,7 @@ struct InteractionKinds: OptionSet, Sendable {
 
   /// Default for `CanvasTool` input capabilities
   static let tapAndDrag: Self = [.tap, .drag]
-
   static let noToolsMode: Self = [.swipe, .pinch, .rotation]
-
   static let all: Self = [
     .swipe, .pinch, .rotation, .tap, .drag, .hover,
   ]

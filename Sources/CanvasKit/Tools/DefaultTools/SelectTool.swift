@@ -6,7 +6,6 @@
 //
 
 import BasePrimitives
-//import InteractionKit
 import SwiftUI
 
 // MARK: - Select Tool
@@ -30,17 +29,18 @@ public struct SelectTool: CanvasTool {
     context: InteractionContext,
     currentTransform: TransformState,
   ) -> ToolResolution {
-    
-    let adjustment: InteractionAdjustment = switch context.interaction {
-      case .tap(let location): .pointer(.tap(location))
-      case .drag(let payload): .pointerAdjustment(from: payload)
-      default: .none
-    }
+
+    let adjustment: InteractionAdjustment =
+      switch context.interaction {
+        case .tap(let location): .pointer(.tap(location))
+        case .drag(let payload): .pointerAdjustment(from: payload)
+        default: .none
+      }
 
     return .init(
       for: context.interaction,
       adjustment: adjustment,
-      action: .none
+      action: .none,
     )
   }
 }
