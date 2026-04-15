@@ -9,7 +9,7 @@ import BasePrimitives
 import SwiftUI
 
 /// Previously called `InteractionSource`
-public enum Interaction: Sendable {
+enum Interaction: Sendable {
   case swipe(delta: Size<ScreenSpace>)  // onSwipeGesture
   case pinch(scale: Double)  // onPinchGesture
   case rotation(angle: Angle)  // Not yet supported
@@ -32,7 +32,7 @@ extension Interaction {
 }
 
 extension Interaction: CustomStringConvertible {
-  public var description: String {
+  var description: String {
     switch self {
       case .swipe(let delta): "Swipe delta: \(delta)"
       case .pinch(let scale): "Pinch scale: \(scale)"
@@ -44,7 +44,7 @@ extension Interaction: CustomStringConvertible {
   }
 }
 
-public enum PointerButton: String, Sendable {
+enum PointerButton: String, Sendable {
   case primary
   case secondary
   case middle

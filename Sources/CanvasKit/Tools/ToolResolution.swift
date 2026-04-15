@@ -12,12 +12,12 @@ import Foundation
 /// Separates canvas-level state changes (`adjustment`) from domain-level
 /// actions (`action`) so that `CanvasHandler` can execute the
 /// adjustment immediately, while the consuming app handles the action.
-public struct ToolResolution: Sendable {
+struct ToolResolution: Sendable {
 
   /// While support/usage is kinda murky at this stage, Tools may declare both
   /// a Pointer *and* a Transform adjustment in response to an Interaction
-  public let adjustment: InteractionAdjustment
-  public let action: ToolAction
+  let adjustment: InteractionAdjustment
+  let action: ToolAction
 
   init(
     adjustment: InteractionAdjustment,
@@ -34,7 +34,7 @@ public struct ToolResolution: Sendable {
 }
 
 extension ToolResolution {
-  public init(
+  init(
     for interaction: Interaction,
     adjustment: InteractionAdjustment,
     action: ToolAction,

@@ -8,12 +8,12 @@
 import BasePrimitives
 import Foundation
 
-public struct InteractionContext: Sendable {
-  public let interaction: Interaction
-  public let phase: InteractionPhase
-  public let modifiers: Modifiers
+struct InteractionContext: Sendable {
+  let interaction: Interaction
+  let phase: InteractionPhase
+  let modifiers: Modifiers
 
-  public init(
+  init(
     interaction: Interaction,
     phase: InteractionPhase = .none,
     modifiers: Modifiers,
@@ -26,14 +26,14 @@ public struct InteractionContext: Sendable {
 
 extension InteractionContext {
   /// True when the last pointer interaction is an active drag.
-  public var isPointerDragging: Bool {
+  var isPointerDragging: Bool {
     guard case .drag = interaction else { return false }
     return phase.isActive
   }
 }
 
 extension InteractionContext: CustomStringConvertible {
-  public var description: String {
+  var description: String {
     "Interaction: \(interaction), Phase: \(phase.name), Modifiers: \(modifiers)"
   }
 }

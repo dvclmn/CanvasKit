@@ -21,5 +21,5 @@ extension View {
 
 @available(macOS 15, iOS 18, *)
 extension ContainerValues {
-  @Entry public var allowsCanvasClipping: Bool = true
+  @Entry var allowsCanvasClipping: Bool = true
 }

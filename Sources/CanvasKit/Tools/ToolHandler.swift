@@ -14,31 +14,31 @@ import SwiftUI
 /// - Base tool: The user's explicitly-selected tool (sticky/standard selection)
 /// - Spring-loaded tools: Temporarily active while a key is held
 /// - Effective tool: What's actually used right now (spring-load > base)
-public struct ToolHandler {
+struct ToolHandler {
 
   /// The user's current committed tool selection.
-  private(set) public var baseTool: any CanvasTool
+  var baseTool: any CanvasTool
 
   /// Active spring-load / hold overrides, most recent last.
-  public private(set) var overrides: [ToolOverride] = []
+  var overrides: [ToolOverride] = []
 
-  public private(set) var heldKeys: Set<KeyEquivalent> = []
-  public private(set) var modifiers: Modifiers = []
+  private var heldKeys: Set<KeyEquivalent> = []
+  private var modifiers: Modifiers = []
 
   /// Key-to-tool mappings
   public private(set) var bindings: [ToolBinding]
 
   /// All registered tools, keyed by kind
-  public private(set) var toolRegistry: [CanvasToolKind: any CanvasTool]
+  var toolRegistry: [CanvasToolKind: any CanvasTool]
 
   /// Sticky threshold: holding a sticky key longer than this arms it as a spring-load.
   /// - For `.sticky`: If released before or equal to this delay, commit to the tool.
   ///   If held longer, treat as a transient spring-load and revert on release.
   /// - For `.hold`: Always spring-load immediately; never commit.
   /// - For `.toggle`: Commit immediately on key down.
-  public var springLoadDelay: TimeInterval
+  var springLoadDelay: TimeInterval
 
-  public init(
+  init(
     baseTool: (any CanvasTool)? = nil,
     tools: [any CanvasTool] = .defaultTools,
     bindings: [ToolBinding] = ToolBinding.defaultBindings(),
@@ -233,17 +233,17 @@ extension ToolHandler {
   }
 
   private mutating func removeOverrides(forKey key: KeyEquivalent) {
-    // First, determine if any sticky override should commit.
+    /// First, determine if any sticky override should commit.
     if let override = overrides.last(where: { $0.key == key && $0.binding.mode == .sticky }) {
       if override.isArmed == false {
-        // Short press: commit to the tool. This clears the override stack.
+        /// Short press: commit to the tool. This clears the override stack.
         setBaseTool(kind: override.binding.target)
         return
       }
-      // Long hold: spring-loaded only; fall through to removal to revert.
+      /// Long hold: spring-loaded only; fall through to removal to revert.
     }
 
-    // Remove any overrides tied to this key for both hold and sticky modes.
+    /// Remove any overrides tied to this key for both hold and sticky modes.
     overrides.removeAll { $0.key == key && ($0.binding.mode == .hold || $0.binding.mode == .sticky) }
   }
 

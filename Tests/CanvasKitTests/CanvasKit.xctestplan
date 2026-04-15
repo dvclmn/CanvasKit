@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "6AC8D601-0905-4106-9D9C-6CC2EEBD6521",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CanvasKitTests",
+        "name" : "CanvasKitTests"
+      }
+    }
+  ],
+  "version" : 1
+}

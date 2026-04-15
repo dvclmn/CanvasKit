@@ -11,7 +11,6 @@ let package = Package(
     .library(name: "CanvasKit", targets: ["CanvasKit"])
   ],
   dependencies: [
-//    .package(url: "https://github.com/dvclmn/InteractionKit", branch: "main"),
     .package(url: "https://github.com/dvclmn/BasePrimitives", branch: "main"),
   ],
   targets: [
