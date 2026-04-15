@@ -20,6 +20,8 @@ final class CanvasHandler {
   /// Consuming apps can observe this to react to tool-specific events
   /// (e.g. "select at point", "commit stroke").
   var lastToolAction: ToolAction?
+
+  /// Only updated when `processedTransform()` is called
   private var activeTool: (any CanvasTool)?
   package var interactionContext: InteractionContext?
 

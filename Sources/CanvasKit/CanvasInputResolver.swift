@@ -9,11 +9,13 @@ import BasePrimitives
 import SwiftUI
 
 /// Centralises input resolution for `CanvasHandler`.
-///
 struct CanvasInputResolver {
   let context: InteractionContext
   let activeTool: (any CanvasTool)?
   let transform: TransformState
+}
+
+extension CanvasInputResolver {
 
   var pointerStyle: PointerStyleCompatible? {
     activeTool?.resolvePointerStyle(context: context)

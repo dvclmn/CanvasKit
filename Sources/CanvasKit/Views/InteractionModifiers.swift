@@ -122,10 +122,10 @@ extension InteractionModifiers {
         }
     }
 
-    if !enabled {
-      let capabilities = tool?.inputCapabilities.map(\.description).joined(separator: ", ") ?? "no tool"
-      print("Interaction \(interaction.displayName) is not enabled for \(capabilities)")
-    }
+//    if !enabled {
+//      let capabilities = tool?.inputCapabilities.map(\.description).joined(separator: ", ") ?? "no tool"
+//      print("Interaction \(interaction.displayName) is not enabled for \(capabilities)")
+//    }
     return enabled
 //    guard let tool else { return true }
 //    return tool.inputCapabilities.contains(interaction)

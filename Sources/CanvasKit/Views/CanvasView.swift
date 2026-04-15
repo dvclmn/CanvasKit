@@ -28,28 +28,24 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   let content: () -> Content
 
   public var body: some View {
-    
+
     CanvasCoreView(
       canvasSize: canvasSize,
       transform: localTransform,
       content: content,
     )
 
-    /// Handles user input modifiers, `onSwipeGesture`, `onTapGesture`, etc
-    //      .gestureModifiers($transform)
+    /// User input modifiers, `onSwipeGesture`, `onTapGesture`, etc
     .modifier(
       InteractionModifiers(
         transform: $localTransform,
         tool: toolHandler?.wrappedValue.effectiveTool,
       )
     )
-    .pointerStyleCompatible(pointerStyle)
     
-
-//    .onEnvironmentChange(\.modifierKeys) { store.updateModifiers(to: $0) }
-//    .task(id: toolHandler != nil) { store.toolHandlingActive = toolHandler != nil }
-    //    .environment(\.activeTool, toolHandler?.wrappedValue.effectiveTool)
-    .environment(\.pointerStyle, pointerStyle)
+    /// Set the resolved pointer style and add it to the Environment
+    .pointerStyleCompatible(store.pointerStyle)
+    .environment(\.pointerStyle, store.pointerStyle)
     .environment(store)
 
     /// In cases where transform state is owned externally,
@@ -62,18 +58,9 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   }
 }
 
-extension CanvasView {
-  private var pointerStyle: PointerStyleCompatible? {
-    guard let tool = toolHandler?.wrappedValue.effectiveTool else { return nil }
-//    return store.pointerStyle(tool: tool, transform: localTransform)
-//    return store.pointerStyle(for: tool)
-    return store.pointerStyle
-  }
-}
-
 // MARK: - Inits
 extension CanvasView {
-  
+
   /// Basic usage, CanvasKit manages transform state internally
   public init(
     size: CGSize,
@@ -85,7 +72,7 @@ extension CanvasView {
     self.toolHandler = nil
     self.content = content
   }
-  
+
   /// Externally-owned transform state, enabling programmatic
   /// control outside the CanvasKit view hierarchy
   public init(
@@ -99,7 +86,7 @@ extension CanvasView {
     self.toolHandler = nil
     self.content = content
   }
-  
+
   /// Externally-owned transform state and Canvas Tool usage
   public init(
     size: CGSize,

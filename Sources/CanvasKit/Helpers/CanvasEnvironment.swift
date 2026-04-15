@@ -15,11 +15,5 @@ extension EnvironmentValues {
   /// Important for coordinate space calculations.
   @Entry var canvasAnchor: UnitPoint = .center
   @Entry var canvasBackground: Color = Color(white: 0.04)
-  
-  /// Not sure whether to make this public, or whether to let the user
-  /// just access their own ToolHandler instance. Probably the latter
-//  @Entry public var activeTool: (any CanvasTool)?
-
   @Entry var artworkOutline: AreaOutline = .init()
-
 }
