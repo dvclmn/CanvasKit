@@ -3,23 +3,24 @@
 Example setup
 
 ```swift
-// 1. Create a handler with your domain's tools and bindings:
-var toolHandler = ToolHandler(
-  baseTool: .select,
-  tools: CanvasTool.defaultTools + [.text],
-  bindings: ToolBinding.defaultBindings() + [
-    .init(binding: .init(key: "t"), target: .text, mode: .sticky)
-  ]
-)
+// 1. Create a value-type configuration in app state:
+@State private var toolConfiguration = CanvasToolConfiguration()
 
-// 2. Feed key events:
-toolHandler.handleKeyDown("h")
-toolHandler.handleKeyUp("h")
+// 2. Hand it to CanvasView:
+CanvasView(
+  size: canvasSize,
+  transform: $transform,
+  toolConfiguration: $toolConfiguration
+) {
+  Canvas(...)
+}
 
-// 3. Read the effective tool:
-let tool = toolHandler.effectiveTool
+// 3. Ask the config for toolbar data:
+let tools = toolConfiguration.availableTools
+let shortcut = toolConfiguration.shortcut(for: .zoom)
 
-// 4. Get the tool list for your toolbar:
-let tools = toolHandler.availableTools  // derived from registry + bindings
-
+// 4. Replace a built-in tool by reusing its kind:
+//    MyZoomTool.kind = .zoom
+toolConfiguration.register(MyZoomTool())
+toolConfiguration.select(.zoom)
 ```

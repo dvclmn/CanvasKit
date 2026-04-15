@@ -7,16 +7,25 @@
 
 import Foundation
 
-/// An extensible tool identity type — same pattern as `Notification.Name`.
+/// An extensible tool identity type, similar to `Notification.Name`.
 ///
 /// Define new tool kinds by extending this type:
 /// ```swift
 /// extension CanvasToolKind {
-///   public static let brush = Self(rawValue: "brush")
+///   public static let brush = Self("brush")
 /// }
 /// ```
-public struct CanvasToolKind: RawRepresentable, Hashable, Sendable {
+public struct CanvasToolKind: RawRepresentable, Hashable, Sendable, ExpressibleByStringLiteral {
   public let rawValue: String
-  public init(rawValue: String) { self.rawValue = rawValue }
-}
 
+  public init(rawValue: String) { self.rawValue = rawValue }
+
+  /// Convenience sugar for defining kinds inline.
+  public init(_ rawValue: String) {
+    self.init(rawValue: rawValue)
+  }
+
+  public init(stringLiteral value: String) {
+    self.init(value)
+  }
+}

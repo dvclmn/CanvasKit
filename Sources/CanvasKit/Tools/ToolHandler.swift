@@ -10,14 +10,12 @@ import SwiftUI
 
 /// Manages tool selection, spring-loading, and key bindings.
 ///
-/// `ToolHandler` is the single owner of "which tool is active". It manages:
-/// - Base tool: The user's explicitly-selected tool (sticky/standard selection)
-/// - Spring-loaded tools: Temporarily active while a key is held
-/// - Effective tool: What's actually used right now (spring-load > base)
+/// This is internal runtime machinery. App code should work with
+/// `CanvasToolConfiguration` instead.
 struct ToolHandler {
 
-  /// The user's current committed tool selection.
-  var baseTool: any CanvasTool
+  /// Public tool configuration copied into runtime state.
+  var configuration: CanvasToolConfiguration
 
   /// Active spring-load / hold overrides, most recent last.
   var overrides: [ToolOverride] = []
@@ -25,29 +23,8 @@ struct ToolHandler {
   private var heldKeys: Set<KeyEquivalent> = []
   private var modifiers: Modifiers = []
 
-  /// Key-to-tool mappings
-  public private(set) var bindings: [ToolBinding]
-
-  /// All registered tools, keyed by kind
-  var toolRegistry: [CanvasToolKind: any CanvasTool]
-
-  /// Sticky threshold: holding a sticky key longer than this arms it as a spring-load.
-  /// - For `.sticky`: If released before or equal to this delay, commit to the tool.
-  ///   If held longer, treat as a transient spring-load and revert on release.
-  /// - For `.hold`: Always spring-load immediately; never commit.
-  /// - For `.toggle`: Commit immediately on key down.
-  var springLoadDelay: TimeInterval
-
-  init(
-    baseTool: (any CanvasTool)? = nil,
-    tools: [any CanvasTool] = .defaultTools,
-    bindings: [ToolBinding] = ToolBinding.defaultBindings(),
-    springLoadDelay: TimeInterval = 0.15,
-  ) {
-    self.baseTool = baseTool ?? tools.first ?? SelectTool()
-    self.bindings = bindings
-    self.toolRegistry = Dictionary(uniqueKeysWithValues: tools.map { ($0.kind, $0) })
-    self.springLoadDelay = springLoadDelay
+  init(configuration: CanvasToolConfiguration = .default) {
+    self.configuration = configuration
   }
 }
 
@@ -55,29 +32,9 @@ struct ToolHandler {
 
 extension ToolHandler {
 
-  /// All registered tools, ordered by binding appearance then remaining registry entries.
-  ///
-  /// Use this to populate toolbar UI.
-  public var availableTools: [any CanvasTool] {
-
-    var seen: Set<CanvasToolKind> = []
-    var result: [any CanvasTool] = []
-
-    /// Tools referenced by bindings, in binding order.
-    for binding in bindings {
-      guard !seen.contains(binding.target),
-        let tool = toolRegistry[binding.target]
-      else { continue }
-      seen.insert(binding.target)
-      result.append(tool)
-    }
-
-    /// Remaining registered tools not covered by any binding.
-    for (kind, tool) in toolRegistry where !seen.contains(kind) {
-      result.append(tool)
-    }
-
-    return result
+  /// All registered tools, ordered by binding appearance then remaining tools.
+  var availableTools: [any CanvasTool] {
+    configuration.availableTools
   }
 }
 
@@ -85,43 +42,49 @@ extension ToolHandler {
 
 extension ToolHandler {
 
-  /// Feeds the `activeTool` Environment value.
   /// The currently effective tool, considering pending and armed overrides.
   /// If there is any override on the stack, its tool is effective immediately.
-  /// Otherwise the base tool is effective.
-  public var effectiveTool: any CanvasTool {
+  /// Otherwise the selected tool is effective.
+  var effectiveTool: any CanvasTool {
     guard let last = overrides.last else { return baseTool }
     return resolveTool(for: last.binding.target)
   }
 
-  /// The Kind of the effective tool
-  public var toolKind: CanvasToolKind { effectiveTool.kind }
+  /// The currently committed selection, excluding temporary spring-loads.
+  var selectedToolKind: CanvasToolKind { configuration.selectedToolKind }
+
+  /// The Kind of the effective tool.
+  var toolKind: CanvasToolKind { effectiveTool.kind }
+
+  /// The selected tool, or a fallback if the configured kind is not registered.
+  var baseTool: any CanvasTool {
+    configuration.resolvedSelectedTool
+  }
 
   /// The spring-loaded tool if one is armed, or `nil`.
-  public var springLoadedTool: (any CanvasTool)? {
+  var springLoadedTool: (any CanvasTool)? {
     guard let armed = overrides.last(where: { $0.isArmed }) else { return nil }
     return resolveTool(for: armed.binding.target)
   }
 
-  public var isSpringLoaded: Bool { overrides.contains { $0.isArmed } }
+  var isSpringLoaded: Bool { overrides.contains { $0.isArmed } }
 
   /// The smallest remaining time (in seconds) before any pending `.sticky` override arms.
   /// Returns `nil` when there are no pending arming overrides.
-  public var pendingArmingTimeRemaining: TimeInterval? {
+  var pendingArmingTimeRemaining: TimeInterval? {
     let now = Date()
     let remainingTimes = overrides.compactMap { ovr -> TimeInterval? in
       guard ovr.binding.mode == .sticky, !ovr.isArmed, heldKeys.contains(ovr.key) else { return nil }
       let elapsed = now.timeIntervalSince(ovr.startedAt)
-      let remaining = springLoadDelay - elapsed
+      let remaining = configuration.springLoadDelay - elapsed
       return remaining > 0 ? remaining : 0
     }
     return remainingTimes.min()
   }
 
-  /// Arms any pending `.sticky` overrides whose hold duration has exceeded `springLoadDelay`
-  /// and whose key is still held. Call this from a reactive context (e.g. a `task(id:)` or
-  /// `onChange(of: overrides)`) after sleeping until the earliest pending deadline.
-  public mutating func armSpringLoadsIfReady() {
+  /// Arms any pending `.sticky` overrides whose hold duration has exceeded
+  /// `springLoadDelay` and whose key is still held.
+  mutating func armSpringLoadsIfReady() {
     let now = Date()
     for i in overrides.indices {
       let o = overrides[i]
@@ -129,7 +92,7 @@ extension ToolHandler {
         !o.isArmed,
         heldKeys.contains(o.key)
       else { continue }
-      if now.timeIntervalSince(o.startedAt) >= springLoadDelay {
+      if now.timeIntervalSince(o.startedAt) >= configuration.springLoadDelay {
         overrides[i].isArmed = true
       }
     }
@@ -140,26 +103,27 @@ extension ToolHandler {
 
 extension ToolHandler {
 
-  public mutating func setBaseTool(_ tool: any CanvasTool) {
-    baseTool = tool
+  mutating func setBaseTool(_ tool: any CanvasTool) {
+    configuration.register(tool)
+    configuration.selectedToolKind = tool.kind
     overrides.removeAll()
   }
 
   /// Set the base tool by kind, looking it up in the registry.
-  public mutating func setBaseTool(kind: CanvasToolKind) {
-    guard let tool = toolRegistry[kind] else { return }
-    setBaseTool(tool)
+  mutating func setBaseTool(kind: CanvasToolKind) {
+    configuration.selectedToolKind = kind
+    overrides.removeAll()
   }
 
-  public mutating func setBindings(_ bindings: [ToolBinding]) {
-    self.bindings = bindings
+  mutating func setBindings(_ bindings: [ToolBinding]) {
+    configuration.setBindings(bindings)
   }
 
-  public mutating func registerTools(_ tools: [any CanvasTool]) {
-    self.toolRegistry = Dictionary(uniqueKeysWithValues: tools.map { ($0.kind, $0) })
+  mutating func registerTools(_ tools: [any CanvasTool]) {
+    configuration.register(tools)
   }
 
-  public mutating func handleKeyDown(_ key: KeyEquivalent) {
+  mutating func handleKeyDown(_ key: KeyEquivalent) {
     heldKeys.insert(key)
 
     guard let best = matchingBindings(for: key).first
@@ -168,25 +132,23 @@ extension ToolHandler {
     apply(binding: best, onKeyDown: key)
   }
 
-  public mutating func handleKeyUp(_ key: KeyEquivalent) {
+  mutating func handleKeyUp(_ key: KeyEquivalent) {
     heldKeys.remove(key)
     removeOverrides(forKey: key)
   }
 
-  public mutating func cancelAllSpringLoads() {
+  mutating func cancelAllSpringLoads() {
     overrides.removeAll()
   }
 
-  public mutating func updateModifiers(_ modifiers: Modifiers) {
+  mutating func updateModifiers(_ modifiers: Modifiers) {
     self.modifiers = modifiers
   }
 
   /// Returns the first shortcut key bound to the given tool kind, if any.
-  ///
   /// Useful for displaying keyboard shortcuts in menus and tooltips.
-  public func shortcut(for kind: CanvasToolKind) -> KeyboardShortcut? {
-    //    public func shortcutKey(for kind: CanvasToolKind) -> KeyEquivalent? {
-    bindings.first { $0.target == kind && $0.mode == .sticky }?.shortcut
+  func shortcut(for kind: CanvasToolKind) -> KeyboardShortcut? {
+    configuration.shortcut(for: kind)
   }
 }
 
@@ -195,7 +157,7 @@ extension ToolHandler {
 extension ToolHandler {
 
   private func matchingBindings(for key: KeyEquivalent) -> [ToolBinding] {
-    bindings.filter { binding in
+    configuration.bindings.filter { binding in
       binding.shortcut.key == key && binding.modifiers.isSubset(of: modifiers)
     }
   }
@@ -248,6 +210,10 @@ extension ToolHandler {
   }
 
   private func resolveTool(for kind: CanvasToolKind) -> any CanvasTool {
-    toolRegistry[kind] ?? baseTool
+    configuration.tool(for: kind) ?? configuration.resolvedSelectedTool
+  }
+  
+  var keysToWatch: Set<KeyEquivalent> {
+    Set(configuration.bindings.map(\.shortcut.key))
   }
 }

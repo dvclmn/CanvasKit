@@ -11,13 +11,13 @@ import SwiftUI
 struct ContentView: View {
   let canvasSize: CGSize = CGSize(width: 380, height: 300)
   @State private var transform: TransformState = .identity
-  @State private var toolHandler: ToolHandler = .init()
+  @State private var toolConfiguration = CanvasToolConfiguration()
   var body: some View {
 
     CanvasView(
       size: canvasSize,
       transform: $transform,
-      toolHandler: $toolHandler
+      toolConfiguration: $toolConfiguration
     ) {
       Canvas { context, size in
         context.fill(
@@ -29,6 +29,9 @@ struct ContentView: View {
       }
     }
     .zoomRange(0...2)
+    .onCanvasToolAction { action in
+      print("Tool action: \(action)")
+    }
 
   }
 }

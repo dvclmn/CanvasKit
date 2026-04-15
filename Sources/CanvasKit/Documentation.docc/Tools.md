@@ -24,3 +24,12 @@ Pointer down + drag → PanViewport
 Tool didn’t change
 
 Intent resolution did
+
+---
+
+Public surface:
+
+- `CanvasTool` defines a tool
+- `CanvasToolKind` gives it a stable identity
+- `CanvasToolConfiguration` owns tools, bindings, and selected kind
+- `onCanvasToolAction` surfaces tool-emitted domain events

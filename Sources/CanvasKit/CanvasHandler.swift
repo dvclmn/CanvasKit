@@ -21,6 +21,9 @@ final class CanvasHandler {
   /// (e.g. "select at point", "commit stroke").
   var lastToolAction: ToolAction?
 
+  /// Simple revision counter for observing tool actions.
+  var toolActionRevision: UInt = 0
+
   /// Only updated when `processedTransform()` is called
   private var activeTool: (any CanvasTool)?
   package var interactionContext: InteractionContext?
@@ -73,13 +76,19 @@ extension CanvasHandler {
       /// Base gestures, updates transform state regardless
       /// of whether Canvas Tools are in use
       case .base(let adjustment):
+        lastToolAction = nil
         return handleAdjustment(
           .transform(adjustment),
           transform: currentTransform,
         )
 
       case .tool(let resolution):
-        lastToolAction = resolution.action
+        if resolution.action.isNone {
+          lastToolAction = nil
+        } else {
+          lastToolAction = resolution.action
+          toolActionRevision &+= 1
+        }
         return handleAdjustment(
           resolution.adjustment,
           transform: currentTransform,
