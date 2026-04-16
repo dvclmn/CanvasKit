@@ -5,7 +5,6 @@
 //  Created by Dave Coleman on 20/3/2026.
 //
 
-//import InteractionKit
 import BasePrimitives
 import SwiftUI
 
@@ -23,7 +22,8 @@ public struct CanvasTapModifier: ViewModifier {
   }
 }
 
-extension View where Self: CanvasAddressable {
+extension View {
+//extension View where Self: CanvasAddressable {
   
   /// Respond to `CanvasView` pointer taps. Provides the
   /// location of the tap in `CanvasSpace`.

@@ -8,7 +8,7 @@
 import BasePrimitives
 import Foundation
 
-struct InteractionContext: Sendable {
+public struct InteractionContext: Sendable {
   let interaction: Interaction
   let phase: InteractionPhase
   let modifiers: Modifiers
@@ -33,7 +33,7 @@ extension InteractionContext {
 }
 
 extension InteractionContext: CustomStringConvertible {
-  var description: String {
+  public var description: String {
     "Interaction: \(interaction), Phase: \(phase.name), Modifiers: \(modifiers)"
   }
 }

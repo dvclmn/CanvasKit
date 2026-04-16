@@ -8,18 +8,35 @@
 import SwiftUI
 
 struct CanvasToolKeyboardModifier: ViewModifier {
+
+  /// Will need to get modifier keys in here from somewhere
   
+  @Binding var toolHandler: ToolHandler
+
   func body(content: Content) -> some View {
     content
       .onKeyPress(
-        keys: <#T##Set<KeyEquivalent>#>,
-        phases: <#T##KeyPress.Phases#>,
-        action: <#T##(KeyPress) -> KeyPress.Result#>
-      )
+        keys: toolHandler.keysToWatch,
+        phases: .all,
+      ) { result in
+        
+        switch result.phase {
+          case .up:
+            toolHandler.handleKeyUp(result.key)
+            
+          case .down:
+            toolHandler.handleKeyDown(result.key)
+          default: break
+        }
+        
+        return .handled
+      }
+//      .onEnvironmentChange(\.modifierKeys) { <#Equatable#> in
+//        <#code#>
+//      }
   }
 }
 
-extension 
 //extension View {
 //  public func example() -> some View {
 //    self.modifier(ExampleModifier())

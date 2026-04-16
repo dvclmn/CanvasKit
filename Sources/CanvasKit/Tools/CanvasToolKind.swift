@@ -20,7 +20,7 @@ public struct CanvasToolKind: RawRepresentable, Hashable, Sendable, ExpressibleB
 
   public init(rawValue: String) { self.rawValue = rawValue }
 
-  /// Convenience sugar for defining kinds inline.
+  /// Convenience for defining kinds inline.
   public init(_ rawValue: String) {
     self.init(rawValue: rawValue)
   }

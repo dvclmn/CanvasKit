@@ -33,13 +33,14 @@ public struct CanvasToolConfiguration: Sendable {
 
   public init(
     tools: [any CanvasTool] = .defaultTools,
-    bindings: [ToolBinding] = .defaultBindings(),
+    bindings: [ToolBinding] = ToolBinding.defaultBindings(),
     selectedToolKind: CanvasToolKind? = nil,
     springLoadDelay: TimeInterval = 0.15,
   ) {
     self.tools = Self.normalisedTools(tools)
     self.bindings = bindings
-    self.selectedToolKind = selectedToolKind ?? self.defaultToolKind
+    self.selectedToolKind = selectedToolKind ?? .select
+//    self.selectedToolKind = selectedToolKind ?? self.defaultToolKind
     self.springLoadDelay = springLoadDelay
   }
 }

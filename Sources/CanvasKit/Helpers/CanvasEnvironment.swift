@@ -15,5 +15,7 @@ extension EnvironmentValues {
   /// Important for coordinate space calculations.
   @Entry var canvasAnchor: UnitPoint = .center
   @Entry var canvasBackground: Color = Color(white: 0.04)
+  
   @Entry var artworkOutline: AreaOutline = .init()
+  
 }

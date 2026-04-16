@@ -32,7 +32,8 @@ public struct CanvasDragEvent<Space> {
   public let phase: InteractionPhase
 }
 
-extension View where Self: CanvasAddressable {
+extension View {
+//extension View where Self: CanvasAddressable {
 
   /// Respond to a `CanvasView` pointer drag operation.
   /// Provides the rectangle of the drag in `CanvasSpace`,
