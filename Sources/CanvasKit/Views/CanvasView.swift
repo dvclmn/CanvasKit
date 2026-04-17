@@ -74,24 +74,24 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
     //      )
     //    )
 
-    //    .task(id: toolConfiguration?.wrappedValue.fingerprint ?? "no-tool-configuration") {
-    //      guard let toolConfiguration else { return }
-    //      toolHandler = ToolHandler(configuration: toolConfiguration.wrappedValue)
-    //    }
-    //
-    //    .onChange(of: toolConfiguration?.wrappedValue.selectedToolKind, initial: false) { _, newValue in
-    //      guard let newValue, toolConfiguration != nil, toolHandler.selectedToolKind != newValue else { return }
-    //      var handler = toolHandler
-    //      handler.setBaseTool(kind: newValue)
-    //      toolHandler = handler
-    //    }
-    //
-    //    .onChange(of: toolHandler.selectedToolKind, initial: false) { _, newValue in
-    //      guard let toolConfiguration,
-    //        toolConfiguration.wrappedValue.selectedToolKind != newValue
-    //      else { return }
-    //      toolConfiguration.wrappedValue.selectedToolKind = newValue
-    //    }
+        .task(id: toolConfiguration?.wrappedValue.fingerprint ?? "no-tool-configuration") {
+          guard let toolConfiguration else { return }
+          toolHandler = ToolHandler(configuration: toolConfiguration.wrappedValue)
+        }
+    
+        .onChange(of: toolConfiguration?.wrappedValue.selectedToolKind, initial: false) { _, newValue in
+          guard let newValue, toolConfiguration != nil, toolHandler.selectedToolKind != newValue else { return }
+          var handler = toolHandler
+          handler.setBaseTool(kind: newValue)
+          toolHandler = handler
+        }
+    
+        .onChange(of: toolHandler.selectedToolKind, initial: false) { _, newValue in
+          guard let toolConfiguration,
+            toolConfiguration.wrappedValue.selectedToolKind != newValue
+          else { return }
+          toolConfiguration.wrappedValue.selectedToolKind = newValue
+        }
   }
 }
 

@@ -8,15 +8,13 @@
 import BasePrimitives
 import SwiftUI
 
-/// `CanvasHandler`'s state is owned outside of CanvasKit,
-/// by the project *using* CanvasKit. E.g. in the case of DrawString,
-/// this is owned by `BaseContainer` view.
 @Observable
 final class CanvasHandler {
 
   var pointer: PointerState = .initial
 
   /// The most recent domain action produced by a tool resolution.
+  /// Only produced if the selected Tool defines a
   /// Consuming apps can observe this to react to tool-specific events
   /// (e.g. "select at point", "commit stroke").
   var lastToolAction: ToolAction?
@@ -85,9 +83,11 @@ extension CanvasHandler {
       case .tool(let resolution):
         if resolution.action.isNone {
           lastToolAction = nil
+          
         } else {
           lastToolAction = resolution.action
           toolActionRevision &+= 1
+          
         }
         return handleAdjustment(
           resolution.adjustment,

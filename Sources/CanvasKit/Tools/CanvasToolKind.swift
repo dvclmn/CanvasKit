@@ -29,3 +29,8 @@ public struct CanvasToolKind: RawRepresentable, Hashable, Sendable, ExpressibleB
     self.init(value)
   }
 }
+
+extension CanvasToolKind: CustomStringConvertible {
+  public var description: String { rawValue }
+  
+}

@@ -76,15 +76,6 @@ extension AdjustmentKind.Set {
   }
 }
 
-//extension AdjustmentKind.Set {
-//  var kinds: [AdjustmentKind] {
-//    AdjustmentKind.allCases.enumerated().compactMap { (index, kind) in
-//      let bit = Self(rawValue: 1 << index)
-//      return contains(bit) ? kind : nil
-//    }
-//  }
-//}
-
 extension AdjustmentKind.Set: CustomStringConvertible {
   public var description: String {
     kinds.map { $0.displayName }.joined(separator: ", ")
