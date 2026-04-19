@@ -1,5 +1,5 @@
 //
-//  CanvasToolConfiguration.swift
+//  ToolConfiguration.swift
 //  CanvasKit
 //
 //  Created by Dave Coleman on 15/4/2026.
@@ -17,7 +17,7 @@ import SwiftUI
 /// Registering a tool with an existing `CanvasToolKind` replaces the previous
 /// tool for that kind, which makes it easy to customise built-in tools while
 /// keeping their identity stable.
-public struct CanvasToolConfiguration: Sendable {
+public struct ToolConfiguration: Sendable {
 
   /// The registered tools, ordered by the app's chosen preference.
   public var tools: [any CanvasTool]
@@ -45,7 +45,7 @@ public struct CanvasToolConfiguration: Sendable {
   }
 }
 
-extension CanvasToolConfiguration {
+extension ToolConfiguration {
 
   public static var `default`: Self { .init() }
 
@@ -128,7 +128,7 @@ extension CanvasToolConfiguration {
   }
 }
 
-extension CanvasToolConfiguration {
+extension ToolConfiguration {
 
   /// A stable-ish fingerprint for SwiftUI update bookkeeping.
   /// This is intentionally implementation detail, not part of the public API.

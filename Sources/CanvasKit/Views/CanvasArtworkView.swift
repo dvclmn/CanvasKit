@@ -21,9 +21,9 @@ struct CanvasArtwork<Content: View>: View {
   var body: some View {
 
     CanvasDecomposed(content: content)
-      .animation(.easeInOut(duration: 0.15)) { content in
-        content.opacity(isCanvasReady ? 1.0 : 0.0)
-      }
+//      .animation(.easeInOut(duration: 0.15)) { content in
+//        content.opacity(isCanvasReady ? 1.0 : 0.0)
+//      }
 
       .frame(
         width: canvasSize.width,
@@ -45,8 +45,9 @@ struct CanvasArtwork<Content: View>: View {
 
       /// Important: Keep the order 1. Scale, 2. Rotate, 3. Offset
       .scaleEffect(
-        transform.scale.clampedIfNeeded(to: zoomRange),
-        anchor: canvasAnchor,
+        transform.scale.clamped(to: zoomRange),
+//        transform.scale.clampedIfNeeded(to: zoomRange),
+//        anchor: canvasAnchor,
       )
       .rotationEffect(transform.rotation, anchor: .center)
       .offset(transform.translation.cgSize)
@@ -58,9 +59,9 @@ struct CanvasArtwork<Content: View>: View {
   }
 }
 
-extension CanvasArtwork {
-  private var isCanvasReady: Bool { zoomRange != nil }
-}
+//extension CanvasArtwork {
+//  private var isCanvasReady: Bool { zoomRange != nil }
+//}
 
 // MARK: - Canvas clipping View
 private struct CanvasDecomposed<Content: View>: View {
@@ -93,6 +94,7 @@ extension CanvasDecomposed {
             .clipShape(.rect(cornerRadius: cornerRounding))
         } else {
           subview
+
         }
       }
     }

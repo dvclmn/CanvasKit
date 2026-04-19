@@ -4,7 +4,7 @@ Example setup
 
 ```swift
 // 1. Create a value-type configuration in app state:
-@State private var toolConfiguration = CanvasToolConfiguration()
+@State private var toolConfiguration = ToolConfiguration()
 
 // 2. Hand it to CanvasView:
 CanvasView(

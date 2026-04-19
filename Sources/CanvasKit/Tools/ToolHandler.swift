@@ -11,11 +11,11 @@ import SwiftUI
 /// Manages tool selection, spring-loading, and key bindings.
 ///
 /// This is internal runtime machinery. App code should work with
-/// `CanvasToolConfiguration` instead.
+/// `ToolConfiguration` instead.
 struct ToolHandler {
 
   /// Public tool configuration copied into runtime state.
-  var configuration: CanvasToolConfiguration
+  var configuration: ToolConfiguration
 
   /// Active spring-load / hold overrides, most recent last.
   var overrides: [ToolOverride] = []
@@ -23,7 +23,7 @@ struct ToolHandler {
   private var heldKeys: Set<KeyEquivalent> = []
   private var modifiers: Modifiers = []
 
-  init(configuration: CanvasToolConfiguration = .default) {
+  init(configuration: ToolConfiguration = .default) {
     self.configuration = configuration
   }
 }

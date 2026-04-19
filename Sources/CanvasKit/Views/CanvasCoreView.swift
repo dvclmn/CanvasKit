@@ -13,11 +13,12 @@ struct CanvasCoreView<Content: View>: View {
   @Environment(\.canvasBackground) private var canvasBackground
   @Environment(\.canvasAnchor) private var canvasAnchor
   @Environment(\.zoomRange) private var zoomRange
-  
+
   @State private var artworkFrame: Rect<ScreenSpace>?
 
   let canvasSize: Size<CanvasSpace>
-  let transform: TransformState
+  @Binding var transform: TransformState
+//  let transform: TransformState
 
   @ViewBuilder var content: () -> Content
 
@@ -54,33 +55,41 @@ struct CanvasCoreView<Content: View>: View {
           .onGeometryChange(for: CGRect?.self) { proxy in
             anchor.map { proxy[$0] }
           } action: { frame in
-            self.artworkFrame = frame.map { Rect<ScreenSpace>(fromRect: $0) }
-//            store.updateArtworkFrame(to: artworkFrame)
+            let frameResult = frame.map { Rect<ScreenSpace>(fromRect: $0) }
+            self.artworkFrame = frameResult
+            transform.artworkFrame = frameResult
           }
       }
+
+//      .environment(\.coordinateSpaceMapper, mapper)
       .modifier(
         CanvasSnapshotModifier(
-          mapper: mapper,
           transform: transform,
           pointer: store.pointer,
-          phase: store.interactionContext?.phase ?? .none
+          phase: store.interactionContext?.phase ?? .none,
         )
       )
-//      .setSnapshotValues(.in)
-//      .setSnapshotValues(
-//        store.snapshot(
-//          zoomRange: zoomRange,
-//          transform: localTransform,
-//        )
-//      )
+      .debugText {
+        Indented("Artwork frame") {
+          Labeled("Offset", value: artworkFrame?.origin.cgPoint)
+          Labeled("W", value: artworkFrame?.width.displayString)
+          Labeled("H", value: artworkFrame?.height.displayString)
+        }
+
+        Indented("Canvas size") {
+          Labeled("W", value: canvasSize.width.displayString)
+          Labeled("H", value: canvasSize.height.displayString)
+        }
+
+      }
   }
 }
 
 extension CanvasCoreView {
-  private var zoomClamped: Double { transform.scale.clampedIfNeeded(to: zoomRange) }
-  private var mapper: CoordinateSpaceMapper? {
-    guard let artworkFrame else { return nil }
-    return .init(artworkFrame: artworkFrame, zoomClamped: zoomClamped)
-  }
-  
+  private var zoomClamped: Double { transform.scale.clamped(to: zoomRange) }
+
+//  private var mapper: CoordinateSpaceMapper? {
+//    guard let artworkFrame else { return nil }
+//    return .init(artworkFrame: artworkFrame, zoomClamped: zoomClamped)
+//  }
 }

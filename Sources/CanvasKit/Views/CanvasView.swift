@@ -9,8 +9,6 @@ import BasePrimitives
 import SwiftUI
 
 public struct CanvasView<Content: View>: View, CanvasAddressable {
-  @Environment(\.zoomRange) private var zoomRange
-
   @State private var store: CanvasHandler = .init()
   @State private var toolHandler: ToolHandler
 
@@ -25,17 +23,17 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   @State private var userModifierKeys: Modifiers?
 
   /// Canvas Tool use is opt-in. If the user doesn't need tools, this stays nil
-  private let toolConfiguration: Binding<CanvasToolConfiguration>?
+  private let toolConfiguration: Binding<ToolConfiguration>?
 
   let canvasSize: Size<CanvasSpace>
   let content: () -> Content
 
   public var body: some View {
-    let activeTool: (any CanvasTool)? = toolConfiguration == nil ? nil : toolHandler.effectiveTool
 
     CanvasCoreView(
       canvasSize: canvasSize,
-      transform: localTransform,
+      transform: $localTransform,
+//      transform: localTransform,
       content: content,
     )
 
@@ -67,38 +65,51 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       toolHandler.updateModifiers(keys)
     }
 
-    //    .modifier(
-    //      CanvasToolKeyboardModifier(
-    //        toolHandler: $toolHandler,
-    //        isEnabled: toolConfiguration != nil
-    //      )
-    //    )
+    .task(id: toolConfiguration?.wrappedValue.fingerprint ?? "no-tool-configuration") {
+      guard let toolConfiguration else { return }
+      toolHandler = ToolHandler(configuration: toolConfiguration.wrappedValue)
+    }
 
-        .task(id: toolConfiguration?.wrappedValue.fingerprint ?? "no-tool-configuration") {
-          guard let toolConfiguration else { return }
-          toolHandler = ToolHandler(configuration: toolConfiguration.wrappedValue)
-        }
-    
-        .onChange(of: toolConfiguration?.wrappedValue.selectedToolKind, initial: false) { _, newValue in
-          guard let newValue, toolConfiguration != nil, toolHandler.selectedToolKind != newValue else { return }
-          var handler = toolHandler
-          handler.setBaseTool(kind: newValue)
-          toolHandler = handler
-        }
-    
-        .onChange(of: toolHandler.selectedToolKind, initial: false) { _, newValue in
-          guard let toolConfiguration,
-            toolConfiguration.wrappedValue.selectedToolKind != newValue
-          else { return }
-          toolConfiguration.wrappedValue.selectedToolKind = newValue
-        }
+    .onChange(of: toolConfiguration?.wrappedValue.selectedToolKind, initial: false) { _, newValue in
+      guard let newValue, toolConfiguration != nil, toolHandler.selectedToolKind != newValue else { return }
+      var handler = toolHandler
+      handler.setBaseTool(kind: newValue)
+      toolHandler = handler
+    }
+
+    .onChange(of: toolHandler.selectedToolKind, initial: false) { _, newValue in
+      guard let toolConfiguration,
+        toolConfiguration.wrappedValue.selectedToolKind != newValue
+      else { return }
+      toolConfiguration.wrappedValue.selectedToolKind = newValue
+    }
+
+    .debugText {
+      //      Labeled("Canvas Size", value: canvasSize.cgSize)
+      //      Labeled("Local Transform", value: localTransform)
+      Indented("Local Transform") {
+        Labeled("Pan Offset", value: localTransform.translation.cgSize.displayString)
+      }
+//      Indented("External Transform") { "\(externalTransform?.wrappedValue, default: "nil")" }
+      //      Divider()
+      //      Labeled("External", value: externalTransform?.wrappedValue)
+      //      Labeled("Tool", value: toolHandler.selectedToolKind)
+    }
+    .debugTextOverlay(isEnabled: true)
+
+  }
+}
+
+extension CanvasView {
+  private var activeTool: (any CanvasTool)? {
+    toolConfiguration == nil ? nil : toolHandler.effectiveTool
   }
 }
 
 // MARK: - Inits
 extension CanvasView {
 
-  // MARK: - No Tool use
+  // MARK: No Tool use
   /// Basic usage, CanvasKit manages transform state internally. No Tool use.
   public init(
     size: CGSize,
@@ -127,11 +138,11 @@ extension CanvasView {
     self.content = content
   }
 
-  // MARK: - Tool use Enabled
+  // MARK: Tool use Enabled
   /// Internally owned transform state. Externally-owned Canvas Tool configuration, enabling Tool use.
   public init(
     size: CGSize,
-    toolConfiguration: Binding<CanvasToolConfiguration>,
+    toolConfiguration: Binding<ToolConfiguration>,
     @ViewBuilder content: @escaping () -> Content,
   ) {
     self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
@@ -146,7 +157,7 @@ extension CanvasView {
   public init(
     size: CGSize,
     transform: Binding<TransformState>,
-    toolConfiguration: Binding<CanvasToolConfiguration>,
+    toolConfiguration: Binding<ToolConfiguration>,
     @ViewBuilder content: @escaping () -> Content,
   ) {
     self.canvasSize = Size<CanvasSpace>(fromCGSize: size)

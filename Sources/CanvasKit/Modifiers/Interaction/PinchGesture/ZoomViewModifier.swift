@@ -129,7 +129,8 @@ extension PinchGestureModifier {
   }
 
   private func clamped(_ value: Double) -> Double {
-    value.clampedIfNeeded(to: zoomRange)
+    value.clamped(to: zoomRange)
+//    value.clampedIfNeeded(to: zoomRange)
   }
 
   private func commitZoom(_ value: Double) {

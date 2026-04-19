@@ -31,5 +31,5 @@ Public surface:
 
 - `CanvasTool` defines a tool
 - `CanvasToolKind` gives it a stable identity
-- `CanvasToolConfiguration` owns tools, bindings, and selected kind
+- `ToolConfiguration` owns tools, bindings, and selected kind
 - `onCanvasToolAction` surfaces tool-emitted domain events

@@ -8,7 +8,7 @@ import Testing
 }
 
 @Test func registeringAToolWithAnExistingKindReplacesIt() {
-  var configuration = CanvasToolConfiguration(
+  var configuration = ToolConfiguration(
     tools: [SelectTool(), CustomZoomTool()],
     bindings: [
       .init(.keyOnly("v"), target: .select, mode: .sticky),
