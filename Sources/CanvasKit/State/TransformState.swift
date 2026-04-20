@@ -15,7 +15,7 @@ public struct TransformState: Sendable, Equatable {
   public var scale: Double
   public var rotation: Angle
   
-  public var artworkFrame: Rect<ScreenSpace>?
+//  public var artworkFrame: Rect<ScreenSpace>?
 
   public init(
     translation: Size<ScreenSpace> = .zero,
@@ -32,11 +32,7 @@ public struct TransformState: Sendable, Equatable {
 
 extension TransformState {
   public mutating func reset() { self = Self.identity }
-  
-  public func mapper(zoomRange: ClosedRange<Double>) -> CoordinateSpaceMapper? {
-    guard let artworkFrame else { return nil }
-    return .init(artworkFrame: artworkFrame, zoomClamped: scale.clamped(to: zoomRange))
-  }
+
 }
 
 extension TransformState: CustomStringConvertible {

@@ -12,7 +12,8 @@ struct InteractionModifiers: ViewModifier {
   @Environment(CanvasHandler.self) private var store
   @Environment(\.modifierKeys) private var modifierKeys
 
-  @Binding var transform: TransformState
+  @Bindable var state: CanvasState
+//  @Binding var transform: TransformState
   let tool: (any CanvasTool)?
 
   func body(content: Content) -> some View {
@@ -28,14 +29,14 @@ struct InteractionModifiers: ViewModifier {
           tool: tool,
           phase: event.phase,
           modifiers: event.modifiers,
-          currentTransform: transform,
+          currentTransform: state.transform,
         )
         guard let adjustment else { return }
-        self.transform = adjustment
+        state.transform = adjustment
       }
 
       .onPinchGesture(
-        initial: transform.scale,
+        initial: state.transform.scale,
         isEnabled: isEnabled(for: .pinch),
       ) { zoom, phase in
 
@@ -44,7 +45,7 @@ struct InteractionModifiers: ViewModifier {
           tool: tool,
           phase: phase,
           modifiers: modifierKeys,
-          currentTransform: transform,
+          currentTransform: state.transform,
         )
 
         /// Returns the scale so the modifier's internal Zoom
@@ -52,7 +53,7 @@ struct InteractionModifiers: ViewModifier {
         guard let adjustment else {
           return adjustment?.scale
         }
-        self.transform = adjustment
+        state.transform = adjustment
         return adjustment.scale
 
       }
@@ -64,10 +65,10 @@ struct InteractionModifiers: ViewModifier {
           tool: tool,
           phase: phase.interactionPhase,
           modifiers: modifierKeys,
-          currentTransform: transform,
+          currentTransform: state.transform,
         )
         guard let adjustment else { return }
-        self.transform = adjustment
+        state.transform = adjustment
 
       }
 
@@ -78,10 +79,10 @@ struct InteractionModifiers: ViewModifier {
           tool: tool,
           phase: .ended,
           modifiers: modifierKeys,
-          currentTransform: transform,
+          currentTransform: state.transform,
         )
         guard let adjustment else { return }
-        self.transform = adjustment
+        state.transform = adjustment
 
       }
 
@@ -95,10 +96,10 @@ struct InteractionModifiers: ViewModifier {
           tool: tool,
           phase: phase,
           modifiers: modifierKeys,
-          currentTransform: transform,
+          currentTransform: state.transform,
         )
         guard let adjustment else { return }
-        self.transform = adjustment
+        state.transform = adjustment
       }
   }
 }

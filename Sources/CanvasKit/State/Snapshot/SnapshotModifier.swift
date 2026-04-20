@@ -11,7 +11,8 @@ import SwiftUI
 struct CanvasSnapshotModifier: ViewModifier {
   @Environment(\.zoomRange) private var zoomRange
   //  let mapper: CoordinateSpaceMapper?
-  let transform: TransformState
+//  let transform: TransformState
+  let state: CanvasState
   let pointer: PointerState
   let phase: InteractionPhase
 
@@ -32,7 +33,7 @@ struct CanvasSnapshotModifier: ViewModifier {
 extension CanvasSnapshotModifier {
   private var snapshot: CanvasSnapshot? {
 
-    guard let mapper = transform.mapper(zoomRange: zoomRange) else { return nil }
+    guard let mapper = state.mapper(zoomRange: zoomRange) else { return nil }
 
     let tapMapped = pointer.tap.map { mapper.canvasPoint(from: $0) }
     let hoverMapped = pointer.hover.map { mapper.canvasPoint(from: $0) }
@@ -40,9 +41,9 @@ extension CanvasSnapshotModifier {
     let isInside = hoverMapped.map { mapper.isInsideCanvas($0) } ?? false
 
     return CanvasSnapshot(
-      zoom: transform.scale,
-      pan: transform.translation,
-      rotation: transform.rotation,
+      zoom: state.transform.scale,
+      pan: state.transform.translation,
+      rotation: state.transform.rotation,
       pointerTap: tapMapped,
       pointerDrag: rectMapped,
       pointerHover: hoverMapped,

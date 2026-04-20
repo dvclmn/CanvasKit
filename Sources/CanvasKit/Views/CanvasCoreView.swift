@@ -17,7 +17,8 @@ struct CanvasCoreView<Content: View>: View {
   @State private var artworkFrame: Rect<ScreenSpace>?
 
   let canvasSize: Size<CanvasSpace>
-  @Binding var transform: TransformState
+  @Bindable var state: CanvasState
+//  @Binding var transform: TransformState
 //  let transform: TransformState
 
   @ViewBuilder var content: () -> Content
@@ -27,7 +28,7 @@ struct CanvasCoreView<Content: View>: View {
       .overlay {
         CanvasArtwork(
           canvasSize: canvasSize,
-          transform: transform,
+          transform: state.transform,
           content: content,
         )
       }
@@ -57,14 +58,16 @@ struct CanvasCoreView<Content: View>: View {
           } action: { frame in
             let frameResult = frame.map { Rect<ScreenSpace>(fromRect: $0) }
             self.artworkFrame = frameResult
-            transform.artworkFrame = frameResult
+            state.artworkFrame = frameResult
+//            transform.artworkFrame = frameResult
           }
       }
 
 //      .environment(\.coordinateSpaceMapper, mapper)
       .modifier(
         CanvasSnapshotModifier(
-          transform: transform,
+          state: state,
+//          transform: state.transform,
           pointer: store.pointer,
           phase: store.interactionContext?.phase ?? .none,
         )
@@ -86,7 +89,7 @@ struct CanvasCoreView<Content: View>: View {
 }
 
 extension CanvasCoreView {
-  private var zoomClamped: Double { transform.scale.clamped(to: zoomRange) }
+  private var zoomClamped: Double { state.transform.scale.clamped(to: zoomRange) }
 
 //  private var mapper: CoordinateSpaceMapper? {
 //    guard let artworkFrame else { return nil }
