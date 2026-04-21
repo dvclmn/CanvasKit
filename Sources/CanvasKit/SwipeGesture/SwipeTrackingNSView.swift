@@ -7,7 +7,7 @@
 
 #if canImport(AppKit)
 import AppKit
-import BasePrimitives
+import CanvasCore
 
 /// Chose the word Swipe instead of Pan:
 ///

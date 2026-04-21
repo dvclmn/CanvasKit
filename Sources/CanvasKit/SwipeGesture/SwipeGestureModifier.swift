@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 24/6/2025.
 //
 
-import BasePrimitives
+import CanvasCore
 import SwiftUI
 
 struct SwipeGestureModifier: ViewModifier {

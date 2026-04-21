@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import BasePrimitives
+import CanvasCore
 
 /// Return a replacement zoom value for `(proposedZoom, phase)`,
 /// or `nil` to accept the gesture's proposal

@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 18/3/2026.
 //
 
-import BasePrimitives
+import CanvasCore
 import Foundation
 
 public struct InteractionContext: Sendable {

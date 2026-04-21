@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 4/4/2026.
 //
 
-@_spi(Internals) import BasePrimitives
+import CanvasCore
 import SwiftUI
 
 /// I expose a public view modifier directly on ``CanvasView``:

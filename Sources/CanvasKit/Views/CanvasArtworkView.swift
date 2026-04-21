@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 28/2/2026.
 //
 
-@_spi(Internals) import BasePrimitives
+@_spi(Internals) import CanvasCore
 import SwiftUI
 
 struct CanvasArtwork<Content: View>: View {

@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 2/4/2026.
 //
 
-import BasePrimitives
+import CanvasCore
 import SwiftUI
 
 /// Centralises input resolution for `CanvasHandler`.

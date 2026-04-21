@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 8/7/2025.
 //
 
-import BasePrimitives
+import CanvasCore
 import SwiftUI
 
 /// Manages tool selection, spring-loading, and key bindings.

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import BasePrimitives
+import CanvasCore
 
 extension EnvironmentValues {
 

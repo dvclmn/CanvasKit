@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 15/4/2026.
 //
 
-import BasePrimitives
+import CanvasCore
 import SwiftUI
 
 public struct CanvasToolActionModifier: ViewModifier {

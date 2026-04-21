@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 1/3/2026.
 //
 
-import BasePrimitives
+import CanvasCore
 import Foundation
 
 /// It may be that later I use this when doing more complex processing on the zoom

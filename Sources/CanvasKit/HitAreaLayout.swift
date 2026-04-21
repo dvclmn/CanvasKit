@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import BasePrimitives
+import CanvasCore
 
 public struct HitAreaLayout {
   let controlPoint: UnitPoint

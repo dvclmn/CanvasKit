@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 17/3/2026.
 //
 
-import BasePrimitives
+import CanvasCore
 
 //public typealias SwipeOutputInternal = (SwipeEvent, Modifiers) -> Void
 public typealias SwipeOutput = (SwipeEvent) -> Void

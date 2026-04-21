@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 13/3/2026.
 //
 
-import BasePrimitives
+import CanvasCore
 import SwiftUI
 
 /// Maps a key input to a tool activation with a given mode.

@@ -5,7 +5,8 @@
 //  Created by Dave Coleman on 25/2/2026.
 //
 
-@_spi(Internals) import BasePrimitives
+//@_spi(Internals) import BasePrimitives
+import CanvasCore
 import SwiftUI
 
 extension EnvironmentValues {

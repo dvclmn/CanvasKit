@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 8/4/2026.
 //
 
-import BasePrimitives
+import CanvasCore
 import SwiftUI
 
 /// Previously held by `CanvasAdjustment`

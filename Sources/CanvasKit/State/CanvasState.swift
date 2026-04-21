@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 19/4/2026.
 //
 
-import BasePrimitives
+import CanvasCore
 import SwiftUI
 
 @Observable
