@@ -5,25 +5,30 @@
 //  Created by Dave Coleman on 28/2/2026.
 //
 
-@_spi(Internals) import CanvasCore
+import CanvasCore
 import SwiftUI
 
 struct CanvasArtwork<Content: View>: View {
+  @Environment(\.zoomLevel) private var zoomLevel
   @Environment(\.zoomRange) private var zoomRange
-//  @Environment(\.artworkOutline) private var artworkOutline
+  //  @Environment(\.artworkOutline) private var artworkOutline
   @Environment(\.canvasAnchor) private var canvasAnchor
 
   let canvasSize: Size<CanvasSpace>
   let transform: TransformState
 
+  let rounding: Double = 4
+  let lineWidth: Double = 1
+
   @ViewBuilder var content: () -> Content
 
   var body: some View {
 
-    CanvasDecomposed(content: content)
-//      .animation(.easeInOut(duration: 0.15)) { content in
-//        content.opacity(isCanvasReady ? 1.0 : 0.0)
-//      }
+    ///
+    CanvasDecomposed(rounding: effectiveRounding, content: content)
+      //      .animation(.easeInOut(duration: 0.15)) { content in
+      //        content.opacity(isCanvasReady ? 1.0 : 0.0)
+      //      }
 
       .frame(
         width: canvasSize.width,
@@ -31,29 +36,22 @@ struct CanvasArtwork<Content: View>: View {
       )
 
       /// Visual indication of Canvas artwork bounds
-//      .areaOutline(
-//        colour: artworkOutline.colour,
-//        rounding: artworkOutline.rounding,
-//        lineWidth: artworkOutline.lineWidth,
-//      )
+      //      .areaOutline(
+      //        colour: artworkOutline.colour,
+      //        rounding: artworkOutline.rounding,
+      //        lineWidth: artworkOutline.lineWidth,
+      //      )
       .overlay {
-        RoundedRectangle(
-          cornerRadius: rounding.removingZoom(
-            zoomLevel,
-            across: zoomRange,
-            sensitivity: sensitivity,
+        RoundedRectangle(cornerRadius: effectiveRounding)
+          .fill(.clear)
+          .stroke(
+            Color.white.opacity(0.05),
+            lineWidth: lineWidth.removingZoom(
+              zoomLevel,
+              across: zoomRange,
+            ),
           )
-        )
-        .fill(.clear)
-        .stroke(
-          colour,
-          lineWidth: lineWidth.removingZoom(
-            zoomLevel,
-            across: zoomRange,
-            sensitivity: sensitivity,
-          ),
-        )
-        .allowsHitTesting(false)
+          .allowsHitTesting(false)
       }
 
       /// `CanvasSpace` namespace declared *before* pan/zoom applied
@@ -64,9 +62,9 @@ struct CanvasArtwork<Content: View>: View {
 
       /// Important: Keep the order 1. Scale, 2. Rotate, 3. Offset
       .scaleEffect(
-        transform.scale.clamped(to: zoomRange),
-//        transform.scale.clampedIfNeeded(to: zoomRange),
-//        anchor: canvasAnchor,
+        transform.scale.clamped(to: zoomRange)
+        //        transform.scale.clampedIfNeeded(to: zoomRange),
+        //        anchor: canvasAnchor,
       )
       .rotationEffect(transform.rotation, anchor: .center)
       .offset(transform.translation.cgSize)
@@ -78,14 +76,21 @@ struct CanvasArtwork<Content: View>: View {
   }
 }
 
-//extension CanvasArtwork {
-//  private var isCanvasReady: Bool { zoomRange != nil }
-//}
+extension CanvasArtwork {
+  private var effectiveRounding: Double {
+    rounding.removingZoom(
+      zoomLevel,
+      across: zoomRange,
+    )
+  }
+}
 
 // MARK: - Canvas clipping View
 private struct CanvasDecomposed<Content: View>: View {
-  @Environment(\.self) private var env
-//  @Environment(\.artworkOutline) private var artworkOutline
+  //  @Environment(\.self) private var env
+  //  @Environment(\.artworkOutline) private var artworkOutline
+
+  let rounding: Double
 
   @ViewBuilder var content: () -> Content
   var body: some View {
@@ -110,7 +115,7 @@ extension CanvasDecomposed {
       ForEach(subviews: subviews) { subview in
         if subview.containerValues.allowsCanvasClipping {
           subview
-            .clipShape(.rect(cornerRadius: cornerRounding))
+            .clipShape(.rect(cornerRadius: rounding))
         } else {
           subview
 
@@ -119,7 +124,7 @@ extension CanvasDecomposed {
     }
   }
 
-  private var cornerRounding: CGFloat {
-    artworkOutline.resolvedOutline(in: env).rounding
-  }
+  //  private var cornerRounding: CGFloat {
+  //    artworkOutline.resolvedOutline(in: env).rounding
+  //  }
 }

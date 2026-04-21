@@ -25,6 +25,9 @@ let package = Package(
     ),
     .target(
       name: "CanvasCore",
+      dependencies: [
+        .product(name: "CoreUtilities", package: "BasePrimitives")
+      ],
     ),
     .testTarget(
       name: "CanvasKitTests",

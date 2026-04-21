@@ -16,9 +16,14 @@ struct ContentView: View {
 
     CanvasView(
       size: canvasSize,
-      transform: $transform,
-      toolConfiguration: $toolConfiguration
+      state: transform,
+      toolConfiguration: $toolConfiguration,
     ) {
+      //    CanvasView(
+      //      size: canvasSize,
+      //      transform: $transform,
+      //      toolConfiguration: $toolConfiguration
+      //    ) {
       Canvas { context, size in
         context.fill(
           Path(
