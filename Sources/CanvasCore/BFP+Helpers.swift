@@ -27,7 +27,7 @@ extension BinaryFloatingPoint {
   }
 
   var isGreaterThanZero: Bool { self > 0 }
-  var isFiniteAndGreaterThanZero: Bool { isFinite && self > 0 }
+  package var isFiniteAndGreaterThanZero: Bool { isFinite && self > 0 }
 }
 
 extension ClosedRange {
@@ -40,7 +40,7 @@ extension Comparable {
   /// Note to self: This is *not* the same as normalising.
   /// For normalisation see `BFP+Normalise`
   @inline(__always)
-  func clamped(to range: ClosedRange<Self>) -> Self {
+  package func clamped(to range: ClosedRange<Self>) -> Self {
     return clamped(range.lowerBound, range.upperBound)
   }
 

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import CanvasCore
+import InputPrimitives
 
 extension HoverPhase {
   public var location: CGPoint? {

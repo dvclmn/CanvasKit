@@ -12,13 +12,16 @@ let package = Package(
     .library(name: "CanvasCore", targets: ["CanvasCore"]),
   ],
   dependencies: [
-//    .package(url: "https://github.com/dvclmn/BasePrimitives", branch: "main"),
+    .package(url: "https://github.com/dvclmn/BasePrimitives", branch: "main"),
     .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
   ],
   targets: [
     .target(
       name: "CanvasKit",
-      dependencies: ["CanvasCore"],
+      dependencies: [
+        "CanvasCore",
+        .product(name: "InputPrimitives", package: "BasePrimitives")
+      ],
     ),
     .target(
       name: "CanvasCore",
