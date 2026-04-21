@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CanvasCore
+import InputPrimitives
 
 /// Callback receiving the drag payload and interaction phase.
 public typealias DragEventUpdate = (PointerDragPayload?, InteractionPhase) -> Void

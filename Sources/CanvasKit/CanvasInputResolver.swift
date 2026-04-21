@@ -17,7 +17,7 @@ struct CanvasInputResolver {
 
 extension CanvasInputResolver {
 
-  var pointerStyle: ToolPointerStyle? {
+  var pointerStyle: PointerStyleCompatible? {
     activeTool?.resolvePointerStyle(context: context)
   }
 

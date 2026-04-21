@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// NOTE: These are duplicated from BasePrimitives (to avoid too many dependancies)
 extension BinaryFloatingPoint {
   func removingZoom(
     _ zoom: Self,

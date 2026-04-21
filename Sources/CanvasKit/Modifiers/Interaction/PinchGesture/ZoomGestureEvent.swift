@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 1/3/2026.
 //
 
-import CanvasCore
 import Foundation
+import InputPrimitives
 
 /// It may be that later I use this when doing more complex processing on the zoom
 /// value, for zooming around a focus point / cursor etc

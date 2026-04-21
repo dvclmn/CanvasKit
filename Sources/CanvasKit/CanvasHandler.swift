@@ -6,6 +6,7 @@
 //
 
 import CanvasCore
+import InputPrimitives
 import SwiftUI
 
 @Observable
@@ -83,11 +84,11 @@ extension CanvasHandler {
       case .tool(let resolution):
         if resolution.action.isNone {
           lastToolAction = nil
-          
+
         } else {
           lastToolAction = resolution.action
           toolActionRevision &+= 1
-          
+
         }
         return handleAdjustment(
           resolution.adjustment,
@@ -121,7 +122,7 @@ extension CanvasHandler {
 }
 
 extension CanvasHandler {
-  var pointerStyle: ToolPointerStyle? {
+  var pointerStyle: PointerStyleCompatible? {
     guard let interactionContext else { return nil }
     return activeTool?.resolvePointerStyle(context: interactionContext)
   }

@@ -31,7 +31,7 @@ public protocol CanvasTool: Sendable, Equatable, Identifiable where ID == Canvas
   var inputCapabilities: [ToolCapability] { get }
 
   /// Resolve the pointer style for the current interaction context.
-  func resolvePointerStyle(context: InteractionContext) -> ToolPointerStyle
+  func resolvePointerStyle(context: InteractionContext) -> PointerStyleCompatible
 
   /// Resolve an interaction into a canvas adjustment and optional domain action.
   ///

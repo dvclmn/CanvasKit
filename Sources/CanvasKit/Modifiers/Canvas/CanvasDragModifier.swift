@@ -7,6 +7,7 @@
 
 import CanvasCore
 import SwiftUI
+import InputPrimitives
 
 public struct CanvasDragModifier: ViewModifier {
   @Environment(\.pointerDrag) private var pointerDrag

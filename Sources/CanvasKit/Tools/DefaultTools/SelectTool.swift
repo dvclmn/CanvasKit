@@ -7,6 +7,7 @@
 
 import CanvasCore
 import SwiftUI
+import InputPrimitives
 
 // MARK: - Select Tool
 
@@ -24,7 +25,7 @@ public struct SelectTool: CanvasTool {
 
   public func resolvePointerStyle(
     context: InteractionContext
-  ) -> ToolPointerStyle { .default }
+  ) -> PointerStyleCompatible { .default }
 
   public func resolvePointerInteraction(
     context: InteractionContext,

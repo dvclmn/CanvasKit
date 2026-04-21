@@ -6,6 +6,7 @@
 //
 
 import CanvasCore
+import InputPrimitives
 import SwiftUI
 
 /// When selected, pointer click-drag pans the canvas.
@@ -24,7 +25,7 @@ extension PanTool {
 
   public func resolvePointerStyle(
     context: InteractionContext
-  ) -> ToolPointerStyle {
+  ) -> PointerStyleCompatible {
     context.isPointerDragging ? .grabActive : .grabIdle
   }
 

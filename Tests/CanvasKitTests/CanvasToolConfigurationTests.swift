@@ -1,5 +1,6 @@
 import BasePrimitives
 import Testing
+import InputPrimitives
 @testable import CanvasKit
 
 @Test func stringLiteralKindsAreConvenient() {
@@ -35,11 +36,11 @@ private struct CustomZoomTool: CanvasTool {
   let icon = "magnifyingglass.circle"
 
   var dragBehaviour: PointerDragBehaviour { .continuous(axes: .vertical) }
-  var inputCapabilities: [ToolCapability] { .zoom }
+  var inputCapabilities: [ToolCapability] { ToolCapability.zoom }
 
   func resolvePointerStyle(
     context: InteractionContext
-  ) -> ToolPointerStyle { .zoomIn }
+  ) -> PointerStyleCompatible { .zoomIn }
 
   func resolvePointerInteraction(
     context: InteractionContext,
@@ -59,7 +60,7 @@ private struct DefaultZoomTool: CanvasTool {
 
   func resolvePointerStyle(
     context: InteractionContext
-  ) -> ToolPointerStyle { .zoomIn }
+  ) -> PointerStyleCompatible { .zoomIn }
 
   func resolvePointerInteraction(
     context: InteractionContext,

@@ -6,6 +6,7 @@
 //
 
 import CanvasCore
+import InputPrimitives
 import SwiftUI
 
 struct CanvasSnapshotModifier: ViewModifier {

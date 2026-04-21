@@ -28,3 +28,23 @@ extension DragGesture.Value {
     )
   }
 }
+
+extension CGRect {
+  
+  /// NOTE: Duplicated from BasePrimitives
+  /// 
+  /// Creates a rectangle from two points, ensuring positive width and height
+  /// Useful for drag operations like marquee selection where the drag direction is unknown
+  ///
+  /// Note: previous methods `reversible`, `fromPoints(_:_:)`,
+  /// `between(point1:point2:)`
+  public static func boundingRect(
+    from start: CGPoint, to end: CGPoint,
+  ) -> CGRect {
+    let size = CGSize(
+      width: end.x - start.x,
+      height: end.y - start.y,
+    )
+    return CGRect(origin: start, size: size).standardized
+  }
+}
