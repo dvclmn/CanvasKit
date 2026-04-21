@@ -24,7 +24,7 @@ public struct SelectTool: CanvasTool {
 
   public func resolvePointerStyle(
     context: InteractionContext
-  ) -> PointerStyleCompatible { .default }
+  ) -> ToolPointerStyle { .default }
 
   public func resolvePointerInteraction(
     context: InteractionContext,

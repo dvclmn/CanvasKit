@@ -65,7 +65,8 @@ extension DragGestureState {
 
   /// Zeroes out movement on locked axes.
   private func applyAxis(
-    _ axes: GeometryAxis.Set,
+    _ axes: Axis.Set,
+//    _ axes: GeometryAxis.Set,
     delta: CGSize,
   ) -> CGSize {
     switch axes {

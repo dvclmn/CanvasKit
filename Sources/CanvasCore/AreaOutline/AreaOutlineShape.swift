@@ -8,34 +8,26 @@
 import SwiftUI
 
 public struct AreaOutlineShape: View {
-  //  @Environment(\.self) private var env
+  @Environment(\.self) private var env
 
   let outline: AreaOutline
-  let zoomLevel: Double
 
-  public init(
-    _ outline: AreaOutline,
-    zoomLevel: Double,
-  ) {
+  public init(_ outline: AreaOutline) {
     self.outline = outline
-    self.zoomLevel = zoomLevel
   }
 
   public init(
     colour: Color = .white.opacity(0.07),
     rounding: Double = 4,
     lineWidth: Double = 1,
-    zoomLevel: Double,
   ) {
     self.init(
       AreaOutline(
         colour: colour,
         rounding: rounding,
         lineWidth: lineWidth,
-      ),
-      zoomLevel: zoomLevel,
+      )
     )
-
   }
 
   public var body: some View {

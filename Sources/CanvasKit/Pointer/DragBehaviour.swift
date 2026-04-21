@@ -22,7 +22,8 @@ public enum PointerDragBehaviour: Equatable, Sendable {
   ///
   /// Each new drag begins from the offset committed by the previous drag, so
   /// movement compounds over time. Pass a `GeometryAxis/Set` to lock to an axis.
-  case continuous(axes: GeometryAxis.Set)
+  case continuous(axes: Axis.Set)
+//  case continuous(axes: GeometryAxis.Set)
 
   /// Drag gesture is inactive; no callbacks or state changes are produced.
   case none
@@ -43,7 +44,7 @@ extension PointerDragBehaviour {
 
   /// The axis constraint for continuous drags. Only applicable for
   /// `continuous`, returns `.all` for other modes
-  public var axes: GeometryAxis.Set {
+  public var axes: Axis.Set {
     if case .continuous(let axes) = self { return axes }
     return .all
   }

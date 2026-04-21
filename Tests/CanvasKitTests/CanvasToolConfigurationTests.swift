@@ -39,7 +39,7 @@ private struct CustomZoomTool: CanvasTool {
 
   func resolvePointerStyle(
     context: InteractionContext
-  ) -> PointerStyleCompatible { .zoomIn }
+  ) -> ToolPointerStyle { .zoomIn }
 
   func resolvePointerInteraction(
     context: InteractionContext,
@@ -59,7 +59,7 @@ private struct DefaultZoomTool: CanvasTool {
 
   func resolvePointerStyle(
     context: InteractionContext
-  ) -> PointerStyleCompatible { .zoomIn }
+  ) -> ToolPointerStyle { .zoomIn }
 
   func resolvePointerInteraction(
     context: InteractionContext,

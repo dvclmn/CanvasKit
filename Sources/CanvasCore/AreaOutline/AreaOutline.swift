@@ -38,13 +38,11 @@ extension AreaOutline {
   /// See `BinaryFloatingPoint/removingZoom(_:across:sensitivity:)`
   /// for more information
   public func resolvedOutline(
-    zoomLevel: Double,
-//    in environment: EnvironmentValues,
+    in environment: EnvironmentValues,
     sensitivity: Double? = nil,
   ) -> AreaOutline.Resolved {
     let rounding = rounding.removingZoom(
-      zoomLevel: Double,
-//      environment.zoomLevel,
+      environment.zoomLevel,
       across: environment.zoomRange,
       sensitivity: sensitivity,
     )

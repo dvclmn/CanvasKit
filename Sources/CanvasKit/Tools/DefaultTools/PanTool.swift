@@ -24,7 +24,7 @@ extension PanTool {
 
   public func resolvePointerStyle(
     context: InteractionContext
-  ) -> PointerStyleCompatible {
+  ) -> ToolPointerStyle {
     context.isPointerDragging ? .grabActive : .grabIdle
   }
 

@@ -26,7 +26,7 @@ extension ZoomTool {
 
   public func resolvePointerStyle(
     context: InteractionContext
-  ) -> PointerStyleCompatible {
+  ) -> ToolPointerStyle {
     context.modifiers.contains(.option) ? .zoomOut : .zoomIn
   }
 

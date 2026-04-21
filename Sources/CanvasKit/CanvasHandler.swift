@@ -121,7 +121,7 @@ extension CanvasHandler {
 }
 
 extension CanvasHandler {
-  var pointerStyle: PointerStyleCompatible? {
+  var pointerStyle: ToolPointerStyle? {
     guard let interactionContext else { return nil }
     return activeTool?.resolvePointerStyle(context: interactionContext)
   }
