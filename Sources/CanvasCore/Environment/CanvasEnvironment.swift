@@ -5,6 +5,7 @@
 //  Created by Dave Coleman on 21/4/2026.
 //
 import SwiftUI
+import GeometryPrimitives
 
 /// If and when a user needs *direct* access to any of these,
 /// I can change package to public

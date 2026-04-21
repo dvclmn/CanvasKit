@@ -5,7 +5,8 @@
 //  Created by Dave Coleman on 28/2/2026.
 //
 
-import CanvasCore
+//import CanvasCore
+import GeometryPrimitives
 import SwiftUI
 
 struct CanvasArtwork<Content: View>: View {

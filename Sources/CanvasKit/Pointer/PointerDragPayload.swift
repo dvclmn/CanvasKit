@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 19/3/2026.
 //
 
-import CanvasCore
+import GeometryPrimitives
 import Foundation
 
 public enum PointerDragPayload: Sendable, Equatable {
@@ -18,10 +18,6 @@ public enum PointerDragPayload: Sendable, Equatable {
 }
 
 extension PointerDragPayload {
-
-//  public var name: String {
-//    
-//  }
 
   public var boundingRect: Rect<ScreenSpace>? {
     switch self {

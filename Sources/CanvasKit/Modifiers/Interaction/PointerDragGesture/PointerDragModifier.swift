@@ -6,7 +6,8 @@
 //
 
 import SwiftUI
-import CanvasCore
+//import CanvasCore
+import GeometryPrimitives
 import InputPrimitives
 
 /// Callback receiving the drag payload and interaction phase.

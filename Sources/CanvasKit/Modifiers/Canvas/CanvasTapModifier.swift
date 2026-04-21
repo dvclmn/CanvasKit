@@ -5,7 +5,8 @@
 //  Created by Dave Coleman on 20/3/2026.
 //
 
-import CanvasCore
+//import CanvasCore
+import GeometryPrimitives
 import SwiftUI
 
 public struct CanvasTapModifier: ViewModifier {
