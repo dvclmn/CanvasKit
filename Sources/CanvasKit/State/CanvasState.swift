@@ -16,8 +16,8 @@ public final class CanvasState {
   public init() {}
 }
 
-extension CanvasState {
-
+extension CanvasState
+{
   public func mapper(zoomRange: ClosedRange<Double>) -> CoordinateSpaceMapper? {
     guard let artworkFrame else { return nil }
     return .init(

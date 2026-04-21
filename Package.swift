@@ -12,14 +12,12 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/dvclmn/BasePrimitives", branch: "main"),
+    .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
   ],
   targets: [
     .target(
       name: "CanvasKit",
-      dependencies: [
-//        "InteractionKit",
-        "BasePrimitives",
-      ],
+      dependencies: ["BasePrimitives"],
     ),
     .testTarget(
       name: "CanvasKitTests",

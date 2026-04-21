@@ -17,6 +17,5 @@ extension EnvironmentValues {
   @Entry var canvasBackground: Color = Color(white: 0.04)
   
   @Entry var artworkOutline: AreaOutline = .init()
-//  @Entry public var coordinateSpaceMapper: CoordinateSpaceMapper?
   
 }

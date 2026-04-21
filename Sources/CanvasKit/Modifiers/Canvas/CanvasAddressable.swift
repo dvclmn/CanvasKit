@@ -5,7 +5,6 @@
 //  Created by Dave Coleman on 6/4/2026.
 //
 
-@_spi(Internals) import BasePrimitives
 import SwiftUI
 
 /// ``CanvasView`` declares conformance to this.

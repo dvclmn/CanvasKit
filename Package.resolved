@@ -1,5 +1,5 @@
 {
-  "originHash" : "ddf1b339dea9d23ddc9e807ae98eeed8a61b2c96847d8de0680436571f348811",
+  "originHash" : "b421356b1cec5161db51f1d0cfad884b2fd1527cd4b096ac7d8930abdf91bc50",
   "pins" : [
     {
       "identity" : "baseprimitives",
@@ -7,7 +7,25 @@
       "location" : "https://github.com/dvclmn/BasePrimitives",
       "state" : {
         "branch" : "main",
-        "revision" : "8ac10e77276a88d4ce727e584a3dc552d84ce96e"
+        "revision" : "f9e0738773c787f7fe59eb33c7d5ea5c75361691"
+      }
+    },
+    {
+      "identity" : "swift-docc-plugin",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-docc-plugin",
+      "state" : {
+        "revision" : "e977f65879f82b375a044c8837597f690c067da6",
+        "version" : "1.4.6"
+      }
+    },
+    {
+      "identity" : "swift-docc-symbolkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swiftlang/swift-docc-symbolkit",
+      "state" : {
+        "revision" : "b45d1f2ed151d057b54504d653e0da5552844e34",
+        "version" : "1.0.0"
       }
     }
   ],

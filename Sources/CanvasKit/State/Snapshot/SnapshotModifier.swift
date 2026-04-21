@@ -10,8 +10,6 @@ import SwiftUI
 
 struct CanvasSnapshotModifier: ViewModifier {
   @Environment(\.zoomRange) private var zoomRange
-  //  let mapper: CoordinateSpaceMapper?
-//  let transform: TransformState
   let state: CanvasState
   let pointer: PointerState
   let phase: InteractionPhase

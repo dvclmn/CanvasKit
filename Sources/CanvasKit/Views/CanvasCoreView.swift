@@ -90,9 +90,4 @@ struct CanvasCoreView<Content: View>: View {
 
 extension CanvasCoreView {
   private var zoomClamped: Double { state.transform.scale.clamped(to: zoomRange) }
-
-//  private var mapper: CoordinateSpaceMapper? {
-//    guard let artworkFrame else { return nil }
-//    return .init(artworkFrame: artworkFrame, zoomClamped: zoomClamped)
-//  }
 }

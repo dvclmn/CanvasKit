@@ -5,8 +5,6 @@
 //  Created by Dave Coleman on 8/4/2026.
 //
 
-import BasePrimitives
-
 /// Provides an interface for a Canvas Tool to describe how it
 /// should mutate Canvas state when it performs some action.
 ///
