@@ -20,7 +20,8 @@ let package = Package(
       name: "CanvasKit",
       dependencies: [
         "CanvasCore",
-        .product(name: "InputPrimitives", package: "BasePrimitives")
+        .product(name: "InputPrimitives", package: "BasePrimitives"),
+        .product(name: "CoreUtilities", package: "BasePrimitives"),
       ],
     ),
     .target(

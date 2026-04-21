@@ -7,6 +7,7 @@
 
 import CanvasCore
 import SwiftUI
+import InputPrimitives
 
 /// Maps a key input to a tool activation with a given mode.
 ///

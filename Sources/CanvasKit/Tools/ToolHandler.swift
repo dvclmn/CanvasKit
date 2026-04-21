@@ -7,6 +7,7 @@
 
 import CanvasCore
 import SwiftUI
+import InputPrimitives
 
 /// Manages tool selection, spring-loading, and key bindings.
 ///

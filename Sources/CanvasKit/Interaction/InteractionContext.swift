@@ -7,6 +7,7 @@
 
 import CanvasCore
 import Foundation
+import InputPrimitives
 
 public struct InteractionContext: Sendable {
   let interaction: Interaction

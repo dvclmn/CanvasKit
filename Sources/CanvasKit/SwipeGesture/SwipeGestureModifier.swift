@@ -6,6 +6,7 @@
 //
 
 import CanvasCore
+import InputPrimitives
 import SwiftUI
 
 struct SwipeGestureModifier: ViewModifier {
@@ -44,7 +45,7 @@ extension View {
   /// Typically used for Pan, but useful for other swipe-y things too.
   public func onSwipeGesture(
     isEnabled: Bool = true,
-    perform action: @escaping SwipeOutput
+    perform action: @escaping SwipeOutput,
   ) -> some View {
     self.modifier(
       SwipeGestureModifier(

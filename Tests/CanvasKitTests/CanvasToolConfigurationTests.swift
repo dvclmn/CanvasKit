@@ -56,7 +56,7 @@ private struct DefaultZoomTool: CanvasTool {
   let icon = "magnifyingglass"
 
   var dragBehaviour: PointerDragBehaviour { .continuous(axes: .vertical) }
-  var inputCapabilities: [ToolCapability] { .zoom }
+  var inputCapabilities: [ToolCapability] { ToolCapability.zoom }
 
   func resolvePointerStyle(
     context: InteractionContext

@@ -7,6 +7,8 @@
 
 import CanvasCore
 import SwiftUI
+import InputPrimitives
+import CoreUtilities
 
 public struct CanvasView<Content: View>: View, CanvasAddressable {
   @State private var store: CanvasHandler = .init()
@@ -87,18 +89,18 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       toolConfiguration.wrappedValue.selectedToolKind = newValue
     }
 
-    .debugText {
-      //      Labeled("Canvas Size", value: canvasSize.cgSize)
-      //      Labeled("Local Transform", value: localTransform)
-      Indented("Local Transform") {
-        Labeled("Pan Offset", value: localState.transform.translation.cgSize.displayString)
-      }
-//      Indented("External Transform") { "\(externalTransform?.wrappedValue, default: "nil")" }
-      //      Divider()
-      //      Labeled("External", value: externalTransform?.wrappedValue)
-      //      Labeled("Tool", value: toolHandler.selectedToolKind)
-    }
-    .debugTextOverlay(isEnabled: true)
+//    .debugText {
+//      //      Labeled("Canvas Size", value: canvasSize.cgSize)
+//      //      Labeled("Local Transform", value: localTransform)
+//      Indented("Local Transform") {
+//        Labeled("Pan Offset", value: localState.transform.translation.cgSize.displayString)
+//      }
+////      Indented("External Transform") { "\(externalTransform?.wrappedValue, default: "nil")" }
+//      //      Divider()
+//      //      Labeled("External", value: externalTransform?.wrappedValue)
+//      //      Labeled("Tool", value: toolHandler.selectedToolKind)
+//    }
+//    .debugTextOverlay(isEnabled: true)
 
   }
 }

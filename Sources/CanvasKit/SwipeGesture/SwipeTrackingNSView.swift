@@ -8,6 +8,7 @@
 #if canImport(AppKit)
 import AppKit
 import CanvasCore
+import InputPrimitives
 
 /// Chose the word Swipe instead of Pan:
 ///

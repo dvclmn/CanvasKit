@@ -6,7 +6,7 @@
 //
 
 import CanvasCore
-//import InteractionKit
+import InputPrimitives
 import SwiftUI
 
 /// When selected, pointer click-drag zooms (vertical axis).

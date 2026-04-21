@@ -72,19 +72,19 @@ struct CanvasCoreView<Content: View>: View {
           phase: store.interactionContext?.phase ?? .none,
         )
       )
-      .debugText {
-        Indented("Artwork frame") {
-          Labeled("Offset", value: artworkFrame?.origin.cgPoint)
-          Labeled("W", value: artworkFrame?.width.displayString)
-          Labeled("H", value: artworkFrame?.height.displayString)
-        }
-
-        Indented("Canvas size") {
-          Labeled("W", value: canvasSize.width.displayString)
-          Labeled("H", value: canvasSize.height.displayString)
-        }
-
-      }
+//      .debugText {
+//        Indented("Artwork frame") {
+//          Labeled("Offset", value: artworkFrame?.origin.cgPoint)
+//          Labeled("W", value: artworkFrame?.width.displayString)
+//          Labeled("H", value: artworkFrame?.height.displayString)
+//        }
+//
+//        Indented("Canvas size") {
+//          Labeled("W", value: canvasSize.width.displayString)
+//          Labeled("H", value: canvasSize.height.displayString)
+//        }
+//
+//      }
   }
 }
 

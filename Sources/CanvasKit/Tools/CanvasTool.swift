@@ -7,6 +7,7 @@
 
 import CanvasCore
 import SwiftUI
+import InputPrimitives
 
 /// A canvas tool defines how pointer interactions (tap, drag) are interpreted.
 ///

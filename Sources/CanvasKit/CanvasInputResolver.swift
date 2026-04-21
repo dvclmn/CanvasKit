@@ -7,6 +7,7 @@
 
 import CanvasCore
 import SwiftUI
+import InputPrimitives
 
 /// Centralises input resolution for `CanvasHandler`.
 struct CanvasInputResolver {
