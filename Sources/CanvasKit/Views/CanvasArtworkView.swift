@@ -10,7 +10,7 @@ import SwiftUI
 
 struct CanvasArtwork<Content: View>: View {
   @Environment(\.zoomRange) private var zoomRange
-  @Environment(\.artworkOutline) private var artworkOutline
+//  @Environment(\.artworkOutline) private var artworkOutline
   @Environment(\.canvasAnchor) private var canvasAnchor
 
   let canvasSize: Size<CanvasSpace>
@@ -31,11 +31,30 @@ struct CanvasArtwork<Content: View>: View {
       )
 
       /// Visual indication of Canvas artwork bounds
-      .areaOutline(
-        colour: artworkOutline.colour,
-        rounding: artworkOutline.rounding,
-        lineWidth: artworkOutline.lineWidth,
-      )
+//      .areaOutline(
+//        colour: artworkOutline.colour,
+//        rounding: artworkOutline.rounding,
+//        lineWidth: artworkOutline.lineWidth,
+//      )
+      .overlay {
+        RoundedRectangle(
+          cornerRadius: rounding.removingZoom(
+            zoomLevel,
+            across: zoomRange,
+            sensitivity: sensitivity,
+          )
+        )
+        .fill(.clear)
+        .stroke(
+          colour,
+          lineWidth: lineWidth.removingZoom(
+            zoomLevel,
+            across: zoomRange,
+            sensitivity: sensitivity,
+          ),
+        )
+        .allowsHitTesting(false)
+      }
 
       /// `CanvasSpace` namespace declared *before* pan/zoom applied
       .coordinateSpace(.named(CanvasSpace.canvas))
@@ -66,7 +85,7 @@ struct CanvasArtwork<Content: View>: View {
 // MARK: - Canvas clipping View
 private struct CanvasDecomposed<Content: View>: View {
   @Environment(\.self) private var env
-  @Environment(\.artworkOutline) private var artworkOutline
+//  @Environment(\.artworkOutline) private var artworkOutline
 
   @ViewBuilder var content: () -> Content
   var body: some View {

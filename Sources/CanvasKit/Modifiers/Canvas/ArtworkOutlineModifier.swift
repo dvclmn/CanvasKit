@@ -19,33 +19,33 @@ import SwiftUI
 ///
 /// Note: See ``CanvasAddressable`` for an explanation of
 /// why this is a whole ViewModifier just to set a single Env value.
-public struct ArtworkOutlineModifier: ViewModifier {
-
-  //  let outline: AreaOutline
-  let colour: Color
-  let rounding: Double
-  let lineWidth: Double
-
-  public func body(content: Content) -> some View {
-    content
-    //    content.environment(\.artworkOutline, outline)
-  }
-}
-
-extension View where Self: CanvasAddressable {
-  public func artworkOutline(
-    colour: Color = .white.opacity(0.07),
-    rounding: Double = 4,
-    lineWidth: Double = 1,
-  ) -> ModifiedContent<Self, ArtworkOutlineModifier> {
-    self.modifier(
-      ArtworkOutlineModifier(
-        //        outline: .init(
-        colour: colour,
-        rounding: rounding,
-        lineWidth: lineWidth,
-        //        )
-      )
-    )
-  }
-}
+//public struct ArtworkOutlineModifier: ViewModifier {
+//
+//  //  let outline: AreaOutline
+//  let colour: Color
+//  let rounding: Double
+//  let lineWidth: Double
+//
+//  public func body(content: Content) -> some View {
+//    content
+//        content.environment(\.artworkOutline, outline)
+//  }
+//}
+//
+//extension View where Self: CanvasAddressable {
+//  public func artworkOutline(
+//    colour: Color = .white.opacity(0.07),
+//    rounding: Double = 4,
+//    lineWidth: Double = 1,
+//  ) -> ModifiedContent<Self, ArtworkOutlineModifier> {
+//    self.modifier(
+//      ArtworkOutlineModifier(
+//        //        outline: .init(
+//        colour: colour,
+//        rounding: rounding,
+//        lineWidth: lineWidth,
+//        //        )
+//      )
+//    )
+//  }
+//}
