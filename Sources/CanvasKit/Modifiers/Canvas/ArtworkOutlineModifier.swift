@@ -21,10 +21,14 @@ import SwiftUI
 /// why this is a whole ViewModifier just to set a single Env value.
 public struct ArtworkOutlineModifier: ViewModifier {
 
-  let outline: AreaOutline
+  //  let outline: AreaOutline
+  let colour: Color
+  let rounding: Double
+  let lineWidth: Double
 
   public func body(content: Content) -> some View {
-    content.environment(\.artworkOutline, outline)
+    content
+    //    content.environment(\.artworkOutline, outline)
   }
 }
 
@@ -36,11 +40,11 @@ extension View where Self: CanvasAddressable {
   ) -> ModifiedContent<Self, ArtworkOutlineModifier> {
     self.modifier(
       ArtworkOutlineModifier(
-        outline: .init(
-          colour: colour,
-          rounding: rounding,
-          lineWidth: lineWidth,
-        )
+        //        outline: .init(
+        colour: colour,
+        rounding: rounding,
+        lineWidth: lineWidth,
+        //        )
       )
     )
   }

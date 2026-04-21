@@ -17,6 +17,6 @@ extension EnvironmentValues {
   @Entry var canvasAnchor: UnitPoint = .center
   @Entry var canvasBackground: Color = Color(white: 0.04)
   
-  @Entry var artworkOutline: AreaOutline = .init()
+//  @Entry var artworkOutline: AreaOutline = .init()
   
 }
