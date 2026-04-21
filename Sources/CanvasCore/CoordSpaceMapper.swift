@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import BasePrimitives
 
 public struct CoordinateSpaceMapper {
 

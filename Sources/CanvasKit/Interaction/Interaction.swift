@@ -5,14 +5,14 @@
 //  Created by Dave Coleman on 16/3/2026.
 //
 
-import BasePrimitives
+import CanvasCore
 import SwiftUI
 
 /// Previously called `InteractionSource`
 enum Interaction: Sendable {
   case swipe(delta: Size<ScreenSpace>)  // onSwipeGesture
   case pinch(scale: Double)  // onPinchGesture
-  case rotation(angle: Angle)  // Not yet supported
+  case rotation(angle: Angle)  // (Not yet supported)
   case tap(location: Point<ScreenSpace>)  // onTapGesture
   case drag(PointerDragPayload)  // onPointerDragGesture
   case hover(Point<ScreenSpace>)  // onContinuousHover
