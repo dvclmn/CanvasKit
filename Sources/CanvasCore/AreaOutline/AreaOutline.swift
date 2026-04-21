@@ -13,7 +13,7 @@ import SwiftUI
 ///
 /// Tbh, I should probably wrap that up better so it's not so
 /// *outline* focused, and then expose tiny helpers. Later.
-@_spi(Internals) public struct AreaOutline {
+public struct AreaOutline {
   public let colour: Color
   public let rounding: Double
   public let lineWidth: Double
@@ -38,11 +38,13 @@ extension AreaOutline {
   /// See `BinaryFloatingPoint/removingZoom(_:across:sensitivity:)`
   /// for more information
   public func resolvedOutline(
-    in environment: EnvironmentValues,
+    zoomLevel: Double,
+//    in environment: EnvironmentValues,
     sensitivity: Double? = nil,
   ) -> AreaOutline.Resolved {
     let rounding = rounding.removingZoom(
-      environment.zoomLevel,
+      zoomLevel: Double,
+//      environment.zoomLevel,
       across: environment.zoomRange,
       sensitivity: sensitivity,
     )
