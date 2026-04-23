@@ -5,36 +5,15 @@
 //  Created by Dave Coleman on 24/6/2025.
 //
 
-import SwiftUI
 import InputPrimitives
+import SwiftUI
 
 /// Return a replacement zoom value for `(proposedZoom, phase)`,
 /// or `nil` to accept the gesture's proposal
+///
+/// Note: Zoom `Double` value not clamped. This is handled per-domain.
 public typealias ZoomUpdate = (Double, InteractionPhase) -> Double?
 
-/// Converts `MagnifyGesture` into incremental zoom deltas and
-/// routes them through one of two ownership modes:
-///
-/// ## Mode A — Binding
-/// ```swift
-/// .onPinchGesture(zoom: $myZoom)
-/// ```
-/// The modifier owns the gesture math, clamps to `zoomRange`, and writes the
-/// result directly to the binding. No override callback — the binding is the
-/// single source of truth.
-///
-/// ## Mode B — Event callback
-/// ```swift
-/// .onPinchGesture(initial: currentZoom, didUpdateZoom: { event in ... })
-/// ```
-/// The modifier tracks deltas internally, but the **caller** owns the zoom
-/// value. The callback receives a ``ZoomGestureEvent`` and returns the
-/// resolved zoom (or `nil` to accept the proposal). The caller is responsible
-/// for writing the result to its own state.
-///
-/// > Important: Do **not** combine a binding with an override callback.
-/// > That creates two writers for the same value and leads to double-writes.
-/// > Use Mode A *or* Mode B, not both.
 public struct PinchGestureModifier: ViewModifier {
   @Environment(\.zoomRange) private var zoomRange
 
@@ -69,7 +48,7 @@ public struct PinchGestureModifier: ViewModifier {
 
       .onChange(of: externalZoom?.wrappedValue) { _, newValue in
         /// External source changed (e.g. reset button / slider / programmatic change).
-        /// Only adopt it when we are NOT currently gesturing.
+        /// Update it when not currently gesturing.
         guard !isGesturing, let newValue else { return }
         internalZoom = clamped(newValue)
       }
@@ -82,7 +61,7 @@ extension PinchGestureModifier {
       .onChanged { value in
         let isGestureStart = !isGesturing
         if isGestureStart { lastMagnification = 1 }
-        
+
         isGesturing = true
 
         let delta = getDelta(from: value)
@@ -128,10 +107,9 @@ extension PinchGestureModifier {
     return value.magnification / safeLast
   }
 
-  private func clamped(_ value: Double) -> Double {
-    value.clamped(to: zoomRange)
-//    value.clampedIfNeeded(to: zoomRange)
-  }
+//  private func clamped(_ value: Double) -> Double {
+//    value.clamped(to: zoomRange)
+//  }
 
   private func commitZoom(_ value: Double) {
     internalZoom = value

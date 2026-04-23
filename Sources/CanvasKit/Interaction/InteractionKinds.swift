@@ -67,13 +67,9 @@ extension InteractionKind.Set {
     self = kinds.reduce(into: []) { $0.formUnion($1.asSet) }
   }
 
-  func contains(_ kind: InteractionKind) -> Bool {
-    contains(kind.asSet)
-  }
+  func contains(_ kind: InteractionKind) -> Bool { contains(kind.asSet) }
 
-  var kinds: [InteractionKind] {
-    InteractionKind.allCases.filter(self.contains)
-  }
+  var kinds: [InteractionKind] { InteractionKind.allCases.filter(self.contains) }
 }
 
 extension InteractionKind.Set: CustomStringConvertible {

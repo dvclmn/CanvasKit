@@ -15,7 +15,7 @@ public struct InteractionContext: Sendable {
 
   init(
     interaction: Interaction,
-    phase: InteractionPhase = .none,
+    phase: InteractionPhase,
     modifiers: Modifiers,
   ) {
     self.interaction = interaction
@@ -34,6 +34,10 @@ extension InteractionContext {
 
 extension InteractionContext: CustomStringConvertible {
   public var description: String {
-    "Interaction: \(interaction), Phase: \(phase.name), Modifiers: \(modifiers)"
+    """
+    Interaction: \(interaction)
+    Phase: \(phase.name)
+    Modifiers: \(modifiers)
+    """
   }
 }

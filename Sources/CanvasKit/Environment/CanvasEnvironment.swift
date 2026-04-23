@@ -1,11 +1,12 @@
-import GeometryPrimitives
-import InputPrimitives
 //
 //  CanvasEnvironment.swift
 //  CanvasKit
 //
 //  Created by Dave Coleman on 21/4/2026.
 //
+
+import GeometryPrimitives
+import InputPrimitives
 import SwiftUI
 
 /// If and when a user needs *direct* access to any of these,

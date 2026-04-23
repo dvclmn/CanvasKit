@@ -8,7 +8,7 @@
 import GeometryPrimitives
 import SwiftUI
 
-/// Previously called `InteractionSource`
+/// Each case corresponds directly to a modifier in `InteractionModifiers`
 enum Interaction: Sendable {
   case swipe(delta: Size<ScreenSpace>)  // onSwipeGesture
   case pinch(scale: Double)  // onPinchGesture
@@ -44,6 +44,7 @@ extension Interaction: CustomStringConvertible {
   }
 }
 
+/// Not currently in use
 enum PointerButton: String, Sendable {
   case primary
   case secondary

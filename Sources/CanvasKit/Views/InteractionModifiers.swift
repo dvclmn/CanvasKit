@@ -5,7 +5,6 @@
 //  Created by Dave Coleman on 11/3/2026.
 //
 
-
 import GeometryPrimitives
 import SwiftUI
 
@@ -14,7 +13,7 @@ struct InteractionModifiers: ViewModifier {
   @Environment(\.modifierKeys) private var modifierKeys
 
   @Bindable var state: CanvasState
-//  @Binding var transform: TransformState
+  //  @Binding var transform: TransformState
   let tool: (any CanvasTool)?
 
   func body(content: Content) -> some View {
@@ -124,12 +123,12 @@ extension InteractionModifiers {
         }
     }
 
-//    if !enabled {
-//      let capabilities = tool?.inputCapabilities.map(\.description).joined(separator: ", ") ?? "no tool"
-//      print("Interaction \(interaction.displayName) is not enabled for \(capabilities)")
-//    }
+    //    if !enabled {
+    //      let capabilities = tool?.inputCapabilities.map(\.description).joined(separator: ", ") ?? "no tool"
+    //      print("Interaction \(interaction.displayName) is not enabled for \(capabilities)")
+    //    }
     return enabled
-//    guard let tool else { return true }
-//    return tool.inputCapabilities.contains(interaction)
+    //    guard let tool else { return true }
+    //    return tool.inputCapabilities.contains(interaction)
   }
 }

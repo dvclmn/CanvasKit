@@ -34,7 +34,6 @@ public struct CanvasDragEvent<Space> {
 }
 
 extension View {
-//extension View where Self: CanvasAddressable {
 
   /// Respond to a `CanvasView` pointer drag operation.
   /// Provides the rectangle of the drag in `CanvasSpace`,

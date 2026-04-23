@@ -5,9 +5,8 @@
 //  Created by Dave Coleman on 19/4/2026.
 //
 
-
-import GeometryPrimitives
 import CoreUtilities
+import GeometryPrimitives
 import SwiftUI
 
 @Observable
@@ -18,8 +17,7 @@ public final class CanvasState {
   public init() {}
 }
 
-extension CanvasState
-{
+extension CanvasState {
   public func mapper(zoomRange: ClosedRange<Double>) -> CoordinateSpaceMapper? {
     guard let artworkFrame else { return nil }
     return .init(

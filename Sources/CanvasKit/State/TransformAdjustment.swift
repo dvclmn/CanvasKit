@@ -5,7 +5,6 @@
 //  Created by Dave Coleman on 8/4/2026.
 //
 
-
 import GeometryPrimitives
 import SwiftUI
 
@@ -33,8 +32,18 @@ public enum TransformAdjustment: Sendable {
   case scale(Double)
   case rotation(Angle)
 }
-extension TransformAdjustment {
 
+extension TransformAdjustment {
+  var supportedInteractions: InteractionKind.Set {
+    switch self {
+      case .translation: [.swipe, .drag]
+      case .scale: [.swipe, .pinch, .tap, .drag]
+      case .rotation: [.swipe, .rotate, .drag]
+    }
+  }
+}
+
+extension TransformAdjustment {
   public func updatedState(_ current: TransformState) -> TransformState {
     var new = current
     switch self {
@@ -43,14 +52,6 @@ extension TransformAdjustment {
       case .rotation(let val): new.rotation = val
     }
     return new
-  }
-
-  var supportedInteractions: InteractionKind.Set {
-    switch self {
-      case .translation: [.swipe, .drag]
-      case .scale: [.swipe, .pinch, .tap, .drag]
-      case .rotation: [.swipe, .rotate, .drag]
-    }
   }
 
   public static func zoomAdjustment(
