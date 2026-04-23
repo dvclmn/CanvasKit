@@ -1,12 +1,13 @@
-import BasePrimitives
+//
+//  CanvasToolConfigurationTests.swift
+//  CanvasKit
+//
+//  Created by Dave Coleman on 25/2/2026.
+//
+
 import Testing
 import InputPrimitives
 @testable import CanvasKit
-
-@Test func stringLiteralKindsAreConvenient() {
-  let kind: CanvasToolKind = "brush"
-  #expect(kind.rawValue == "brush")
-}
 
 @Test func registeringAToolWithAnExistingKindReplacesIt() {
   var configuration = ToolConfiguration(

@@ -6,5 +6,5 @@
 //
 
 import Testing
-import BasePrimitives
 @testable import CanvasKit
+@testable import CanvasCore
