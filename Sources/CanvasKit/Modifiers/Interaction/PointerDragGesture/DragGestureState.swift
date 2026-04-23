@@ -5,7 +5,6 @@
 //  Created by Dave Coleman on 14/1/2026.
 //
 
-//import CanvasCore
 import GeometryPrimitives
 import SwiftUI
 
@@ -67,7 +66,7 @@ extension DragGestureState {
   /// Zeroes out movement on locked axes.
   private func applyAxis(
     _ axes: Axis.Set,
-//    _ axes: GeometryAxis.Set,
+    //    _ axes: GeometryAxis.Set,
     delta: CGSize,
   ) -> CGSize {
     switch axes {

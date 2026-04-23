@@ -7,7 +7,7 @@
 
 import CoreGraphics
 //import InteractionKit
-//import CanvasCore
+
 import GeometryPrimitives
 
 /// Raw locations/geometry in screen space, no

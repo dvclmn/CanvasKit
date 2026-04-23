@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import GeometryPrimitives
+import InputPrimitives
 
 /// If and when a user needs *direct* access to any of these,
 /// I can change internal/package to public
@@ -27,4 +28,7 @@ extension EnvironmentValues {
   @Entry package var pointerHover: Point<CanvasSpace>?
   @Entry package var pointerTap: Point<CanvasSpace>?
   @Entry package var pointerDrag: Rect<CanvasSpace>?
+  
+  // TODO: If BasePrimitives/InputPrimitives owns InteractionPhase, maybe it should be added as Env value there, not here
+  @Entry package var interactionPhase: InteractionPhase = .none
 }

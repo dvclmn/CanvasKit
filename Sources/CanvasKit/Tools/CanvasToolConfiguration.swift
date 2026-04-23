@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 15/4/2026.
 //
 
-import CanvasCore
+
 import InputPrimitives
 import SwiftUI
 

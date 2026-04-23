@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-//import CanvasCore
+
 import GeometryPrimitives
 import InputPrimitives
 
