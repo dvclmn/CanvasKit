@@ -19,19 +19,7 @@ struct ContentView: View {
       state: transform,
       toolConfiguration: $toolConfiguration,
     ) {
-      //    CanvasView(
-      //      size: canvasSize,
-      //      transform: $transform,
-      //      toolConfiguration: $toolConfiguration
-      //    ) {
-      Canvas { context, size in
-        context.fill(
-          Path(
-            ellipseIn: CGRect(origin: .zero, size: CGSize(width: 200, height: 100))
-          ),
-          with: .color(.blue),
-        )
-      }
+      CanvasContentView()
     }
     .zoomRange(0...2)
     .onCanvasToolAction { action in

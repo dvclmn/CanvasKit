@@ -5,7 +5,6 @@
 //  Created by Dave Coleman on 6/8/2025.
 //
 
-
 import GeometryPrimitives
 import SwiftUI
 
@@ -19,8 +18,6 @@ struct CanvasCoreView<Content: View>: View {
 
   let canvasSize: Size<CanvasSpace>
   @Bindable var state: CanvasState
-//  @Binding var transform: TransformState
-//  let transform: TransformState
 
   @ViewBuilder var content: () -> Content
 
@@ -60,35 +57,14 @@ struct CanvasCoreView<Content: View>: View {
             let frameResult = frame.map { Rect<ScreenSpace>(fromRect: $0) }
             self.artworkFrame = frameResult
             state.artworkFrame = frameResult
-//            transform.artworkFrame = frameResult
           }
       }
-
-//      .environment(\.coordinateSpaceMapper, mapper)
       .modifier(
         CanvasSnapshotModifier(
           state: state,
-//          transform: state.transform,
           pointer: store.pointer,
           phase: store.interactionContext?.phase ?? .none,
         )
       )
-//      .debugText {
-//        Indented("Artwork frame") {
-//          Labeled("Offset", value: artworkFrame?.origin.cgPoint)
-//          Labeled("W", value: artworkFrame?.width.displayString)
-//          Labeled("H", value: artworkFrame?.height.displayString)
-//        }
-//
-//        Indented("Canvas size") {
-//          Labeled("W", value: canvasSize.width.displayString)
-//          Labeled("H", value: canvasSize.height.displayString)
-//        }
-//
-//      }
   }
-}
-
-extension CanvasCoreView {
-  private var zoomClamped: Double { state.transform.scale.clamped(to: zoomRange) }
 }

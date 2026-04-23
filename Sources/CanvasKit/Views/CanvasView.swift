@@ -5,25 +5,24 @@
 //  Created by Dave Coleman on 24/6/2025.
 //
 
-
-import GeometryPrimitives
-import SwiftUI
-import InputPrimitives
 import CoreUtilities
+import GeometryPrimitives
+import InputPrimitives
+import SwiftUI
 
 public struct CanvasView<Content: View>: View, CanvasAddressable {
   @State private var store: CanvasHandler = .init()
   @State private var toolHandler: ToolHandler
 
   /// Populated when user wishes to handle their own transform state
-//  private let externalState: CanvasState?
+  //  private let externalState: CanvasState?
   private let externalTransform: Binding<TransformState>?
 
   /// Internal-only source of truth for transform state. If user passes in state,
   /// it is passed to this. If not, this gets a default initial value.
   /// External and internal state is kept in sync via `bindModel`.
   @State private var localState: CanvasState
-//  @State private var localTransform: TransformState
+  //  @State private var localTransform: TransformState
 
   @State private var userModifierKeys: Modifiers?
 
@@ -38,8 +37,8 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
     CanvasCoreView(
       canvasSize: canvasSize,
       state: localState,
-//      transform: $localTransform,
-//      transform: localTransform,
+      //      transform: $localTransform,
+      //      transform: localTransform,
       content: content,
     )
 
@@ -90,18 +89,18 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       toolConfiguration.wrappedValue.selectedToolKind = newValue
     }
 
-//    .debugText {
-//      //      Labeled("Canvas Size", value: canvasSize.cgSize)
-//      //      Labeled("Local Transform", value: localTransform)
-//      Indented("Local Transform") {
-//        Labeled("Pan Offset", value: localState.transform.translation.cgSize.displayString)
-//      }
-////      Indented("External Transform") { "\(externalTransform?.wrappedValue, default: "nil")" }
-//      //      Divider()
-//      //      Labeled("External", value: externalTransform?.wrappedValue)
-//      //      Labeled("Tool", value: toolHandler.selectedToolKind)
-//    }
-//    .debugTextOverlay(isEnabled: true)
+    //    .debugText {
+    //      //      Labeled("Canvas Size", value: canvasSize.cgSize)
+    //      //      Labeled("Local Transform", value: localTransform)
+    //      Indented("Local Transform") {
+    //        Labeled("Pan Offset", value: localState.transform.translation.cgSize.displayString)
+    //      }
+    ////      Indented("External Transform") { "\(externalTransform?.wrappedValue, default: "nil")" }
+    //      //      Divider()
+    //      //      Labeled("External", value: externalTransform?.wrappedValue)
+    //      //      Labeled("Tool", value: toolHandler.selectedToolKind)
+    //    }
+    //    .debugTextOverlay(isEnabled: true)
 
   }
 }
@@ -117,53 +116,53 @@ extension CanvasView {
 
   // MARK: No Tool use
   /// Basic usage, CanvasKit manages transform state internally. No Tool use.
-//  public init(
-//    size: CGSize,
-//    @ViewBuilder content: @escaping () -> Content,
-//  ) {
-//    self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
-//    self._localTransform = State(initialValue: .identity)
-//    self.externalTransform = nil
-//    self._toolHandler = State(initialValue: .init(configuration: .default))
-//    self.toolConfiguration = nil
-//    self.content = content
-//  }
-//
-//  /// Externally-owned transform state, enabling programmatic
-//  /// control outside the CanvasKit view hierarchy. No Tool use.
-//  public init(
-//    size: CGSize,
-//    transform: Binding<TransformState>,
-//    @ViewBuilder content: @escaping () -> Content,
-//  ) {
-//    self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
-//    self._localTransform = State(initialValue: transform.wrappedValue)
-//    self.externalTransform = transform
-//    self._toolHandler = State(initialValue: .init(configuration: .default))
-//    self.toolConfiguration = nil
-//    self.content = content
-//  }
-//
-//  // MARK: Tool use Enabled
-//  /// Internally owned transform state. Externally-owned Canvas Tool configuration, enabling Tool use.
-//  public init(
-//    size: CGSize,
-//    toolConfiguration: Binding<ToolConfiguration>,
-//    @ViewBuilder content: @escaping () -> Content,
-//  ) {
-//    self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
-//    self._localTransform = State(initialValue: .identity)
-//    self.externalTransform = nil
-//    self._toolHandler = State(initialValue: .init(configuration: toolConfiguration.wrappedValue))
-//    self.toolConfiguration = toolConfiguration
-//    self.content = content
-//  }
+  //  public init(
+  //    size: CGSize,
+  //    @ViewBuilder content: @escaping () -> Content,
+  //  ) {
+  //    self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
+  //    self._localTransform = State(initialValue: .identity)
+  //    self.externalTransform = nil
+  //    self._toolHandler = State(initialValue: .init(configuration: .default))
+  //    self.toolConfiguration = nil
+  //    self.content = content
+  //  }
+  //
+  //  /// Externally-owned transform state, enabling programmatic
+  //  /// control outside the CanvasKit view hierarchy. No Tool use.
+  //  public init(
+  //    size: CGSize,
+  //    transform: Binding<TransformState>,
+  //    @ViewBuilder content: @escaping () -> Content,
+  //  ) {
+  //    self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
+  //    self._localTransform = State(initialValue: transform.wrappedValue)
+  //    self.externalTransform = transform
+  //    self._toolHandler = State(initialValue: .init(configuration: .default))
+  //    self.toolConfiguration = nil
+  //    self.content = content
+  //  }
+  //
+  //  // MARK: Tool use Enabled
+  //  /// Internally owned transform state. Externally-owned Canvas Tool configuration, enabling Tool use.
+  //  public init(
+  //    size: CGSize,
+  //    toolConfiguration: Binding<ToolConfiguration>,
+  //    @ViewBuilder content: @escaping () -> Content,
+  //  ) {
+  //    self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
+  //    self._localTransform = State(initialValue: .identity)
+  //    self.externalTransform = nil
+  //    self._toolHandler = State(initialValue: .init(configuration: toolConfiguration.wrappedValue))
+  //    self.toolConfiguration = toolConfiguration
+  //    self.content = content
+  //  }
 
   /// Externally-owned transform state and Canvas Tool usage.
   public init(
     size: CGSize,
     state: CanvasState,
-//    transform: Binding<TransformState>,
+    //    transform: Binding<TransformState>,
     toolConfiguration: Binding<ToolConfiguration>,
     @ViewBuilder content: @escaping () -> Content,
   ) {
@@ -171,7 +170,7 @@ extension CanvasView {
     self._localState = State(initialValue: state)
     @Bindable var canvasState = state
     self.externalTransform = $canvasState.transform
-    
+
     self._toolHandler = State(initialValue: .init(configuration: toolConfiguration.wrappedValue))
     self.toolConfiguration = toolConfiguration
     self.content = content

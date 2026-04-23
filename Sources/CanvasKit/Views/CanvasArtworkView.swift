@@ -23,86 +23,55 @@ struct CanvasArtwork<Content: View>: View {
 
   var body: some View {
 
-    CanvasDecomposed(rounding: effectiveRounding, content: content)
-      .frame(
-        width: canvasSize.width,
-        height: canvasSize.height,
-      )
+    CanvasArtworkDecomposed(
+      rounding: effectiveRounding,
+      content: content,
+    )
+    .frame(
+      width: canvasSize.width,
+      height: canvasSize.height,
+    )
 
-      /// Visual indication of Canvas artwork bounds
-      .overlay {
-        RoundedRectangle(cornerRadius: effectiveRounding)
-          .fill(.clear)
-          .stroke(
-            Color.white.opacity(0.05),
-            lineWidth: lineWidth.removingZoom(
-              zoomLevel,
-              across: zoomRange,
-            ),
-          )
-          .allowsHitTesting(false)
-      }
+    /// Visual indication of Canvas artwork bounds
+    .overlay { ArtworkOutline() }
 
-      /// `CanvasSpace` namespace declared *before* pan/zoom applied
-      .coordinateSpace(.named(CanvasSpace.canvas))
+    /// `CanvasSpace` namespace declared before pan/zoom applied
+    .coordinateSpace(.named(CanvasSpace.canvas))
 
-      /// Artwork bounds captured
-      .anchorPreference(key: ArtworkBoundsAnchorKey.self, value: .bounds) { $0 }
+    /// Artwork bounds captured here
+    .anchorPreference(key: ArtworkBoundsAnchorKey.self, value: .bounds) { $0 }
 
-      /// Important: Keep the order 1. Scale, 2. Rotate, 3. Offset
-      .scaleEffect(transform.scale.clamped(to: zoomRange))
-      .rotationEffect(transform.rotation, anchor: .center)
-      .offset(transform.translation.cgSize)
-      .frame(
-        maxWidth: .infinity,
-        maxHeight: .infinity,
-        alignment: canvasAnchor.toAlignment,
-      )
-  }
-}
+    /// Important: For transforms the order needs to be 1. Scale, 2. Rotation, 3. Offset
+    .scaleEffect(transform.scale.clamped(to: zoomRange))
 
-extension CanvasArtwork {
-  private var effectiveRounding: Double {
-    rounding.removingZoom(
-      zoomLevel,
-      across: zoomRange,
+    /// Note: Rotation not yet supported, coming in future versions
+    .rotationEffect(transform.rotation, anchor: .center)
+    .offset(transform.translation.cgSize)
+    
+    .frame(
+      maxWidth: .infinity,
+      maxHeight: .infinity,
+      alignment: canvasAnchor.toAlignment,
     )
   }
 }
 
-// MARK: - Canvas clipping View
-private struct CanvasDecomposed<Content: View>: View {
-  let rounding: Double
+extension CanvasArtwork {
 
-  @ViewBuilder var content: () -> Content
-  var body: some View {
-
-    if #available(macOS 15.0, iOS 18.0, *) {
-      Group(subviews: content()) { subviewCollection in
-        SubViews(subviewCollection)
-      }
-    } else {
-      ZStack {
-        content()
-      }
-    }
-  }
-}
-
-extension CanvasDecomposed {
-  @available(macOS 15.0, iOS 18.0, *)
   @ViewBuilder
-  private func SubViews(_ subviews: SubviewsCollection) -> some View {
-    ZStack {
-      ForEach(subviews: subviews) { subview in
-        if subview.containerValues.allowsCanvasClipping {
-          subview
-            .clipShape(.rect(cornerRadius: rounding))
-        } else {
-          subview
-
-        }
-      }
-    }
+  private func ArtworkOutline() -> some View {
+    RoundedRectangle(cornerRadius: effectiveRounding)
+      .fill(.clear)
+      .stroke(
+        Color.white.opacity(0.05),
+        lineWidth: lineWidth.removingZoom(
+          zoomLevel,
+          across: zoomRange,
+        ),
+      )
+      .allowsHitTesting(false)
+  }
+  private var effectiveRounding: Double {
+    rounding.removingZoom(zoomLevel, across: zoomRange)
   }
 }
