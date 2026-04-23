@@ -5,7 +5,6 @@
 //  Created by Dave Coleman on 18/3/2026.
 //
 
-import CanvasCore
 import Foundation
 import InputPrimitives
 

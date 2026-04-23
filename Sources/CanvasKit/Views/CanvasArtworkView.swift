@@ -12,7 +12,6 @@ import SwiftUI
 struct CanvasArtwork<Content: View>: View {
   @Environment(\.zoomLevel) private var zoomLevel
   @Environment(\.zoomRange) private var zoomRange
-  //  @Environment(\.artworkOutline) private var artworkOutline
   @Environment(\.canvasAnchor) private var canvasAnchor
 
   let canvasSize: Size<CanvasSpace>
@@ -25,23 +24,13 @@ struct CanvasArtwork<Content: View>: View {
 
   var body: some View {
 
-    ///
     CanvasDecomposed(rounding: effectiveRounding, content: content)
-      //      .animation(.easeInOut(duration: 0.15)) { content in
-      //        content.opacity(isCanvasReady ? 1.0 : 0.0)
-      //      }
-
       .frame(
         width: canvasSize.width,
         height: canvasSize.height,
       )
 
       /// Visual indication of Canvas artwork bounds
-      //      .areaOutline(
-      //        colour: artworkOutline.colour,
-      //        rounding: artworkOutline.rounding,
-      //        lineWidth: artworkOutline.lineWidth,
-      //      )
       .overlay {
         RoundedRectangle(cornerRadius: effectiveRounding)
           .fill(.clear)
@@ -62,11 +51,7 @@ struct CanvasArtwork<Content: View>: View {
       .anchorPreference(key: ArtworkBoundsAnchorKey.self, value: .bounds) { $0 }
 
       /// Important: Keep the order 1. Scale, 2. Rotate, 3. Offset
-      .scaleEffect(
-        transform.scale.clamped(to: zoomRange)
-        //        transform.scale.clampedIfNeeded(to: zoomRange),
-        //        anchor: canvasAnchor,
-      )
+      .scaleEffect(transform.scale.clamped(to: zoomRange))
       .rotationEffect(transform.rotation, anchor: .center)
       .offset(transform.translation.cgSize)
       .frame(
@@ -88,9 +73,6 @@ extension CanvasArtwork {
 
 // MARK: - Canvas clipping View
 private struct CanvasDecomposed<Content: View>: View {
-  //  @Environment(\.self) private var env
-  //  @Environment(\.artworkOutline) private var artworkOutline
-
   let rounding: Double
 
   @ViewBuilder var content: () -> Content
@@ -124,8 +106,4 @@ extension CanvasDecomposed {
       }
     }
   }
-
-  //  private var cornerRounding: CGFloat {
-  //    artworkOutline.resolvedOutline(in: env).rounding
-  //  }
 }
