@@ -70,6 +70,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       toolHandler.updateModifiers(keys)
     }
 
+    // TODO: Re-evaluate this fingerprint system
     .task(id: toolConfiguration?.wrappedValue.fingerprint ?? "no-tool-configuration") {
       guard let toolConfiguration else { return }
       toolHandler = ToolHandler(configuration: toolConfiguration.wrappedValue)

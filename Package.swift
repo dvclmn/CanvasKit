@@ -9,7 +9,6 @@ let package = Package(
   ],
   products: [
     .library(name: "CanvasKit", targets: ["CanvasKit"]),
-//    .library(name: "CanvasCore", targets: ["CanvasCore"]),
   ],
   dependencies: [
     .package(url: "https://github.com/dvclmn/BasePrimitives", branch: "main"),
@@ -18,12 +17,13 @@ let package = Package(
   targets: [
     .target(
       name: "CanvasKit",
-      dependencies: [.product(name: "CoreUtilities", package: "BasePrimitives")],
+      dependencies: [.product(name: "CoreUtilities", package: "BasePrimitives")]
     ),
     
     .testTarget(
       name: "CanvasKitTests",
       dependencies: ["CanvasKit"],
+      exclude: ["CanvasKit.xctestplan"]
     ),
   ],
 )

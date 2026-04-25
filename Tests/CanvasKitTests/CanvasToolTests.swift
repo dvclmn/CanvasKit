@@ -1,6 +1,5 @@
-import Testing
-import BasePrimitives
-@testable import CanvasKit
+//import Testing
+//@testable import CanvasKit
 
 //struct CanvasKitTests {
 //

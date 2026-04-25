@@ -14,7 +14,7 @@ struct CanvasDemoApp: App {
       ContentView()
         //            .environment(store)
         //            .environment(\.popup, popup)
-        //            .readModifierKeys()
+//                    .readModifierKeys()
         .environment(\.artwork, file.$document.text)
         .focusedSceneValue(\.artwork, file.$document.text)
         .focusedSceneValue(\.documentURL, file.fileURL)

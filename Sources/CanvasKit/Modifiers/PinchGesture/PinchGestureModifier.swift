@@ -107,9 +107,9 @@ extension PinchGestureModifier {
     return value.magnification / safeLast
   }
 
-//  private func clamped(_ value: Double) -> Double {
-//    value.clamped(to: zoomRange)
-//  }
+  private func clamped(_ value: Double) -> Double {
+    value.clamped(to: zoomRange)
+  }
 
   private func commitZoom(_ value: Double) {
     internalZoom = value

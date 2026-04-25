@@ -6,9 +6,11 @@
 //
 
 public enum ActivationMode: Sendable, Hashable {
-  /// Spring-load while key is held (with debounce delay)
+  
+  /// Spring-load while key is held
   case hold
 
+  /// Standard shortcut key behaviour.
   /// Press to switch tool; remains active until changed
   case sticky
 

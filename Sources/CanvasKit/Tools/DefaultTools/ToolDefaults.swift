@@ -6,15 +6,15 @@
 //
 
 extension CanvasToolKind {
-  public static let select = Self(rawValue: "select")
-  public static let pan = Self(rawValue: "pan")
-  public static let zoom = Self(rawValue: "zoom")
+  public static let select = Self("select")
+  public static let pan = Self("pan")
+  public static let zoom = Self("zoom")
 }
 
 extension ToolBinding {
 
-  /// A minimal set of sensible defaults:
-  /// - Sticky shortcuts for Select (V), Pan (H), Zoom (Z)
+  /// A minimal set of binding defaults:
+  /// - Shortcuts for Select (V), Pan (H), Zoom (Z)
   /// - Hold Space → spring-load Pan from any tool
   public static func defaultBindings() -> [ToolBinding] {
     [

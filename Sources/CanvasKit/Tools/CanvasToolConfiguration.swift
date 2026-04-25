@@ -5,7 +5,6 @@
 //  Created by Dave Coleman on 15/4/2026.
 //
 
-
 import InputPrimitives
 import SwiftUI
 
@@ -41,7 +40,7 @@ public struct ToolConfiguration: Sendable {
     self.tools = Self.normalisedTools(tools)
     self.bindings = bindings
     self.selectedToolKind = selectedToolKind ?? .select
-//    self.selectedToolKind = selectedToolKind ?? self.defaultToolKind
+    //    self.selectedToolKind = selectedToolKind ?? self.defaultToolKind
     self.springLoadDelay = springLoadDelay
   }
 }

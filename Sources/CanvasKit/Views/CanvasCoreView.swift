@@ -49,15 +49,7 @@ struct CanvasCoreView<Content: View>: View {
         ArtworkBoundsAnchorKey.self,
         alignment: canvasAnchor.toAlignment,
       ) { anchor in
-        Color.clear
-          .allowsHitTesting(false)
-          .onGeometryChange(for: CGRect?.self) { proxy in
-            anchor.map { proxy[$0] }
-          } action: { frame in
-            let frameResult = frame.map { Rect<ScreenSpace>(fromRect: $0) }
-            self.artworkFrame = frameResult
-            state.artworkFrame = frameResult
-          }
+        FrameCaptureView(anchor)
       }
       .modifier(
         CanvasSnapshotModifier(
@@ -66,5 +58,20 @@ struct CanvasCoreView<Content: View>: View {
           phase: store.interactionContext?.phase ?? .none,
         )
       )
+  }
+}
+
+extension CanvasCoreView {
+  @ViewBuilder
+  private func FrameCaptureView(_ anchor: Anchor<CGRect>?) -> some View {
+    Color.clear
+      .allowsHitTesting(false)
+      .onGeometryChange(for: CGRect?.self) { proxy in
+        anchor.map { proxy[$0] }
+      } action: { frame in
+        let frameResult = frame.map { Rect<ScreenSpace>(fromRect: $0) }
+        self.artworkFrame = frameResult
+        state.artworkFrame = frameResult
+      }
   }
 }
