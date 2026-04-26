@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 24/4/2026.
 //
 
-import BasePrimitives
+import CoreUtilities
 import SwiftUI
 
 struct ToolsView: View {
@@ -15,21 +15,25 @@ struct ToolsView: View {
 
   private let toolbarWidth: Double = 36
 
+  @Binding var toolConfiguration: ToolConfiguration
+
   var body: some View {
 
-    VStack(spacing: Styles.sizeSmall) {
+    VStack(spacing: 6) {
 
       VStack(alignment: .leading, spacing: 0) {
 
-        if !store.toolConfiguration.availableTools.isEmpty {
+        if !toolConfiguration.availableTools.isEmpty {
           //        if !store.toolHandler.availableTools.isEmpty {
-          ForEach(store.toolConfiguration.availableTools, id: \.kind) { tool in
+          ForEach(toolConfiguration.availableTools, id: \.kind) { tool in
             //          ForEach(store.toolHandler.availableTools, id: \.kind) { tool in
             ToolButton(for: tool)
           }
 
         } else {
-          StateView("No Tools registered")
+          Text("No Tools registered")
+            .foregroundStyle(.tertiary)
+//          StateView("No Tools registered")
         }
       }  // END vstack
 
@@ -55,22 +59,21 @@ struct ToolsView: View {
 
     }  // END main vstack
     .buttonStyle(.plain)
-    .labelStyle(.base(display: .iconOnly))
+    //    .labelStyle(.base(display: .iconOnly))
     //    .setLabelDisplay(.iconOnly)
     //    .setSymbolVariants(.fill)
 
-    .quickRoundedBackground(glass: .regular(tint: .black.opacity(0.5)))
+    //    .quickRoundedBackground(glass: .regular(tint: .black.opacity(0.5)))
 
-    .depthShadow(
-      opacity: 0.3,
-      radius: 20,
-      distanceY: 10,
-      depthIntensity: 0,
-    )
+    //    .depthShadow(
+    //      opacity: 0.3,
+    //      radius: 20,
+    //      distanceY: 10,
+    //      depthIntensity: 0,
+    //    )
 
-    .environment(\.layoutSpacing, 0)
-
-    .padding(Constants.basePadding)
+    //    .environment(\.layoutSpacing, 0)
+    .padding()
     .font(.title3)
     //    .animation(Styles.animationSpringQuickNSubtle, value: paddingLeading)
 
@@ -85,7 +88,7 @@ extension ToolsView {
   private func ToolButton(for tool: any CanvasTool) -> some View {
 
     Button {
-      store.toolConfiguration.select(tool.kind)
+      toolConfiguration.select(tool.kind)
       //      store.toolHandler.setBaseTool(tool)
     } label: {
       Label(tool.name, systemImage: tool.icon)
@@ -97,7 +100,7 @@ extension ToolsView {
         .contentShape(Rectangle())
         .background {
           if isToolActive(tool) {
-            RoundedRectangle(cornerRadius: Styles.sizeTiny)
+            RoundedRectangle(cornerRadius: 4)
               .fill(.quaternary)
           }
         }
@@ -108,23 +111,23 @@ extension ToolsView {
   func isToolActive(_ tool: any CanvasTool) -> Bool {
     //  func isToolActive(_ tool: Tool) -> Bool {
     //    store.toolHandler.toolKind == tool.kind
-    guard let kind = store.toolConfiguration.selectedTool?.kind else { return false }
+    guard let kind = toolConfiguration.selectedTool?.kind else { return false }
     return kind == tool.kind
     //    store.toolHandler.effectiveTool(modifiers: modifierKeys) == tool
   }
 }
 
-#if DEBUG
-#Preview(traits: .size(.normal)) {
-  @Previewable @State var store = AppHandler()
-  ToolsView()
-    .environment(store)
-    .frame(maxWidth: 400, maxHeight: .infinity, alignment: .topLeading)
-    .background {
-      Image("flower")
-        .resizable()
-        .scaledToFill()
-        .scaleEffect(3.0)
-    }
-}
-#endif
+//#if DEBUG
+//#Preview(traits: .size(.normal)) {
+//  @Previewable @State var store = AppHandler()
+//  ToolsView()
+//    .environment(store)
+//    .frame(maxWidth: 400, maxHeight: .infinity, alignment: .topLeading)
+//    .background {
+//      Image("flower")
+//        .resizable()
+//        .scaledToFill()
+//        .scaleEffect(3.0)
+//    }
+//}
+//#endif

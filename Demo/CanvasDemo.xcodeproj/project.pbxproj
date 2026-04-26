@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		F67418912F10DF3D004B8381 /* CanvasKit in Frameworks */ = {isa = PBXBuildFile; productRef = F67418902F10DF3D004B8381 /* CanvasKit */; };
+		F6EC038E2F9CCC840005E730 /* CoreUtilities in Frameworks */ = {isa = PBXBuildFile; productRef = F6EC038D2F9CCC840005E730 /* CoreUtilities */; };
+		F6EC03932F9CCCB00005E730 /* CoreUtilities in Frameworks */ = {isa = PBXBuildFile; productRef = F6EC03922F9CCCB00005E730 /* CoreUtilities */; };
+		F6EC03962F9CCCBD0005E730 /* CanvasKit in Frameworks */ = {isa = PBXBuildFile; productRef = F6EC03952F9CCCBD0005E730 /* CanvasKit */; };
+		F6EC03992F9CCCD40005E730 /* CanvasKit in Frameworks */ = {isa = PBXBuildFile; productRef = F6EC03982F9CCCD40005E730 /* CanvasKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,7 +44,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6EC03992F9CCCD40005E730 /* CanvasKit in Frameworks */,
+				F6EC03932F9CCCB00005E730 /* CoreUtilities in Frameworks */,
+				F6EC038E2F9CCC840005E730 /* CoreUtilities in Frameworks */,
 				F67418912F10DF3D004B8381 /* CanvasKit in Frameworks */,
+				F6EC03962F9CCCBD0005E730 /* CanvasKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -92,6 +100,10 @@
 			name = CanvasDemo;
 			packageProductDependencies = (
 				F67418902F10DF3D004B8381 /* CanvasKit */,
+				F6EC038D2F9CCC840005E730 /* CoreUtilities */,
+				F6EC03922F9CCCB00005E730 /* CoreUtilities */,
+				F6EC03952F9CCCBD0005E730 /* CanvasKit */,
+				F6EC03982F9CCCD40005E730 /* CanvasKit */,
 			);
 			productName = CanvasDemo;
 			productReference = F67418692F10DEC9004B8381 /* CanvasDemo.app */;
@@ -121,6 +133,10 @@
 			);
 			mainGroup = F67418602F10DEC9004B8381;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				F6EC038F2F9CCCB00005E730 /* XCRemoteSwiftPackageReference "BasePrimitives" */,
+				F6EC03972F9CCCD40005E730 /* XCRemoteSwiftPackageReference "CanvasKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F674186A2F10DEC9004B8381 /* Products */;
 			projectDirPath = "";
@@ -363,9 +379,46 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		F6EC038F2F9CCCB00005E730 /* XCRemoteSwiftPackageReference "BasePrimitives" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dvclmn/BasePrimitives";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		F6EC03972F9CCCD40005E730 /* XCRemoteSwiftPackageReference "CanvasKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dvclmn/CanvasKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		F67418902F10DF3D004B8381 /* CanvasKit */ = {
 			isa = XCSwiftPackageProductDependency;
+			productName = CanvasKit;
+		};
+		F6EC038D2F9CCC840005E730 /* CoreUtilities */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CoreUtilities;
+		};
+		F6EC03922F9CCCB00005E730 /* CoreUtilities */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F6EC038F2F9CCCB00005E730 /* XCRemoteSwiftPackageReference "BasePrimitives" */;
+			productName = CoreUtilities;
+		};
+		F6EC03952F9CCCBD0005E730 /* CanvasKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CanvasKit;
+		};
+		F6EC03982F9CCCD40005E730 /* CanvasKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F6EC03972F9CCCD40005E730 /* XCRemoteSwiftPackageReference "CanvasKit" */;
 			productName = CanvasKit;
 		};
 /* End XCSwiftPackageProductDependency section */

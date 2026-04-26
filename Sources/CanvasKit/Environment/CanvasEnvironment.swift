@@ -24,7 +24,7 @@ extension EnvironmentValues {
 
   /// Pointer hover location in `CanvasSpace` (i.e. before pan/zoom)
   /// package access to be accessible to CanvasKit.
-  /// This depenancy shape probably needs revision
+  /// This dependancy shape probably needs revision
   @Entry package var pointerHover: Point<CanvasSpace>?
   @Entry package var pointerTap: Point<CanvasSpace>?
   @Entry package var pointerDrag: Rect<CanvasSpace>?

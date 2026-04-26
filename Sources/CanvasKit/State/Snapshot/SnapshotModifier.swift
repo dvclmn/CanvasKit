@@ -17,9 +17,9 @@ struct CanvasSnapshotModifier: ViewModifier {
 
   func body(content: Content) -> some View {
     content
-      .environment(\.zoomLevel, snapshot?.zoom ?? 1.0)
-      .environment(\.panOffset, snapshot?.pan.cgSize ?? .zero)
-      .environment(\.rotation, snapshot?.rotation ?? .zero)
+//      .environment(\.zoomLevel, snapshot?.zoom ?? 1.0)
+//      .environment(\.panOffset, snapshot?.pan.cgSize ?? .zero)
+//      .environment(\.rotation, snapshot?.rotation ?? .zero)
 
       .environment(\.pointerTap, snapshot?.pointerTap)
       .environment(\.pointerDrag, snapshot?.pointerDrag)

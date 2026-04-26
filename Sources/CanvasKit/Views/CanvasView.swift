@@ -37,8 +37,6 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
     CanvasCoreView(
       canvasSize: canvasSize,
       state: localState,
-      //      transform: $localTransform,
-      //      transform: localTransform,
       content: content,
     )
 
@@ -47,6 +45,15 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       InteractionModifiers(
         state: localState,
         tool: activeTool,
+      )
+    )
+
+    /// Adds mapped transform/pointer values, phase etc to the Environment
+    .modifier(
+      CanvasSnapshotModifier(
+        state: localState,
+        pointer: store.pointer,
+        phase: store.interactionContext?.phase ?? .none,
       )
     )
 

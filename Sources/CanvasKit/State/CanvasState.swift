@@ -12,6 +12,8 @@ import SwiftUI
 @Observable
 public final class CanvasState {
   public var transform: TransformState = .identity
+  
+  /// This is updated any time pan or zoom change
   public var artworkFrame: Rect<ScreenSpace>?
 
   public init() {}

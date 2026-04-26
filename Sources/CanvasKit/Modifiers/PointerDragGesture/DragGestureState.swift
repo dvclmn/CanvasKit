@@ -25,7 +25,7 @@ struct DragGestureState {
 
   /// For continuous mode: the previous `DragGesture.Value.translation`,
   /// used to compute the frame-to-frame delta. `nil` on first frame.
-  private var previousGestureTranslation: CGSize?
+  private var previousTranslation: CGSize?
 }
 
 extension DragGestureState {
@@ -43,13 +43,13 @@ extension DragGestureState {
         )
 
       case .continuous(let axes):
-        let prev = previousGestureTranslation ?? .zero
+        let prev = previousTranslation ?? .zero
         let rawDelta = CGSize(
           width: gestureValue.translation.width - prev.width,
           height: gestureValue.translation.height - prev.height,
         )
         let constrained = applyAxis(axes, delta: rawDelta)
-        previousGestureTranslation = gestureValue.translation
+        previousTranslation = gestureValue.translation
 
         let size = Size<ScreenSpace>(fromCGSize: constrained)
         let location = Point<ScreenSpace>(fromPoint: gestureValue.location)
@@ -61,7 +61,7 @@ extension DragGestureState {
   }
 
   /// Clears per-gesture tracking state. Called from `DragGesture.onEnded`.
-  mutating func end() { previousGestureTranslation = nil }
+  mutating func end() { previousTranslation = nil }
 
   /// Zeroes out movement on locked axes.
   private func applyAxis(

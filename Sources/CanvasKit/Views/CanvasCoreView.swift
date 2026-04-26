@@ -48,16 +48,7 @@ struct CanvasCoreView<Content: View>: View {
       .overlayPreferenceValue(
         ArtworkBoundsAnchorKey.self,
         alignment: canvasAnchor.toAlignment,
-      ) { anchor in
-        FrameCaptureView(anchor)
-      }
-      .modifier(
-        CanvasSnapshotModifier(
-          state: state,
-          pointer: store.pointer,
-          phase: store.interactionContext?.phase ?? .none,
-        )
-      )
+      ) { FrameCaptureView($0) }
   }
 }
 
