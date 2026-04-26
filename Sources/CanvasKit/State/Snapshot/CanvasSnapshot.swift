@@ -11,22 +11,23 @@ import SwiftUI
 
 /// Computed from `CanvasHandler` state and geometry.
 /// Holds only already-converted/mapped, consumer-ready values
-///
-/// Note to self: I removed this type at one point, thinking it wasn't
-/// doing anything useful. But soon realised its really helpful for
-/// centralising fully mapped state unambiguously, well worth keeping.
 struct CanvasSnapshot: Sendable {
 
   let transform: TransformSnapshot
-  
-  /// ## Pointer state
-  let pointerTap: Point<CanvasSpace>?
-  let pointerDrag: Rect<CanvasSpace>?
-  let pointerHover: Point<CanvasSpace>?
-  let isPointerInsideCanvas: Bool
+  let pointer: PointerSnapshot
 
   /// Phase of any in-progress gesture
   let phase: InteractionPhase
+
+  init(
+    transform: TransformSnapshot,
+    pointer: PointerSnapshot,
+    phase: InteractionPhase = .none,
+  ) {
+    self.transform = transform
+    self.pointer = pointer
+    self.phase = phase
+  }
 
   init(
     zoom: Double,
@@ -38,14 +39,20 @@ struct CanvasSnapshot: Sendable {
     isPointerInsideCanvas: Bool = false,
     phase: InteractionPhase = .none,
   ) {
-    self.zoom = zoom
-    self.pan = pan
-    self.rotation = rotation
-    self.pointerTap = pointerTap
-    self.pointerDrag = pointerDrag
-    self.pointerHover = pointerHover
-    self.isPointerInsideCanvas = isPointerInsideCanvas
-    self.phase = phase
+    self.init(
+      transform: .init(
+        translation: pan,
+        scale: zoom,
+        rotation: rotation,
+      ),
+      pointer: .init(
+        tap: pointerTap,
+        drag: pointerDrag,
+        hover: pointerHover,
+        isInsideCanvas: isPointerInsideCanvas,
+      ),
+      phase: phase,
+    )
   }
 }
 
@@ -61,7 +68,7 @@ struct CanvasSnapshot: Sendable {
 //      rotation: state.transform.rotation,
 //    )
 //  }
-//  
+//
 //  static func pointerSnapshot(
 //    from state: CanvasState,
 //    zoomRange: ClosedRange<Double>,

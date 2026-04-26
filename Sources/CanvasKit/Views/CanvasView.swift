@@ -48,7 +48,10 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       )
     )
 
-    /// Adds mapped transform/pointer values, phase etc to the Environment
+    /// Publishes current canvas transform values to the Environment
+    .canvasTransformEnvironment(localState)
+
+    /// Adds mapped pointer values and interaction phase to the Environment
     .modifier(
       CanvasSnapshotModifier(
         state: localState,

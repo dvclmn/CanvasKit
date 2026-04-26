@@ -5,7 +5,6 @@
 //  Created by Dave Coleman on 12/4/2026.
 //
 
-
 import InputPrimitives
 import SwiftUI
 
@@ -17,13 +16,9 @@ struct CanvasSnapshotModifier: ViewModifier {
 
   func body(content: Content) -> some View {
     content
-//      .environment(\.zoomLevel, snapshot?.zoom ?? 1.0)
-//      .environment(\.panOffset, snapshot?.pan.cgSize ?? .zero)
-//      .environment(\.rotation, snapshot?.rotation ?? .zero)
-
-      .environment(\.pointerTap, snapshot?.pointerTap)
-      .environment(\.pointerDrag, snapshot?.pointerDrag)
-      .environment(\.pointerHover, snapshot?.pointerHover)
+      .environment(\.pointerTap, snapshot?.pointer.tap)
+      .environment(\.pointerDrag, snapshot?.pointer.drag)
+      .environment(\.pointerHover, snapshot?.pointer.hover)
 
       .environment(\.interactionPhase, snapshot?.phase ?? .none)
   }
@@ -40,13 +35,13 @@ extension CanvasSnapshotModifier {
     let isInside = hoverMapped.map { mapper.isInsideCanvas($0) } ?? false
 
     return CanvasSnapshot(
-      zoom: state.transform.scale,
-      pan: state.transform.translation,
-      rotation: state.transform.rotation,
-      pointerTap: tapMapped,
-      pointerDrag: rectMapped,
-      pointerHover: hoverMapped,
-      isPointerInsideCanvas: isInside,
+      transform: .init(transform: state.transform),
+      pointer: .init(
+        tap: tapMapped,
+        drag: rectMapped,
+        hover: hoverMapped,
+        isInsideCanvas: isInside,
+      ),
       phase: phase,
     )
   }
