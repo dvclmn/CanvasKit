@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 8/3/2026.
 //
 
-
+import GeometryPrimitives
 import InputPrimitives
 import SwiftUI
 
@@ -26,6 +26,8 @@ final class CanvasHandler {
   /// Only updated when `processedTransform()` is called
   private var activeTool: (any CanvasTool)?
   package var interactionContext: InteractionContext?
+
+  var artworkFrame: Rect<ScreenSpace>?
 
   init() {}
 }

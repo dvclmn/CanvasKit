@@ -29,7 +29,7 @@ public struct TransformModifier: ViewModifier {
 extension View {
   /// Adds the current canvas transform values to the environment.
   public func canvasTransformEnvironment(
-    transform: TransformState
+    _ transform: TransformState
       //    _ canvasState: CanvasState
   ) -> some View {
     //  ) -> ModifiedContent<Self, TransformModifier> {

@@ -16,7 +16,7 @@ struct CanvasCoreView<Content: View>: View {
 
   // TODO: As I have removed CanvasState, this needs to be provided
   // somewhere else useful in CanvasKit, for mapping
-  @State private var artworkFrame: Rect<ScreenSpace>?
+//  @State private var artworkFrame: Rect<ScreenSpace>?
 
   let canvasSize: Size<CanvasSpace>
   @Binding var transform: TransformState
@@ -64,8 +64,9 @@ extension CanvasCoreView {
         anchor.map { proxy[$0] }
       } action: { frame in
         let frameResult = frame.map { Rect<ScreenSpace>(fromRect: $0) }
-        self.artworkFrame = frameResult
+//        self.artworkFrame = frameResult
 //        transform.artworkFrame = frameResult
+        store.artworkFrame = frameResult
       }
   }
 }

@@ -29,14 +29,14 @@ struct InteractionModifiers: ViewModifier {
           tool: tool,
           phase: event.phase,
           modifiers: event.modifiers,
-          currentTransform: state.transform,
+          currentTransform: transform,
         )
         guard let adjustment else { return }
-        state.transform = adjustment
+        transform = adjustment
       }
 
       .onPinchGesture(
-        initial: state.transform.scale,
+        initial: transform.scale,
         isEnabled: isEnabled(for: .pinch),
       ) { zoom, phase in
 
@@ -45,7 +45,7 @@ struct InteractionModifiers: ViewModifier {
           tool: tool,
           phase: phase,
           modifiers: modifierKeys,
-          currentTransform: state.transform,
+          currentTransform: transform,
         )
 
         /// Returns the scale so the modifier's internal Zoom
@@ -53,7 +53,7 @@ struct InteractionModifiers: ViewModifier {
         guard let adjustment else {
           return adjustment?.scale
         }
-        state.transform = adjustment
+        transform = adjustment
         return adjustment.scale
 
       }
@@ -65,10 +65,10 @@ struct InteractionModifiers: ViewModifier {
           tool: tool,
           phase: phase.interactionPhase,
           modifiers: modifierKeys,
-          currentTransform: state.transform,
+          currentTransform: transform,
         )
         guard let adjustment else { return }
-        state.transform = adjustment
+        transform = adjustment
 
       }
 
@@ -79,10 +79,10 @@ struct InteractionModifiers: ViewModifier {
           tool: tool,
           phase: .ended,
           modifiers: modifierKeys,
-          currentTransform: state.transform,
+          currentTransform: transform,
         )
         guard let adjustment else { return }
-        state.transform = adjustment
+        transform = adjustment
 
       }
 
@@ -96,10 +96,10 @@ struct InteractionModifiers: ViewModifier {
           tool: tool,
           phase: phase,
           modifiers: modifierKeys,
-          currentTransform: state.transform,
+          currentTransform: transform,
         )
         guard let adjustment else { return }
-        state.transform = adjustment
+        transform = adjustment
       }
   }
 }

@@ -53,7 +53,8 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
     /// Adds mapped pointer values and interaction phase to the Environment
     .modifier(
       CanvasSnapshotModifier(
-        state: localState,
+        transform: localTransform,
+        canvasSize: canvasSize,
         pointer: store.pointer,
         phase: store.interactionContext?.phase ?? .none,
       )
@@ -68,7 +69,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
     /// ensures both local and external are kept in sync
     .bindModel(
       debounce: .noDebounce,
-      $localState.transform,
+      $localTransform,
       to: externalTransform,
     )
 
@@ -178,10 +179,10 @@ extension CanvasView {
   ) {
     self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
     //    self._localState = State(initialValue: state)
-//    @Bindable var canvasState = state
+    //    @Bindable var canvasState = state
     self._localTransform = State(initialValue: transform.wrappedValue)
     self.externalTransform = transform
-//    self.externalTransform = $canvasState.transform
+    //    self.externalTransform = $canvasState.transform
 
     self._toolHandler = State(initialValue: .init(configuration: toolConfiguration.wrappedValue))
     self.toolConfiguration = toolConfiguration
