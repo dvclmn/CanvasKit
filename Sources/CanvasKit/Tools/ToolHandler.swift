@@ -5,18 +5,19 @@
 //  Created by Dave Coleman on 8/7/2025.
 //
 
-
-import SwiftUI
 import InputPrimitives
+import SwiftUI
 
 /// Manages tool selection, spring-loading, and key bindings.
 ///
 /// This is internal runtime machinery. App code should work with
 /// `ToolConfiguration` instead.
-struct ToolHandler {
+@Observable
+final class ToolHandler {
+  //struct ToolHandler {
 
   /// Public tool configuration copied into runtime state.
-  var configuration: ToolConfiguration
+  var configuration: ToolConfiguration = .default
 
   /// Active spring-load / hold overrides, most recent last.
   var overrides: [ToolOverride] = []
@@ -24,12 +25,10 @@ struct ToolHandler {
   private var heldKeys: Set<KeyEquivalent> = []
   private var modifiers: Modifiers = []
 
-  init(configuration: ToolConfiguration = .default) {
-    self.configuration = configuration
-  }
+  //  init(configuration: ToolConfiguration = .default) {
+  //    self.configuration = configuration
+  //  }
 }
-
-// MARK: - Available tools (for toolbar UI)
 
 extension ToolHandler {
 
@@ -37,11 +36,8 @@ extension ToolHandler {
   var availableTools: [any CanvasTool] {
     configuration.availableTools
   }
-}
 
-// MARK: - Effective tool resolution
-
-extension ToolHandler {
+  // MARK: - Effective tool resolution
 
   /// The currently effective tool, considering pending and armed overrides.
   /// If there is any override on the stack, its tool is effective immediately.
@@ -85,7 +81,7 @@ extension ToolHandler {
 
   /// Arms any pending `.sticky` overrides whose hold duration has exceeded
   /// `springLoadDelay` and whose key is still held.
-  mutating func armSpringLoadsIfReady() {
+  func armSpringLoadsIfReady() {
     let now = Date()
     for i in overrides.indices {
       let o = overrides[i]
@@ -104,27 +100,27 @@ extension ToolHandler {
 
 extension ToolHandler {
 
-  mutating func setBaseTool(_ tool: any CanvasTool) {
+  func setBaseTool(_ tool: any CanvasTool) {
     configuration.register(tool)
     configuration.selectedToolKind = tool.kind
     overrides.removeAll()
   }
 
   /// Set the base tool by kind, looking it up in the registry.
-  mutating func setBaseTool(kind: CanvasToolKind) {
+  func setBaseTool(kind: CanvasToolKind) {
     configuration.selectedToolKind = kind
     overrides.removeAll()
   }
 
-  mutating func setBindings(_ bindings: [ToolBinding]) {
+  func setBindings(_ bindings: [ToolBinding]) {
     configuration.setBindings(bindings)
   }
 
-  mutating func registerTools(_ tools: [any CanvasTool]) {
+  func registerTools(_ tools: [any CanvasTool]) {
     configuration.register(tools)
   }
 
-  mutating func handleKeyDown(_ key: KeyEquivalent) {
+  func handleKeyDown(_ key: KeyEquivalent) {
     heldKeys.insert(key)
 
     guard let best = matchingBindings(for: key).first
@@ -133,16 +129,16 @@ extension ToolHandler {
     apply(binding: best, onKeyDown: key)
   }
 
-  mutating func handleKeyUp(_ key: KeyEquivalent) {
+  func handleKeyUp(_ key: KeyEquivalent) {
     heldKeys.remove(key)
     removeOverrides(forKey: key)
   }
 
-  mutating func cancelAllSpringLoads() {
+  func cancelAllSpringLoads() {
     overrides.removeAll()
   }
 
-  mutating func updateModifiers(_ modifiers: Modifiers) {
+  func updateModifiers(_ modifiers: Modifiers) {
     self.modifiers = modifiers
   }
 
@@ -163,7 +159,7 @@ extension ToolHandler {
     }
   }
 
-  private mutating func apply(
+  private func apply(
     binding: ToolBinding,
     onKeyDown key: KeyEquivalent,
   ) {
@@ -195,7 +191,7 @@ extension ToolHandler {
     }
   }
 
-  private mutating func removeOverrides(forKey key: KeyEquivalent) {
+  private func removeOverrides(forKey key: KeyEquivalent) {
     /// First, determine if any sticky override should commit.
     if let override = overrides.last(where: { $0.key == key && $0.binding.mode == .sticky }) {
       if override.isArmed == false {
@@ -213,7 +209,7 @@ extension ToolHandler {
   private func resolveTool(for kind: CanvasToolKind) -> any CanvasTool {
     configuration.tool(for: kind) ?? configuration.resolvedSelectedTool
   }
-  
+
   var keysToWatch: Set<KeyEquivalent> {
     Set(configuration.bindings.map(\.shortcut.key))
   }

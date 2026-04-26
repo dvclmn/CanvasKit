@@ -12,7 +12,7 @@ import SwiftUI
 
 public struct CanvasView<Content: View>: View, CanvasAddressable {
   @State private var store: CanvasHandler = .init()
-  @State private var toolHandler: ToolHandler
+//  @State private var toolHandler: ToolHandler
 
   /// Populated when user wishes to handle their own transform state
   private let externalTransform: Binding<TransformState>?
@@ -77,14 +77,14 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
     /// for modifier keys some other way elsewhere? Or, whether I should be
     /// allowing passing in own state for modifiers.
     .modifierKeys { keys in
-      toolHandler.updateModifiers(keys)
+      store.toolHandler.updateModifiers(keys)
     }
 
     // TODO: Re-evaluate this fingerprint system
-    .task(id: toolConfiguration?.wrappedValue.fingerprint ?? "no-tool-configuration") {
-      guard let toolConfiguration else { return }
-      toolHandler = ToolHandler(configuration: toolConfiguration.wrappedValue)
-    }
+//    .task(id: toolConfiguration?.wrappedValue.fingerprint ?? "no-tool-configuration") {
+//      guard let toolConfiguration else { return }
+//      store.toolHandler = ToolHandler(configuration: toolConfiguration.wrappedValue)
+//    }
 
     .onChange(of: toolConfiguration?.wrappedValue.selectedToolKind, initial: false) { _, newValue in
       guard let newValue, toolConfiguration != nil, toolHandler.selectedToolKind != newValue else { return }

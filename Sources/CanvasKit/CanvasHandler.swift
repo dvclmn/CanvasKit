@@ -12,6 +12,7 @@ import SwiftUI
 @Observable
 final class CanvasHandler {
 
+  var toolHandler: ToolHandler = .init()
   var pointer: PointerState = .initial
 
   /// The most recent domain action produced by a tool resolution.
