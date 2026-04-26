@@ -12,8 +12,8 @@ struct InteractionModifiers: ViewModifier {
   @Environment(CanvasHandler.self) private var store
   @Environment(\.modifierKeys) private var modifierKeys
 
-  @Bindable var state: CanvasState
-  //  @Binding var transform: TransformState
+//  @Bindable var state: CanvasState
+    @Binding var transform: TransformState
   let tool: (any CanvasTool)?
 
   func body(content: Content) -> some View {

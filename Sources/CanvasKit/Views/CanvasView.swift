@@ -15,14 +15,13 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   @State private var toolHandler: ToolHandler
 
   /// Populated when user wishes to handle their own transform state
-  //  private let externalState: CanvasState?
   private let externalTransform: Binding<TransformState>?
 
   /// Internal-only source of truth for transform state. If user passes in state,
   /// it is passed to this. If not, this gets a default initial value.
   /// External and internal state is kept in sync via `bindModel`.
-  @State private var localState: CanvasState
-  //  @State private var localTransform: TransformState
+  //  @State private var localState: CanvasState
+  @State private var localTransform: TransformState
 
   @State private var userModifierKeys: Modifiers?
 
@@ -36,20 +35,20 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
 
     CanvasCoreView(
       canvasSize: canvasSize,
-      state: localState,
+      transform: $localTransform,
       content: content,
     )
 
     /// User input modifiers, `onSwipeGesture`, `onTapGesture`, etc
     .modifier(
       InteractionModifiers(
-        state: localState,
+        transform: $localTransform,
         tool: activeTool,
       )
     )
 
     /// Publishes current canvas transform values to the Environment
-    .canvasTransformEnvironment(localState)
+    .canvasTransformEnvironment(localTransform)
 
     /// Adds mapped pointer values and interaction phase to the Environment
     .modifier(
@@ -172,15 +171,17 @@ extension CanvasView {
   /// Externally-owned transform state and Canvas Tool usage.
   public init(
     size: CGSize,
-    state: CanvasState,
-    //    transform: Binding<TransformState>,
+    //    state: CanvasState,
+    transform: Binding<TransformState>,
     toolConfiguration: Binding<ToolConfiguration>,
     @ViewBuilder content: @escaping () -> Content,
   ) {
     self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
-    self._localState = State(initialValue: state)
-    @Bindable var canvasState = state
-    self.externalTransform = $canvasState.transform
+    //    self._localState = State(initialValue: state)
+//    @Bindable var canvasState = state
+    self._localTransform = State(initialValue: transform.wrappedValue)
+    self.externalTransform = transform
+//    self.externalTransform = $canvasState.transform
 
     self._toolHandler = State(initialValue: .init(configuration: toolConfiguration.wrappedValue))
     self.toolConfiguration = toolConfiguration
