@@ -22,12 +22,15 @@ extension EnvironmentValues {
   @Entry var canvasAnchor: UnitPoint = .center
   @Entry var canvasBackground: Color = Color(white: 0.04)
 
-  /// Pointer hover location in `CanvasSpace` (i.e. before pan/zoom)
-  /// package access to be accessible to CanvasKit.
-  /// This dependancy shape probably needs revision
-  @Entry package var pointerHover: Point<CanvasSpace>?
+  // TODO: Comments like the below are better suited to
+  // a page in the Doc catalogue, not inline doc comment.
+  
+  /// Pointer Tap, Drag and Hover are added to the environment as
+  /// an internal convenience. For user access, see Canvas event
+  /// modifiers like `CanvasDragModifier`.
   @Entry package var pointerTap: Point<CanvasSpace>?
   @Entry package var pointerDrag: Rect<CanvasSpace>?
+  @Entry package var pointerHover: Point<CanvasSpace>?
 
   // TODO: If BasePrimitives/InputPrimitives owns InteractionPhase,
   // maybe it should be added as Env value there, not here

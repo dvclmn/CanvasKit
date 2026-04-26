@@ -6,6 +6,7 @@
 //
 
 import GeometryPrimitives
+import CoreUtilities
 import SwiftUI
 
 public struct CanvasHoverModifier: ViewModifier {
@@ -17,18 +18,11 @@ public struct CanvasHoverModifier: ViewModifier {
   public func body(content: Content) -> some View {
     content
       .onChange(of: pointerHover) {
-        guard let pointerHover else { return }
+        guard let pointerHover else {
+          printMissing("pointerHover", for: "CanvasHoverModifier")
+          return
+        }
         action(pointerHover)
       }
-  }
-}
-
-extension View {
-
-  /// Respond to a `CanvasView` pointer hover operation.
-  public func onCanvasHover(
-    perform action: @escaping (Point<CanvasSpace>) -> Void
-  ) -> ModifiedContent<Self, CanvasHoverModifier> {
-    self.modifier(CanvasHoverModifier(action: action))
   }
 }

@@ -6,6 +6,7 @@
 //
 
 import GeometryPrimitives
+import CoreUtilities
 import SwiftUI
 
 public struct CanvasTapModifier: ViewModifier {
@@ -16,19 +17,11 @@ public struct CanvasTapModifier: ViewModifier {
   public func body(content: Content) -> some View {
     content
       .onChange(of: pointerTap) {
-        guard let pointerTap else { return }
+        guard let pointerTap else {
+          printMissing("pointerTap", for: "CanvasTapModifier")
+          return
+        }
         action(pointerTap)
       }
   }
-}
-
-extension View {
-  /// Respond to `CanvasView` pointer taps. Provides the
-  /// location of the tap in `CanvasSpace`.
-  public func onCanvasTap(
-    perform action: @escaping (Point<CanvasSpace>) -> Void
-  ) -> ModifiedContent<Self, CanvasTapModifier> {
-    self.modifier(CanvasTapModifier(action: action))
-  }
-
 }
