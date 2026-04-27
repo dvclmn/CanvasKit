@@ -9,26 +9,26 @@ import SwiftUI
 
 /// This shouldn't be public, but needs to be to satisfy the compiler error
 /// > Method cannot be declared public because its result uses an internal type
-public struct CanvasToolActionModifier: ViewModifier {
-  @Environment(CanvasHandler.self) private var store
-
-  let action: (ToolAction) -> Void
-
-  public func body(content: Content) -> some View {
-    content
-      .onChange(of: store.toolActionRevision, initial: false) { _, _ in
-        guard let toolAction = store.lastToolAction else { return }
-        action(toolAction)
-      }
-  }
-}
-
-extension View where Self: CanvasAddressable {
-
-  /// Respond to a tool-emitted domain action.
-  public func onCanvasToolAction(
-    perform action: @escaping (ToolAction) -> Void
-  ) -> ModifiedContent<Self, CanvasToolActionModifier> {
-    self.modifier(CanvasToolActionModifier(action: action))
-  }
-}
+//public struct CanvasToolActionModifier: ViewModifier {
+//  @Environment(CanvasHandler.self) private var store
+//
+//  let action: (ToolAction) -> Void
+//
+//  public func body(content: Content) -> some View {
+//    content
+//      .onChange(of: store.toolActionRevision, initial: false) { _, _ in
+//        guard let toolAction = store.lastToolAction else { return }
+//        action(toolAction)
+//      }
+//  }
+//}
+//
+//extension View where Self: CanvasAddressable {
+//
+//  /// Respond to a tool-emitted domain action.
+//  public func onCanvasToolAction(
+//    perform action: @escaping (ToolAction) -> Void
+//  ) -> ModifiedContent<Self, CanvasToolActionModifier> {
+//    self.modifier(CanvasToolActionModifier(action: action))
+//  }
+//}

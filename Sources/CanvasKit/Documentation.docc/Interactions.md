@@ -47,3 +47,11 @@ GestureInteraction
 - operates in view / world / mode space
 - often multi-pointer
 - relative motion matters
+
+
+Gesture / input language: swipe, pinch, tap, drag, rotate
+Intent / operation language: pan, zoom, rotate, select, scrub phase
+State / maths language: translation, scale, rotation
+
+E.g.:
+“A swipe resolved to a zoom intent, which produced a scale update.” 

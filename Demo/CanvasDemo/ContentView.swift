@@ -23,9 +23,6 @@ struct ContentView: View {
       CanvasContentView()
     }
     .zoomRange(0...2)
-    .onCanvasToolAction { action in
-      print("Tool action: \(action)")
-    }
 
   }
 }

@@ -17,6 +17,8 @@ public struct ToolResolution: Sendable {
   /// While support/usage is kinda murky at this stage, Tools may declare both
   /// a Pointer *and* a Transform adjustment in response to an Interaction
   let adjustment: InteractionAdjustment
+  
+  @available(*, message: "A very early work-in-progress, not stable enough for any kind of use yet.")
   let action: ToolAction
 
   init(

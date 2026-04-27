@@ -7,6 +7,7 @@
 
 import GeometryPrimitives
 import InputPrimitives
+import CoreUtilities
 import SwiftUI
 
 /// If and when a user needs *direct* access to any of these,
@@ -27,7 +28,7 @@ extension EnvironmentValues {
 
   // TODO: Comments like the below are better suited to
   // a page in the Doc catalogue, not inline doc comment.
-  
+
   /// Pointer Tap, Drag and Hover are added to the environment as
   /// an internal convenience. For user access, see Canvas event
   /// modifiers like `CanvasDragModifier`.
@@ -38,4 +39,19 @@ extension EnvironmentValues {
   // TODO: If BasePrimitives/InputPrimitives owns InteractionPhase,
   // maybe it should be added as Env value there, not here
   @Entry package var interactionPhase: InteractionPhase = .none
+
+  @Entry public var panOffset: CGSize = .zero
+  @Entry public var rotation: Angle = .zero
+
+  /// Important: This zoom level is not clamped. Use ``zoomClamped``
+  /// (which clamps by ``zoomRange``) if clamping is required
+  @Entry public var zoomLevel: Double = 1.0
+
+  @Entry public var zoomRange: ClosedRange<Double> = 0.2...10
+
+  /// Returns `1.0` if `zoomLevel` is less than zero or NaN/infinite
+  public var zoomClamped: Double {
+    guard zoomLevel.isFiniteAndGreaterThanZero else { return 1.0 }
+    return zoomLevel.clamped(to: zoomRange)
+  }
 }

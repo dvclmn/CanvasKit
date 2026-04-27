@@ -23,7 +23,6 @@ struct CanvasSnapshotModifier: ViewModifier {
       .environment(\.pointerTap, snapshot?.pointer.tap)
       .environment(\.pointerDrag, snapshot?.pointer.drag)
       .environment(\.pointerHover, snapshot?.pointer.hover)
-
       .environment(\.interactionPhase, snapshot?.phase ?? .none)
   }
 }
