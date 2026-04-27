@@ -12,9 +12,9 @@ struct InteractionModifiers: ViewModifier {
   @Environment(CanvasHandler.self) private var store
   @Environment(\.modifierKeys) private var modifierKeys
 
-//  @Bindable var state: CanvasState
-    @Binding var transform: TransformState
-  let tool: (any CanvasTool)?
+  //  @Bindable var state: CanvasState
+  @Binding var transform: TransformState
+  //  let tool: (any CanvasTool)?
 
   func body(content: Content) -> some View {
     @Bindable var store = store
@@ -26,7 +26,6 @@ struct InteractionModifiers: ViewModifier {
 
         let adjustment = store.processedTransform(
           .swipe(delta: event.delta),
-          tool: tool,
           phase: event.phase,
           modifiers: event.modifiers,
           currentTransform: transform,
@@ -42,7 +41,6 @@ struct InteractionModifiers: ViewModifier {
 
         let adjustment = store.processedTransform(
           .pinch(scale: zoom),
-          tool: tool,
           phase: phase,
           modifiers: modifierKeys,
           currentTransform: transform,
@@ -62,7 +60,6 @@ struct InteractionModifiers: ViewModifier {
         guard isEnabled(for: .hover), let location = phase.location else { return }
         let adjustment = store.processedTransform(
           .hover(location.screenPoint),
-          tool: tool,
           phase: phase.interactionPhase,
           modifiers: modifierKeys,
           currentTransform: transform,
@@ -76,7 +73,6 @@ struct InteractionModifiers: ViewModifier {
         guard isEnabled(for: .tap) else { return }
         let adjustment = store.processedTransform(
           .tap(location: location.screenPoint),
-          tool: tool,
           phase: .ended,
           modifiers: modifierKeys,
           currentTransform: transform,
@@ -87,13 +83,12 @@ struct InteractionModifiers: ViewModifier {
       }
 
       .onPointerDragGesture(
-        behaviour: tool?.dragBehaviour ?? .none,
+        behaviour: store.activeTool?.dragBehaviour ?? .none,
         isEnabled: isEnabled(for: .drag),
       ) { payload, phase in
         guard let payload else { return }
         let adjustment = store.processedTransform(
           .drag(payload),
-          tool: tool,
           phase: phase,
           modifiers: modifierKeys,
           currentTransform: transform,
@@ -113,7 +108,7 @@ extension InteractionModifiers {
         enabled = true
 
       case .tap, .drag, .hover:
-        guard let tool else {
+        guard let tool = store.activeTool else {
           enabled = false
           break
         }

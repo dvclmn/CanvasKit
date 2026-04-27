@@ -22,10 +22,10 @@ final class CanvasHandler {
   var lastToolAction: ToolAction?
 
   /// Simple revision counter for observing tool actions.
-  var toolActionRevision: UInt = 0
+//  var toolActionRevision: UInt = 0
 
   /// Only updated when `processedTransform()` is called
-  private var activeTool: (any CanvasTool)?
+//  private var activeTool: (any CanvasTool)?
   package var interactionContext: InteractionContext?
 
   var artworkFrame: Rect<ScreenSpace>?
@@ -34,6 +34,8 @@ final class CanvasHandler {
 }
 
 extension CanvasHandler {
+  
+  var activeTool: (any CanvasTool)? { toolHandler.effectiveTool }
 
   /// Entry point for all raw input events from gesture modifiers.
   ///
@@ -49,13 +51,13 @@ extension CanvasHandler {
   /// don't inadvertantly write it to `identity`.
   func processedTransform(
     _ interaction: Interaction,
-    tool: (any CanvasTool)?,
+//    tool: (any CanvasTool)?,
     phase: InteractionPhase,
     modifiers: Modifiers,
     currentTransform: TransformState,
   ) -> TransformState? {
 
-    self.activeTool = tool
+//    self.activeTool = tool
     let context = InteractionContext(
       interaction: interaction,
       phase: phase,
@@ -65,7 +67,7 @@ extension CanvasHandler {
 
     let resolver = CanvasInputResolver(
       context: context,
-      activeTool: tool,
+      activeTool: activeTool,
       transform: currentTransform,
     )
 
@@ -90,7 +92,7 @@ extension CanvasHandler {
 
         } else {
           lastToolAction = resolution.action
-          toolActionRevision &+= 1
+//          toolActionRevision &+= 1
 
         }
         return handleAdjustment(

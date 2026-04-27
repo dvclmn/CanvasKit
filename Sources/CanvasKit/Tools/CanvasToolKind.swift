@@ -13,7 +13,7 @@ import Foundation
 ///   public static let brush = Self("brush")
 /// }
 /// ```
-public struct CanvasToolKind: RawRepresentable, Hashable, Sendable, ExpressibleByStringLiteral {
+public struct CanvasToolKind: RawRepresentable, Hashable, Sendable, Equatable, ExpressibleByStringLiteral {
   public let rawValue: String
 
   public init(rawValue: String) { self.rawValue = rawValue }

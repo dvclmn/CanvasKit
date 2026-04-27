@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+/// This shouldn't be public, but needs to be to satisfy the compiler error
+/// > Method cannot be declared public because its result uses an internal type
 public struct CanvasToolActionModifier: ViewModifier {
   @Environment(CanvasHandler.self) private var store
 

@@ -45,6 +45,28 @@ public struct ToolConfiguration: Sendable {
   }
 }
 
+extension ToolConfiguration: Equatable {
+  
+  public static func == (lhs: Self, rhs: Self) -> Bool {
+    lhs.bindings == rhs.bindings &&
+    lhs.selectedToolKind == rhs.selectedToolKind &&
+    lhs.springLoadDelay == rhs.springLoadDelay &&
+    lhs.tools.elementsEqual(rhs.tools, by: Self.toolsAreEqual)
+  }
+
+  private static func toolsAreEqual(
+    _ lhs: any CanvasTool,
+    _ rhs: any CanvasTool,
+  ) -> Bool {
+    func compare<T: CanvasTool>(_ lhs: T, to rhs: any CanvasTool) -> Bool {
+      guard let rhs = rhs as? T else { return false }
+      return lhs == rhs
+    }
+    
+    return compare(lhs, to: rhs)
+  }
+  
+}
 extension ToolConfiguration {
 
   public static var `default`: Self { .init() }
@@ -132,39 +154,39 @@ extension ToolConfiguration {
 
   /// A stable-ish fingerprint for SwiftUI update bookkeeping.
   /// This is intentionally implementation detail, not part of the public API.
-  var fingerprint: String {
-    let toolBits = tools.map { tool in
-      [
-        tool.kind.rawValue,
-        tool.name,
-        tool.icon,
-        tool.dragBehaviour.name,
-        tool.inputCapabilities.map(\.description).joined(separator: ","),
-      ]
-      .joined(separator: "|")
-    }
-    .joined(separator: ";")
-
-    let bindingBits = bindings.map { binding in
-      let modifiers = Modifiers(from: binding.shortcut.modifiers).rawValue
-      return [
-        String(describing: binding.shortcut.key),
-        String(modifiers),
-        binding.target.rawValue,
-        String(describing: binding.mode),
-      ]
-      .joined(separator: "|")
-    }
-    .joined(separator: ";")
-
-    return [
-      selectedToolKind.rawValue,
-      String(springLoadDelay),
-      toolBits,
-      bindingBits,
-    ]
-    .joined(separator: "||")
-  }
+//  var fingerprint: String {
+//    let toolBits = tools.map { tool in
+//      [
+//        tool.kind.rawValue,
+//        tool.name,
+//        tool.icon,
+//        tool.dragBehaviour.name,
+//        tool.inputCapabilities.map(\.description).joined(separator: ","),
+//      ]
+//      .joined(separator: "|")
+//    }
+//    .joined(separator: ";")
+//
+//    let bindingBits = bindings.map { binding in
+//      let modifiers = Modifiers(from: binding.shortcut.modifiers).rawValue
+//      return [
+//        String(describing: binding.shortcut.key),
+//        String(modifiers),
+//        binding.target.rawValue,
+//        String(describing: binding.mode),
+//      ]
+//      .joined(separator: "|")
+//    }
+//    .joined(separator: ";")
+//
+//    return [
+//      selectedToolKind.rawValue,
+//      String(springLoadDelay),
+//      toolBits,
+//      bindingBits,
+//    ]
+//    .joined(separator: "||")
+//  }
 
   private static func normalisedTools(_ tools: [any CanvasTool]) -> [any CanvasTool] {
     var result: [any CanvasTool] = []

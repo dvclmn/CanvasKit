@@ -12,7 +12,7 @@ import SwiftUI
 
 public struct CanvasView<Content: View>: View, CanvasAddressable {
   @State private var store: CanvasHandler = .init()
-//  @State private var toolHandler: ToolHandler
+  //  @State private var toolHandler: ToolHandler
 
   /// Populated when user wishes to handle their own transform state
   private let externalTransform: Binding<TransformState>?
@@ -22,12 +22,12 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   /// External and internal state is kept in sync via `bindModel`.
   //  @State private var localState: CanvasState
   @State private var localTransform: TransformState
-
   @State private var userModifierKeys: Modifiers?
 
   /// Canvas Tool use is opt-in. If the user doesn't need tools, this stays nil
-  private let toolConfiguration: Binding<ToolConfiguration>?
+  //  private let toolConfiguration: Binding<ToolConfiguration>?
 
+  @Binding var toolConfiguration: ToolConfiguration
   let canvasSize: Size<CanvasSpace>
   let content: () -> Content
 
@@ -41,10 +41,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
 
     /// User input modifiers, `onSwipeGesture`, `onTapGesture`, etc
     .modifier(
-      InteractionModifiers(
-        transform: $localTransform,
-        tool: activeTool,
-      )
+      InteractionModifiers(transform: $localTransform)
     )
 
     /// Publishes current canvas transform values to the Environment
@@ -54,16 +51,12 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
     .modifier(
       CanvasSnapshotModifier(
         transform: localTransform,
+        artworkFrame: store.artworkFrame,
         canvasSize: canvasSize,
         pointer: store.pointer,
         phase: store.interactionContext?.phase ?? .none,
       )
     )
-
-    /// Set the resolved pointer style and add it to the Environment
-    .pointerStyleCompatible(store.pointerStyle)
-    .environment(\.pointerStyle, store.pointerStyle)
-    .environment(store)
 
     /// In cases where transform state is owned externally,
     /// ensures both local and external are kept in sync
@@ -80,25 +73,35 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       store.toolHandler.updateModifiers(keys)
     }
 
+    /// Only one-way sync required for tool configuration; from external to internal.
+    .task(id: toolConfiguration) {
+      store.toolHandler.configuration = toolConfiguration
+    }
+
+    /// Set the resolved pointer style and add it to the Environment
+    .pointerStyleCompatible(store.pointerStyle)
+    .environment(\.pointerStyle, store.pointerStyle)
+    .environment(store)
+    
     // TODO: Re-evaluate this fingerprint system
-//    .task(id: toolConfiguration?.wrappedValue.fingerprint ?? "no-tool-configuration") {
-//      guard let toolConfiguration else { return }
-//      store.toolHandler = ToolHandler(configuration: toolConfiguration.wrappedValue)
-//    }
+    //    .task(id: toolConfiguration?.wrappedValue.fingerprint ?? "no-tool-configuration") {
+    //      guard let toolConfiguration else { return }
+    //      store.toolHandler = ToolHandler(configuration: toolConfiguration.wrappedValue)
+    //    }
 
-    .onChange(of: toolConfiguration?.wrappedValue.selectedToolKind, initial: false) { _, newValue in
-      guard let newValue, toolConfiguration != nil, toolHandler.selectedToolKind != newValue else { return }
-      var handler = toolHandler
-      handler.setBaseTool(kind: newValue)
-      toolHandler = handler
-    }
-
-    .onChange(of: toolHandler.selectedToolKind, initial: false) { _, newValue in
-      guard let toolConfiguration,
-        toolConfiguration.wrappedValue.selectedToolKind != newValue
-      else { return }
-      toolConfiguration.wrappedValue.selectedToolKind = newValue
-    }
+    //    .onChange(of: toolConfiguration?.wrappedValue.selectedToolKind) { _, newValue in
+    //      guard let newValue, toolConfiguration != nil, toolHandler.selectedToolKind != newValue else { return }
+    //      var handler = toolHandler
+    //      handler.setBaseTool(kind: newValue)
+    //      toolHandler = handler
+    //    }
+    //
+    //    .onChange(of: toolHandler.selectedToolKind, initial: false) { _, newValue in
+    //      guard let toolConfiguration,
+    //        toolConfiguration.wrappedValue.selectedToolKind != newValue
+    //      else { return }
+    //      toolConfiguration.wrappedValue.selectedToolKind = newValue
+    //    }
 
     //    .debugText {
     //      //      Labeled("Canvas Size", value: canvasSize.cgSize)
@@ -116,11 +119,11 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   }
 }
 
-extension CanvasView {
-  private var activeTool: (any CanvasTool)? {
-    toolConfiguration == nil ? nil : toolHandler.effectiveTool
-  }
-}
+//extension CanvasView {
+//  private var activeTool: (any CanvasTool)? {
+//    toolConfiguration == nil ? nil : toolHandler.effectiveTool
+//  }
+//}
 
 // MARK: - Inits
 extension CanvasView {
@@ -174,7 +177,7 @@ extension CanvasView {
     size: CGSize,
     //    state: CanvasState,
     transform: Binding<TransformState>,
-    toolConfiguration: Binding<ToolConfiguration>,
+    toolConfiguration: Binding<ToolConfiguration>? = nil,
     @ViewBuilder content: @escaping () -> Content,
   ) {
     self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
@@ -184,8 +187,9 @@ extension CanvasView {
     self.externalTransform = transform
     //    self.externalTransform = $canvasState.transform
 
-    self._toolHandler = State(initialValue: .init(configuration: toolConfiguration.wrappedValue))
-    self.toolConfiguration = toolConfiguration
+    self._toolConfiguration = toolConfiguration ?? .constant(.default)
+    //    self._toolHandler = State(initialValue: .init(configuration: toolConfiguration.wrappedValue))
+    //    self.toolConfiguration = toolConfiguration
     self.content = content
   }
 }

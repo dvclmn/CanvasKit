@@ -9,7 +9,6 @@ import GeometryPrimitives
 import SwiftUI
 
 struct CanvasArtwork<Content: View>: View {
-  @Environment(\.zoomLevel) private var zoomLevel
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.canvasAnchor) private var canvasAnchor
 
@@ -65,13 +64,13 @@ extension CanvasArtwork {
       .stroke(
         Color.white.opacity(0.05),
         lineWidth: lineWidth.removingZoom(
-          zoomLevel,
+          transform.scale,
           across: zoomRange,
         ),
       )
       .allowsHitTesting(false)
   }
   private var effectiveRounding: Double {
-    rounding.removingZoom(zoomLevel, across: zoomRange)
+    rounding.removingZoom(transform.scale, across: zoomRange)
   }
 }

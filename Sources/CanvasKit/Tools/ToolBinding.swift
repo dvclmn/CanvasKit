@@ -15,7 +15,7 @@ import InputPrimitives
 /// `CanvasTool` intentionally does not store shortcut keys — that's this type's job.
 ///
 /// A single tool can have multiple bindings (e.g. Pan has both "H" sticky and Space hold).
-public struct ToolBinding: Hashable, Sendable {
+public struct ToolBinding: Hashable, Sendable, Equatable {
   public let shortcut: KeyboardShortcut
   public let target: CanvasToolKind
   public let mode: ActivationMode
