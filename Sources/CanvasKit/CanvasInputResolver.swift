@@ -71,13 +71,16 @@ extension CanvasInputResolver {
   static func defaultResolution(for context: InteractionContext) -> InteractionAdjustment? {
     switch context.interaction {
       case .swipe(let delta):
-        return .base(.translation(delta))
+        return .transform(.translation(delta))
+      //        return .base(.translation(delta))
 
       case .pinch(let scale):
-        return .base(.scale(scale))
+        return .transform(.scale(scale))
+      //        return .base(.scale(scale))
 
       case .rotation(let angle):
-        return .base(.rotation(angle))
+        return .transform(.rotation(angle))
+      //        return .base(.rotation(angle))
 
       case .tap, .drag, .hover:
         // No tool claimed these — no default behaviour for pointer events.

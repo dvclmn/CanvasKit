@@ -9,9 +9,8 @@ import InputPrimitives
 
 public struct ToolCapability: Hashable, Sendable {
   public let interactionKind: InteractionKind
-  //  public let adjustmentKind: AdjustmentKind
   public let intent: GestureIntent
-  public let modifiers: Modifiers? // nil = match regardless of modifiers
+  public let modifiers: Modifiers?
 
   public init(
     interaction: InteractionKind,
@@ -65,20 +64,19 @@ extension ToolCapability {
   //  ]
 }
 
-
 extension ToolCapability {
   func matches(_ context: InteractionContext) -> Bool {
     guard interactionKind == context.interaction.kind else { return false }
     guard let required = modifiers else { return true }  // nil = any
     return context.modifiers.contains(required)
   }
-//  func matches(
-//    interaction: InteractionKind,
-//    adjustment: AdjustmentKind?,
-//  ) -> Bool {
-//    guard interactionKind == interaction, let adjustment else { return false }
-//    return adjustmentKind == adjustment
-//  }
+  //  func matches(
+  //    interaction: InteractionKind,
+  //    adjustment: AdjustmentKind?,
+  //  ) -> Bool {
+  //    guard interactionKind == interaction, let adjustment else { return false }
+  //    return adjustmentKind == adjustment
+  //  }
 }
 
 //extension ToolCapability: CustomStringConvertible {

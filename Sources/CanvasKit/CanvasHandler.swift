@@ -15,17 +15,7 @@ final class CanvasHandler {
   var toolHandler: ToolHandler = .init()
   var pointer: PointerState = .initial
 
-  /// The most recent domain action produced by a tool resolution.
-  /// Only produced if the selected Tool defines a
-  /// Consuming apps can observe this to react to tool-specific events
-  /// (e.g. "select at point", "commit stroke").
-  var lastToolAction: ToolAction?
-
-  /// Simple revision counter for observing tool actions.
-//  var toolActionRevision: UInt = 0
-
   /// Only updated when `processedTransform()` is called
-//  private var activeTool: (any CanvasTool)?
   package var interactionContext: InteractionContext?
 
   var artworkFrame: Rect<ScreenSpace>?
@@ -34,7 +24,7 @@ final class CanvasHandler {
 }
 
 extension CanvasHandler {
-  
+
   var activeTool: (any CanvasTool)? { toolHandler.effectiveTool }
 
   /// Entry point for all raw input events from gesture modifiers.
@@ -49,16 +39,16 @@ extension CanvasHandler {
   /// Returns an optional to allow a no-op in ``InteractionModifiers``,
   /// so that interaction modifiers that don't need to touch Transform state
   /// don't inadvertantly write it to `identity`.
-//  func handleInteraction(
+  //  func handleInteraction(
   func processedTransform(
     _ interaction: Interaction,
-//    tool: (any CanvasTool)?,
+    //    tool: (any CanvasTool)?,
     phase: InteractionPhase,
     modifiers: Modifiers,
     currentTransform: TransformState,
   ) -> TransformState? {
 
-//    self.activeTool = tool
+    //    self.activeTool = tool
     let context = InteractionContext(
       interaction: interaction,
       phase: phase,
@@ -77,30 +67,42 @@ extension CanvasHandler {
       return nil
     }
 
-    switch resolution {
-      /// Base gestures, updates transform state regardless
-      /// of whether Canvas Tools are in use
-      case .base(let adjustment):
-        lastToolAction = nil
-        return handleAdjustment(
-          .transform(adjustment),
-          transform: currentTransform,
-        )
-
-      case .tool(let resolution):
-        if resolution.action.isNone {
-          lastToolAction = nil
-
-        } else {
-          lastToolAction = resolution.action
-//          toolActionRevision &+= 1
-
-        }
-        return handleAdjustment(
-          resolution.adjustment,
-          transform: currentTransform,
-        )
-    }
+    return handleAdjustment(
+      resolution,
+      transform: currentTransform
+    )
+//    switch resolution {
+//      case .transform(let transformAdjustment):
+//        <#code#>
+//      case .pointer(let pointerAdjustment):
+//        <#code#>
+//      case .none:
+//        <#code#>
+//    }
+//    switch resolution {
+//      /// Base gestures, updates transform state regardless
+//      /// of whether Canvas Tools are in use
+//      case .base(let adjustment):
+//        lastToolAction = nil
+//        return handleAdjustment(
+//          .transform(adjustment),
+//          transform: currentTransform,
+//        )
+//
+//      case .tool(let resolution):
+//        if resolution.action.isNone {
+//          lastToolAction = nil
+//
+//        } else {
+//          lastToolAction = resolution.action
+//          //          toolActionRevision &+= 1
+//
+//        }
+//        return handleAdjustment(
+//          resolution.adjustment,
+//          transform: currentTransform,
+//        )
+//    }
   }
 }
 
