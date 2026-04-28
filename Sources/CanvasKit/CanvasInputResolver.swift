@@ -68,7 +68,7 @@ extension CanvasInputResolver {
 // MARK: - Base Adjustment (Tool Use inactive)
 extension CanvasInputResolver {
 
-  static func defaultResolution(for context: InteractionContext) -> CanvasInputResolution? {
+  static func defaultResolution(for context: InteractionContext) -> InteractionAdjustment? {
     switch context.interaction {
       case .swipe(let delta):
         return .base(.translation(delta))
