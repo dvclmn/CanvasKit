@@ -6,16 +6,17 @@
 //
 
 /// Starting with finite/default intents at first
-public enum GestureIntent : Sendable{
-//public struct GestureIntent : Sendable{
-  
+public enum GestureIntent: Sendable {
+
   /// Important: Need to see Modifiers to properly resolve. E.g. a Swipe
   /// gesture resolves to Pan by default; with Option it becomes Zoom.
-//  public enum Preset: Sendable {
-    case pan
-    case zoom
-    case rotate
-    
-    case adjustBrushSize
-//  }
+  case pan
+  case zoom
+  case rotate
+
+  case adjustBrushSize
+
+  // These two are undefined currently, need work
+  case select
+  case drawMarquee
 }

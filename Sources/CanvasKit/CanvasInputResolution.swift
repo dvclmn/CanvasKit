@@ -13,31 +13,32 @@ enum CanvasInputResolution {
   case base(TransformAdjustment)
 
   /// For when Tools are in use, requiring full input resolution
-  case tool(ToolResolution)
+  case tool(InteractionAdjustment)
 }
 
 extension CanvasTool {
-  func shouldResolve(
-    with context: InteractionContext,
-    resolution: ToolResolution,
-  ) -> Bool {
-    let interaction = context.interaction.kind
-
-    if let adjustment = resolution.adjustment.kind {
-      return inputCapabilities.contains { capability in
-        capability.matches(
-          interaction: interaction,
-          adjustment: adjustment,
-        )
-      }
-    }
-
-    guard !resolution.action.isNone else { return false }
-
-    return inputCapabilities.contains { capability in
-      capability.interactionKind == interaction
-    }
-  }
+  
+//  func shouldResolve(
+//    with context: InteractionContext,
+//    resolution: ToolResolution,
+//  ) -> Bool {
+//    let interaction = context.interaction.kind
+//
+//    if let adjustment = resolution.adjustment.kind {
+//      return inputCapabilities.contains { capability in
+//        capability.matches(
+//          interaction: interaction,
+//          adjustment: adjustment,
+//        )
+//      }
+//    }
+//
+//    guard !resolution.action.isNone else { return false }
+//
+//    return inputCapabilities.contains { capability in
+//      capability.interactionKind == interaction
+//    }
+//  }
 }
 
 /// Whether in Tools mode or not, there will be an adjustment to be made,

@@ -5,7 +5,6 @@
 //  Created by Dave Coleman on 12/3/2026.
 //
 
-
 import InputPrimitives
 import SwiftUI
 
@@ -16,12 +15,15 @@ public struct PanTool: CanvasTool {
   public let icon = "hand.raised"
 
   public var dragBehaviour: PointerDragBehaviour { .continuous }
-  public var inputCapabilities: [ToolCapability] { ToolCapability.pan }
+  //  public var inputCapabilities: [ToolCapability] { ToolCapability.pan }
+
+  public var inputCapabilities: [ToolCapability] {
+    [
+      ToolCapability(interaction: .drag, intent: .pan)
+    ]
+  }
 
   public init() {}
-}
-
-extension PanTool {
 
   public func resolvePointerStyle(
     context: InteractionContext
@@ -29,7 +31,7 @@ extension PanTool {
     context.isPointerDragging ? .grabActive : .grabIdle
   }
 
-  public func resolvePointerInteraction(
+  public func resolveInteraction(
     context: InteractionContext,
     currentTransform: TransformState,
   ) -> ToolResolution {
@@ -47,10 +49,11 @@ extension PanTool {
         default: .none
       }
 
-    return .init(
-      for: context.interaction,
-      adjustment: adjustment,
-      action: .none,
-    )
+    return .handled(adjustment)
+    //    return .init(
+    //      for: context.interaction,
+    //      adjustment: adjustment,
+    //      action: .none,
+    //    )
   }
 }

@@ -22,7 +22,7 @@ extension CanvasInputResolver {
     activeTool?.resolvePointerStyle(context: context)
   }
 
-  func resolve() -> CanvasResolution? {
+  func resolve() -> CanvasInputResolution? {
     let interactionKind = context.interaction.kind
     
     /// 1. Does the active tool declare a matching capability?

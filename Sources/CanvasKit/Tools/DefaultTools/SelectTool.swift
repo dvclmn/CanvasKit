@@ -19,7 +19,13 @@ public struct SelectTool: CanvasTool {
   public let icon = "cursorarrow"
 
   public var dragBehaviour: PointerDragBehaviour { .marquee }
-  public var inputCapabilities: [ToolCapability] { ToolCapability.selection }
+  public var inputCapabilities: [ToolCapability] {
+    [
+      ToolCapability(interaction: .tap, intent: .select),
+      ToolCapability(interaction: .drag, intent: .drawMarquee)
+      ]
+//    ToolCapability.selection
+  }
 
   public init() {}
 
@@ -27,7 +33,7 @@ public struct SelectTool: CanvasTool {
     context: InteractionContext
   ) -> PointerStyleCompatible { .default }
 
-  public func resolvePointerInteraction(
+  public func resolveInteraction(
     context: InteractionContext,
     currentTransform: TransformState,
   ) -> ToolResolution {
@@ -39,10 +45,11 @@ public struct SelectTool: CanvasTool {
         default: .none
       }
 
-    return .init(
-      for: context.interaction,
-      adjustment: adjustment,
-      action: .none,
-    )
+    return .handled(adjustment)
+//    return .init(
+//      for: context.interaction,
+//      adjustment: adjustment,
+//      action: .none,
+//    )
   }
 }

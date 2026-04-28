@@ -5,7 +5,6 @@
 //  Created by Dave Coleman on 12/3/2026.
 //
 
-
 import GeometryPrimitives
 import InputPrimitives
 import SwiftUI
@@ -17,13 +16,18 @@ public struct ZoomTool: CanvasTool {
   public let name = "Zoom"
   public let icon = "magnifyingglass"
 
-  public var dragBehaviour: PointerDragBehaviour { .continuous(axes: .vertical) }
-  public var inputCapabilities: [ToolCapability] { ToolCapability.zoom }
-
   public init() {}
-}
 
-extension ZoomTool {
+  public var dragBehaviour: PointerDragBehaviour { .continuous(axes: .vertical) }
+  //  public var inputCapabilities: [ToolCapability] { ToolCapability.zoom }
+
+  /// modifiers: nil → matches drag/tap regardless of modifier state
+  public var inputCapabilities: [ToolCapability] {
+    [
+      ToolCapability(interaction: .drag, intent: .zoom, modifiers: nil),
+      ToolCapability(interaction: .tap, intent: .zoom, modifiers: nil),
+    ]
+  }
 
   public func resolvePointerStyle(
     context: InteractionContext
@@ -31,11 +35,11 @@ extension ZoomTool {
     context.modifiers.contains(.option) ? .zoomOut : .zoomIn
   }
 
-  public func resolvePointerInteraction(
+  public func resolveInteraction(
     context: InteractionContext,
     currentTransform: TransformState,
   ) -> ToolResolution {
-
+    
     let adjustment: InteractionAdjustment =
       switch context.interaction {
         case .drag(let payload):
@@ -51,8 +55,7 @@ extension ZoomTool {
               rectDrag(from: from, current: current, transform: currentTransform)
 
           }
-
-        case .tap(_):
+        case .tap:
           .transform(
             .zoomAdjustment(
               for: currentTransform,
@@ -60,15 +63,49 @@ extension ZoomTool {
             )
           )
 
-        default: .none
+        default: .none  // shouldn't be reached given capabilities, but safe
       }
-    
-    return .init(
-      for: context.interaction,
-      adjustment: adjustment,
-      action: .none
-    )
+    return .handled(adjustment)
   }
+
+  //  public func resolvePointerInteraction(
+  //    context: InteractionContext,
+  //    currentTransform: TransformState,
+  //  ) -> ToolResolution {
+  //
+  //    let adjustment: InteractionAdjustment =
+  //      switch context.interaction {
+  //        case .drag(let payload):
+  //          switch payload {
+  //            case .delta(let delta, _):
+  //              deltaDrag(
+  //                delta,
+  //                modifiers: context.modifiers,
+  //                transform: currentTransform,
+  //              )
+  //
+  //            case .rect(let from, let current):
+  //              rectDrag(from: from, current: current, transform: currentTransform)
+  //
+  //          }
+  //
+  //        case .tap(_):
+  //          .transform(
+  //            .zoomAdjustment(
+  //              for: currentTransform,
+  //              by: context.modifiers.isHoldingOption ? 0.8 : 1.25,
+  //            )
+  //          )
+  //
+  //        default: .none
+  //      }
+  //
+  //    return .init(
+  //      for: context.interaction,
+  //      adjustment: adjustment,
+  //      action: .none,
+  //    )
+  //  }
 
   private func deltaDrag(
     _ delta: Size<ScreenSpace>,

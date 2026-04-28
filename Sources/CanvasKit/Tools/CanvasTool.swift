@@ -44,7 +44,6 @@ public protocol CanvasTool: Sendable, Equatable, Identifiable where ID == Canvas
     context: InteractionContext,
     currentTransform: TransformState,
   ) -> ToolResolution
-
 }
 
 extension CanvasTool {
@@ -52,9 +51,9 @@ extension CanvasTool {
 
   /// This is the default capability contract for a tool that has not opted into
   /// anything more specific.
-  public var inputCapabilities: [ToolCapability] {
-    ToolCapability.canvasBasics
-  }
+//  public var inputCapabilities: [ToolCapability] {
+//    ToolCapability.canvasBasics
+//  }
 }
 
 extension CanvasTool where Self == SelectTool {
