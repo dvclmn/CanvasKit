@@ -40,7 +40,7 @@ public protocol CanvasTool: Sendable, Equatable, Identifiable where ID == Canvas
   ///
   /// This allows a Tool to declare what should happen when it is selected,
   /// and certain interaction events happen
-  func resolvePointerInteraction(
+  func resolveInteraction(
     context: InteractionContext,
     currentTransform: TransformState,
   ) -> ToolResolution

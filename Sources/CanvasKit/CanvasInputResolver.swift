@@ -22,22 +22,43 @@ extension CanvasInputResolver {
     activeTool?.resolvePointerStyle(context: context)
   }
 
-  func resolve() -> CanvasInputResolution? {
-    guard let activeTool else {
-      return baseAdjustment.map { .base($0) }
+  func resolve() -> CanvasResolution? {
+    let interactionKind = context.interaction.kind
+    
+    /// 1. Does the active tool declare a matching capability?
+    if let tool = activeTool,
+       tool.inputCapabilities.contains(where: { $0.matches(context) }) {
+      
+      let resolution = tool.resolveInteraction(context: context, currentTransform: transform)
+      
+      switch resolution {
+        case .handled(let adjustment):
+          return .tool(adjustment)
+          
+        case .passthrough:
+          break  // fall through to canvas defaults below
+      }
     }
-
-    let resolution = activeTool.resolvePointerInteraction(
-      context: context,
-      currentTransform: transform,
-    )
-
-    guard activeTool.shouldResolve(with: context, resolution: resolution) else {
-      return baseAdjustment.map { .base($0) }
-    }
-
-    return .tool(resolution)
+    
+    // 2. Canvas-level defaults (swipe→pan, pinch→zoom, etc.)
+    return defaultResolution(for: context)
   }
+//  func resolve() -> CanvasInputResolution? {
+//    guard let activeTool else {
+//      return baseAdjustment.map { .base($0) }
+//    }
+//
+//    let resolution = activeTool.resolvePointerInteraction(
+//      context: context,
+//      currentTransform: transform,
+//    )
+//
+//    guard activeTool.shouldResolve(with: context, resolution: resolution) else {
+//      return baseAdjustment.map { .base($0) }
+//    }
+//
+//    return .tool(resolution)
+//  }
 }
 
 // MARK: - Base Adjustment (Tool Use inactive)

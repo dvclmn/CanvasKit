@@ -11,12 +11,12 @@ public struct ToolCapability: Hashable, Sendable {
   public let interactionKind: InteractionKind
   //  public let adjustmentKind: AdjustmentKind
   public let intent: GestureIntent
-  public let modifiers: Modifiers
+  public let modifiers: Modifiers? // nil = match regardless of modifiers
 
   public init(
     interaction: InteractionKind,
     intent: GestureIntent,
-    modifiers: Modifiers = [],
+    modifiers: Modifiers? = nil,
   ) {
     self.interactionKind = interaction
     self.intent = intent
@@ -65,18 +65,24 @@ extension ToolCapability {
   //  ]
 }
 
+
 extension ToolCapability {
-  func matches(
-    interaction: InteractionKind,
-    adjustment: AdjustmentKind?,
-  ) -> Bool {
-    guard interactionKind == interaction, let adjustment else { return false }
-    return adjustmentKind == adjustment
+  func matches(_ context: InteractionContext) -> Bool {
+    guard interactionKind == context.interaction.kind else { return false }
+    guard let required = modifiers else { return true }  // nil = any
+    return context.modifiers.contains(required)
   }
+//  func matches(
+//    interaction: InteractionKind,
+//    adjustment: AdjustmentKind?,
+//  ) -> Bool {
+//    guard interactionKind == interaction, let adjustment else { return false }
+//    return adjustmentKind == adjustment
+//  }
 }
 
-extension ToolCapability: CustomStringConvertible {
-  public var description: String {
-    "\(interactionKind.displayName) → \(adjustmentKind.displayName)"
-  }
-}
+//extension ToolCapability: CustomStringConvertible {
+//  public var description: String {
+//    "\(interactionKind.displayName) → \(adjustmentKind.displayName)"
+//  }
+//}
