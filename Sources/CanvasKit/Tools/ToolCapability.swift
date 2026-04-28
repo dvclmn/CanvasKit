@@ -5,9 +5,13 @@
 //  Created by Dave Coleman on 12/4/2026.
 //
 
+import InputPrimitives
+
 public struct ToolCapability: Hashable, Sendable {
   public let interactionKind: InteractionKind
-  public let adjustmentKind: AdjustmentKind
+//  public let adjustmentKind: AdjustmentKind
+  public let intent: GestureIntent
+  public let modifiers: Modifiers
 
   public init(
     interaction: InteractionKind,

@@ -5,6 +5,26 @@
 //  Created by Dave Coleman on 12/4/2026.
 //
 
+public struct InteractionIntent {
+
+}
+
+//public enum IntentPreset {
+//  case zoom
+//  case pan
+//  case rotate
+//
+//  /// Content intents (canvas-space, coord mapping needed)
+//  case selectAt        // was tapLocation
+//  case marqueeSelect   // was dragRect
+//  case draw            // drag-to-draw
+//  case trackCursor     // was hoverLocation
+//
+//  // Adjustable parameter intents (tool-specific)
+//  case adjustBrushSize
+//  case adjustThreshold
+//}
+
 public enum AdjustmentKind: CaseIterable, Hashable, Sendable {
   case translation
   case scale
