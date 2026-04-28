@@ -9,55 +9,60 @@ import InputPrimitives
 
 public struct ToolCapability: Hashable, Sendable {
   public let interactionKind: InteractionKind
-//  public let adjustmentKind: AdjustmentKind
+  //  public let adjustmentKind: AdjustmentKind
   public let intent: GestureIntent
   public let modifiers: Modifiers
 
   public init(
     interaction: InteractionKind,
-    adjustment: AdjustmentKind,
+    intent: GestureIntent,
+    modifiers: Modifiers = [],
   ) {
     self.interactionKind = interaction
-    self.adjustmentKind = adjustment
+    self.intent = intent
+    self.modifiers = modifiers
   }
 }
 
 extension ToolCapability {
 
-  static let swipeToTranslate = Self(interaction: .swipe, adjustment: .translation)
-  static let swipeToScale = Self(interaction: .swipe, adjustment: .scale)
-  static let pinchToScale = Self(interaction: .pinch, adjustment: .scale)
-  static let rotateToRotate = Self(interaction: .rotate, adjustment: .rotation)
-  static let tapLocation = Self(interaction: .tap, adjustment: .tapLocation)
-  static let tapToScale = Self(interaction: .tap, adjustment: .scale)
-  static let dragToTranslate = Self(interaction: .drag, adjustment: .translation)
-  static let dragToScale = Self(interaction: .drag, adjustment: .scale)
-  static let dragRect = Self(interaction: .drag, adjustment: .dragRect)
-  static let hoverLocation = Self(interaction: .hover, adjustment: .hoverLocation)
+  static let swipeToPan = Self(interaction: .swipe, intent: .pan)
+  static let pinchToZoom = Self(interaction: .pinch, intent: .zoom)
+
+  //  static let swipeToTranslate = Self(interaction: .swipe, adjustment: .translation)
+  //  static let swipeToScale = Self(interaction: .swipe, adjustment: .scale)
+  //  static let pinchToScale = Self(interaction: .pinch, adjustment: .scale)
+  //  static let rotateToRotate = Self(interaction: .rotate, adjustment: .rotation)
+  //  static let tapLocation = Self(interaction: .tap, adjustment: .tapLocation)
+  //  static let tapToScale = Self(interaction: .tap, adjustment: .scale)
+  //  static let dragToTranslate = Self(interaction: .drag, adjustment: .translation)
+  //  static let dragToScale = Self(interaction: .drag, adjustment: .scale)
+  //  static let dragRect = Self(interaction: .drag, adjustment: .dragRect)
+  //  static let hoverLocation = Self(interaction: .hover, adjustment: .hoverLocation)
 
   /// Canonical canvas gestures that a tool may claim.
-  static let canvasBasics: [Self] = [
-    .swipeToTranslate,
-    .pinchToScale,
-    .rotateToRotate,
-  ]
-
-  /// Selection-style pointer interactions.
-  static let selection: [Self] = [
-    .tapLocation,
-    .dragRect,
-  ]
-
-  /// Pan tool pointer interactions.
-  static let pan: [Self] = [
-    .dragToTranslate
-  ]
-
-  /// Zoom tool pointer interactions.
-  static let zoom: [Self] = [
-    .tapToScale,
-    .dragToScale,
-  ]
+  //  static let canvasBasics: [Self] = [
+  //    .swipeToTranslate,
+  //    .pinchToScale,
+  //    .rotateToRotate,
+  //  ]
+  //
+  //  /// Selection-style pointer interactions.
+  //  static let selection: [Self] = [
+  //    .tapLocation,
+  //    .dragRect,
+  //  ]
+  //
+  //  /// Pan tool pointer interactions.
+  //  static let pan: [Self] = [
+  //    .dragToTranslate
+  //  ]
+  //
+  //  /// Zoom tool pointer interactions.
+  //  static let zoom: [Self] = [
+  //    .tapToScale,
+  //    .dragToScale,
+  //  ]
 }
 
 extension ToolCapability {

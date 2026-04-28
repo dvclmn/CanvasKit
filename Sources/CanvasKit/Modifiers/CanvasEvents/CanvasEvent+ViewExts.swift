@@ -33,5 +33,4 @@ extension View {
   ) -> ModifiedContent<Self, CanvasHoverModifier> {
     self.modifier(CanvasHoverModifier(action: action))
   }
-
 }
