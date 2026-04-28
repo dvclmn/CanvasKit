@@ -7,16 +7,22 @@
 
 import Foundation
 
-enum CanvasInputResolution {
+/// `CanvasInputResolution` retired as ToolAction
+/// was removed from ToolResolution, I think this is the reason?
+//enum CanvasInputResolution {
   /// For cases where Tool use is inactive, so just a
   /// basic zoom/pan adjustment is required
-  case base(TransformAdjustment)
+//  case base(TransformAdjustment)
 
   /// For when Tools are in use, requiring full input resolution
-  case tool(InteractionAdjustment)
-}
+//  case tool(InteractionAdjustment)
+//}
 
-extension CanvasTool {
+//extension CanvasTool {
+//  
+//  static func defaultResolution(for: InteractionContext) -> CanvasInputResolution {
+//    
+//  }
   
 //  func shouldResolve(
 //    with context: InteractionContext,
@@ -39,7 +45,7 @@ extension CanvasTool {
 //      capability.interactionKind == interaction
 //    }
 //  }
-}
+//}
 
 /// Whether in Tools mode or not, there will be an adjustment to be made,
 /// based on some interaction. So Base should probably not be optional
