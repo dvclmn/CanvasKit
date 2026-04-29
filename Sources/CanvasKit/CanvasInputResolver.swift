@@ -18,20 +18,17 @@ struct CanvasInputResolver {
 
 extension CanvasInputResolver {
 
-  var pointerStyle: PointerStyleCompatible? {
-    activeTool?.resolvePointerStyle(context: context)
-  }
-
   func resolve() -> InteractionAdjustment? {
-    //  func resolve() -> CanvasInputResolution? {
-    let interactionKind = context.interaction.kind
 
     /// 1. Does the active tool declare a matching capability?
     if let tool = activeTool,
       tool.inputCapabilities.contains(where: { $0.matches(context) })
     {
 
-      let resolution = tool.resolveInteraction(context: context, currentTransform: transform)
+      let resolution = tool.resolveInteraction(
+        context: context,
+        currentTransform: transform,
+      )
 
       switch resolution {
         case .handled(let adjustment):
@@ -43,7 +40,12 @@ extension CanvasInputResolver {
       }
     }
 
-    return Self.defaultResolution(for: context)
+    /// If not, fall back to defaults, which ensures that basics like
+    /// Swipe to pan, Pinch to Zoom etc work as expected.
+    return Self.defaultResolution(
+      for: context,
+      currentTransform: transform,
+    )
     // 2. Canvas-level defaults (swipe→pan, pinch→zoom, etc.)
 
   }
@@ -63,19 +65,28 @@ extension CanvasInputResolver {
   //
   //    return .tool(resolution)
   //  }
+
+  var pointerStyle: PointerStyleCompatible? {
+    activeTool?.resolvePointerStyle(context: context)
+  }
 }
 
 // MARK: - Base Adjustment (Tool Use inactive)
 extension CanvasInputResolver {
 
-  static func defaultResolution(for context: InteractionContext) -> InteractionAdjustment? {
+  static func defaultResolution(
+    for context: InteractionContext,
+    currentTransform: TransformState,
+  ) -> InteractionAdjustment? {
     switch context.interaction {
       case .swipe(let delta):
-        return .transform(.translation(delta))
+        return .transform(.panAdjustment(for: currentTransform, delta: delta))
+      //        return .transform(.translation(delta))
       //        return .base(.translation(delta))
 
       case .pinch(let scale):
-        return .transform(.scale(scale))
+        return .transform(.zoomAdjustment(for: currentTransform, by: scale))
+      //        return .transform(.scale(scale))
       //        return .base(.scale(scale))
 
       case .rotation(let angle):
