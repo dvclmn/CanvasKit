@@ -11,12 +11,12 @@ import InputPrimitives
 /// when a user performs one of the six ``InteractionKind``s.
 public struct ToolCapability: Hashable, Sendable {
   public let interactionKind: InteractionKind
-  public let intent: GestureIntent
+  public let intent: InteractionIntent
   public let modifiers: Modifiers?
 
   public init(
     interaction: InteractionKind,
-    intent: GestureIntent,
+    intent: InteractionIntent,
     modifiers: Modifiers? = nil,
   ) {
     self.interactionKind = interaction

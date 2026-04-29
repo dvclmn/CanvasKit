@@ -10,7 +10,7 @@
 /// CanvasKit supports six types of user input.
 ///
 /// Swipe, Pinch, and Rotate are viewport gestures, performed with the trackpad.
-/// By default, these are paired with ``GestureIntent``s, Pan, Zoom and Rotate.
+/// By default, these are paired with ``InteractionIntent``s, Pan, Zoom and Rotate.
 /// They can be assigned alternative behaviours when declaring a new ``CanvasTool``.
 ///
 /// Tap Drag, and Hover are pointer events. Their values are captured in Screen

@@ -39,16 +39,14 @@ extension CanvasHandler {
   /// Returns an optional to allow a no-op in ``InteractionModifiers``,
   /// so that interaction modifiers that don't need to touch Transform state
   /// don't inadvertantly write it to `identity`.
-  //  func handleInteraction(  
+  //  func handleInteraction(
   func processedTransform(
     _ interaction: Interaction,
-    //    tool: (any CanvasTool)?,
     phase: InteractionPhase,
     modifiers: Modifiers,
     currentTransform: TransformState,
   ) -> TransformState? {
 
-    //    self.activeTool = tool
     let context = InteractionContext(
       interaction: interaction,
       phase: phase,
@@ -69,40 +67,40 @@ extension CanvasHandler {
 
     return handleAdjustment(
       resolution,
-      transform: currentTransform
+      transform: currentTransform,
     )
-//    switch resolution {
-//      case .transform(let transformAdjustment):
-//        <#code#>
-//      case .pointer(let pointerAdjustment):
-//        <#code#>
-//      case .none:
-//        <#code#>
-//    }
-//    switch resolution {
-//      /// Base gestures, updates transform state regardless
-//      /// of whether Canvas Tools are in use
-//      case .base(let adjustment):
-//        lastToolAction = nil
-//        return handleAdjustment(
-//          .transform(adjustment),
-//          transform: currentTransform,
-//        )
-//
-//      case .tool(let resolution):
-//        if resolution.action.isNone {
-//          lastToolAction = nil
-//
-//        } else {
-//          lastToolAction = resolution.action
-//          //          toolActionRevision &+= 1
-//
-//        }
-//        return handleAdjustment(
-//          resolution.adjustment,
-//          transform: currentTransform,
-//        )
-//    }
+    //    switch resolution {
+    //      case .transform(let transformAdjustment):
+    //        <#code#>
+    //      case .pointer(let pointerAdjustment):
+    //        <#code#>
+    //      case .none:
+    //        <#code#>
+    //    }
+    //    switch resolution {
+    //      /// Base gestures, updates transform state regardless
+    //      /// of whether Canvas Tools are in use
+    //      case .base(let adjustment):
+    //        lastToolAction = nil
+    //        return handleAdjustment(
+    //          .transform(adjustment),
+    //          transform: currentTransform,
+    //        )
+    //
+    //      case .tool(let resolution):
+    //        if resolution.action.isNone {
+    //          lastToolAction = nil
+    //
+    //        } else {
+    //          lastToolAction = resolution.action
+    //          //          toolActionRevision &+= 1
+    //
+    //        }
+    //        return handleAdjustment(
+    //          resolution.adjustment,
+    //          transform: currentTransform,
+    //        )
+    //    }
   }
 }
 
@@ -130,6 +128,9 @@ extension CanvasHandler {
 }
 
 extension CanvasHandler {
+  // TODO: Change how interactionContext is updated, as this pointer style
+  // is possibly not being updated at the right cadence. interactionContext
+  // is currently only updated when processedTransform() is run.
   var pointerStyle: PointerStyleCompatible? {
     guard let interactionContext else { return nil }
     return activeTool?.resolvePointerStyle(context: interactionContext)

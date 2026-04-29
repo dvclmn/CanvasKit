@@ -19,44 +19,44 @@ public enum InteractionAdjustment: Sendable {
 
 extension InteractionAdjustment {
 
-  var kind: AdjustmentKind? {
-    switch self {
-      case .transform(let adjustment):
-        switch adjustment {
-          case .translation: .translation
-          case .scale: .scale
-          case .rotation: .rotation
-        }
-
-      case .pointer(let adjustment):
-        switch adjustment {
-          case .tap: .tapLocation
-          case .hover: .hoverLocation
-          case .drag: .dragRect
-        }
-
-      case .none:
-        nil
-    }
-  }
+//  var kind: AdjustmentKind? {
+//    switch self {
+//      case .transform(let adjustment):
+//        switch adjustment {
+//          case .translation: .translation
+//          case .scale: .scale
+//          case .rotation: .rotation
+//        }
+//
+//      case .pointer(let adjustment):
+//        switch adjustment {
+//          case .tap: .tapLocation
+//          case .hover: .hoverLocation
+//          case .drag: .dragRect
+//        }
+//
+//      case .none:
+//        nil
+//    }
+//  }
 
   static func pointerAdjustment(from drag: PointerDragPayload) -> Self {
     guard let rect = drag.boundingRect else { return .none }
     return .pointer(.drag(rect))
   }
 
-  func isSupported(by interaction: InteractionKind) -> Bool {
-    switch self {
-      case .transform(let adjustment):
-        adjustment.supportedInteractions.contains(interaction)
-
-      case .pointer:
-        /// Pointer adjustments have no support limitations
-        true
-
-      case .none: true
-    }
-  }
+//  func isSupported(by interaction: InteractionKind) -> Bool {
+//    switch self {
+//      case .transform(let adjustment):
+//        adjustment.supportedInteractions.contains(interaction)
+//
+//      case .pointer:
+//        /// Pointer adjustments have no support limitations
+//        true
+//
+//      case .none: true
+//    }
+//  }
 }
 
 extension InteractionAdjustment: CustomStringConvertible {

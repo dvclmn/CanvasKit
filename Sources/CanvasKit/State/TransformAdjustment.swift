@@ -34,13 +34,19 @@ public enum TransformAdjustment: Sendable {
 }
 
 extension TransformAdjustment {
-  var supportedInteractions: InteractionKind.Set {
-    switch self {
-      case .translation: [.swipe, .drag]
-      case .scale: [.swipe, .pinch, .tap, .drag]
-      case .rotation: [.swipe, .rotate, .drag]
-    }
-  }
+  
+  /// Certain Transform adjustments can only be mutated by
+  /// compatible interactions.
+  ///
+  /// UPDATE: I think this may limit how tools may wish to declare
+  /// some capacibilities? Have turned off for now.
+//  var supportedInteractions: InteractionKind.Set {
+//    switch self {
+//      case .translation: [.swipe, .drag]
+//      case .scale: [.swipe, .pinch, .tap, .drag]
+//      case .rotation: [.swipe, .rotate, .drag]
+//    }
+//  }
 }
 
 extension TransformAdjustment {
