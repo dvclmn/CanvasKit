@@ -11,8 +11,8 @@ import InputPrimitives
 import SwiftUI
 
 public struct CanvasView<Content: View>: View, CanvasAddressable {
+
   @State private var store: CanvasHandler = .init()
-  //  @State private var toolHandler: ToolHandler
 
   /// Populated when user wishes to handle their own transform state
   private let externalTransform: Binding<TransformState>?
@@ -20,12 +20,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   /// Internal-only source of truth for transform state. If user passes in state,
   /// it is passed to this. If not, this gets a default initial value.
   /// External and internal state is kept in sync via `bindModel`.
-  //  @State private var localState: CanvasState
   @State private var localTransform: TransformState
-  @State private var userModifierKeys: Modifiers?
-
-  /// Canvas Tool use is opt-in. If the user doesn't need tools, this stays nil
-  //  private let toolConfiguration: Binding<ToolConfiguration>?
 
   @Binding var toolConfiguration: ToolConfiguration
   let canvasSize: Size<CanvasSpace>
@@ -38,6 +33,10 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       transform: $localTransform,
       content: content,
     )
+    
+    .overlay {
+      
+    }
 
     /// User input modifiers, `onSwipeGesture`, `onTapGesture`, etc
     .modifier(
@@ -82,7 +81,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
     .pointerStyleCompatible(store.pointerStyle)
     .environment(\.pointerStyle, store.pointerStyle)
     .environment(store)
-    
+
     // TODO: Re-evaluate this fingerprint system
     //    .task(id: toolConfiguration?.wrappedValue.fingerprint ?? "no-tool-configuration") {
     //      guard let toolConfiguration else { return }
@@ -181,15 +180,9 @@ extension CanvasView {
     @ViewBuilder content: @escaping () -> Content,
   ) {
     self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
-    //    self._localState = State(initialValue: state)
-    //    @Bindable var canvasState = state
     self._localTransform = State(initialValue: transform.wrappedValue)
     self.externalTransform = transform
-    //    self.externalTransform = $canvasState.transform
-
     self._toolConfiguration = toolConfiguration ?? .constant(.default)
-    //    self._toolHandler = State(initialValue: .init(configuration: toolConfiguration.wrappedValue))
-    //    self.toolConfiguration = toolConfiguration
     self.content = content
   }
 }

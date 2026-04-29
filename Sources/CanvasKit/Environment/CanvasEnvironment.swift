@@ -16,6 +16,8 @@ extension EnvironmentValues {
 
   /// Aka artwork/document size. Used internally by CanvasKit only
   @Entry var canvasSize: Size<CanvasSpace>?
+  
+  @Entry var isShowingToolPicker: Bool = false
 
   /// `canvasAnchor` is useful for both Canvas and Grid domains.
   /// Describes the anchor point for layout in ``CanvasArtworkView``.
@@ -54,4 +56,6 @@ extension EnvironmentValues {
     guard zoomLevel.isFiniteAndGreaterThanZero else { return 1.0 }
     return zoomLevel.clamped(to: zoomRange)
   }
+  
+  
 }

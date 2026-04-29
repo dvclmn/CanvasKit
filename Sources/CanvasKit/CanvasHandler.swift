@@ -60,47 +60,15 @@ extension CanvasHandler {
       transform: currentTransform,
     )
 
-    guard let resolution = resolver.resolve() else {
+    guard let resolvedAdjustment = resolver.resolve() else {
       print("No resolution for provided interaction context: \(context)")
       return nil
     }
 
     return handleAdjustment(
-      resolution,
+      resolvedAdjustment,
       transform: currentTransform,
     )
-    //    switch resolution {
-    //      case .transform(let transformAdjustment):
-    //        <#code#>
-    //      case .pointer(let pointerAdjustment):
-    //        <#code#>
-    //      case .none:
-    //        <#code#>
-    //    }
-    //    switch resolution {
-    //      /// Base gestures, updates transform state regardless
-    //      /// of whether Canvas Tools are in use
-    //      case .base(let adjustment):
-    //        lastToolAction = nil
-    //        return handleAdjustment(
-    //          .transform(adjustment),
-    //          transform: currentTransform,
-    //        )
-    //
-    //      case .tool(let resolution):
-    //        if resolution.action.isNone {
-    //          lastToolAction = nil
-    //
-    //        } else {
-    //          lastToolAction = resolution.action
-    //          //          toolActionRevision &+= 1
-    //
-    //        }
-    //        return handleAdjustment(
-    //          resolution.adjustment,
-    //          transform: currentTransform,
-    //        )
-    //    }
   }
 }
 
