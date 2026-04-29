@@ -8,6 +8,9 @@
 import Foundation
 import InputPrimitives
 
+/// Describes the current interaction, as it is happening right now.
+/// Can be used to compare against ``ToolCapability``s to
+/// determine user intent based on the selected ``CanvasTool``.
 public struct InteractionContext: Sendable {
   let interaction: Interaction
   let phase: InteractionPhase
@@ -25,7 +28,7 @@ public struct InteractionContext: Sendable {
 }
 
 extension InteractionContext {
-  /// True when the last pointer interaction is an active drag.
+  
   var isPointerDragging: Bool {
     guard case .drag = interaction else { return false }
     return phase.isActive

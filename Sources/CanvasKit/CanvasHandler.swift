@@ -39,7 +39,7 @@ extension CanvasHandler {
   /// Returns an optional to allow a no-op in ``InteractionModifiers``,
   /// so that interaction modifiers that don't need to touch Transform state
   /// don't inadvertantly write it to `identity`.
-  //  func handleInteraction(
+  //  func handleInteraction(  
   func processedTransform(
     _ interaction: Interaction,
     //    tool: (any CanvasTool)?,

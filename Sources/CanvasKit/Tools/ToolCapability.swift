@@ -7,6 +7,8 @@
 
 import InputPrimitives
 
+/// A Tool Capability allows the tool author to declare what should happen
+/// when a user performs one of the six ``InteractionKind``s.
 public struct ToolCapability: Hashable, Sendable {
   public let interactionKind: InteractionKind
   public let intent: GestureIntent
@@ -27,6 +29,7 @@ extension ToolCapability {
 
   static let swipeToPan = Self(interaction: .swipe, intent: .pan)
   static let pinchToZoom = Self(interaction: .pinch, intent: .zoom)
+  static let rotateToRotate = Self(interaction: .rotate, intent: .rotate)
 
   //  static let swipeToTranslate = Self(interaction: .swipe, adjustment: .translation)
   //  static let swipeToScale = Self(interaction: .swipe, adjustment: .scale)

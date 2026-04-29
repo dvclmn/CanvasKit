@@ -1,5 +1,5 @@
 {
-  "originHash" : "baaf73d92418ce407974012e82299d9bcb4a9438b92b306c1170e45577ca967e",
+  "originHash" : "ee8a2e0baacc469e0ffd2d6d2544a09d150bcadc75a36ca088602a20d9185a91",
   "pins" : [
     {
       "identity" : "baseprimitives",
@@ -7,7 +7,7 @@
       "location" : "https://github.com/dvclmn/BasePrimitives",
       "state" : {
         "branch" : "main",
-        "revision" : "a783a53e032e418d060d7f227cb624f6bf5c8c2a"
+        "revision" : "0d270ba8573a60a854b8922d6080f1b761b850dc"
       }
     },
     {
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-docc-plugin",
       "state" : {
-        "revision" : "e977f65879f82b375a044c8837597f690c067da6",
-        "version" : "1.4.6"
+        "revision" : "647c708be89f834fa6a6d4945442793a77ddf5b6",
+        "version" : "1.5.0"
       }
     },
     {

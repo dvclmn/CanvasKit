@@ -10,6 +10,7 @@ import SwiftUI
 
 /// Each case corresponds directly to a modifier in `InteractionModifiers`
 enum Interaction: Sendable {
+  /// ``SwiftUI/View/onSwipeGesture(isEnabled:perform:)``
   case swipe(delta: Size<ScreenSpace>)  // onSwipeGesture
   case pinch(scale: Double)  // onPinchGesture
   case rotation(angle: Angle)  // (Not yet supported)

@@ -7,6 +7,7 @@
 
 import Foundation
 
+// TODO: Should this really be ToolCapabilityResolution?
 public enum ToolResolution: Sendable {
   
   /// The tool has handled this interaction. Apply the adjustment,

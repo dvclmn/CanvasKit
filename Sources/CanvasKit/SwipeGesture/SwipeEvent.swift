@@ -9,7 +9,6 @@
 import GeometryPrimitives
 import InputPrimitives
 
-//public typealias SwipeOutputInternal = (SwipeEvent, Modifiers) -> Void
 public typealias SwipeOutput = (SwipeEvent) -> Void
 
 public struct SwipeEvent {

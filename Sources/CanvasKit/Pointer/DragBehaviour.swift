@@ -5,12 +5,10 @@
 //  Created by Dave Coleman on 14/1/2026.
 //
 
-
 import SwiftUI
 
 /// Defines the drag interaction mode applied by `PointerDragModifier`.
 public enum PointerDragBehaviour: Equatable, Sendable {
-//public enum PointerDragBehaviour: Equatable, Sendable {
 
   /// A transient selection rectangle drawn from the drag origin to the current
   /// pointer position. All state is cleared on drag end.
@@ -23,7 +21,6 @@ public enum PointerDragBehaviour: Equatable, Sendable {
   /// Each new drag begins from the offset committed by the previous drag, so
   /// movement compounds over time. Pass a `GeometryAxis/Set` to lock to an axis.
   case continuous(axes: Axis.Set)
-//  case continuous(axes: GeometryAxis.Set)
 
   /// Drag gesture is inactive; no callbacks or state changes are produced.
   case none
@@ -44,17 +41,16 @@ extension PointerDragBehaviour {
 
   /// The axis constraint for continuous drags. Only applicable for
   /// `continuous`, returns `.all` for other modes
-  public var axes: Axis.Set {
-    if case .continuous(let axes) = self { return axes }
-    return .all
-  }
+//  public var axes: Axis.Set {
+//    if case .continuous(let axes) = self { return axes }
+//    return .all
+//  }
 
   public var isMarquee: Bool {
     if case .marquee = self { return true }
     return false
   }
 
-  /// Whether drag gestures are permitted.
   public var isEnabled: Bool { self != .none }
 }
 
