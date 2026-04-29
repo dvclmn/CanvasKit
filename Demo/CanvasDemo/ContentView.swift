@@ -6,6 +6,7 @@
 //
 
 import CanvasKit
+import GeometryPrimitives
 import SwiftUI
 
 enum Constants {
@@ -15,15 +16,15 @@ enum Constants {
 struct ContentView: View {
   @State private var transform: TransformState
   @State private var toolConfiguration: ToolConfiguration
-  
+
   init(
     transform: TransformState = .init(),
-    toolConfiguration: ToolConfiguration = .default
+    toolConfiguration: ToolConfiguration = .default,
   ) {
     self._transform = State(initialValue: transform)
     self._toolConfiguration = State(initialValue: toolConfiguration)
   }
-  
+
   var body: some View {
 
     CanvasView(
@@ -36,6 +37,10 @@ struct ContentView: View {
     .zoomRange(0.1...20)
     .toolPicker()
 
+//    .onAppear {
+//      transform.scale = 1.8
+//      transform.translation.width = -90
+//    }
   }
 }
 
@@ -43,15 +48,13 @@ struct ContentView: View {
 #Preview {
   @Previewable @State var transform = TransformState()
   @Previewable @State var toolConfiguration = ToolConfiguration()
-  
+
   ContentView(
     transform: transform,
-    toolConfiguration: toolConfiguration
+    toolConfiguration: toolConfiguration,
   )
-  
+
   .frame(minWidth: 400, minHeight: 500)
-  .onAppear {
-    transform.scale = 2
-  }
+
 }
 #endif

@@ -62,7 +62,8 @@ extension CanvasArtwork {
     RoundedRectangle(cornerRadius: effectiveRounding)
       .fill(.clear)
       .stroke(
-        Color.white.opacity(0.05),
+        .regularMaterial.opacity(0.9),
+//        Color.white.opacity(0.05),
         lineWidth: lineWidth.removingZoom(
           transform.scale,
           across: zoomRange,

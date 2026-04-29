@@ -24,16 +24,13 @@ struct ToolsView: View {
       VStack(alignment: .leading, spacing: 0) {
 
         if !toolConfiguration.availableTools.isEmpty {
-          //        if !store.toolHandler.availableTools.isEmpty {
           ForEach(toolConfiguration.availableTools, id: \.kind) { tool in
-            //          ForEach(store.toolHandler.availableTools, id: \.kind) { tool in
             ToolButton(for: tool)
           }
 
         } else {
           Text("No Tools registered")
             .foregroundStyle(.tertiary)
-          //          StateView("No Tools registered")
         }
       }  // END vstack
 
@@ -41,7 +38,6 @@ struct ToolsView: View {
         .frame(width: toolbarWidth * 0.7)
 
       VStack(alignment: .leading) {
-
         Group {
           Button {
             print("Need to bring this back")
@@ -59,12 +55,24 @@ struct ToolsView: View {
 
     }  // END main vstack
     .buttonStyle(.plain)
+
+    .labelStyle(.iconOnly)
     //    .labelStyle(.base(display: .iconOnly))
     //    .setLabelDisplay(.iconOnly)
     //    .setSymbolVariants(.fill)
 
-    //    .quickRoundedBackground(glass: .regular(tint: .black.opacity(0.5)))
+    .padding(6)
+    .background {
+      RoundedRectangle(cornerRadius: 6)
+        .fill(Color.white.opacity(0.08))
+        .fill(.regularMaterial)
 
+    }
+//    .shadow(
+//      radius: 100,
+//      x: 0,
+//      y: 10,
+//    )
     //    .depthShadow(
     //      opacity: 0.3,
     //      radius: 20,
@@ -72,13 +80,8 @@ struct ToolsView: View {
     //      depthIntensity: 0,
     //    )
 
-    //    .environment(\.layoutSpacing, 0)
     .padding()
-    .font(.title3)
-    //    .animation(Styles.animationSpringQuickNSubtle, value: paddingLeading)
-
-    //    .offset(y: documentCount.multipleOpen ? Styles.titleBarHeight : 0)
-    //    .animation(Styles.animationSpringSubtle, value: documentCount.multipleOpen)
+    .font(.title2)
   }
 }
 
@@ -100,7 +103,7 @@ extension ToolsView {
         .contentShape(Rectangle())
         .background {
           if isToolActive(tool) {
-            RoundedRectangle(cornerRadius: 4)
+            RoundedRectangle(cornerRadius: 5)
               .fill(.quaternary)
           }
         }
