@@ -11,7 +11,8 @@ import InputPrimitives
 import SwiftUI
 
 public struct CanvasView<Content: View>: View, CanvasAddressable {
-
+  @Environment(\.isShowingToolPicker) private var isShowingToolPicker
+  @Environment(\.toolPickerAlignment) private var toolPickerAlignment
   @State private var store: CanvasHandler = .init()
 
   /// Populated when user wishes to handle their own transform state
@@ -33,9 +34,11 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       transform: $localTransform,
       content: content,
     )
-    
-    .overlay {
-      
+
+    .overlay(alignment: toolPickerAlignment) {
+      if isShowingToolPicker {
+        ToolsView(toolConfiguration: $store.toolHandler.configuration)
+      }
     }
 
     /// User input modifiers, `onSwipeGesture`, `onTapGesture`, etc

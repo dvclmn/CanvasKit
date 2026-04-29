@@ -33,7 +33,7 @@ struct ToolsView: View {
         } else {
           Text("No Tools registered")
             .foregroundStyle(.tertiary)
-//          StateView("No Tools registered")
+          //          StateView("No Tools registered")
         }
       }  // END vstack
 

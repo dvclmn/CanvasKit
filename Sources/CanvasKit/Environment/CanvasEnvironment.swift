@@ -18,6 +18,7 @@ extension EnvironmentValues {
   @Entry var canvasSize: Size<CanvasSpace>?
   
   @Entry var isShowingToolPicker: Bool = false
+  @Entry var toolPickerAlignment: Alignment = .topLeading
 
   /// `canvasAnchor` is useful for both Canvas and Grid domains.
   /// Describes the anchor point for layout in ``CanvasArtworkView``.

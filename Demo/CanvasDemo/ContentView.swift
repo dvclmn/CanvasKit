@@ -8,29 +8,50 @@
 import CanvasKit
 import SwiftUI
 
+enum Constants {
+  static let canvasSize: CGSize = CGSize(width: 380, height: 300)
+}
+
 struct ContentView: View {
-  let canvasSize: CGSize = CGSize(width: 380, height: 300)
-  @State private var transform: TransformState = .init()
-  @State private var toolConfiguration = ToolConfiguration()
+  @State private var transform: TransformState
+  @State private var toolConfiguration: ToolConfiguration
+  
+  init(
+    transform: TransformState = .init(),
+    toolConfiguration: ToolConfiguration = .default
+  ) {
+    self._transform = State(initialValue: transform)
+    self._toolConfiguration = State(initialValue: toolConfiguration)
+  }
+  
   var body: some View {
 
     CanvasView(
-      size: canvasSize,
+      size: Constants.canvasSize,
       transform: $transform,
-//      state: transform,
       toolConfiguration: $toolConfiguration,
     ) {
       CanvasContentView()
     }
-    .zoomRange(0...2)
+    .zoomRange(0.1...20)
+    .toolPicker()
 
   }
 }
 
 #if DEBUG
 #Preview {
-  ContentView()
-    .frame(minWidth: 400, minHeight: 500)
+  @Previewable @State var transform = TransformState()
+  @Previewable @State var toolConfiguration = ToolConfiguration()
+  
+  ContentView(
+    transform: transform,
+    toolConfiguration: toolConfiguration
+  )
+  
+  .frame(minWidth: 400, minHeight: 500)
+  .onAppear {
+    transform.scale = 2
+  }
 }
 #endif
-
