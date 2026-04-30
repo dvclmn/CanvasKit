@@ -23,8 +23,8 @@ struct ToolsView: View {
 
       VStack(alignment: .leading, spacing: 0) {
 
-        if !toolConfiguration.availableTools.isEmpty {
-          ForEach(toolConfiguration.availableTools, id: \.kind) { tool in
+        if !toolConfiguration.tools.isEmpty {
+          ForEach(toolConfiguration.tools, id: \.kind) { tool in
             ToolButton(for: tool)
           }
 

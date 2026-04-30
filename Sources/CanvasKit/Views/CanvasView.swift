@@ -22,7 +22,6 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   /// it is passed to this. If not, this gets a default initial value.
   /// External and internal state is kept in sync via `bindModel`.
   @State private var localTransform: TransformState
-
   @Binding var toolConfiguration: ToolConfiguration
   let canvasSize: Size<CanvasSpace>
   let content: () -> Content

@@ -14,9 +14,7 @@ import SwiftUI
 /// `ToolConfiguration` instead.
 @Observable
 final class ToolHandler {
-  //struct ToolHandler {
-
-  /// Public tool configuration copied into runtime state.
+  
   var configuration: ToolConfiguration = .default
 
   /// Active spring-load / hold overrides, most recent last.
@@ -32,23 +30,16 @@ final class ToolHandler {
 
 extension ToolHandler {
 
-  /// All registered tools, ordered by binding appearance then remaining tools.
-//  var availableTools: [any CanvasTool] {
-//    configuration.availableTools
-//  }
-
-  // MARK: - Effective tool resolution
-
   /// The currently effective tool, considering pending and armed overrides.
   /// If there is any override on the stack, its tool is effective immediately.
   /// Otherwise the selected tool is effective.
   var effectiveTool: any CanvasTool {
     guard let last = overrides.last else { return baseTool }
-    return resolveTool(for: last.binding.target)
+    return resolveTool(for: last.binding.target) ?? baseTool
   }
 
   /// The currently committed selection, excluding temporary spring-loads.
-  var selectedToolKind: CanvasToolKind { configuration.selectedToolKind }
+//  var selectedToolKind: CanvasToolKind { configuration.selectedToolKind }
 
   /// The Kind of the effective tool.
   var toolKind: CanvasToolKind { effectiveTool.kind }
@@ -108,7 +99,7 @@ extension ToolHandler {
 
   /// Set the base tool by kind, looking it up in the registry.
   func setBaseTool(kind: CanvasToolKind) {
-    configuration.selectedToolKind = kind
+    configuration.select(kind)
     overrides.removeAll()
   }
 
@@ -154,16 +145,31 @@ extension ToolHandler {
 extension ToolHandler {
 
   private func matchingBindings(for key: KeyEquivalent) -> [ToolBinding] {
-    configuration.bindings.filter { binding in
-      binding.shortcut.key == key && binding.modifiers.isSubset(of: modifiers)
-    }
+    configuration.activeBindings
+      .enumerated()
+      .filter { _, binding in
+        binding.shortcut.key == key && binding.modifiers.isSubset(of: modifiers)
+      }
+      .sorted { lhs, rhs in
+        let lhsExact = lhs.element.modifiers == modifiers
+        let rhsExact = rhs.element.modifiers == modifiers
+
+        if lhsExact != rhsExact { return lhsExact }
+
+        let lhsSpecificity = lhs.element.modifiers.rawValue.nonzeroBitCount
+        let rhsSpecificity = rhs.element.modifiers.rawValue.nonzeroBitCount
+        if lhsSpecificity != rhsSpecificity { return lhsSpecificity > rhsSpecificity }
+
+        return lhs.offset < rhs.offset
+      }
+      .map(\.element)
   }
 
   private func apply(
     binding: ToolBinding,
     onKeyDown key: KeyEquivalent,
   ) {
-    let targetTool = resolveTool(for: binding.target)
+//    let targetTool = resolveTool(for: binding.target)
     switch binding.mode {
       case .hold:
         /// Always spring-load immediately; never commit.
@@ -185,9 +191,9 @@ extension ToolHandler {
         )
         overrides.append(override)
 
-      case .toggle:
+//      case .toggle:
         /// Commit immediately on key down.
-        setBaseTool(targetTool)
+//        setBaseTool(targetTool)
     }
   }
 
@@ -206,11 +212,11 @@ extension ToolHandler {
     overrides.removeAll { $0.key == key && ($0.binding.mode == .hold || $0.binding.mode == .sticky) }
   }
 
-  private func resolveTool(for kind: CanvasToolKind) -> any CanvasTool {
-    configuration.tool(for: kind) ?? configuration.resolvedSelectedTool
+  private func resolveTool(for kind: CanvasToolKind) -> (any CanvasTool)? {
+    configuration.tool(for: kind)
   }
 
   var keysToWatch: Set<KeyEquivalent> {
-    Set(configuration.bindings.map(\.shortcut.key))
+    Set(configuration.activeBindings.map(\.shortcut.key))
   }
 }

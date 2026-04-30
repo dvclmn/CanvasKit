@@ -15,5 +15,6 @@ public enum ActivationMode: Sendable, Hashable {
   case sticky
 
   /// Press to toggle on/off
-  case toggle
+  /// UPDATE: Switching off for now until I can implement properly
+//  case toggle
 }
