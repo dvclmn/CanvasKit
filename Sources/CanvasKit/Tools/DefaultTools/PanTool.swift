@@ -15,12 +15,8 @@ public struct PanTool: CanvasTool {
   public let icon = "hand.raised"
 
   public var dragBehaviour: PointerDragBehaviour { .continuous }
-  //  public var inputCapabilities: [ToolCapability] { ToolCapability.pan }
-
   public var inputCapabilities: [ToolCapability] {
-    [
-      ToolCapability(interaction: .drag, intent: .pan)
-    ]
+    [ToolCapability(interaction: .drag, intent: .pan)]
   }
 
   public init() {}
@@ -48,12 +44,6 @@ public struct PanTool: CanvasTool {
 
         default: .none
       }
-
     return .handled(adjustment)
-    //    return .init(
-    //      for: context.interaction,
-    //      adjustment: adjustment,
-    //      action: .none,
-    //    )
   }
 }

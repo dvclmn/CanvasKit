@@ -57,9 +57,6 @@ struct ToolsView: View {
     .buttonStyle(.plain)
 
     .labelStyle(.iconOnly)
-    //    .labelStyle(.base(display: .iconOnly))
-    //    .setLabelDisplay(.iconOnly)
-    //    .setSymbolVariants(.fill)
 
     .padding(6)
     .background {
@@ -119,18 +116,3 @@ extension ToolsView {
     //    store.toolHandler.effectiveTool(modifiers: modifierKeys) == tool
   }
 }
-
-//#if DEBUG
-//#Preview(traits: .size(.normal)) {
-//  @Previewable @State var store = AppHandler()
-//  ToolsView()
-//    .environment(store)
-//    .frame(maxWidth: 400, maxHeight: .infinity, alignment: .topLeading)
-//    .background {
-//      Image("flower")
-//        .resizable()
-//        .scaledToFill()
-//        .scaleEffect(3.0)
-//    }
-//}
-//#endif

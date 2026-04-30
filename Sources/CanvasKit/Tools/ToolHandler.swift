@@ -33,9 +33,9 @@ final class ToolHandler {
 extension ToolHandler {
 
   /// All registered tools, ordered by binding appearance then remaining tools.
-  var availableTools: [any CanvasTool] {
-    configuration.availableTools
-  }
+//  var availableTools: [any CanvasTool] {
+//    configuration.availableTools
+//  }
 
   // MARK: - Effective tool resolution
 
