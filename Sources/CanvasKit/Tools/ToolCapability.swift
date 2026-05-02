@@ -33,7 +33,8 @@ extension ToolCapability: CustomStringConvertible {
       Labeled("Intent", value: intent)
       Labeled("Modifiers", value: modifiers)
     }.text
-    //    "\(interactionKind.displayName) → \(adjustmentKind.displayName)"
+//    let modifiersDescription = modifiers.map { "\($0)" } ?? "Any"
+//    return "\(interactionKind) -> \(intent) (\(modifiersDescription))"
   }
 }
 

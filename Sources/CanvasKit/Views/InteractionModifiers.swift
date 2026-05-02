@@ -107,6 +107,11 @@ extension InteractionModifiers {
       case .swipe, .pinch, .rotate:
         enabled = true
 
+//      case .hover:
+//        enabled = store.activeTool != nil
+
+//      case .tap, .drag:
+        
       case .tap, .drag, .hover:
         guard let tool = store.activeTool else {
           enabled = false

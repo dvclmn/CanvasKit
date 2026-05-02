@@ -12,11 +12,11 @@ import InputPrimitives
 /// Can be used to compare against ``ToolCapability``s to
 /// determine user intent based on the selected ``CanvasTool``.
 public struct InteractionContext: Sendable {
-  let interaction: Interaction
-  let phase: InteractionPhase
-  let modifiers: Modifiers
+  public let interaction: Interaction
+  public let phase: InteractionPhase
+  public let modifiers: Modifiers
 
-  init(
+  public init(
     interaction: Interaction,
     phase: InteractionPhase,
     modifiers: Modifiers,
@@ -28,10 +28,15 @@ public struct InteractionContext: Sendable {
 }
 
 extension InteractionContext {
-  
-  
-  
-  var isPointerDragging: Bool {
+  public func withModifiers(_ modifiers: Modifiers) -> Self {
+    .init(
+      interaction: interaction,
+      phase: phase,
+      modifiers: modifiers,
+    )
+  }
+
+  public var isPointerDragging: Bool {
     guard case .drag = interaction else { return false }
     return phase.isActive
   }

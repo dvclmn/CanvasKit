@@ -75,7 +75,10 @@ extension CanvasInputResolver {
         return .transform(.rotation(angle))
       //        return .base(.rotation(angle))
 
-      case .tap, .drag, .hover:
+      case .hover(let location):
+        return .pointer(.hover(location))
+
+      case .tap, .drag:
         // No tool claimed these — no default behaviour for pointer events.
         return nil
     }

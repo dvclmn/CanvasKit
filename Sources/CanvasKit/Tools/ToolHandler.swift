@@ -23,9 +23,9 @@ final class ToolHandler {
   private var heldKeys: Set<KeyEquivalent> = []
   private var modifiers: Modifiers = []
 
-  //  init(configuration: ToolConfiguration = .default) {
-  //    self.configuration = configuration
-  //  }
+  init(configuration: ToolConfiguration = .default) {
+    self.configuration = configuration
+  }
 }
 
 extension ToolHandler {

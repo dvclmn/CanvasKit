@@ -13,7 +13,7 @@ import SwiftUI
 public struct CanvasView<Content: View>: View, CanvasAddressable {
   @Environment(\.isShowingToolPicker) private var isShowingToolPicker
   @Environment(\.toolPickerAlignment) private var toolPickerAlignment
-  @State private var store: CanvasHandler = .init()
+  @State private var store: CanvasHandler
 
   /// Populated when user wishes to handle their own transform state
   private let externalTransform: Binding<TransformState>?
@@ -22,7 +22,14 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   /// it is passed to this. If not, this gets a default initial value.
   /// External and internal state is kept in sync via `bindModel`.
   @State private var localTransform: TransformState
-  @Binding var toolConfiguration: ToolConfiguration
+
+  /// Populated when user wishes to handle their own tool configuration state.
+  private let externalToolConfiguration: Binding<ToolConfiguration>?
+
+  /// Local source of truth for tool configuration while CanvasView is mounted.
+  /// External state, when provided, is kept in sync via `bindModel`.
+  @State private var localToolConfiguration: ToolConfiguration
+
   let canvasSize: Size<CanvasSpace>
   let content: () -> Content
 
@@ -36,7 +43,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
 
     .overlay(alignment: toolPickerAlignment) {
       if isShowingToolPicker {
-        ToolsView(toolConfiguration: $store.toolHandler.configuration)
+        ToolsView(toolConfiguration: $localToolConfiguration)
       }
     }
 
@@ -70,12 +77,10 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
             }
           }
         }
-
+        
       }
     }
-
-    .debugTextOverlay()
-
+    
     /// In cases where transform state is owned externally,
     /// ensures both local and external are kept in sync
     .bindModel(
@@ -88,13 +93,25 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
     /// for modifier keys some other way elsewhere? Or, whether I should be
     /// allowing passing in own state for modifiers.
     .modifierKeys { keys in
-      store.toolHandler.updateModifiers(keys)
+      store.updateModifiers(keys)
     }
 
-    /// Only one-way sync required for tool configuration; from external to internal.
-    .task(id: toolConfiguration) {
-      store.toolHandler.configuration = toolConfiguration
-    }
+    /// Tool configuration follows the same ownership pattern as transform state:
+    /// CanvasView has a local value while mounted, and optionally mirrors it
+    /// to the caller's binding.
+    .bindModel(
+      debounce: .noDebounce,
+      $localToolConfiguration,
+      to: externalToolConfiguration,
+    )
+
+    /// ToolHandler owns transient runtime state, but resolves against the same
+    /// value-type configuration visible to app code and the toolbar.
+    .bindModel(
+      debounce: .noDebounce,
+      $store.toolHandler.configuration,
+      to: $localToolConfiguration,
+    )
 
     /// Set the resolved pointer style and add it to the Environment
     .pointerStyleCompatible(store.pointerStyle)
@@ -178,10 +195,13 @@ extension CanvasView {
     toolConfiguration: Binding<ToolConfiguration>? = nil,
     @ViewBuilder content: @escaping () -> Content,
   ) {
+    let initialToolConfiguration = toolConfiguration?.wrappedValue ?? .default
     self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
     self._localTransform = State(initialValue: transform.wrappedValue)
     self.externalTransform = transform
-    self._toolConfiguration = toolConfiguration ?? .constant(.default)
+    self.externalToolConfiguration = toolConfiguration
+    self._localToolConfiguration = State(initialValue: initialToolConfiguration)
+    self._store = State(initialValue: .init(toolConfiguration: initialToolConfiguration))
     self.content = content
   }
 }

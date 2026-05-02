@@ -12,7 +12,7 @@ import SwiftUI
 @Observable
 final class CanvasHandler {
 
-  var toolHandler: ToolHandler = .init()
+  var toolHandler: ToolHandler
   var pointer: PointerState = .initial
 
   /// Only updated when `processedTransform()` is called
@@ -20,7 +20,9 @@ final class CanvasHandler {
 
   var artworkFrame: Rect<ScreenSpace>?
 
-  init() {}
+  init(toolConfiguration: ToolConfiguration = .default) {
+    self.toolHandler = .init(configuration: toolConfiguration)
+  }
 }
 
 extension CanvasHandler {
@@ -96,6 +98,11 @@ extension CanvasHandler {
 }
 
 extension CanvasHandler {
+  func updateModifiers(_ modifiers: Modifiers) {
+    toolHandler.updateModifiers(modifiers)
+    interactionContext = interactionContext?.withModifiers(modifiers)
+  }
+
   // TODO: Change how interactionContext is updated, as this pointer style
   // is possibly not being updated at the right cadence. interactionContext
   // is currently only updated when processedTransform() is run.

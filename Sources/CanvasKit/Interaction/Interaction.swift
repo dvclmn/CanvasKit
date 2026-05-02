@@ -8,8 +8,8 @@
 import GeometryPrimitives
 import SwiftUI
 
-/// Each case corresponds directly to a modifier in `InteractionModifiers`
-enum Interaction: Sendable {
+/// Each case corresponds directly to a modifier in `InteractionModifiers`.
+public enum Interaction: Sendable {
   /// ``SwiftUI/View/onSwipeGesture(isEnabled:perform:)``
   case swipe(delta: Size<ScreenSpace>)  // onSwipeGesture
   case pinch(scale: Double)  // onPinchGesture
@@ -20,7 +20,7 @@ enum Interaction: Sendable {
 }
 
 extension Interaction {
-  var kind: InteractionKind {
+  public var kind: InteractionKind {
     switch self {
       case .swipe: .swipe
       case .pinch: .pinch
@@ -33,7 +33,7 @@ extension Interaction {
 }
 
 extension Interaction: CustomStringConvertible {
-  var description: String {
+  public var description: String {
     switch self {
       case .swipe(let delta): "Swipe delta: \(delta)"
       case .pinch(let scale): "Pinch scale: \(scale)"
