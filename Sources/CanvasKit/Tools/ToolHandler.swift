@@ -112,7 +112,8 @@ extension ToolHandler {
   }
 
   func handleKeyDown(_ key: KeyEquivalent) {
-    heldKeys.insert(key)
+    let inserted = heldKeys.insert(key).inserted
+    guard inserted else { return }
 
     guard let best = matchingBindings(for: key).first
     else { return }

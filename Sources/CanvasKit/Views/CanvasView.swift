@@ -26,14 +26,11 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   /// Populated when user wishes to handle their own tool configuration state.
   private let externalToolConfiguration: Binding<ToolConfiguration>?
 
-  /// Local source of truth for tool configuration while CanvasView is mounted.
-  /// External state, when provided, is kept in sync via `bindModel`.
-  @State private var localToolConfiguration: ToolConfiguration
-
   let canvasSize: Size<CanvasSpace>
   let content: () -> Content
 
   public var body: some View {
+    @Bindable var store = store
 
     CanvasCoreView(
       canvasSize: canvasSize,
@@ -41,16 +38,18 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       content: content,
     )
 
-    .overlay(alignment: toolPickerAlignment) {
-      if isShowingToolPicker {
-        ToolsView(toolConfiguration: $localToolConfiguration)
-      }
-    }
-
-    /// User input modifiers, `onSwipeGesture`, `onTapGesture`, etc
+    /// User input modifiers, `onSwipeGesture`, `onTapGesture`, etc.
+    /// These wrap the canvas only, so their invisible event-capture overlays
+    /// do not sit above the tool picker.
     .modifier(
       InteractionModifiers(transform: $localTransform)
     )
+
+    .overlay(alignment: toolPickerAlignment) {
+      if isShowingToolPicker {
+        ToolsView(toolConfiguration: $store.toolHandler.configuration)
+      }
+    }
 
     /// Publishes current canvas transform values to the Environment
     .canvasTransformEnvironment(localTransform)
@@ -66,14 +65,14 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       )
     )
 
-    .debugText {
-      Labeled("Ext. Tool Config", value: externalToolConfiguration?.wrappedValue)
-      "\n"
-      Divider()
-      Labeled("Local Tool Config", value: localToolConfiguration)
-    }
-    //    .modifier(DebugOverlayModifier(isEnabled: false))
-    .debugTextOverlay(isEnabled: true)
+//    .debugText {
+//      Labeled("Ext. Tool Config", value: externalToolConfiguration?.wrappedValue)
+//      "\n"
+//      Divider()
+//      Labeled("Runtime Tool Config", value: store.toolHandler.configuration)
+//    }
+//    //    .modifier(DebugOverlayModifier(isEnabled: false))
+//    .debugTextOverlay(isEnabled: true)
 
     /// In cases where transform state is owned externally,
     /// ensures both local and external are kept in sync
@@ -90,16 +89,12 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       store.updateModifiers(keys)
     }
 
-    .bindModel(
-      debounce: .noDebounce,
-      $localToolConfiguration,
-      to: externalToolConfiguration,
-    )
+    .modifier(CanvasToolKeyboardModifier(toolHandler: $store.toolHandler))
 
     .bindModel(
       debounce: .noDebounce,
       $store.toolHandler.configuration,
-      to: $localToolConfiguration,
+      to: externalToolConfiguration,
     )
 
     /// Set the resolved pointer style and add it to the Environment
@@ -169,7 +164,6 @@ extension CanvasView {
     self._localTransform = State(initialValue: transform.wrappedValue)
     self.externalTransform = transform
     self.externalToolConfiguration = toolConfiguration
-    self._localToolConfiguration = State(initialValue: initialToolConfiguration)
     self._store = State(initialValue: .init(toolConfiguration: initialToolConfiguration))
     self.content = content
   }

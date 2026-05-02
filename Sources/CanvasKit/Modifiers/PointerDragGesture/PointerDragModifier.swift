@@ -53,7 +53,7 @@ struct PointerDragModifier: ViewModifier {
 
   func body(content: Content) -> some View {
     content
-      .gesture(dragGesture, isEnabled: behaviour.isEnabled)
+      .gesture(dragGesture, isEnabled: isEnabled && behaviour.isEnabled)
       .drawMarqueeRect(
         marqueeRect?.cgRect,
         colour: marqueeColour,

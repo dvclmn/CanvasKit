@@ -223,6 +223,24 @@ struct ToolHandlerTests {
     #expect(handler.effectiveTool.kind == .select)
     #expect(handler.overrides.isEmpty)
   }
+
+  @Test func repeatedKeyDownDoesNotStackOverrides() {
+    let configuration = ToolConfiguration(
+      tools: [SelectTool(), BrushTool()],
+      bindings: [
+        .init(.keyOnly("b"), target: .brush, mode: .hold)
+      ],
+      selectedToolKind: .select,
+    )
+    let handler = ToolHandler()
+    handler.configuration = configuration
+
+    handler.handleKeyDown("b")
+    handler.handleKeyDown("b")
+
+    #expect(handler.overrides.count == 1)
+    #expect(handler.effectiveTool.kind == .brush)
+  }
 }
 
 private struct BrushTool: CanvasTool {

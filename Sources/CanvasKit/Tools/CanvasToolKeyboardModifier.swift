@@ -12,9 +12,16 @@ struct CanvasToolKeyboardModifier: ViewModifier {
   /// Will need to get modifier keys in here from somewhere
 
   @Binding var toolHandler: ToolHandler
+  @FocusState private var isFocused: Bool
 
   func body(content: Content) -> some View {
     content
+      .focusable(true)
+      .focused($isFocused)
+      .focusEffectDisabled()
+      .onAppear {
+        isFocused = true
+      }
       .onKeyPress(
         keys: toolHandler.keysToWatch,
         phases: .all,
