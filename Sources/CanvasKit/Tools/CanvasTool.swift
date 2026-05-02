@@ -6,6 +6,7 @@
 //
 
 import InputPrimitives
+import CoreUtilities
 import SwiftUI
 
 /// A canvas tool defines how pointer interactions (tap, drag) are interpreted.
@@ -13,7 +14,7 @@ import SwiftUI
 /// Global gestures (swipe→pan, pinch→zoom) are handled centrally
 /// by `CanvasHandler` and never reach `resolvePointerInteraction()`.
 /// Tools only receive pointer events: taps and drags. This may change in future, not sure yet
-public protocol CanvasTool: Sendable, Equatable, Identifiable where ID == CanvasToolKind {
+public protocol CanvasTool: Sendable, Equatable, CustomStringConvertible, Identifiable where ID == CanvasToolKind {
 
   /// The tool's identity, used for keyboard binding lookups and registry.
   var kind: CanvasToolKind { get }
@@ -54,6 +55,14 @@ extension CanvasTool {
 //  public var inputCapabilities: [ToolCapability] {
 //    ToolCapability.canvasBasics
 //  }
+  
+  public var description: String {
+    DisplayString {
+      Labeled("Name", value: name)
+//      Labeled("Kind", value: kind) // Usually same as name
+      Labeled("Capabilities", value: inputCapabilities)
+    }.text
+  }
 }
 
 extension CanvasTool where Self == SelectTool {

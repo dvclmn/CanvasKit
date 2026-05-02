@@ -67,9 +67,12 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
     )
 
     .debugText {
-      Labeled("Ext. Tool Config", value: externalToolConfiguration)
+      Labeled("Ext. Tool Config", value: externalToolConfiguration?.wrappedValue)
+      "\n"
+      Divider()
+      Labeled("Local Tool Config", value: localToolConfiguration)
     }
-//    .modifier(DebugOverlayModifier(isEnabled: false))
+    //    .modifier(DebugOverlayModifier(isEnabled: false))
     .debugTextOverlay(isEnabled: true)
 
     /// In cases where transform state is owned externally,
@@ -87,17 +90,12 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       store.updateModifiers(keys)
     }
 
-    /// Tool configuration follows the same ownership pattern as transform state:
-    /// CanvasView has a local value while mounted, and optionally mirrors it
-    /// to the caller's binding.
     .bindModel(
       debounce: .noDebounce,
       $localToolConfiguration,
       to: externalToolConfiguration,
     )
 
-    /// ToolHandler owns transient runtime state, but resolves against the same
-    /// value-type configuration visible to app code and the toolbar.
     .bindModel(
       debounce: .noDebounce,
       $store.toolHandler.configuration,
@@ -108,26 +106,6 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
     .pointerStyleCompatible(store.pointerStyle)
     .environment(\.pointerStyle, store.pointerStyle)
     .environment(store)
-
-    // TODO: Re-evaluate this fingerprint system
-    //    .task(id: toolConfiguration?.wrappedValue.fingerprint ?? "no-tool-configuration") {
-    //      guard let toolConfiguration else { return }
-    //      store.toolHandler = ToolHandler(configuration: toolConfiguration.wrappedValue)
-    //    }
-
-    //    .onChange(of: toolConfiguration?.wrappedValue.selectedToolKind) { _, newValue in
-    //      guard let newValue, toolConfiguration != nil, toolHandler.selectedToolKind != newValue else { return }
-    //      var handler = toolHandler
-    //      handler.setBaseTool(kind: newValue)
-    //      toolHandler = handler
-    //    }
-    //
-    //    .onChange(of: toolHandler.selectedToolKind, initial: false) { _, newValue in
-    //      guard let toolConfiguration,
-    //        toolConfiguration.wrappedValue.selectedToolKind != newValue
-    //      else { return }
-    //      toolConfiguration.wrappedValue.selectedToolKind = newValue
-    //    }
 
   }
 }

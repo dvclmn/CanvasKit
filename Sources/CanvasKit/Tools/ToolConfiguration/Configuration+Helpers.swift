@@ -5,6 +5,8 @@
 //  Created by Dave Coleman on 2/5/2026.
 //
 
+import CoreUtilities
+
 extension ToolConfiguration {
   static func containsTool(
     _ kind: CanvasToolKind,
@@ -49,4 +51,16 @@ extension ToolConfiguration: Equatable {
     return compare(lhs, to: rhs)
   }
 
+}
+
+extension ToolConfiguration: CustomStringConvertible {
+  public var description: String {
+    DisplayString {
+      Labeled("Tools", value: tools)
+      Labeled("Bindings", value: bindings)
+      Labeled("Selected Kind", value: selectedToolKind)
+      Labeled("Spring Load Delay", value: springLoadDelay)
+      Labeled("Is Selection Valid", value: isSelectionValid)
+    }.text
+  }
 }

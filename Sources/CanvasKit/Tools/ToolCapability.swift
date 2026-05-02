@@ -29,7 +29,7 @@ public struct ToolCapability: Hashable, Sendable {
 extension ToolCapability: CustomStringConvertible {
   public var description: String {
     DisplayString {
-      Labeled("Kind", value: interactionKind)
+      Labeled("Interaction", value: interactionKind)
       Labeled("Intent", value: intent)
       Labeled("Modifiers", value: modifiers)
     }.text

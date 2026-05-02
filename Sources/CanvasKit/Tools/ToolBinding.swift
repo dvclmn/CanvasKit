@@ -5,6 +5,7 @@
 //  Created by Dave Coleman on 13/3/2026.
 //
 
+import CoreUtilities
 import InputPrimitives
 import SwiftUI
 
@@ -38,5 +39,15 @@ extension ToolBinding {
 extension KeyboardShortcut {
   static func keyOnly(_ key: KeyEquivalent) -> Self {
     .init(key, modifiers: [])
+  }
+}
+
+extension ToolBinding: CustomStringConvertible {
+  public var description: String {
+    DisplayString {
+      Labeled("Shortcut", value: shortcut.displayString())
+      Labeled("Target Tool Kind", value: target)
+      Labeled("Activation Mode", value: mode.rawValue)
+    }.text
   }
 }

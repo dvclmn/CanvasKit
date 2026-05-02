@@ -10,7 +10,7 @@ import SwiftUI
 struct CanvasToolKeyboardModifier: ViewModifier {
 
   /// Will need to get modifier keys in here from somewhere
-  
+
   @Binding var toolHandler: ToolHandler
 
   func body(content: Content) -> some View {
@@ -19,21 +19,21 @@ struct CanvasToolKeyboardModifier: ViewModifier {
         keys: toolHandler.keysToWatch,
         phases: .all,
       ) { result in
-        
+
         switch result.phase {
           case .up:
             toolHandler.handleKeyUp(result.key)
-            
+
           case .down:
             toolHandler.handleKeyDown(result.key)
           default: break
         }
-        
+
         return .handled
       }
-//      .onEnvironmentChange(\.modifierKeys) { <#Equatable#> in
-//        <#code#>
-//      }
+    //      .onEnvironmentChange(\.modifierKeys) { <#Equatable#> in
+    //        <#code#>
+    //      }
   }
 }
 

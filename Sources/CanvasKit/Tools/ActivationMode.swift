@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 6/4/2026.
 //
 
-public enum ActivationMode: Sendable, Hashable {
+public enum ActivationMode: String, Sendable, Hashable {
   
   /// Spring-load while key is held
   case hold
