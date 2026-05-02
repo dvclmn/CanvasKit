@@ -65,22 +65,13 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
         phase: store.interactionContext?.phase ?? .none,
       )
     )
+
     .debugText {
-      Indented("Tools") {
-        for tool in store.toolHandler.configuration.tools {
-          Indented(tool.name) {
-            Labeled("Input Capabilities", value: tool.inputCapabilities)
-            if let context = store.interactionContext {
-              Labeled("Resolution", value: tool.resolvePointerStyle(context: context))
-            } else {
-              "No context found"
-            }
-          }
-        }
-        
-      }
+      Labeled("Ext. Tool Config", value: externalToolConfiguration)
     }
-    
+//    .modifier(DebugOverlayModifier(isEnabled: false))
+    .debugTextOverlay(isEnabled: true)
+
     /// In cases where transform state is owned externally,
     /// ensures both local and external are kept in sync
     .bindModel(

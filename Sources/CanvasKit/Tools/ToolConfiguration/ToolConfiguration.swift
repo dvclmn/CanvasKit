@@ -20,7 +20,7 @@ import SwiftUI
 public struct ToolConfiguration: Sendable {
 
   /// The registered tools, ordered by the app's chosen preference.
-  public private(set) var tools: [any CanvasTool]
+  public package(set) var tools: [any CanvasTool]
 
   /// The key-to-tool mapping list.
   public var bindings: [ToolBinding]
@@ -42,33 +42,12 @@ public struct ToolConfiguration: Sendable {
     self.bindings = bindings
     self.selectedToolKind = Self.resolvedSelection(
       selectedToolKind,
-      in: normalisedTools
+      in: normalisedTools,
     )
     self.springLoadDelay = springLoadDelay
   }
 }
 
-extension ToolConfiguration: Equatable {
-
-  public static func == (lhs: Self, rhs: Self) -> Bool {
-    lhs.bindings == rhs.bindings && lhs.selectedToolKind == rhs.selectedToolKind
-      && lhs.springLoadDelay == rhs.springLoadDelay
-      && lhs.tools.elementsEqual(rhs.tools, by: Self.toolsAreEqual)
-  }
-
-  private static func toolsAreEqual(
-    _ lhs: any CanvasTool,
-    _ rhs: any CanvasTool,
-  ) -> Bool {
-    func compare<T: CanvasTool>(_ lhs: T, to rhs: any CanvasTool) -> Bool {
-      guard let rhs = rhs as? T else { return false }
-      return lhs == rhs
-    }
-
-    return compare(lhs, to: rhs)
-  }
-
-}
 extension ToolConfiguration {
 
   public static var `default`: Self { .init() }
@@ -87,28 +66,9 @@ extension ToolConfiguration {
     return kind
   }
 
-  static func containsTool(
-    _ kind: CanvasToolKind,
-    in tools: [any CanvasTool],
-  ) -> Bool {
-    firstIndex(of: kind, in: tools) != nil
-  }
-
-  static func firstIndex(
-    of kind: CanvasToolKind,
-    in tools: [any CanvasTool],
-  ) -> Int? {
-    tools.firstIndex { $0.kind == kind }
-  }
-
   /// The first registered tool kind, or `select` if the catalogue is empty.
   public var defaultToolKind: CanvasToolKind {
     Self.defaultSelection(in: tools)
-  }
-
-  /// Whether the committed selection currently refers to a registered tool.
-  public var isSelectionValid: Bool {
-    Self.containsTool(selectedToolKind, in: tools)
   }
 
   /// The committed selection when valid, otherwise the default fallback.
@@ -145,11 +105,6 @@ extension ToolConfiguration {
     selectedTool ?? tools.first ?? SelectTool()
   }
 
-  /// All registered tools, in the app's configured order.
-//  public var availableTools: [any CanvasTool] {
-//    tools
-//  }
-
   /// Returns the registered tool for the given kind, if any.
   public func tool(for kind: CanvasToolKind) -> (any CanvasTool)? {
     guard let index = Self.firstIndex(of: kind, in: tools) else { return nil }
@@ -159,73 +114,5 @@ extension ToolConfiguration {
   /// Returns the first sticky shortcut for the given kind, if any.
   public func shortcut(for kind: CanvasToolKind) -> KeyboardShortcut? {
     activeBindings.first { $0.target == kind && $0.mode == .sticky }?.shortcut
-  }
-
-  /// Register or replace a tool by kind.
-  public mutating func register(_ tool: any CanvasTool) {
-    if let index = Self.firstIndex(of: tool.kind, in: tools) {
-      tools[index] = tool
-    } else {
-      tools.append(tool)
-    }
-  }
-
-  /// Register or replace multiple tools by kind.
-  public mutating func register(_ tools: [any CanvasTool]) {
-    tools.forEach { self.register($0) }
-  }
-
-  /// Replace the registered tools wholesale, preserving the ordered-unique invariant.
-  public mutating func setTools(_ tools: [any CanvasTool]) {
-    self.tools = Self.normalisedTools(tools)
-    selectedToolKind = Self.resolvedSelection(selectedToolKind, in: self.tools)
-  }
-
-  /// Reorder an existing tool to a new position within the catalogue.
-  public mutating func moveTool(kind: CanvasToolKind, to newIndex: Int) {
-    guard let currentIndex = Self.firstIndex(of: kind, in: tools) else { return }
-    let tool = tools.remove(at: currentIndex)
-    let clampedIndex = max(0, min(newIndex, tools.count))
-    tools.insert(tool, at: clampedIndex)
-  }
-
-  /// Remove a registered tool by kind.
-  public mutating func removeTool(kind: CanvasToolKind) {
-    tools.removeAll { $0.kind == kind }
-    if selectedToolKind == kind {
-      selectedToolKind = Self.defaultSelection(in: tools)
-    }
-  }
-
-  /// Replace the keyboard bindings wholesale.
-  public mutating func setBindings(_ bindings: [ToolBinding]) {
-    self.bindings = bindings
-  }
-
-  /// Update the committed tool selection.
-  public mutating func select(_ kind: CanvasToolKind) {
-    guard Self.containsTool(kind, in: tools) else { return }
-    selectedToolKind = kind
-  }
-}
-
-extension ToolConfiguration {
-
-  /// Provides similar functionality to an ordered set. Ensures
-  /// Tools will display in the order they are
-  /// - Tool selection fallback is the first tool in the array. Place the tool
-  /// considered the 'default' first in the list, to nominate it as the fallback
-  /// - Tool order in the UI is determined by array order
-  ///
-  private static func normalisedTools(_ tools: [any CanvasTool]) -> [any CanvasTool] {
-    var result: [any CanvasTool] = []
-    for tool in tools {
-      if let index = result.firstIndex(where: { $0.kind == tool.kind }) {
-        result[index] = tool
-      } else {
-        result.append(tool)
-      }
-    }
-    return result
   }
 }
