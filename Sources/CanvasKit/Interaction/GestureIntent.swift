@@ -6,7 +6,7 @@
 //
 
 /// Starting with finite/default intents at first
-public enum InteractionIntent: Sendable {
+public enum InteractionIntent: String, Sendable {
 
   /// Important: Need to see Modifiers to properly resolve. E.g. a Swipe
   /// gesture resolves to Pan by default; with Option it becomes Zoom.
@@ -19,4 +19,14 @@ public enum InteractionIntent: Sendable {
   // These two are undefined currently, need work
   case select
   case drawMarquee
+}
+
+extension InteractionIntent: CustomStringConvertible {
+  public var description: String {
+    switch self {
+      case .adjustBrushSize: "Adjust Brush Size"
+      case .drawMarquee: "Draw Marquee"
+      default: rawValue.capitalized
+    }
+  }
 }

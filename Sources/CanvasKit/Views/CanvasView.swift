@@ -58,6 +58,23 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
         phase: store.interactionContext?.phase ?? .none,
       )
     )
+    .debugText {
+      Indented("Tools") {
+        for tool in store.toolHandler.configuration.tools {
+          Indented(tool.name) {
+            Labeled("Input Capabilities", value: tool.inputCapabilities)
+            if let context = store.interactionContext {
+              Labeled("Resolution", value: tool.resolvePointerStyle(context: context))
+            } else {
+              "No context found"
+            }
+          }
+        }
+
+      }
+    }
+
+    .debugTextOverlay()
 
     /// In cases where transform state is owned externally,
     /// ensures both local and external are kept in sync
@@ -104,27 +121,8 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
     //      toolConfiguration.wrappedValue.selectedToolKind = newValue
     //    }
 
-    //    .debugText {
-    //      //      Labeled("Canvas Size", value: canvasSize.cgSize)
-    //      //      Labeled("Local Transform", value: localTransform)
-    //      Indented("Local Transform") {
-    //        Labeled("Pan Offset", value: localState.transform.translation.cgSize.displayString)
-    //      }
-    ////      Indented("External Transform") { "\(externalTransform?.wrappedValue, default: "nil")" }
-    //      //      Divider()
-    //      //      Labeled("External", value: externalTransform?.wrappedValue)
-    //      //      Labeled("Tool", value: toolHandler.selectedToolKind)
-    //    }
-    //    .debugTextOverlay(isEnabled: true)
-
   }
 }
-
-//extension CanvasView {
-//  private var activeTool: (any CanvasTool)? {
-//    toolConfiguration == nil ? nil : toolHandler.effectiveTool
-//  }
-//}
 
 // MARK: - Inits
 extension CanvasView {
@@ -176,7 +174,6 @@ extension CanvasView {
   /// Externally-owned transform state and Canvas Tool usage.
   public init(
     size: CGSize,
-    //    state: CanvasState,
     transform: Binding<TransformState>,
     toolConfiguration: Binding<ToolConfiguration>? = nil,
     @ViewBuilder content: @escaping () -> Content,

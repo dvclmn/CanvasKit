@@ -16,27 +16,16 @@
 /// Tap Drag, and Hover are pointer events. Their values are captured in Screen
 /// Space, and can be mapped to Canvas space to allow targeting Canvas level things.
 public enum InteractionKind: CaseIterable, Hashable, Sendable {
-  
+
   // Viewport gestures
   case swipe
   case pinch
   case rotate
-  
+
   // Pointer events
   case tap
   case drag
   case hover
-
-  var displayName: String {
-    switch self {
-      case .swipe: "Swipe"
-      case .pinch: "Pinch"
-      case .rotate: "Rotate"
-      case .tap: "Tap"
-      case .drag: "Drag"
-      case .hover: "Hover"
-    }
-  }
 
   var asSet: Set {
     switch self {
@@ -47,6 +36,20 @@ public enum InteractionKind: CaseIterable, Hashable, Sendable {
       case .drag: .drag
       case .hover: .hover
     }
+  }
+}
+
+extension InteractionKind: CustomStringConvertible {
+  public var description: String {
+    switch self {
+      case .swipe: "Swipe"
+      case .pinch: "Pinch"
+      case .rotate: "Rotate"
+      case .tap: "Tap"
+      case .drag: "Drag"
+      case .hover: "Hover"
+    }
+
   }
 }
 
@@ -88,6 +91,6 @@ extension InteractionKind.Set {
 
 extension InteractionKind.Set: CustomStringConvertible {
   public var description: String {
-    kinds.map { $0.displayName }.joined(separator: ", ")
+    kinds.map { $0.description }.joined(separator: ", ")
   }
 }

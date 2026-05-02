@@ -37,10 +37,10 @@ struct ContentView: View {
     .zoomRange(0.1...20)
     .toolPicker()
 
-//    .onAppear {
-//      transform.scale = 1.8
-//      transform.translation.width = -90
-//    }
+    //    .onAppear {
+    //      transform.scale = 1.8
+    //      transform.translation.width = -90
+    //    }
   }
 }
 

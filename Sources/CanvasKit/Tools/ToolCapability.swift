@@ -5,6 +5,7 @@
 //  Created by Dave Coleman on 12/4/2026.
 //
 
+import CoreUtilities
 import InputPrimitives
 
 /// A Tool Capability allows the tool author to declare what should happen
@@ -22,6 +23,17 @@ public struct ToolCapability: Hashable, Sendable {
     self.interactionKind = interaction
     self.intent = intent
     self.modifiers = modifiers
+  }
+}
+
+extension ToolCapability: CustomStringConvertible {
+  public var description: String {
+    DisplayString {
+      Labeled("Kind", value: interactionKind)
+      Labeled("Intent", value: intent)
+      Labeled("Modifiers", value: modifiers)
+    }.text
+    //    "\(interactionKind.displayName) → \(adjustmentKind.displayName)"
   }
 }
 
@@ -81,9 +93,3 @@ extension ToolCapability {
   //    return adjustmentKind == adjustment
   //  }
 }
-
-//extension ToolCapability: CustomStringConvertible {
-//  public var description: String {
-//    "\(interactionKind.displayName) → \(adjustmentKind.displayName)"
-//  }
-//}
