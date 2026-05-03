@@ -14,8 +14,8 @@ extension CanvasToolKind {
 extension ToolBinding {
 
   /// A minimal set of binding defaults:
-  /// - Shortcuts for Select (V), Pan (H), Zoom (Z)
-  /// - Hold Space → spring-load Pan from any tool
+  /// - Sticky shortcuts for Select (V), Pan (H), Zoom (Z)
+  /// - Hold Space to immediately spring-load Pan from any committed tool
   public static func defaultBindings() -> [ToolBinding] {
     [
       ToolBinding(.keyOnly("v"), target: .select, mode: .sticky),

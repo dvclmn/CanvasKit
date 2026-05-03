@@ -22,9 +22,19 @@ extension ToolConfiguration {
     tools.firstIndex { $0.kind == kind }
   }
 
-  /// Whether the committed selection currently refers to a registered tool.
+  /// Whether the committed/base tool kind currently refers to a registered tool.
+  public var isCommittedToolKindValid: Bool {
+    Self.containsTool(committedToolKind, in: tools)
+  }
+
+  @available(
+    *,
+    deprecated,
+    renamed: "isCommittedToolKindValid",
+    message: "`selection` here means committed/base selection only, not runtime effective tool state."
+  )
   public var isSelectionValid: Bool {
-    Self.containsTool(selectedToolKind, in: tools)
+    isCommittedToolKindValid
   }
 
 }
@@ -34,7 +44,7 @@ extension ToolConfiguration {
 extension ToolConfiguration: Equatable {
 
   public static func == (lhs: Self, rhs: Self) -> Bool {
-    lhs.bindings == rhs.bindings && lhs.selectedToolKind == rhs.selectedToolKind
+    lhs.bindings == rhs.bindings && lhs.committedToolKind == rhs.committedToolKind
       && lhs.springLoadDelay == rhs.springLoadDelay
       && lhs.tools.elementsEqual(rhs.tools, by: Self.toolsAreEqual)
   }
@@ -58,9 +68,9 @@ extension ToolConfiguration: CustomStringConvertible {
     DisplayString {
       Labeled("Tools", value: tools)
       Labeled("Bindings", value: bindings)
-      Labeled("Selected Kind", value: selectedToolKind)
+      Labeled("Committed Tool Kind", value: committedToolKind)
       Labeled("Spring Load Delay", value: springLoadDelay)
-      Labeled("Is Selection Valid", value: isSelectionValid)
+      Labeled("Is Committed Tool Kind Valid", value: isCommittedToolKindValid)
     }.text
   }
 }

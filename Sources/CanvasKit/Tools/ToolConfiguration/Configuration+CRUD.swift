@@ -23,7 +23,7 @@ extension ToolConfiguration {
   /// Replace the registered tools wholesale, preserving the ordered-unique invariant.
   public mutating func setTools(_ tools: [any CanvasTool]) {
     self.tools = Self.normalisedTools(tools)
-    selectedToolKind = Self.resolvedSelection(selectedToolKind, in: self.tools)
+    committedToolKind = Self.committedToolKindOrDefault(committedToolKind, in: self.tools)
   }
 
   /// Reorder an existing tool to a new position within the catalogue.
@@ -37,8 +37,8 @@ extension ToolConfiguration {
   /// Remove a registered tool by kind.
   public mutating func removeTool(kind: CanvasToolKind) {
     tools.removeAll { $0.kind == kind }
-    if selectedToolKind == kind {
-      selectedToolKind = Self.defaultSelection(in: tools)
+    if committedToolKind == kind {
+      committedToolKind = Self.defaultToolKind(in: tools)
     }
   }
 
@@ -47,10 +47,24 @@ extension ToolConfiguration {
     self.bindings = bindings
   }
 
-  /// Update the committed tool selection.
-  public mutating func select(_ kind: CanvasToolKind) {
+  /// Commit a new base tool selection.
+  ///
+  /// This changes the persistent selection stored in ``ToolConfiguration``.
+  /// It does not represent temporary runtime overrides; those live in
+  /// `ToolHandler`.
+  public mutating func commitTool(_ kind: CanvasToolKind) {
     guard Self.containsTool(kind, in: tools) else { return }
-    selectedToolKind = kind
+    committedToolKind = kind
+  }
+
+  @available(
+    *,
+    deprecated,
+    renamed: "commitTool(_:)",
+    message: "Use `commitTool(_:)` to make it explicit that this changes only the persistent/base selection."
+  )
+  public mutating func select(_ kind: CanvasToolKind) {
+    commitTool(kind)
   }
 
   /// Provides similar functionality to an ordered set. Ensures

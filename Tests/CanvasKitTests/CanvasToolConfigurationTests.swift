@@ -24,20 +24,20 @@ struct ToolConfigurationTests {
       bindings: [],
     )
 
-    #expect(configuration.selectedToolKind == .brush)
+    #expect(configuration.committedToolKind == .brush)
     #expect(configuration.defaultToolKind == .brush)
-    #expect(configuration.resolvedSelectionKind == .brush)
+    #expect(configuration.committedToolKindOrDefault == .brush)
   }
 
   @Test func invalidInitialSelectionNormalisesToDefaultTool() {
     let configuration = ToolConfiguration(
       tools: [BrushTool(), SelectTool()],
       bindings: [],
-      selectedToolKind: .zoom,
+      committedToolKind: .zoom,
     )
 
-    #expect(configuration.selectedToolKind == .brush)
-    #expect(configuration.isSelectionValid)
+    #expect(configuration.committedToolKind == .brush)
+    #expect(configuration.isCommittedToolKindValid)
   }
 
   @Test func duplicateToolKindsKeepFirstPositionButReplaceValue() {
@@ -47,19 +47,19 @@ struct ToolConfigurationTests {
     )
 
     #expect(configuration.tools.map(\.kind) == [.select, .zoom, .brush])
-    #expect(configuration.tool(for: .zoom)?.name == "Zoom B")
+    #expect(configuration.registeredTool(for: .zoom)?.name == "Zoom B")
   }
 
   @Test func selectingMissingToolDoesNothing() {
     var configuration = ToolConfiguration(
       tools: [SelectTool(), BrushTool()],
       bindings: [],
-      selectedToolKind: .brush,
+      committedToolKind: .brush,
     )
 
-    configuration.select(.zoom)
+    configuration.commitTool(.zoom)
 
-    #expect(configuration.selectedToolKind == .brush)
+    #expect(configuration.committedToolKind == .brush)
   }
 
   @Test func invalidAndDuplicateBindingsAreSurfacedSeparatelyFromActiveBindings() {
@@ -81,18 +81,18 @@ struct ToolConfigurationTests {
     var configuration = ToolConfiguration(
       tools: [SelectTool(), ZoomTool()],
       bindings: [],
-      selectedToolKind: .zoom,
+      committedToolKind: .zoom,
     )
 
     configuration.setTools([BrushTool(), CustomZoomTool(name: "Zoom B"), BrushTool()])
 
     #expect(configuration.tools.map(\.kind) == [.brush, .zoom])
-    #expect(configuration.selectedToolKind == .zoom)
+    #expect(configuration.committedToolKind == .zoom)
 
     configuration.setTools([BrushTool()])
 
-    #expect(configuration.selectedToolKind == .brush)
-    #expect(configuration.resolvedSelectedTool.kind == .brush)
+    #expect(configuration.committedToolKind == .brush)
+    #expect(configuration.committedToolOrDefault.kind == .brush)
   }
 
   @Test func moveToolReordersExistingToolOnly() {
@@ -123,7 +123,7 @@ struct ToolHandlerTests {
 
     handler.handleKeyDown("z")
 
-    #expect(handler.toolKind == .select)
+    #expect(handler.effectiveToolKind == .select)
     #expect(handler.overrides.isEmpty)
   }
 
@@ -135,7 +135,7 @@ struct ToolHandlerTests {
         .init(KeyboardShortcut("b", modifiers: [.shift]), target: .brush, mode: .sticky),
         .init(KeyboardShortcut("b", modifiers: [.shift, .command]), target: .zoom, mode: .sticky),
       ],
-      selectedToolKind: .select,
+      committedToolKind: .select,
     )
     let handler = ToolHandler()
     handler.configuration = configuration
@@ -144,14 +144,14 @@ struct ToolHandlerTests {
     handler.handleKeyDown("b")
     #expect(handler.effectiveTool.kind == .zoom)
     handler.handleKeyUp("b")
-    #expect(handler.configuration.selectedToolKind == .zoom)
+    #expect(handler.configuration.committedToolKind == .zoom)
 
-    handler.configuration.select(.select)
+    handler.configuration.commitTool(.select)
     handler.updateModifiers([.shift])
     handler.handleKeyDown("b")
     #expect(handler.effectiveTool.kind == .brush)
     handler.handleKeyUp("b")
-    #expect(handler.configuration.selectedToolKind == .brush)
+    #expect(handler.configuration.committedToolKind == .brush)
   }
 
   @Test func stickyShortPressCommitsSelection() {
@@ -160,7 +160,7 @@ struct ToolHandlerTests {
       bindings: [
         .init(.keyOnly("b"), target: .brush, mode: .sticky)
       ],
-      selectedToolKind: .select,
+      committedToolKind: .select,
       springLoadDelay: 0.2,
     )
     let handler = ToolHandler()
@@ -168,11 +168,12 @@ struct ToolHandlerTests {
 
     handler.handleKeyDown("b")
     #expect(handler.effectiveTool.kind == .brush)
-    #expect(handler.isSpringLoaded == false)
+    #expect(handler.hasArmedSpringLoad == false)
+    #expect(handler.pendingSpringLoadArmingDelay != nil)
 
     handler.handleKeyUp("b")
 
-    #expect(handler.configuration.selectedToolKind == .brush)
+    #expect(handler.configuration.committedToolKind == .brush)
     #expect(handler.overrides.isEmpty)
   }
 
@@ -182,7 +183,7 @@ struct ToolHandlerTests {
       bindings: [
         .init(.keyOnly("b"), target: .brush, mode: .sticky)
       ],
-      selectedToolKind: .select,
+      committedToolKind: .select,
       springLoadDelay: 0.01,
     )
     let handler = ToolHandler()
@@ -190,14 +191,15 @@ struct ToolHandlerTests {
 
     handler.handleKeyDown("b")
     Thread.sleep(forTimeInterval: 0.02)
-    handler.armSpringLoadsIfReady()
+    handler.armPendingSpringLoads()
 
-    #expect(handler.springLoadedTool?.kind == .brush)
-    #expect(handler.isSpringLoaded)
+    #expect(handler.armedSpringLoadedTool?.kind == .brush)
+    #expect(handler.hasArmedSpringLoad)
+    #expect(handler.pendingSpringLoadArmingDelay == nil)
 
     handler.handleKeyUp("b")
 
-    #expect(handler.configuration.selectedToolKind == .select)
+    #expect(handler.configuration.committedToolKind == .select)
     #expect(handler.effectiveTool.kind == .select)
     #expect(handler.overrides.isEmpty)
   }
@@ -208,18 +210,19 @@ struct ToolHandlerTests {
       bindings: [
         .init(.keyOnly("b"), target: .brush, mode: .hold)
       ],
-      selectedToolKind: .select,
+      committedToolKind: .select,
     )
     let handler = ToolHandler()
     handler.configuration = configuration
 
     handler.handleKeyDown("b")
     #expect(handler.effectiveTool.kind == .brush)
-    #expect(handler.isSpringLoaded)
+    #expect(handler.hasArmedSpringLoad)
+    #expect(handler.pendingSpringLoadArmingDelay == nil)
 
     handler.handleKeyUp("b")
 
-    #expect(handler.configuration.selectedToolKind == .select)
+    #expect(handler.configuration.committedToolKind == .select)
     #expect(handler.effectiveTool.kind == .select)
     #expect(handler.overrides.isEmpty)
   }
@@ -230,7 +233,7 @@ struct ToolHandlerTests {
       bindings: [
         .init(.keyOnly("b"), target: .brush, mode: .hold)
       ],
-      selectedToolKind: .select,
+      committedToolKind: .select,
     )
     let handler = ToolHandler()
     handler.configuration = configuration

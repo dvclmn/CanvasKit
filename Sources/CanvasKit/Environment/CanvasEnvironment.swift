@@ -17,6 +17,9 @@ extension EnvironmentValues {
   /// Aka artwork/document size. Used internally by CanvasKit only
   @Entry var canvasSize: Size<CanvasSpace>?
   
+  /// Current runtime transform state
+//  @Entry var transform: TransformState?
+  
   @Entry var isShowingToolPicker: Bool = false
   @Entry var toolPickerAlignment: Alignment = .topLeading
 

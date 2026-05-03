@@ -7,6 +7,7 @@
 
 import CanvasKit
 import GeometryPrimitives
+import CoreUtilities
 import SwiftUI
 
 enum Constants {
@@ -46,27 +47,25 @@ struct ContentView: View {
       Text(
         "Photo by [Linus Belanger](https://unsplash.com/@linusbelanger?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/photos/a-single-sunflower-blooms-against-a-bright-blue-sky-ysB8453OSbI?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)"
       )
-      .tint(.secondary)
+      .tint(.secondary.opacity(0.85))
       .font(.callout)
       .foregroundStyle(.tertiary)
       .padding(.horizontal, 6)
       .padding(.vertical, 3)
-      .background(.black.opacity(0.25))
+//      .background(.gray.opacity(0.15))
       .background(.regularMaterial)
       .clipShape(.rect(cornerRadius: 5))
       .padding(8)
     }
-
-    //    .onAppear {
-    //      transform.scale = 1.8
-    //      transform.translation.width = -90
-    //    }
   }
 }
 
 #if DEBUG
 #Preview {
-  @Previewable @State var transform = TransformState()
+  @Previewable @State var transform = TransformState(
+    translation: .zero,
+    scale: 2,
+  )
   @Previewable @State var toolConfiguration = ToolConfiguration()
 
   ContentView(

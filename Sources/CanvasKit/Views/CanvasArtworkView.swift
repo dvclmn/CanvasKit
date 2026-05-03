@@ -9,10 +9,11 @@ import GeometryPrimitives
 import SwiftUI
 
 struct CanvasArtwork<Content: View>: View {
+  @Environment(CanvasHandler.self) private var store
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.canvasAnchor) private var canvasAnchor
 
-  let transform: TransformState
+//  let transform: TransformState
 
   let rounding: Double = 4
   let lineWidth: Double = 1
@@ -36,11 +37,11 @@ struct CanvasArtwork<Content: View>: View {
     .anchorPreference(key: ArtworkBoundsAnchorKey.self, value: .bounds) { $0 }
 
     /// Important: For transforms the order needs to be 1. Scale, 2. Rotation, 3. Offset
-    .scaleEffect(transform.scale.clamped(to: zoomRange))
+    .scaleEffect(store.currentTransform.scale.clamped(to: zoomRange))
 
     /// Note: Rotation not yet supported, coming in future versions
-    .rotationEffect(transform.rotation, anchor: .center)
-    .offset(transform.translation.cgSize)
+    .rotationEffect(store.currentTransform.rotation, anchor: .center)
+    .offset(store.currentTransform.translation.cgSize)
 
     .frame(
       maxWidth: .infinity,
@@ -59,7 +60,7 @@ extension CanvasArtwork {
       .stroke(
         .regularMaterial.opacity(0.9),
         lineWidth: lineWidth.removingZoom(
-          transform.scale,
+          store.currentTransform.scale,
           across: zoomRange,
         ),
       )
@@ -67,6 +68,6 @@ extension CanvasArtwork {
   }
 
   private var effectiveRounding: Double {
-    rounding.removingZoom(transform.scale, across: zoomRange)
+    rounding.removingZoom(store.currentTransform.scale, across: zoomRange)
   }
 }

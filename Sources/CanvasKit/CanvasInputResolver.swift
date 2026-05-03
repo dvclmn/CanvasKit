@@ -12,7 +12,7 @@ import SwiftUI
 /// Centralises input resolution for `CanvasHandler`.
 struct CanvasInputResolver {
   let context: InteractionContext
-  let activeTool: (any CanvasTool)?
+  let effectiveTool: (any CanvasTool)?
   let transform: TransformState
 }
 
@@ -20,8 +20,8 @@ extension CanvasInputResolver {
 
   func resolve() -> InteractionAdjustment? {
 
-    /// 1. Does the active tool declare a matching capability?
-    if let tool = activeTool,
+    /// 1. Does the effective tool declare a matching capability?
+    if let tool = effectiveTool,
       tool.inputCapabilities.contains(where: { $0.matches(context) })
     {
 
@@ -48,7 +48,7 @@ extension CanvasInputResolver {
   }
 
   var pointerStyle: PointerStyleCompatible? {
-    activeTool?.resolvePointerStyle(context: context)
+    effectiveTool?.resolvePointerStyle(context: context)
   }
 }
 

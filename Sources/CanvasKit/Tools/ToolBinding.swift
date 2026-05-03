@@ -14,7 +14,9 @@ import SwiftUI
 /// Bindings are the single source of truth for "which key activates which tool".
 /// `CanvasTool` intentionally does not store shortcut keys — that's this type's job.
 ///
-/// A single tool can have multiple bindings (e.g. Pan has both "H" sticky and Space hold).
+/// A single tool can have multiple bindings. For example, Pan can have both
+/// an "H" sticky shortcut that may commit the tool, and a Space hold shortcut
+/// that only spring-loads it temporarily.
 public struct ToolBinding: Hashable, Sendable, Equatable {
   public let shortcut: KeyboardShortcut
   public let target: CanvasToolKind

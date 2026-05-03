@@ -75,7 +75,7 @@ struct InteractionModifiers: ViewModifier {
       }
 
       .onPointerDragGesture(
-        behaviour: store.activeTool?.dragBehaviour ?? .none,
+        behaviour: store.effectiveTool.dragBehaviour,
         isEnabled: isEnabled(for: .drag),
       ) { payload, phase in
         guard let payload else { return }
@@ -106,18 +106,8 @@ extension InteractionModifiers {
       case .swipe, .pinch, .rotate:
         isEnabled = true
 
-      //      case .hover:
-      //        enabled = store.activeTool != nil
-
-      //      case .tap, .drag:
-
       case .tap, .drag, .hover:
-        guard let tool = store.activeTool else {
-          isEnabled = false
-          break
-        }
-
-        isEnabled = tool.inputCapabilities.contains { capability in
+        isEnabled = store.effectiveTool.inputCapabilities.contains { capability in
           capability.interactionKind == interaction
         }
     }

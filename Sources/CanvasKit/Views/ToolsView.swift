@@ -9,29 +9,32 @@ import CoreUtilities
 import SwiftUI
 
 struct ToolsView: View {
-  @Environment(\.modifierKeys) private var modifierKeys
-  @State private var isSelectFontActive: Bool = true
-  @State private var localCanvasZoom: CGFloat = 1.0
+  @Environment(CanvasHandler.self) private var store
 
   private let toolbarWidth: Double = 36
 
-  @Binding var transform: TransformState
-  @Binding var toolConfiguration: ToolConfiguration
+  //  @Binding var transform: TransformState
+
+  /// Runtime tool state, not just the durable configuration.
+  ///
+  /// The toolbar highlights ``ToolHandler/effectiveToolKind`` so transient
+  /// overrides such as Space-held Pan are reflected immediately.
+  //  let toolHandler: ToolHandler
 
   var body: some View {
 
     VStack(spacing: 6) {
 
       MainTools()
-      
+
       Divider()
         .frame(width: toolbarWidth * 0.7)
 
       VStack(alignment: .leading) {
         Group {
           Button {
-            transform.scale = 1.0
-            transform.translation = .zero
+            store.currentTransform?.scale = 1.0
+            store.currentTransform?.translation = .zero
 
           } label: {
             Label("Re-centre artwork", systemImage: "viewfinder")
@@ -48,12 +51,15 @@ struct ToolsView: View {
     .labelStyle(.iconOnly)
 
     .padding(6)
-    .background {
-      RoundedRectangle(cornerRadius: 6)
-        .fill(Color.white.opacity(0.08))
-        .fill(.regularMaterial)
 
-    }
+    .glassEffectCompatible(in: .capsule)
+    //    .glassEffectCompatible(in: .rect(cornerRadius: 6))
+    //    .background {
+    //      RoundedRectangle(cornerRadius: 6)
+    //        .fill(Color.white.opacity(0.08))
+    //        .fill(.regularMaterial)
+    //
+    //    }
     //    .shadow(
     //      radius: 100,
     //      x: 0,
@@ -72,17 +78,17 @@ struct ToolsView: View {
 }
 
 extension ToolsView {
-  
+
   @ViewBuilder
   private func MainTools() -> some View {
-    
+
     VStack(alignment: .leading, spacing: 0) {
-      
-      if !toolConfiguration.tools.isEmpty {
-        ForEach(toolConfiguration.tools, id: \.kind) { tool in
+
+      if !store.toolHandler.configuration.tools.isEmpty {
+        ForEach(store.toolHandler.configuration.tools, id: \.kind) { tool in
           ToolButton(for: tool)
         }
-        
+
       } else {
         Text("No Tools registered")
           .foregroundStyle(.tertiary)
@@ -95,8 +101,7 @@ extension ToolsView {
   private func ToolButton(for tool: any CanvasTool) -> some View {
 
     Button {
-      toolConfiguration.select(tool.kind)
-      //      store.toolHandler.setBaseTool(tool)
+      store.toolHandler.setCommittedTool(kind: tool.kind)
     } label: {
       Label(tool.name, systemImage: tool.icon)
         .foregroundStyle(isToolActive(tool) ? .primary : .secondary)
@@ -105,21 +110,21 @@ extension ToolsView {
         //              .opacity(isToolActive(tool) ? 1 : 0.5)
         .frame(width: toolbarWidth, height: toolbarWidth)
         .contentShape(Rectangle())
-        .background {
-          if isToolActive(tool) {
-            RoundedRectangle(cornerRadius: 5)
-              .fill(.quaternary)
-          }
-        }
+        .tint(.blue)
+      //        .background {
+      //          if isToolActive(tool) {
+      //            RoundedRectangle(cornerRadius: 5)
+      //              .fill(.quaternary)
+      //          }
+      //        }
       //              .background(.white.opacity(isToolActive(tool) ? 0.06 : 0))
     }
+    .foregroundStyle(.blue)
     .help(tool.name)
+    //    .buttonStyle(.glassProminent)
+
   }
   func isToolActive(_ tool: any CanvasTool) -> Bool {
-    //  func isToolActive(_ tool: Tool) -> Bool {
-    //    store.toolHandler.toolKind == tool.kind
-    guard let kind = toolConfiguration.selectedTool?.kind else { return false }
-    return kind == tool.kind
-    //    store.toolHandler.effectiveTool(modifiers: modifierKeys) == tool
+    store.toolHandler.effectiveToolKind == tool.kind
   }
 }

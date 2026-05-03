@@ -12,17 +12,13 @@ struct ToolsViewModifier: ViewModifier {
   @Environment(\.isShowingToolPicker) private var isShowingToolPicker
   @Environment(\.toolPickerAlignment) private var toolPickerAlignment
 
-  @Binding var transform: TransformState
+//  @Binding var transform: TransformState
 
   func body(content: Content) -> some View {
     content
       .overlay(alignment: toolPickerAlignment) {
         if isShowingToolPicker {
-          @Bindable var store = store
-          ToolsView(
-            transform: $transform,
-            toolConfiguration: $store.toolHandler.configuration,
-          )
+          ToolsView(transform: $transform)
         }
       }
   }

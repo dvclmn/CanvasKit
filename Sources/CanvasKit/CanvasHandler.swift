@@ -19,6 +19,7 @@ final class CanvasHandler {
   package var interactionContext: InteractionContext?
 
   var artworkFrame: Rect<ScreenSpace>?
+  var currentTransform: TransformState = .identity
 
   init(toolConfiguration: ToolConfiguration = .default) {
     self.toolHandler = .init(configuration: toolConfiguration)
@@ -27,14 +28,21 @@ final class CanvasHandler {
 
 extension CanvasHandler {
 
-  var activeTool: (any CanvasTool)? { toolHandler.effectiveTool }
+  /// The runtime tool used to resolve canvas input right now.
+  ///
+  /// This includes transient overrides such as Space-held Pan. For the
+  /// committed/base selection only, use `toolHandler.committedTool`.
+  var effectiveTool: any CanvasTool { toolHandler.effectiveTool }
+
+  @available(*, deprecated, renamed: "effectiveTool")
+  var activeTool: (any CanvasTool)? { effectiveTool }
 
   /// Entry point for all raw input events from gesture modifiers.
   ///
   /// 1. Global gestures (swipe, pinch, hover) are handled centrally here.
   /// Tools never see these events.
   ///
-  /// Pointer interactions (tap, drag) are forwarded to the active tool's
+  /// Pointer interactions (tap, drag) are forwarded to the effective tool's
   /// `resolvePointerInteraction()` method when the tool claims that
   /// interaction/adjustment pair via `inputCapabilities`.
   ///
@@ -58,7 +66,7 @@ extension CanvasHandler {
 
     let resolver = CanvasInputResolver(
       context: context,
-      activeTool: activeTool,
+      effectiveTool: effectiveTool,
       transform: currentTransform,
     )
 
@@ -108,7 +116,7 @@ extension CanvasHandler {
   // is currently only updated when processedTransform() is run.
   var pointerStyle: PointerStyleCompatible? {
     guard let interactionContext else { return nil }
-    return activeTool?.resolvePointerStyle(context: interactionContext)
+    return effectiveTool.resolvePointerStyle(context: interactionContext)
   }
 
 }

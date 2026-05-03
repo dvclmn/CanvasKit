@@ -13,7 +13,7 @@ Avoids a rigid mode machine.
 
 ---
 
-Current tool: Selection
+Committed tool: Selection
 Pointer down + drag → SelectionDrag
 
 Hold spacebar
@@ -21,9 +21,9 @@ Pointer down + drag → PanViewport
 
 ---
 
-Tool didn’t change
+Committed tool didn’t change
 
-Intent resolution did
+Effective tool / intent resolution did
 
 ---
 
@@ -31,5 +31,6 @@ Public surface:
 
 - `CanvasTool` defines a tool
 - `CanvasToolKind` gives it a stable identity
-- `ToolConfiguration` owns tools, bindings, and selected kind
+- `ToolConfiguration` owns tools, bindings, and committed/base kind
+- `ToolHandler` resolves the effective runtime tool, including key-held overrides
 - `onCanvasToolAction` surfaces tool-emitted domain events

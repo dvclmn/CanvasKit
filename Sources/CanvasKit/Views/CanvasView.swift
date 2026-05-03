@@ -11,7 +11,7 @@ import InputPrimitives
 import SwiftUI
 
 public struct CanvasView<Content: View>: View, CanvasAddressable {
-  
+
   @State private var store: CanvasHandler
 
   /// Populated when user wishes to handle their own transform state
@@ -20,7 +20,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   /// Internal-only source of truth for transform state. If user passes in state,
   /// it is passed to this. If not, this gets a default initial value.
   /// External and internal state is kept in sync via `bindModel`.
-  @State private var localTransform: TransformState
+//  @State private var localTransform: TransformState
 
   /// Populated when user wishes to handle their own tool configuration state.
   private let externalToolConfiguration: Binding<ToolConfiguration>?
@@ -32,7 +32,6 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
     @Bindable var store = store
 
     CanvasCoreView(
-//      canvasSize: canvasSize,
       transform: $localTransform,
       content: content,
     )
@@ -70,7 +69,8 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
     /// ensures both local and external are kept in sync
     .bindModel(
       debounce: .noDebounce,
-      $localTransform,
+      $store.currentTransform,
+//      $localTransform,
       to: externalTransform,
     )
 

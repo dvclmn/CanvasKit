@@ -15,7 +15,7 @@ struct CanvasCoreView<Content: View>: View {
   @Environment(\.canvasAnchor) private var canvasAnchor
   @Environment(\.zoomRange) private var zoomRange
 
-  @Binding var transform: TransformState
+//  @Binding var transform: TransformState
 
   @ViewBuilder var content: () -> Content
 
@@ -24,7 +24,7 @@ struct CanvasCoreView<Content: View>: View {
 //      .contentShape(Rectangle())
       .overlay {
         CanvasArtwork(
-          transform: transform,
+//          transform: store.cu,
           content: content,
         )
 //        .allowsHitTesting(false)

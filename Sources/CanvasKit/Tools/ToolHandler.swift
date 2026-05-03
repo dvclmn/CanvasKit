@@ -10,14 +10,20 @@ import SwiftUI
 
 /// Manages tool selection, spring-loading, and key bindings.
 ///
-/// This is internal runtime machinery. App code should work with
-/// `ToolConfiguration` instead.
+/// This is internal runtime machinery layered on top of ``ToolConfiguration``.
+/// The configuration stores the committed/base tool. The handler adds transient
+/// key-held overrides and exposes the effective tool used to resolve canvas
+/// input right now.
 @Observable
 final class ToolHandler {
   
   var configuration: ToolConfiguration = .default
 
-  /// Active spring-load / hold overrides, most recent last.
+  /// Active key-held overrides, most recent last.
+  ///
+  /// `.hold` bindings are armed immediately. `.sticky` bindings start as
+  /// pending overrides so a quick key press can still commit on key-up; if held
+  /// past `springLoadDelay`, they become armed spring-loads and revert on key-up.
   var overrides: [ToolOverride] = []
 
   private var heldKeys: Set<KeyEquivalent> = []
@@ -30,36 +36,40 @@ final class ToolHandler {
 
 extension ToolHandler {
 
-  /// The currently effective tool, considering pending and armed overrides.
-  /// If there is any override on the stack, its tool is effective immediately.
-  /// Otherwise the selected tool is effective.
+  /// The tool used to resolve canvas input right now.
+  ///
+  /// This includes pending sticky shortcuts and armed spring-loads. If no
+  /// key-held override is active, this falls back to ``committedTool``.
   var effectiveTool: any CanvasTool {
-    guard let last = overrides.last else { return baseTool }
-    return resolveTool(for: last.binding.target) ?? baseTool
+    guard let last = overrides.last else { return committedTool }
+    return registeredTool(for: last.binding.target) ?? committedTool
   }
 
-  /// The currently committed selection, excluding temporary spring-loads.
-//  var selectedToolKind: CanvasToolKind { configuration.selectedToolKind }
+  /// The kind of ``effectiveTool``.
+  var effectiveToolKind: CanvasToolKind { effectiveTool.kind }
 
-  /// The Kind of the effective tool.
-  var toolKind: CanvasToolKind { effectiveTool.kind }
-
-  /// The selected tool, or a fallback if the configured kind is not registered.
-  var baseTool: any CanvasTool {
-    configuration.resolvedSelectedTool
+  /// The committed/base tool, excluding key-held overrides.
+  var committedTool: any CanvasTool {
+    configuration.committedToolOrDefault
   }
 
-  /// The spring-loaded tool if one is armed, or `nil`.
-  var springLoadedTool: (any CanvasTool)? {
+  /// The most recent armed spring-loaded tool, or `nil`.
+  ///
+  /// Pending sticky shortcuts affect ``effectiveTool`` immediately, but do not
+  /// appear here until ``armPendingSpringLoads`` marks them as armed.
+  var armedSpringLoadedTool: (any CanvasTool)? {
     guard let armed = overrides.last(where: { $0.isArmed }) else { return nil }
-    return resolveTool(for: armed.binding.target)
+    return registeredTool(for: armed.binding.target)
   }
 
-  var isSpringLoaded: Bool { overrides.contains { $0.isArmed } }
+  /// Whether any key-held override has crossed into armed spring-load state.
+  var hasArmedSpringLoad: Bool { overrides.contains { $0.isArmed } }
 
-  /// The smallest remaining time (in seconds) before any pending `.sticky` override arms.
-  /// Returns `nil` when there are no pending arming overrides.
-  var pendingArmingTimeRemaining: TimeInterval? {
+  /// The smallest remaining delay before any pending `.sticky` override arms.
+  ///
+  /// The keyboard modifier uses this to schedule ``armPendingSpringLoads``.
+  /// Returns `nil` when there are no pending sticky overrides.
+  var pendingSpringLoadArmingDelay: TimeInterval? {
     let now = Date()
     let remainingTimes = overrides.compactMap { ovr -> TimeInterval? in
       guard ovr.binding.mode == .sticky, !ovr.isArmed, heldKeys.contains(ovr.key) else { return nil }
@@ -72,7 +82,7 @@ extension ToolHandler {
 
   /// Arms any pending `.sticky` overrides whose hold duration has exceeded
   /// `springLoadDelay` and whose key is still held.
-  func armSpringLoadsIfReady() {
+  func armPendingSpringLoads() {
     let now = Date()
     for i in overrides.indices {
       let o = overrides[i]
@@ -85,22 +95,52 @@ extension ToolHandler {
       }
     }
   }
+
+  @available(*, deprecated, renamed: "effectiveToolKind")
+  var toolKind: CanvasToolKind { effectiveToolKind }
+
+  @available(*, deprecated, renamed: "committedTool")
+  var baseTool: any CanvasTool { committedTool }
+
+  @available(*, deprecated, renamed: "armedSpringLoadedTool")
+  var springLoadedTool: (any CanvasTool)? { armedSpringLoadedTool }
+
+  @available(*, deprecated, renamed: "hasArmedSpringLoad")
+  var isSpringLoaded: Bool { hasArmedSpringLoad }
+
+  @available(*, deprecated, renamed: "pendingSpringLoadArmingDelay")
+  var pendingArmingTimeRemaining: TimeInterval? { pendingSpringLoadArmingDelay }
+
+  @available(*, deprecated, renamed: "armPendingSpringLoads()")
+  func armSpringLoadsIfReady() {
+    armPendingSpringLoads()
+  }
 }
 
 // MARK: - Mutations
 
 extension ToolHandler {
 
-  func setBaseTool(_ tool: any CanvasTool) {
+  func setCommittedTool(_ tool: any CanvasTool) {
     configuration.register(tool)
-    configuration.selectedToolKind = tool.kind
+    configuration.committedToolKind = tool.kind
     overrides.removeAll()
   }
 
-  /// Set the base tool by kind, looking it up in the registry.
-  func setBaseTool(kind: CanvasToolKind) {
-    configuration.select(kind)
+  /// Set the committed/base tool by kind, looking it up in the registry.
+  func setCommittedTool(kind: CanvasToolKind) {
+    configuration.commitTool(kind)
     overrides.removeAll()
+  }
+
+  @available(*, deprecated, renamed: "setCommittedTool(_:)")
+  func setBaseTool(_ tool: any CanvasTool) {
+    setCommittedTool(tool)
+  }
+
+  @available(*, deprecated, renamed: "setCommittedTool(kind:)")
+  func setBaseTool(kind: CanvasToolKind) {
+    setCommittedTool(kind: kind)
   }
 
   func setBindings(_ bindings: [ToolBinding]) {
@@ -126,8 +166,14 @@ extension ToolHandler {
     removeOverrides(forKey: key)
   }
 
-  func cancelAllSpringLoads() {
+  /// Clear every transient key-held override and return to the committed tool.
+  func cancelAllToolOverrides() {
     overrides.removeAll()
+  }
+
+  @available(*, deprecated, renamed: "cancelAllToolOverrides()")
+  func cancelAllSpringLoads() {
+    cancelAllToolOverrides()
   }
 
   func updateModifiers(_ modifiers: Modifiers) {
@@ -170,10 +216,9 @@ extension ToolHandler {
     binding: ToolBinding,
     onKeyDown key: KeyEquivalent,
   ) {
-//    let targetTool = resolveTool(for: binding.target)
     switch binding.mode {
       case .hold:
-        /// Always spring-load immediately; never commit.
+        // Always spring-load immediately; never commit.
         let override = ToolOverride(
           binding: binding,
           startedAt: Date(),
@@ -183,7 +228,7 @@ extension ToolHandler {
         overrides.append(override)
 
       case .sticky:
-        /// Activate immediately as a pending commit; arming happens after the threshold.
+        // Activate immediately as a pending commit; arming happens after the threshold.
         let override = ToolOverride(
           binding: binding,
           startedAt: Date(),
@@ -191,30 +236,26 @@ extension ToolHandler {
           isArmed: false,
         )
         overrides.append(override)
-
-//      case .toggle:
-        /// Commit immediately on key down.
-//        setBaseTool(targetTool)
     }
   }
 
   private func removeOverrides(forKey key: KeyEquivalent) {
-    /// First, determine if any sticky override should commit.
+    // First, determine if any sticky override should commit.
     if let override = overrides.last(where: { $0.key == key && $0.binding.mode == .sticky }) {
       if override.isArmed == false {
-        /// Short press: commit to the tool. This clears the override stack.
-        setBaseTool(kind: override.binding.target)
+        // Short press: commit to the tool. This clears the override stack.
+        setCommittedTool(kind: override.binding.target)
         return
       }
-      /// Long hold: spring-loaded only; fall through to removal to revert.
+      // Long hold: spring-loaded only; fall through to removal to revert.
     }
 
-    /// Remove any overrides tied to this key for both hold and sticky modes.
+    // Remove any overrides tied to this key for both hold and sticky modes.
     overrides.removeAll { $0.key == key && ($0.binding.mode == .hold || $0.binding.mode == .sticky) }
   }
 
-  private func resolveTool(for kind: CanvasToolKind) -> (any CanvasTool)? {
-    configuration.tool(for: kind)
+  private func registeredTool(for kind: CanvasToolKind) -> (any CanvasTool)? {
+    configuration.registeredTool(for: kind)
   }
 
   var keysToWatch: Set<KeyEquivalent> {
