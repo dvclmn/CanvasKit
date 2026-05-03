@@ -11,10 +11,11 @@ import SwiftUI
 
 struct CanvasSnapshotModifier: ViewModifier {
   @Environment(\.zoomRange) private var zoomRange
+  @Environment(\.canvasSize) private var canvasSize
 
   let transform: TransformState
   let artworkFrame: Rect<ScreenSpace>?
-  let canvasSize: Size<CanvasSpace>
+  
   let pointer: PointerState
   let phase: InteractionPhase
 
@@ -29,7 +30,7 @@ struct CanvasSnapshotModifier: ViewModifier {
 
 extension CanvasSnapshotModifier {
   private var snapshot: CanvasSnapshot? {
-    guard let artworkFrame else { return nil }
+    guard let artworkFrame, let canvasSize else { return nil }
     let mapper = CoordinateSpaceMapper(frame: artworkFrame, canvasSize: canvasSize)
 
     let tapMapped = pointer.tap.map { mapper.canvasPoint(from: $0) }

@@ -22,19 +22,8 @@ struct ToolsView: View {
 
     VStack(spacing: 6) {
 
-      VStack(alignment: .leading, spacing: 0) {
-
-        if !toolConfiguration.tools.isEmpty {
-          ForEach(toolConfiguration.tools, id: \.kind) { tool in
-            ToolButton(for: tool)
-          }
-
-        } else {
-          Text("No Tools registered")
-            .foregroundStyle(.tertiary)
-        }
-      }  // END vstack
-
+      MainTools()
+      
       Divider()
         .frame(width: toolbarWidth * 0.7)
 
@@ -42,9 +31,7 @@ struct ToolsView: View {
         Group {
           Button {
             transform.scale = 1.0
-//            print("Need to bring this back")
-            //            store.canvasHandler.updateGesture(.zoom(.fit))
-            //            store.canvasHandler.zoomHandler.zoomToFit()
+            transform.translation = .zero
 
           } label: {
             Label("Re-centre artwork", systemImage: "viewfinder")
@@ -85,6 +72,24 @@ struct ToolsView: View {
 }
 
 extension ToolsView {
+  
+  @ViewBuilder
+  private func MainTools() -> some View {
+    
+    VStack(alignment: .leading, spacing: 0) {
+      
+      if !toolConfiguration.tools.isEmpty {
+        ForEach(toolConfiguration.tools, id: \.kind) { tool in
+          ToolButton(for: tool)
+        }
+        
+      } else {
+        Text("No Tools registered")
+          .foregroundStyle(.tertiary)
+      }
+    }  // END vstack
+
+  }
 
   @ViewBuilder
   private func ToolButton(for tool: any CanvasTool) -> some View {

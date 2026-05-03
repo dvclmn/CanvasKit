@@ -11,6 +11,7 @@ import InputPrimitives
 import SwiftUI
 
 public struct CanvasView<Content: View>: View, CanvasAddressable {
+  
   @State private var store: CanvasHandler
 
   /// Populated when user wishes to handle their own transform state
@@ -31,7 +32,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
     @Bindable var store = store
 
     CanvasCoreView(
-      canvasSize: canvasSize,
+//      canvasSize: canvasSize,
       transform: $localTransform,
       content: content,
     )
@@ -51,7 +52,6 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       CanvasSnapshotModifier(
         transform: localTransform,
         artworkFrame: store.artworkFrame,
-        canvasSize: canvasSize,
         pointer: store.pointer,
         phase: store.interactionContext?.phase ?? .none,
       )
@@ -91,6 +91,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
 
     /// Set the resolved pointer style and add it to the Environment
     .pointerStyleCompatible(store.pointerStyle)
+    .environment(\.canvasSize, canvasSize)
     .environment(\.pointerStyle, store.pointerStyle)
     .environment(store)
 

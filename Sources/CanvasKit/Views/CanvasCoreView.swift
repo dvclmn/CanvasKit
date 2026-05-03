@@ -11,10 +11,10 @@ import SwiftUI
 struct CanvasCoreView<Content: View>: View {
   @Environment(CanvasHandler.self) private var store
   @Environment(\.canvasBackground) private var canvasBackground
+  @Environment(\.canvasSize) private var canvasSize
   @Environment(\.canvasAnchor) private var canvasAnchor
   @Environment(\.zoomRange) private var zoomRange
 
-  let canvasSize: Size<CanvasSpace>
   @Binding var transform: TransformState
 
   @ViewBuilder var content: () -> Content
@@ -24,7 +24,6 @@ struct CanvasCoreView<Content: View>: View {
 //      .contentShape(Rectangle())
       .overlay {
         CanvasArtwork(
-          canvasSize: canvasSize,
           transform: transform,
           content: content,
         )

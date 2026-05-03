@@ -12,7 +12,6 @@ struct CanvasArtwork<Content: View>: View {
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.canvasAnchor) private var canvasAnchor
 
-  let canvasSize: Size<CanvasSpace>
   let transform: TransformState
 
   let rounding: Double = 4
@@ -26,11 +25,7 @@ struct CanvasArtwork<Content: View>: View {
       rounding: effectiveRounding,
       content: content,
     )
-    .frame(
-      width: canvasSize.width,
-      height: canvasSize.height,
-    )
-
+    
     /// Visual indication of Canvas artwork bounds
     .overlay { ArtworkOutline() }
 
@@ -70,7 +65,7 @@ extension CanvasArtwork {
       )
       .allowsHitTesting(false)
   }
-  
+
   private var effectiveRounding: Double {
     rounding.removingZoom(transform.scale, across: zoomRange)
   }

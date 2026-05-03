@@ -6,14 +6,17 @@
 //
 
 import SwiftUI
+import GeometryPrimitives
 
 /// Uses SwiftUI subview APIs for granular control over canvas clipping.
 ///
 /// This drives modifier `canvasClipped(_:)`, giving the user control
 /// over whether or not a View nested within `CanvasView` should
 /// be clipped to the canvas size.
+///
+/// Modifier `canvasSizeFrame()` is placed before
+/// `clipShape(_:style:)`, so that clipping matches canvas size correctly.
 struct CanvasArtworkDecomposed<Content: View>: View {
-
   let rounding: Double
   @ViewBuilder var content: () -> Content
 
@@ -25,6 +28,7 @@ struct CanvasArtworkDecomposed<Content: View>: View {
       }
     } else {
       ZStack(content: content)
+        .canvasSizeFrame()
     }
   }
 }
@@ -36,9 +40,12 @@ extension CanvasArtworkDecomposed {
     ZStack {
       ForEach(subviews: subviews) { subview in
         if subview.containerValues.allowsCanvasClipping {
-          subview.clipShape(.rect(cornerRadius: rounding))
+          subview
+            .canvasSizeFrame()
+            .clipShape(.rect(cornerRadius: rounding))
         } else {
           subview
+            .canvasSizeFrame()
         }
       }
     }

@@ -32,11 +32,30 @@ struct ContentView: View {
       transform: $transform,
       toolConfiguration: $toolConfiguration,
     ) {
-      CanvasContentView()
-        .canvasClipped(true)
+      Image(.sunflower)
+        .resizable()
+        .scaledToFill()
+      //      CanvasContentView()
+//              .canvasClipped(false)
     }
     .zoomRange(0.1...20)
     .toolPicker()
+
+    .overlay(alignment: .bottomTrailing) {
+
+      Text(
+        "Photo by [Linus Belanger](https://unsplash.com/@linusbelanger?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/photos/a-single-sunflower-blooms-against-a-bright-blue-sky-ysB8453OSbI?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)"
+      )
+      .tint(.secondary)
+      .font(.callout)
+      .foregroundStyle(.tertiary)
+      .padding(.horizontal, 6)
+      .padding(.vertical, 3)
+      .background(.black.opacity(0.25))
+      .background(.regularMaterial)
+      .clipShape(.rect(cornerRadius: 5))
+      .padding(8)
+    }
 
     //    .onAppear {
     //      transform.scale = 1.8

@@ -59,7 +59,6 @@
 			isa = PBXGroup;
 			children = (
 				F674186B2F10DEC9004B8381 /* CanvasDemo */,
-				F674188F2F10DF3D004B8381 /* Frameworks */,
 				F674186A2F10DEC9004B8381 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -70,13 +69,6 @@
 				F67418692F10DEC9004B8381 /* CanvasDemo.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		F674188F2F10DF3D004B8381 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
