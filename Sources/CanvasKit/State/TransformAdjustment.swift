@@ -6,6 +6,7 @@
 //
 
 import GeometryPrimitives
+import InputPrimitives
 import SwiftUI
 
 /// Previously held by `CanvasAdjustment`
@@ -74,6 +75,25 @@ extension TransformAdjustment {
   ) -> Self {
     let new = transform.translation + delta
     return .translation(new)
+  }
+  
+  static func swipeAdjustment(
+    for transform: TransformState,
+    delta: Size<ScreenSpace>,
+    modifiers: Modifiers,
+  ) -> TransformAdjustment {
+    
+    /// If Option is held during a Swipe, it is interpreted as Zoom, not Pan
+    guard modifiers.contains(.option) else {
+      return .panAdjustment(for: transform, delta: delta)
+    }
+    
+    /// Each point contributes up to 0.5% zoom change at sensitivity = 1.0
+    let factor = ZoomComputation.factorFromDelta(
+      CGSize(width: 0, height: delta.cgSize.height),
+      weights: .vertical,
+    )
+    return .zoomAdjustment(for: transform, by: factor)
   }
 }
 

@@ -12,6 +12,8 @@ import SwiftUI
 public enum Interaction: Sendable {
   /// ``SwiftUI/View/onSwipeGesture(isEnabled:perform:)``
   case swipe(delta: Size<ScreenSpace>)  // onSwipeGesture
+  /// Proposed absolute zoom level (not delta) from
+  ///  ``SwiftUI/View/onPinchGesture(initial:isEnabled:didUpdateZoom:)``.
   case pinch(scale: Double)  // onPinchGesture
   case rotation(angle: Angle)  // (Not yet supported)
   case tap(location: Point<ScreenSpace>)  // onTapGesture

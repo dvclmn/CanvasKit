@@ -5,12 +5,14 @@
 //  Created by Dave Coleman on 11/3/2026.
 //
 
+import CoreUtilities
 import GeometryPrimitives
 import SwiftUI
 
 struct InteractionModifiers: ViewModifier {
   @Environment(CanvasHandler.self) private var store
   @Environment(\.modifierKeys) private var modifierKeys
+  @Environment(\.zoomRange) private var zoomRange
 
   @Binding var transform: TransformState
 
@@ -28,8 +30,7 @@ struct InteractionModifiers: ViewModifier {
           modifiers: event.modifiers,
           currentTransform: transform,
         )
-        guard let adjustment else { return }
-        transform = adjustment
+        apply(adjustment)
       }
 
       .onPinchGesture(
@@ -46,11 +47,7 @@ struct InteractionModifiers: ViewModifier {
 
         /// Returns the scale so the modifier's internal Zoom
         /// stays in sync with transform state
-        guard let adjustment else {
-          return adjustment?.scale
-        }
-        transform = adjustment
-        return adjustment.scale
+        return apply(adjustment)?.scale
       }
 
       .onContinuousHover(coordinateSpace: .named(ScreenSpace.screen)) { phase in
@@ -61,8 +58,7 @@ struct InteractionModifiers: ViewModifier {
           modifiers: modifierKeys,
           currentTransform: transform,
         )
-        guard let adjustment else { return }
-        transform = adjustment
+        apply(adjustment)
 
       }
 
@@ -74,8 +70,7 @@ struct InteractionModifiers: ViewModifier {
           modifiers: modifierKeys,
           currentTransform: transform,
         )
-        guard let adjustment else { return }
-        transform = adjustment
+        apply(adjustment)
 
       }
 
@@ -90,13 +85,20 @@ struct InteractionModifiers: ViewModifier {
           modifiers: modifierKeys,
           currentTransform: transform,
         )
-        guard let adjustment else { return }
-        transform = adjustment
+        apply(adjustment)
       }
   }
 }
 
 extension InteractionModifiers {
+  @discardableResult
+  private func apply(_ adjustment: TransformState?) -> TransformState? {
+    guard var adjustment else { return nil }
+    adjustment.scale = adjustment.scale.clamped(to: zoomRange)
+    transform = adjustment
+    return adjustment
+  }
+
   private func isEnabled(for interaction: InteractionKind) -> Bool {
     let isEnabled: Bool
 
