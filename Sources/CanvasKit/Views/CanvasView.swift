@@ -11,8 +11,6 @@ import InputPrimitives
 import SwiftUI
 
 public struct CanvasView<Content: View>: View, CanvasAddressable {
-  @Environment(\.isShowingToolPicker) private var isShowingToolPicker
-  @Environment(\.toolPickerAlignment) private var toolPickerAlignment
   @State private var store: CanvasHandler
 
   /// Populated when user wishes to handle their own transform state
@@ -41,15 +39,9 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
     /// User input modifiers, `onSwipeGesture`, `onTapGesture`, etc.
     /// These wrap the canvas only, so their invisible event-capture overlays
     /// do not sit above the tool picker.
-    .modifier(
-      InteractionModifiers(transform: $localTransform)
-    )
+    .modifier(InteractionModifiers(transform: $localTransform))
 
-    .overlay(alignment: toolPickerAlignment) {
-      if isShowingToolPicker {
-        ToolsView(toolConfiguration: $store.toolHandler.configuration)
-      }
-    }
+    .toolPalette($localTransform)
 
     /// Publishes current canvas transform values to the Environment
     .canvasTransformEnvironment(localTransform)
@@ -65,14 +57,14 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       )
     )
 
-//    .debugText {
-//      Labeled("Ext. Tool Config", value: externalToolConfiguration?.wrappedValue)
-//      "\n"
-//      Divider()
-//      Labeled("Runtime Tool Config", value: store.toolHandler.configuration)
-//    }
-//    //    .modifier(DebugOverlayModifier(isEnabled: false))
-//    .debugTextOverlay(isEnabled: true)
+    //    .debugText {
+    //      Labeled("Ext. Tool Config", value: externalToolConfiguration?.wrappedValue)
+    //      "\n"
+    //      Divider()
+    //      Labeled("Runtime Tool Config", value: store.toolHandler.configuration)
+    //    }
+    //    //    .modifier(DebugOverlayModifier(isEnabled: false))
+    //    .debugTextOverlay(isEnabled: true)
 
     /// In cases where transform state is owned externally,
     /// ensures both local and external are kept in sync

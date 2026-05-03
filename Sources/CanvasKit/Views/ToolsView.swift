@@ -15,6 +15,7 @@ struct ToolsView: View {
 
   private let toolbarWidth: Double = 36
 
+  @Binding var transform: TransformState
   @Binding var toolConfiguration: ToolConfiguration
 
   var body: some View {
@@ -40,7 +41,8 @@ struct ToolsView: View {
       VStack(alignment: .leading) {
         Group {
           Button {
-            print("Need to bring this back")
+            transform.scale = 1.0
+//            print("Need to bring this back")
             //            store.canvasHandler.updateGesture(.zoom(.fit))
             //            store.canvasHandler.zoomHandler.zoomToFit()
 
@@ -65,11 +67,11 @@ struct ToolsView: View {
         .fill(.regularMaterial)
 
     }
-//    .shadow(
-//      radius: 100,
-//      x: 0,
-//      y: 10,
-//    )
+    //    .shadow(
+    //      radius: 100,
+    //      x: 0,
+    //      y: 10,
+    //    )
     //    .depthShadow(
     //      opacity: 0.3,
     //      radius: 20,

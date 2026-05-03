@@ -21,14 +21,14 @@ struct CanvasCoreView<Content: View>: View {
 
   var body: some View {
     Color.clear
-      .contentShape(Rectangle())
+//      .contentShape(Rectangle())
       .overlay {
         CanvasArtwork(
           canvasSize: canvasSize,
           transform: transform,
           content: content,
         )
-        .allowsHitTesting(false)
+//        .allowsHitTesting(false)
       }
       .frame(
         maxWidth: .infinity,

@@ -12,9 +12,7 @@ struct InteractionModifiers: ViewModifier {
   @Environment(CanvasHandler.self) private var store
   @Environment(\.modifierKeys) private var modifierKeys
 
-  //  @Bindable var state: CanvasState
   @Binding var transform: TransformState
-  //  let tool: (any CanvasTool)?
 
   func body(content: Content) -> some View {
     @Bindable var store = store
@@ -53,7 +51,6 @@ struct InteractionModifiers: ViewModifier {
         }
         transform = adjustment
         return adjustment.scale
-
       }
 
       .onContinuousHover(coordinateSpace: .named(ScreenSpace.screen)) { phase in
@@ -101,34 +98,28 @@ struct InteractionModifiers: ViewModifier {
 
 extension InteractionModifiers {
   private func isEnabled(for interaction: InteractionKind) -> Bool {
-    let enabled: Bool
+    let isEnabled: Bool
 
     switch interaction {
       case .swipe, .pinch, .rotate:
-        enabled = true
+        isEnabled = true
 
-//      case .hover:
-//        enabled = store.activeTool != nil
+      //      case .hover:
+      //        enabled = store.activeTool != nil
 
-//      case .tap, .drag:
-        
+      //      case .tap, .drag:
+
       case .tap, .drag, .hover:
         guard let tool = store.activeTool else {
-          enabled = false
+          isEnabled = false
           break
         }
 
-        enabled = tool.inputCapabilities.contains { capability in
+        isEnabled = tool.inputCapabilities.contains { capability in
           capability.interactionKind == interaction
         }
     }
 
-    //    if !enabled {
-    //      let capabilities = tool?.inputCapabilities.map(\.description).joined(separator: ", ") ?? "no tool"
-    //      print("Interaction \(interaction.displayName) is not enabled for \(capabilities)")
-    //    }
-    return enabled
-    //    guard let tool else { return true }
-    //    return tool.inputCapabilities.contains(interaction)
+    return isEnabled
   }
 }
