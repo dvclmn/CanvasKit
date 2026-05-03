@@ -46,7 +46,7 @@ struct CanvasArtwork<Content: View>: View {
     /// Note: Rotation not yet supported, coming in future versions
     .rotationEffect(transform.rotation, anchor: .center)
     .offset(transform.translation.cgSize)
-    
+
     .frame(
       maxWidth: .infinity,
       maxHeight: .infinity,
@@ -63,7 +63,6 @@ extension CanvasArtwork {
       .fill(.clear)
       .stroke(
         .regularMaterial.opacity(0.9),
-//        Color.white.opacity(0.05),
         lineWidth: lineWidth.removingZoom(
           transform.scale,
           across: zoomRange,
@@ -71,6 +70,7 @@ extension CanvasArtwork {
       )
       .allowsHitTesting(false)
   }
+  
   private var effectiveRounding: Double {
     rounding.removingZoom(transform.scale, across: zoomRange)
   }

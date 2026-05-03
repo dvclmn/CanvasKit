@@ -33,6 +33,7 @@ struct ContentView: View {
       toolConfiguration: $toolConfiguration,
     ) {
       CanvasContentView()
+        .canvasClipped(true)
     }
     .zoomRange(0.1...20)
     .toolPicker()

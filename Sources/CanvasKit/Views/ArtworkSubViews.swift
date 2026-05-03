@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+/// Uses SwiftUI subview APIs for granular control over canvas clipping.
+///
+/// This drives modifier `canvasClipped(_:)`, giving the user control
+/// over whether or not a View nested within `CanvasView` should
+/// be clipped to the canvas size.
 struct CanvasArtworkDecomposed<Content: View>: View {
 
   let rounding: Double
@@ -19,7 +24,7 @@ struct CanvasArtworkDecomposed<Content: View>: View {
         SubViews(subviews)
       }
     } else {
-      ZStack { content() }
+      ZStack(content: content)
     }
   }
 }
