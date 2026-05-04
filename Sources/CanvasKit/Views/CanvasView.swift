@@ -59,23 +59,20 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
     //      Labeled("Runtime Tool Config", value: store.toolHandler.configuration)
     //    }
     //    //    .modifier(DebugOverlayModifier(isEnabled: false))
-    //    .debugTextOverlay(isEnabled: true)
+        .debugTextOverlay(isEnabled: true)
 
     /// In cases where transform state is owned externally,
     /// ensures both local and external are kept in sync
     .bindModel(
       debounce: .noDebounce,
       $store.currentTransform,
-//      $localTransform,
       to: externalTransform,
     )
 
     /// Wonder if I just keep this here, even if the user is already listening
     /// for modifier keys some other way elsewhere? Or, whether I should be
     /// allowing passing in own state for modifiers.
-    .modifierKeys { keys in
-      store.updateModifiers(keys)
-    }
+    .modifierKeys { store.updateModifiers($0) }
 
     .modifier(CanvasToolKeyboardModifier(toolHandler: $store.toolHandler))
 

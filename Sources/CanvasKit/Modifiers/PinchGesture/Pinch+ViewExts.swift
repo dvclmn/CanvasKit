@@ -9,7 +9,7 @@ import SwiftUI
 
 extension View {
 
-  /// Binding-driven zoom. 
+  /// Binding-driven zoom.
   public func onPinchGesture(
     zoom: Binding<Double>,
     isEnabled: Bool = true,

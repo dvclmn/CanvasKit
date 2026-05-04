@@ -13,14 +13,6 @@ struct ToolsView: View {
 
   private let toolbarWidth: Double = 36
 
-  //  @Binding var transform: TransformState
-
-  /// Runtime tool state, not just the durable configuration.
-  ///
-  /// The toolbar highlights ``ToolHandler/effectiveToolKind`` so transient
-  /// overrides such as Space-held Pan are reflected immediately.
-  //  let toolHandler: ToolHandler
-
   var body: some View {
 
     VStack(spacing: 6) {
@@ -47,31 +39,9 @@ struct ToolsView: View {
 
     }  // END main vstack
     .buttonStyle(.plain)
-
     .labelStyle(.iconOnly)
-
     .padding(6)
-
     .glassEffectCompatible(in: .capsule)
-    //    .glassEffectCompatible(in: .rect(cornerRadius: 6))
-    //    .background {
-    //      RoundedRectangle(cornerRadius: 6)
-    //        .fill(Color.white.opacity(0.08))
-    //        .fill(.regularMaterial)
-    //
-    //    }
-    //    .shadow(
-    //      radius: 100,
-    //      x: 0,
-    //      y: 10,
-    //    )
-    //    .depthShadow(
-    //      opacity: 0.3,
-    //      radius: 20,
-    //      distanceY: 10,
-    //      depthIntensity: 0,
-    //    )
-
     .padding()
     .font(.title2)
   }
