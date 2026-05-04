@@ -14,12 +14,12 @@ import SwiftUI
 /// `rotation`). When published to the environment, those values are exposed
 /// using the more canvas-specific `panOffset`, `zoomLevel`, and `rotation`.
 struct TransformSnapshot: Sendable {
-  let translation: Size<ScreenSpace>
+  let translation: Size<ViewportSpace>
   let scale: Double
   let rotation: Angle
 
   init(
-    translation: Size<ScreenSpace>,
+    translation: Size<ViewportSpace>,
     scale: Double,
     rotation: Angle,
   ) {

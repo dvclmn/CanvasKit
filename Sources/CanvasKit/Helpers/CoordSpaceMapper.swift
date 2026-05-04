@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import GeometryPrimitives
 
 public struct CoordinateSpaceMapper {
 
@@ -16,14 +17,14 @@ public struct CoordinateSpaceMapper {
   /// to the top left corner of the artwork.
   ///
   /// `size`: Expresses the canvas size scaled by zoom
-  public let artworkFrame: Rect<ScreenSpace>
+  public let artworkFrame: Rect<ViewportSpace>
   public let canvasSize: Size<CanvasSpace>
   //  public let zoom: Double
 
   /// Zoom is expected to be provided already clamped to `zoomRange`.
   /// Clamped zoom value available from the Environment as `zoomClamped`
   public init(
-    frame: Rect<ScreenSpace>,
+    frame: Rect<ViewportSpace>,
     canvasSize: Size<CanvasSpace>,
   ) {
     self.artworkFrame = frame
@@ -32,12 +33,12 @@ public struct CoordinateSpaceMapper {
 
   public init(
     zoom: Double,
-    panOffset: Size<ScreenSpace>,
+    panOffset: Size<ViewportSpace>,
     canvasSize: Size<CanvasSpace>,
   ) {
-    let origin: Point<ScreenSpace> = .init(fromOffset: panOffset)
+    let origin: Point<ViewportSpace> = .init(fromOffset: panOffset)
 
-    let size: Size<ScreenSpace> = .init(
+    let size: Size<ViewportSpace> = .init(
       width: canvasSize.width * zoom,
       height: canvasSize.height * zoom,
     )
@@ -114,7 +115,7 @@ extension CoordinateSpaceMapper {
   }
 
   /// Convert screen-space point to canvas-space
-  public func canvasPoint(from screenPoint: Point<ScreenSpace>) -> Point<CanvasSpace> {
+  public func canvasPoint(from screenPoint: Point<ViewportSpace>) -> Point<CanvasSpace> {
     Point<CanvasSpace>(
       x: (screenPoint.x - artworkFrame.minX) / zoom,
       y: (screenPoint.y - artworkFrame.minY) / zoom,
@@ -122,21 +123,21 @@ extension CoordinateSpaceMapper {
   }
 
   /// Convert canvas-space point to screen-space
-  func screenPoint(from canvasPoint: Point<CanvasSpace>) -> Point<ScreenSpace> {
-    Point<ScreenSpace>(
+  func screenPoint(from canvasPoint: Point<CanvasSpace>) -> Point<ViewportSpace> {
+    Point<ViewportSpace>(
       x: artworkFrame.minX + canvasPoint.x * zoom,
       y: artworkFrame.minY + canvasPoint.y * zoom,
     )
   }
 
   /// Convert screen-space rect to canvas-space
-  public func canvasRect(from screenRect: Rect<ScreenSpace>) -> Rect<CanvasSpace> {
-    let origin = canvasPoint(from: screenRect.origin)
+  public func canvasRect(from viewportRect: Rect<ViewportSpace>) -> Rect<CanvasSpace> {
+    let origin = canvasPoint(from: viewportRect.origin)
     return Rect<CanvasSpace>(
       x: origin.x,
       y: origin.y,
-      width: screenRect.width / zoom,
-      height: screenRect.height / zoom,
+      width: viewportRect.width / zoom,
+      height: viewportRect.height / zoom,
     )
   }
 

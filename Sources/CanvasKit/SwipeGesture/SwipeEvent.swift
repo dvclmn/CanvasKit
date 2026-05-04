@@ -12,8 +12,8 @@ import InputPrimitives
 public typealias SwipeOutput = (SwipeEvent) -> Void
 
 public struct SwipeEvent {
-  public let delta: Size<ScreenSpace>
-  public let location: Point<ScreenSpace>
+  public let delta: Size<ViewportSpace>
+  public let location: Point<ViewportSpace>
   public let phase: InteractionPhase
   
   /// Will be added to the environment, but also included

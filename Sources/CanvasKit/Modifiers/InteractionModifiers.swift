@@ -50,10 +50,10 @@ struct InteractionModifiers: ViewModifier {
         return apply(adjustment)?.scale
       }
 
-      .onContinuousHover(coordinateSpace: .named(ScreenSpace.screen)) { phase in
+      .onContinuousHover(coordinateSpace: .named(ViewportSpace.viewport)) { phase in
         guard isEnabled(for: .hover), let location = phase.location else { return }
         let adjustment = store.processedTransform(
-          .hover(location.screenPoint),
+          .hover(location.viewportPoint),
           phase: phase.interactionPhase,
           modifiers: modifierKeys,
 //          currentTransform: transform,
@@ -62,10 +62,10 @@ struct InteractionModifiers: ViewModifier {
 
       }
 
-      .onTapGesture(coordinateSpace: .named(ScreenSpace.screen)) { location in
+      .onTapGesture(coordinateSpace: .named(ViewportSpace.viewport)) { location in
         guard isEnabled(for: .tap) else { return }
         let adjustment = store.processedTransform(
-          .tap(location: location.screenPoint),
+          .tap(location: location.viewportPoint),
           phase: .ended,
           modifiers: modifierKeys,
 //          currentTransform: transform,

@@ -36,8 +36,8 @@ struct CanvasCoreView<Content: View>: View {
       //      .ignoresSafeArea(edges: .top)
 
       /// View now covers full width/height provided to it, no longer
-      /// cares about pan zoom etc, so is considered `ScreenSpace`
-      .coordinateSpace(.named(ScreenSpace.screen))
+      /// cares about pan zoom etc, so is considered `ViewportSpace`
+      .coordinateSpace(.named(ViewportSpace.viewport))
 
       /// This resolves the `CanvasSpace`
       .overlayPreferenceValue(
@@ -55,7 +55,7 @@ extension CanvasCoreView {
       .onGeometryChange(for: CGRect?.self) { proxy in
         anchor.map { proxy[$0] }
       } action: { frame in
-        let frameResult = frame.map { Rect<ScreenSpace>(fromRect: $0) }
+        let frameResult = frame.map { Rect<ViewportSpace>(fromRect: $0) }
         store.artworkFrame = frameResult
       }
   }

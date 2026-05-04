@@ -47,7 +47,7 @@ struct CanvasInputResolverTests {
 
   @Test func optionSwipeDefaultsToZoomAdjustment() {
     let context = InteractionContext(
-      interaction: .swipe(delta: Size<ScreenSpace>(width: 0, height: 20)),
+      interaction: .swipe(delta: Size<ViewportSpace>(width: 0, height: 20)),
       phase: .changed,
       modifiers: [.option],
     )
@@ -61,7 +61,7 @@ struct CanvasInputResolverTests {
   }
 
   @Test func hoverDefaultsToPointerTrackingWhenNoToolClaimsIt() {
-    let location = Point<ScreenSpace>(fromPoint: .zero)
+    let location = Point<ViewportSpace>(fromPoint: .zero)
     let context = InteractionContext(
       interaction: .hover(location),
       phase: .changed,

@@ -31,7 +31,7 @@ struct CanvasSnapshot: Sendable {
 
   init(
     zoom: Double,
-    pan: Size<ScreenSpace>,
+    pan: Size<ViewportSpace>,
     rotation: Angle,
     pointerTap: Point<CanvasSpace>? = nil,
     pointerDrag: Rect<CanvasSpace>? = nil,

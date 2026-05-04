@@ -51,8 +51,8 @@ extension DragGestureState {
         let constrained = applyAxis(axes, delta: rawDelta)
         previousTranslation = gestureValue.translation
 
-        let size = Size<ScreenSpace>(fromCGSize: constrained)
-        let location = Point<ScreenSpace>(fromPoint: gestureValue.location)
+        let size = Size<ViewportSpace>(fromCGSize: constrained)
+        let location = Point<ViewportSpace>(fromPoint: gestureValue.location)
         return .delta(size, location: location)
 
       case .none:

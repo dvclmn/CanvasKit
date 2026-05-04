@@ -20,9 +20,9 @@ import GeometryPrimitives
 /// a device at all, just the *transformation* from a device.
 /// Be it a pointer device, or via multi-touch trackpad gesture.
 public enum PointerAdjustment: Sendable {
-  case tap(Point<ScreenSpace>)
-  case hover(Point<ScreenSpace>)
-  case drag(Rect<ScreenSpace>)
+  case tap(Point<ViewportSpace>)
+  case hover(Point<ViewportSpace>)
+  case drag(Rect<ViewportSpace>)
 }
 
 

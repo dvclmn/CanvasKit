@@ -9,14 +9,14 @@ import GeometryPrimitives
 import SwiftUI
 
 public struct TransformState: Sendable, Equatable {
-  public var translation: Size<ScreenSpace>
+  public var translation: Size<ViewportSpace>
 
   /// This value is not clamped. Should be done by the caller if required
   public var scale: Double
   public var rotation: Angle
 
   public init(
-    translation: Size<ScreenSpace> = .zero,
+    translation: Size<ViewportSpace> = .zero,
     scale: Double = 1.0,
     rotation: Angle = .zero,
   ) {

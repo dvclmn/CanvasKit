@@ -11,14 +11,14 @@ import SwiftUI
 /// Each case corresponds directly to a modifier in `InteractionModifiers`.
 public enum Interaction: Sendable {
   /// ``SwiftUI/View/onSwipeGesture(isEnabled:perform:)``
-  case swipe(delta: Size<ScreenSpace>)  // onSwipeGesture
+  case swipe(delta: Size<ViewportSpace>)  // onSwipeGesture
   /// Proposed absolute zoom level (not delta) from
   ///  ``SwiftUI/View/onPinchGesture(initial:isEnabled:didUpdateZoom:)``.
   case pinch(scale: Double)  // onPinchGesture
   case rotation(angle: Angle)  // (Not yet supported)
-  case tap(location: Point<ScreenSpace>)  // onTapGesture
+  case tap(location: Point<ViewportSpace>)  // onTapGesture
   case drag(PointerDragPayload)  // onPointerDragGesture
-  case hover(Point<ScreenSpace>)  // onContinuousHover
+  case hover(Point<ViewportSpace>)  // onContinuousHover
 }
 
 extension Interaction {

@@ -15,7 +15,7 @@ struct CanvasSnapshotModifier: ViewModifier {
   @Environment(\.canvasSize) private var canvasSize
 
 //  let transform: TransformState
-  let artworkFrame: Rect<ScreenSpace>?
+  let artworkFrame: Rect<ViewportSpace>?
   
   let pointer: PointerState
   let phase: InteractionPhase

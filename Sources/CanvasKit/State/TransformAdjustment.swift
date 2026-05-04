@@ -29,7 +29,7 @@ import SwiftUI
 // TODO: List more examples for above
 // I'm thinking of the different ways gestures can be used
 public enum TransformAdjustment: Sendable {
-  case translation(Size<ScreenSpace>)
+  case translation(Size<ViewportSpace>)
   case scale(Double)
   case rotation(Angle)
 }
@@ -71,7 +71,7 @@ extension TransformAdjustment {
 
   public static func panAdjustment(
     for transform: TransformState,
-    delta: Size<ScreenSpace>,
+    delta: Size<ViewportSpace>,
   ) -> Self {
     let new = transform.translation + delta
     return .translation(new)
@@ -79,7 +79,7 @@ extension TransformAdjustment {
   
   static func swipeAdjustment(
     for transform: TransformState,
-    delta: Size<ScreenSpace>,
+    delta: Size<ViewportSpace>,
     modifiers: Modifiers,
   ) -> TransformAdjustment {
     

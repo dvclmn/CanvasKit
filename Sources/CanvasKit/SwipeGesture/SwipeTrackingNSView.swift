@@ -25,8 +25,8 @@ class SwipeTrackingNSView: NSView {
     let modifiers = Modifiers(from: event)
 
     let eventData = SwipeEvent(
-      delta: delta.screenSize,
-      location: locationInView.screenPoint,
+      delta: delta.viewportSize,
+      location: locationInView.viewportPoint,
       phase: phase,
       modifiers: modifiers
     )

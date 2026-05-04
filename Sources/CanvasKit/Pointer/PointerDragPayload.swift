@@ -11,18 +11,18 @@ import Foundation
 public enum PointerDragPayload: Sendable, Equatable {
 
   /// For panning/continuous
-  case delta(Size<ScreenSpace>, location: Point<ScreenSpace>)
+  case delta(Size<ViewportSpace>, location: Point<ViewportSpace>)
 
   /// For marquee/select
-  case rect(from: Point<ScreenSpace>, current: Point<ScreenSpace>)
+  case rect(from: Point<ViewportSpace>, current: Point<ViewportSpace>)
 }
 
 extension PointerDragPayload {
 
-  public var boundingRect: Rect<ScreenSpace>? {
+  public var boundingRect: Rect<ViewportSpace>? {
     switch self {
       case .delta: nil
-      case .rect(let from, let current): Rect<ScreenSpace>(from: from, to: current)
+      case .rect(let from, let current): Rect<ViewportSpace>(from: from, to: current)
     }
   }
 }

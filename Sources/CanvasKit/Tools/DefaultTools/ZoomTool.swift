@@ -108,7 +108,7 @@ public struct ZoomTool: CanvasTool {
   //  }
 
   private func deltaDrag(
-    _ delta: Size<ScreenSpace>,
+    _ delta: Size<ViewportSpace>,
     modifiers: Modifiers,
     transform: TransformState,
   ) -> InteractionAdjustment {
@@ -124,8 +124,8 @@ public struct ZoomTool: CanvasTool {
   }
 
   private func rectDrag(
-    from: Point<ScreenSpace>,
-    current: Point<ScreenSpace>,
+    from: Point<ViewportSpace>,
+    current: Point<ViewportSpace>,
     transform: TransformState,
   ) -> InteractionAdjustment {
 

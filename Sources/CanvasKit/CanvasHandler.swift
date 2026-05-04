@@ -18,7 +18,7 @@ final class CanvasHandler {
   /// Only updated when `processedTransform()` is called
   package var interactionContext: InteractionContext?
 
-  var artworkFrame: Rect<ScreenSpace>?
+  var artworkFrame: Rect<ViewportSpace>?
   var currentTransform: TransformState = .identity
 
   init(toolConfiguration: ToolConfiguration = .default) {

@@ -35,7 +35,7 @@ struct PointerDragModifier: ViewModifier {
   @State private var dragState = DragGestureState()
 
   /// Local marquee rect for the overlay — only populated in marquee mode.
-  @State private var marqueeRect: Rect<ScreenSpace>?
+  @State private var marqueeRect: Rect<ViewportSpace>?
 
   /// The drag mode passed from the parent (via environment → modifier init).
   /// Stored as a `let` so SwiftUI refreshes it on every re-render, allowing
@@ -78,7 +78,7 @@ extension PointerDragModifier {
     .onChanged { gestureValue in
       let payload = dragState.update(gestureValue)
       if case .rect(let from, let current) = payload {
-        marqueeRect = Rect<ScreenSpace>(from: from, to: current)
+        marqueeRect = Rect<ViewportSpace>(from: from, to: current)
       }
       didUpdatePayload(payload, .changed)
     }
