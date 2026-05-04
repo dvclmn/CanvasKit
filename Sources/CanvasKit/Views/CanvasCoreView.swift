@@ -23,10 +23,7 @@ struct CanvasCoreView<Content: View>: View {
     Color.clear
 //      .contentShape(Rectangle())
       .overlay {
-        CanvasArtwork(
-//          transform: store.cu,
-          content: content,
-        )
+        CanvasArtwork(content: content)
 //        .allowsHitTesting(false)
       }
       .frame(

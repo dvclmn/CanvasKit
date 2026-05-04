@@ -31,25 +31,21 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   public var body: some View {
     @Bindable var store = store
 
-    CanvasCoreView(
-      transform: $localTransform,
-      content: content,
-    )
+    CanvasCoreView(content: content)
 
     /// User input modifiers, `onSwipeGesture`, `onTapGesture`, etc.
     /// These wrap the canvas only, so their invisible event-capture overlays
     /// do not sit above the tool picker.
-    .modifier(InteractionModifiers(transform: $localTransform))
+    .modifier(InteractionModifiers())
 
-    .toolPalette($localTransform)
+    .toolPalette()
 
     /// Publishes current canvas transform values to the Environment
-    .canvasTransformEnvironment(localTransform)
+    .canvasTransformEnvironment()
 
     /// Adds mapped pointer values and interaction phase to the Environment
     .modifier(
       CanvasSnapshotModifier(
-        transform: localTransform,
         artworkFrame: store.artworkFrame,
         pointer: store.pointer,
         phase: store.interactionContext?.phase ?? .none,
@@ -154,7 +150,7 @@ extension CanvasView {
   ) {
     let initialToolConfiguration = toolConfiguration?.wrappedValue ?? .default
     self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
-    self._localTransform = State(initialValue: transform.wrappedValue)
+//    self._localTransform = State(initialValue: transform.wrappedValue)
     self.externalTransform = transform
     self.externalToolConfiguration = toolConfiguration
     self._store = State(initialValue: .init(toolConfiguration: initialToolConfiguration))

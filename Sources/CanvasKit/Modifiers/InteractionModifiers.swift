@@ -14,7 +14,7 @@ struct InteractionModifiers: ViewModifier {
   @Environment(\.modifierKeys) private var modifierKeys
   @Environment(\.zoomRange) private var zoomRange
 
-  @Binding var transform: TransformState
+//  @Binding var transform: TransformState
 
   func body(content: Content) -> some View {
     @Bindable var store = store
@@ -28,13 +28,13 @@ struct InteractionModifiers: ViewModifier {
           .swipe(delta: event.delta),
           phase: event.phase,
           modifiers: event.modifiers,
-          currentTransform: transform,
+//          currentTransform: transform,
         )
         apply(adjustment)
       }
 
       .onPinchGesture(
-        initial: transform.scale,
+        initial: store.currentTransform.scale,
         isEnabled: isEnabled(for: .pinch),
       ) { zoom, phase in
 
@@ -42,7 +42,7 @@ struct InteractionModifiers: ViewModifier {
           .pinch(scale: zoom),
           phase: phase,
           modifiers: modifierKeys,
-          currentTransform: transform,
+//          currentTransform: transform,
         )
 
         /// Returns the scale so the modifier's internal Zoom
@@ -56,7 +56,7 @@ struct InteractionModifiers: ViewModifier {
           .hover(location.screenPoint),
           phase: phase.interactionPhase,
           modifiers: modifierKeys,
-          currentTransform: transform,
+//          currentTransform: transform,
         )
         apply(adjustment)
 
@@ -68,7 +68,7 @@ struct InteractionModifiers: ViewModifier {
           .tap(location: location.screenPoint),
           phase: .ended,
           modifiers: modifierKeys,
-          currentTransform: transform,
+//          currentTransform: transform,
         )
         apply(adjustment)
 
@@ -83,7 +83,7 @@ struct InteractionModifiers: ViewModifier {
           .drag(payload),
           phase: phase,
           modifiers: modifierKeys,
-          currentTransform: transform,
+//          currentTransform: transform,
         )
         apply(adjustment)
       }
@@ -95,7 +95,7 @@ extension InteractionModifiers {
   private func apply(_ adjustment: TransformState?) -> TransformState? {
     guard var adjustment else { return nil }
     adjustment.scale = adjustment.scale.clamped(to: zoomRange)
-    transform = adjustment
+    store.currentTransform = adjustment
     return adjustment
   }
 

@@ -33,8 +33,8 @@ struct ToolsView: View {
       VStack(alignment: .leading) {
         Group {
           Button {
-            store.currentTransform?.scale = 1.0
-            store.currentTransform?.translation = .zero
+            store.currentTransform.scale = 1.0
+            store.currentTransform.translation = .zero
 
           } label: {
             Label("Re-centre artwork", systemImage: "viewfinder")

@@ -18,13 +18,13 @@ struct ToolsViewModifier: ViewModifier {
     content
       .overlay(alignment: toolPickerAlignment) {
         if isShowingToolPicker {
-          ToolsView(transform: $transform)
+          ToolsView()
         }
       }
   }
 }
 extension View {
-  public func toolPalette(_ transform: Binding<TransformState>) -> some View {
-    self.modifier(ToolsViewModifier(transform: transform))
+  public func toolPalette() -> some View {
+    self.modifier(ToolsViewModifier())
   }
 }

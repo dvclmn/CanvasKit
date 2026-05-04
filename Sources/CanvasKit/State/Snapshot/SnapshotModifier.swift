@@ -10,10 +10,11 @@ import InputPrimitives
 import SwiftUI
 
 struct CanvasSnapshotModifier: ViewModifier {
+  @Environment(CanvasHandler.self) private var store
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.canvasSize) private var canvasSize
 
-  let transform: TransformState
+//  let transform: TransformState
   let artworkFrame: Rect<ScreenSpace>?
   
   let pointer: PointerState
@@ -39,7 +40,7 @@ extension CanvasSnapshotModifier {
     let isInside = hoverMapped.map { mapper.isInsideCanvas($0) } ?? false
 
     return CanvasSnapshot(
-      transform: .init(transform: transform),
+      transform: .init(transform: store.currentTransform),
       pointer: .init(
         tap: tapMapped,
         drag: rectMapped,

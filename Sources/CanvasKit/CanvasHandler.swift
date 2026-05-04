@@ -54,7 +54,7 @@ extension CanvasHandler {
     _ interaction: Interaction,
     phase: InteractionPhase,
     modifiers: Modifiers,
-    currentTransform: TransformState,
+//    currentTransform: TransformState,
   ) -> TransformState? {
 
     let context = InteractionContext(
