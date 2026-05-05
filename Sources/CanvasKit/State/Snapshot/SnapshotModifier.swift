@@ -15,9 +15,9 @@ struct PointerStateEnvironmentModifier: ViewModifier {
   @Environment(\.canvasSize) private var canvasSize
 
 //  let transform: TransformState
-  let artworkFrame: Rect<ViewportSpace>?
+//  let artworkFrame: Rect<ViewportSpace>?
   
-  let pointer: PointerState
+//  let pointer: PointerState<>
 //  let phase: InteractionPhase
 
   func body(content: Content) -> some View {
@@ -25,12 +25,20 @@ struct PointerStateEnvironmentModifier: ViewModifier {
       .environment(\.pointerTap, snapshot?.pointer.tap)
       .environment(\.pointerDrag, snapshot?.pointer.drag)
       .environment(\.pointerHover, snapshot?.pointer.hover)
-      .environment(\.interaction, snapshot?.interaction ?? .none)
+//      .environment(\.interaction, snapshot?.interaction ?? .none)
 //      .environment(\.interactionPhase, snapshot?.phase ?? .none)
   }
 }
 
-extension CanvasSnapshotModifier {
+extension PointerStateEnvironmentModifier {
+  private var snapshot: PointerMappedSnapshot? {
+    guard let frame = store.artworkFrame, let canvasSize else { return nil }
+    return .createMapped(
+      artworkFrame: frame,
+      canvasSize: canvasSize,
+      pointerState: store.pointer,
+    )
+  }
 //  private var snapshot: CanvasSnapshot? {
 //    guard let artworkFrame, let canvasSize else { return nil }
 //    let mapper = CoordinateSpaceMapper(frame: artworkFrame, canvasSize: canvasSize)

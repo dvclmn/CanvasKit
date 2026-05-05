@@ -12,7 +12,8 @@ import SwiftUI
 
 public struct CanvasDragModifier: ViewModifier {
   @Environment(\.pointerDrag) private var pointerDrag
-  @Environment(\.interactionPhase) private var interactionPhase
+  @Environment(\.activeInteraction) private var activeInteraction
+//  @Environment(\.interactionPhase) private var interactionPhase
 
   let action: (CanvasDragEvent<CanvasSpace>) -> Void
   public func body(content: Content) -> some View {
@@ -25,7 +26,7 @@ public struct CanvasDragModifier: ViewModifier {
 
         let event = CanvasDragEvent<CanvasSpace>(
           rect: pointerDrag,
-          phase: interactionPhase,
+          phase: activeInteraction.phase,
         )
         action(event)
       }

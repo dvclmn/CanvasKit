@@ -14,8 +14,6 @@ struct InteractionModifiers: ViewModifier {
   @Environment(\.modifierKeys) private var modifierKeys
   @Environment(\.zoomRange) private var zoomRange
 
-//  @Binding var transform: TransformState
-
   func body(content: Content) -> some View {
     @Bindable var store = store
 

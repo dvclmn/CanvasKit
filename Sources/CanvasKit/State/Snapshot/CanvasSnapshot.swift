@@ -13,60 +13,69 @@ import SwiftUI
 /// Holds only already-converted/mapped, consumer-ready values
 struct PointerMappedSnapshot: Sendable {
 
-//  let transform: TransformState
+  //  let transform: TransformState
   let pointer: PointerState<CanvasSpace>
-
+  let isInsideCanvas: Bool
   /// Phase of any in-progress gesture
   //  let phase: InteractionPhase
   //  let activeInteraction: ActiveInteraction?
-  let interaction: ActiveInteraction
+  //  let interaction: ActiveInteraction
   //  let context: InteractionContext?
 
-  init(
-//    transform: TransformState,
-    pointer: PointerState<CanvasSpace>,
-    interaction: ActiveInteraction,
-      //    context: InteractionContext? = nil,
-      //    interaction: InteractionKind? = nil,
-      //    phase: InteractionPhase = .none,
-  ) {
-//    self.transform = transform
-    self.pointer = pointer
-    self.interaction = interaction
-    //    self.phase = phase
-
-    //    self.activeInteraction = .init(kind: interaction, phase: phase)
-  }
+  //  init(
+  ////    transform: TransformState,
+  //    pointer: PointerState<CanvasSpace>,
+  ////    interaction: ActiveInteraction,
+  //      //    context: InteractionContext? = nil,
+  //      //    interaction: InteractionKind? = nil,
+  //      //    phase: InteractionPhase = .none,
+  //  ) {
+  ////    self.transform = transform
+  //    self.pointer = pointer
+  //    self.isInsideCanvas = false
+  ////    self.interaction = interaction
+  //    //    self.phase = phase
+  //
+  //    //    self.activeInteraction = .init(kind: interaction, phase: phase)
+  //  }
 }
 
 extension PointerMappedSnapshot {
   static func createMapped(
-    artworkFrame: Rect<ViewportSpace>?,
+    artworkFrame: Rect<ViewportSpace>,
     canvasSize: Size<CanvasSpace>,
-    transform: TransformState,
-    pointerState: PointerState,
-    context: InteractionContext?
+    //    transform: TransformState,
+    pointerState: PointerState<ViewportSpace>,
+//    context: InteractionContext?,
   ) -> Self? {
-    guard let artworkFrame else { return nil }
+    //    guard let artworkFrame else { return nil }
     let mapper = CoordinateSpaceMapper(frame: artworkFrame, canvasSize: canvasSize)
-    
+
     let tapMapped = pointerState.tap.map { mapper.canvasPoint(from: $0) }
     let hoverMapped = pointerState.hover.map { mapper.canvasPoint(from: $0) }
     let dragMapped = pointerState.drag.map { mapper.canvasRect(from: $0) }
     let isInside = hoverMapped.map { mapper.isInsideCanvas($0) } ?? false
-    
-    return CanvasSnapshot(
-      transform: transform,
+
+    return .init(
       pointer: .init(
-        tap: tapMapped, hover: hoverMapped, drag: dragMapped
-//        tap: tapMapped,
-//        drag: rectMapped,
-//        hover: hoverMapped,
-//        isInsideCanvas: isInside,
+        tap: tapMapped,
+        hover: hoverMapped,
+        drag: dragMapped,
       ),
-      
-      //      phase: phase,
+      isInsideCanvas: isInside,
     )
+    //    return CanvasSnapshot(
+    //      transform: transform,
+    //      pointer: .init(
+    //        tap: tapMapped, hover: hoverMapped, drag: dragMapped
+    ////        tap: tapMapped,
+    ////        drag: rectMapped,
+    ////        hover: hoverMapped,
+    ////        isInsideCanvas: isInside,
+    //      ),
+    //
+    //      //      phase: phase,
+    //    )
   }
 }
 

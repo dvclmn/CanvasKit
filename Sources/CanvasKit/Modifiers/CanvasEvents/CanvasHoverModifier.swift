@@ -11,9 +11,9 @@ import SwiftUI
 
 public struct CanvasHoverModifier: ViewModifier {
   @Environment(\.pointerHover) private var pointerHover
-  @Environment(\.interactionPhase) private var interactionPhase
+//  @Environment(\.interactionPhase) private var interactionPhase
   
-  let action: (Point<CanvasSpace>) -> Void
+  let action: (CanvasHoverPhase) -> Void
   
   public func body(content: Content) -> some View {
     content
@@ -22,7 +22,15 @@ public struct CanvasHoverModifier: ViewModifier {
           printMissing("pointerHover", for: "CanvasHoverModifier")
           return
         }
-        action(pointerHover)
+        action()
       }
   }
+}
+
+public enum CanvasHoverPhase {
+  /// The pointer's location within the CanvasView, in local CanvasSpace.
+  case active(CGPoint)
+  
+  /// The pointer exited the CanvasView.
+  case ended
 }

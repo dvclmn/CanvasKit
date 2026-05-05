@@ -45,7 +45,7 @@ extension EnvironmentValues {
   // TODO: If BasePrimitives/InputPrimitives owns InteractionPhase,
   // maybe it should be added as Env value there, not here
 //  @Entry package var interactionPhase: InteractionPhase = .none
-  @Entry var interaction: ActiveInteraction = .none
+  @Entry var activeInteraction: ActiveInteraction = .none
   
 
   @Entry public var panOffset: CGSize = .zero

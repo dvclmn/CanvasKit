@@ -13,7 +13,7 @@ import SwiftUI
 final class CanvasHandler {
 
   var toolHandler: ToolHandler
-  var pointer: PointerState = .initial
+  var pointer: PointerState<ViewportSpace> = .init()
 
   /// Only updated when `processedTransform()` is called
   package var interactionContext: InteractionContext?
@@ -27,15 +27,6 @@ final class CanvasHandler {
 }
 
 extension CanvasHandler {
-
-  /// The runtime tool used to resolve canvas input right now.
-  ///
-  /// This includes transient overrides such as Space-held Pan. For the
-  /// committed/base selection only, use `toolHandler.committedTool`.
-  var effectiveTool: any CanvasTool { toolHandler.effectiveTool }
-
-  @available(*, deprecated, renamed: "effectiveTool")
-  var activeTool: (any CanvasTool)? { effectiveTool }
 
   /// Entry point for all raw input events from gesture modifiers.
   ///
@@ -54,7 +45,7 @@ extension CanvasHandler {
     _ interaction: Interaction,
     phase: InteractionPhase,
     modifiers: Modifiers,
-//    currentTransform: TransformState,
+    //    currentTransform: TransformState,
   ) -> TransformState? {
 
     let context = InteractionContext(
@@ -80,9 +71,6 @@ extension CanvasHandler {
       transform: currentTransform,
     )
   }
-}
-
-extension CanvasHandler {
 
   private func handleAdjustment(
     _ adjustment: InteractionAdjustment,
@@ -103,6 +91,27 @@ extension CanvasHandler {
       case .none: return transform
     }
   }
+}
+
+extension CanvasHandler {
+
+  var activeInteraction: ActiveInteraction {
+    guard let interactionContext else { return .none }
+    return .init(
+      kind: interactionContext.interaction.kind,
+      phase: interactionContext.phase,
+    )
+  }
+
+  /// The runtime tool used to resolve canvas input right now.
+  ///
+  /// This includes transient overrides such as Space-held Pan. For the
+  /// committed/base selection only, use `toolHandler.committedTool`.
+  var effectiveTool: any CanvasTool { toolHandler.effectiveTool }
+
+  @available(*, deprecated, renamed: "effectiveTool")
+  var activeTool: (any CanvasTool)? { effectiveTool }
+
 }
 
 extension CanvasHandler {
