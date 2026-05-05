@@ -29,7 +29,8 @@ extension View {
 
   /// Respond to a `CanvasView` pointer hover operation.
   public func onCanvasHover(
-    perform action: @escaping (Point<CanvasSpace>) -> Void
+    perform action: @escaping (CanvasHoverPhase) -> Void
+//    perform action: @escaping (Point<CanvasSpace>) -> Void
   ) -> ModifiedContent<Self, CanvasHoverModifier> {
     self.modifier(CanvasHoverModifier(action: action))
   }

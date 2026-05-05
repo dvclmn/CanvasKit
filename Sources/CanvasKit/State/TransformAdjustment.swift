@@ -35,22 +35,24 @@ public enum TransformAdjustment: Sendable {
 }
 
 extension TransformAdjustment {
-  
+
   /// Certain Transform adjustments can only be mutated by
   /// compatible interactions.
   ///
   /// UPDATE: I think this may limit how tools may wish to declare
   /// some capacibilities? Have turned off for now.
-//  var supportedInteractions: InteractionKind.Set {
-//    switch self {
-//      case .translation: [.swipe, .drag]
-//      case .scale: [.swipe, .pinch, .tap, .drag]
-//      case .rotation: [.swipe, .rotate, .drag]
-//    }
-//  }
+  //  var supportedInteractions: InteractionKind.Set {
+  //    switch self {
+  //      case .translation: [.swipe, .drag]
+  //      case .scale: [.swipe, .pinch, .tap, .drag]
+  //      case .rotation: [.swipe, .rotate, .drag]
+  //    }
+  //  }
 }
 
 extension TransformAdjustment {
+  
+  /// Creates a new state, based on the transform property that changed
   public func updatedState(_ current: TransformState) -> TransformState {
     var new = current
     switch self {
@@ -76,18 +78,18 @@ extension TransformAdjustment {
     let new = transform.translation + delta
     return .translation(new)
   }
-  
+
   static func swipeAdjustment(
     for transform: TransformState,
     delta: Size<ViewportSpace>,
     modifiers: Modifiers,
   ) -> TransformAdjustment {
-    
+
     /// If Option is held during a Swipe, it is interpreted as Zoom, not Pan
     guard modifiers.contains(.option) else {
       return .panAdjustment(for: transform, delta: delta)
     }
-    
+
     /// Each point contributes up to 0.5% zoom change at sensitivity = 1.0
     let factor = ZoomComputation.factorFromDelta(
       CGSize(width: 0, height: delta.cgSize.height),

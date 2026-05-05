@@ -12,28 +12,37 @@ import SwiftUI
 
 public struct CanvasDragModifier: ViewModifier {
   @Environment(\.pointerDrag) private var pointerDrag
-  @Environment(\.activeInteraction) private var activeInteraction
+//  @Environment(\.activeInteraction) private var activeInteraction
 //  @Environment(\.interactionPhase) private var interactionPhase
 
-  let action: (CanvasDragEvent<CanvasSpace>) -> Void
+  let action: (CanvasDragEvent) -> Void
   public func body(content: Content) -> some View {
     content
       .onChange(of: pointerDrag) {
-        guard let pointerDrag else {
-          printMissing("pointerDrag", for: "CanvasDragModifier")
-          return
+        if let pointerDrag {
+          let event = CanvasDragEvent(
+            rect: pointerDrag,
+//            phase: activeInteraction.phase,
+          )
+          action(event)
+//          action
         }
+//        guard let pointerDrag else {
+//          printMissing("pointerDrag", for: "CanvasDragModifier")
+//          return
+//        }
+//        guard activeInteraction.kind == .drag else {
+//          print("Expected `InteractionKind/drag`, got: \(activeInteraction.kind)")
+//          return
+//        }
 
-        let event = CanvasDragEvent<CanvasSpace>(
-          rect: pointerDrag,
-          phase: activeInteraction.phase,
-        )
-        action(event)
+        
       }
   }
 }
 
-public struct CanvasDragEvent<Space> {
-  public let rect: Rect<Space>
+public struct CanvasDragEvent {
+//public struct CanvasDragEvent<Space> {
+  public let rect: Rect<CanvasSpace>
   public let phase: InteractionPhase
 }

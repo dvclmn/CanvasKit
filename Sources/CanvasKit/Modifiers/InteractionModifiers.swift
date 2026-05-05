@@ -26,7 +26,7 @@ struct InteractionModifiers: ViewModifier {
           .swipe(delta: event.delta),
           phase: event.phase,
           modifiers: event.modifiers,
-//          currentTransform: transform,
+          //          currentTransform: transform,
         )
         apply(adjustment)
       }
@@ -40,12 +40,14 @@ struct InteractionModifiers: ViewModifier {
           .pinch(scale: zoom),
           phase: phase,
           modifiers: modifierKeys,
-//          currentTransform: transform,
+          //          currentTransform: transform,
         )
 
         /// Returns the scale so the modifier's internal Zoom
         /// stays in sync with transform state
-        return apply(adjustment)?.scale
+        apply(adjustment)
+        return adjustment?.scale
+        //        return apply(adjustment)?.scale
       }
 
       .onContinuousHover(coordinateSpace: .named(ViewportSpace.viewport)) { phase in
@@ -54,7 +56,7 @@ struct InteractionModifiers: ViewModifier {
           .hover(location.viewportPoint),
           phase: phase.interactionPhase,
           modifiers: modifierKeys,
-//          currentTransform: transform,
+          //          currentTransform: transform,
         )
         apply(adjustment)
 
@@ -66,7 +68,7 @@ struct InteractionModifiers: ViewModifier {
           .tap(location: location.viewportPoint),
           phase: .ended,
           modifiers: modifierKeys,
-//          currentTransform: transform,
+          //          currentTransform: transform,
         )
         apply(adjustment)
 
@@ -81,7 +83,7 @@ struct InteractionModifiers: ViewModifier {
           .drag(payload),
           phase: phase,
           modifiers: modifierKeys,
-//          currentTransform: transform,
+          //          currentTransform: transform,
         )
         apply(adjustment)
       }
@@ -89,12 +91,15 @@ struct InteractionModifiers: ViewModifier {
 }
 
 extension InteractionModifiers {
-  @discardableResult
-  private func apply(_ adjustment: TransformState?) -> TransformState? {
-    guard var adjustment else { return nil }
+  /// Has a return value only for the benefit of `onPinchGesture()`
+  //  @discardableResult
+  private func apply(_ adjustment: TransformState?) {
+    //  private func apply(_ adjustment: TransformState?) -> TransformState? {
+    guard var adjustment else { return }
+    //    guard var adjustment else { return nil }
     adjustment.scale = adjustment.scale.clamped(to: zoomRange)
     store.currentTransform = adjustment
-    return adjustment
+    //    return adjustment
   }
 
   private func isEnabled(for interaction: InteractionKind) -> Bool {
