@@ -5,26 +5,28 @@
 //  Created by Dave Coleman on 6/8/2025.
 //
 
+import CoreUtilities
 import GeometryPrimitives
 import SwiftUI
 
 struct CanvasCoreView<Content: View>: View {
   @Environment(CanvasHandler.self) private var store
+  @Environment(\.modifierKeys) private var modifierKeys
   @Environment(\.canvasBackground) private var canvasBackground
   @Environment(\.canvasSize) private var canvasSize
   @Environment(\.canvasAnchor) private var canvasAnchor
   @Environment(\.zoomRange) private var zoomRange
 
-//  @Binding var transform: TransformState
+  //  @Binding var transform: TransformState
 
   @ViewBuilder var content: () -> Content
 
   var body: some View {
     Color.clear
-//      .contentShape(Rectangle())
+      //      .contentShape(Rectangle())
       .overlay {
         CanvasArtwork(content: content)
-//        .allowsHitTesting(false)
+        //        .allowsHitTesting(false)
       }
       .frame(
         maxWidth: .infinity,
@@ -44,6 +46,11 @@ struct CanvasCoreView<Content: View>: View {
         ArtworkBoundsAnchorKey.self,
         alignment: canvasAnchor.toAlignment,
       ) { FrameCaptureView($0) }
+
+      .debugText {
+        Labeled("Modifiers", value: modifierKeys.displayString)
+      }
+
   }
 }
 

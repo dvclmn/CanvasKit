@@ -74,13 +74,13 @@ extension ToolsView {
       store.toolHandler.setCommittedTool(kind: tool.kind)
     } label: {
       Label(tool.name, systemImage: tool.icon)
-        .foregroundStyle(isToolActive(tool) ? .primary : .secondary)
+        .foregroundStyle(toolForegroundColour(for: tool))
         .symbolVariant(.fill)
         .symbolRenderingMode(.hierarchical)
         //              .opacity(isToolActive(tool) ? 1 : 0.5)
         .frame(width: toolbarWidth, height: toolbarWidth)
         .contentShape(Rectangle())
-        .tint(.blue)
+      //        .tint(.blue)
       //        .background {
       //          if isToolActive(tool) {
       //            RoundedRectangle(cornerRadius: 5)
@@ -89,6 +89,7 @@ extension ToolsView {
       //        }
       //              .background(.white.opacity(isToolActive(tool) ? 0.06 : 0))
     }
+    
     .foregroundStyle(.blue)
     .help(tool.name)
     //    .buttonStyle(.glassProminent)
@@ -96,5 +97,21 @@ extension ToolsView {
   }
   func isToolActive(_ tool: any CanvasTool) -> Bool {
     store.toolHandler.effectiveToolKind == tool.kind
+  }
+
+  func toolForegroundColour(for tool: any CanvasTool) -> Color {
+    switch store.toolHandler.activationStatus(for: tool.kind) {
+      case .nonCommittingHold:
+        return .blue
+
+      case .heldPendingCommitOrRelease:
+        return .orange
+
+      case .springLoaded:
+        return .green
+
+      case nil:
+        return isToolActive(tool) ? .primary : .secondary
+    }
   }
 }

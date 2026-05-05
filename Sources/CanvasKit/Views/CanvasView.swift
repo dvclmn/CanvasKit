@@ -11,7 +11,6 @@ import InputPrimitives
 import SwiftUI
 
 public struct CanvasView<Content: View>: View, CanvasAddressable {
-
   @State private var store: CanvasHandler
 
   /// Populated when user wishes to handle their own transform state
@@ -59,7 +58,6 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       //      Labeled("Runtime Tool Config", value: store.toolHandler.configuration)
       //    }
       //    //    .modifier(DebugOverlayModifier(isEnabled: false))
-      
 
       /// In cases where transform state is owned externally,
       /// ensures both local and external are kept in sync
@@ -69,13 +67,9 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
         to: externalTransform,
       )
 
-      /// Wonder if I just keep this here, even if the user is already listening
-      /// for modifier keys some other way elsewhere? Or, whether I should be
-      /// allowing passing in own state for modifiers.
-      .modifierKeys { store.updateModifiers($0) }
-
       .modifier(CanvasToolKeyboardModifier(toolHandler: $store.toolHandler))
-
+      .modifierKeys { store.updateModifiers($0) }
+    
       .bindModel(
         debounce: .noDebounce,
         $store.toolHandler.configuration,
@@ -87,7 +81,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       .environment(\.canvasSize, canvasSize)
       .environment(\.pointerStyle, store.pointerStyle)
       .environment(store)
-    
+
       .debugTextOverlay(isEnabled: true)
 
   }

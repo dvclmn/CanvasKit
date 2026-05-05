@@ -12,6 +12,8 @@ extension CanvasToolKind {
 }
 
 extension ToolBinding {
+  
+  // TODO: Add binding for "hold Command = Activate a Select mode/tool"
 
   /// A minimal set of binding defaults:
   /// - Sticky shortcuts for Select (V), Pan (H), Zoom (Z)

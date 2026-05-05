@@ -16,7 +16,7 @@ import SwiftUI
 /// input right now.
 @Observable
 final class ToolHandler {
-  
+
   var configuration: ToolConfiguration = .default
 
   /// Active key-held overrides, most recent last.
@@ -47,6 +47,22 @@ extension ToolHandler {
 
   /// The kind of ``effectiveTool``.
   var effectiveToolKind: CanvasToolKind { effectiveTool.kind }
+
+  /// The activation status of the currently effective key-held override.
+  ///
+  /// Returns `nil` when the effective tool is simply the committed tool.
+  var effectiveActivationStatus: ToolActivationStatus? {
+    overrides.last?.activationStatus
+  }
+
+  /// The activation status for a tool kind, if that tool currently has a
+  /// key-held override in the stack.
+  ///
+  /// This is useful for toolbar/debug UI that wants to style individual tool
+  /// buttons according to their transient activation state.
+  func activationStatus(for kind: CanvasToolKind) -> ToolActivationStatus? {
+    overrides.last(where: { $0.binding.target == kind })?.activationStatus
+  }
 
   /// The committed/base tool, excluding key-held overrides.
   var committedTool: any CanvasTool {
@@ -260,5 +276,18 @@ extension ToolHandler {
 
   var keysToWatch: Set<KeyEquivalent> {
     Set(configuration.activeBindings.map(\.shortcut.key))
+  }
+}
+
+extension ToolOverride {
+
+  var activationStatus: ToolActivationStatus {
+    switch binding.mode {
+      case .hold:
+        return .nonCommittingHold
+
+      case .sticky:
+        return isArmed ? .springLoaded : .heldPendingCommitOrRelease
+    }
   }
 }

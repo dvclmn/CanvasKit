@@ -19,7 +19,6 @@ public struct ZoomTool: CanvasTool {
   public init() {}
 
   public var dragBehaviour: PointerDragBehaviour { .continuous(axes: .vertical) }
-  //  public var inputCapabilities: [ToolCapability] { ToolCapability.zoom }
 
   /// modifiers: nil → matches drag/tap regardless of modifier state
   public var inputCapabilities: [ToolCapability] {
@@ -39,7 +38,7 @@ public struct ZoomTool: CanvasTool {
     context: InteractionContext,
     currentTransform: TransformState,
   ) -> ToolResolution {
-    
+
     let adjustment: InteractionAdjustment =
       switch context.interaction {
         case .drag(let payload):
@@ -63,49 +62,10 @@ public struct ZoomTool: CanvasTool {
             )
           )
 
-        default: .none  // shouldn't be reached given capabilities, but safe
+        default: .none  // shouldn't be reached, given capabilities
       }
     return .handled(adjustment)
   }
-
-  //  public func resolvePointerInteraction(
-  //    context: InteractionContext,
-  //    currentTransform: TransformState,
-  //  ) -> ToolResolution {
-  //
-  //    let adjustment: InteractionAdjustment =
-  //      switch context.interaction {
-  //        case .drag(let payload):
-  //          switch payload {
-  //            case .delta(let delta, _):
-  //              deltaDrag(
-  //                delta,
-  //                modifiers: context.modifiers,
-  //                transform: currentTransform,
-  //              )
-  //
-  //            case .rect(let from, let current):
-  //              rectDrag(from: from, current: current, transform: currentTransform)
-  //
-  //          }
-  //
-  //        case .tap(_):
-  //          .transform(
-  //            .zoomAdjustment(
-  //              for: currentTransform,
-  //              by: context.modifiers.isHoldingOption ? 0.8 : 1.25,
-  //            )
-  //          )
-  //
-  //        default: .none
-  //      }
-  //
-  //    return .init(
-  //      for: context.interaction,
-  //      adjustment: adjustment,
-  //      action: .none,
-  //    )
-  //  }
 
   private func deltaDrag(
     _ delta: Size<ViewportSpace>,
