@@ -18,13 +18,17 @@ public struct TransformModifier: ViewModifier {
 //  let transform: TransformState
 
   public func body(content: Content) -> some View {
-    let snapshot = TransformSnapshot(transform: store.currentTransform)
+    
 
     content
       .environment(\.zoomLevel, snapshot.zoomLevel)
       .environment(\.panOffset, snapshot.panOffset)
       .environment(\.rotation, snapshot.rotation)
   }
+}
+
+extension TransformModifier {
+  
 }
 
 extension View {

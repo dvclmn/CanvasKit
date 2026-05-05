@@ -8,9 +8,9 @@
 import GeometryPrimitives
 
 /// Consumer-ready pointer values already mapped into `CanvasSpace`.
-struct PointerSnapshot: Sendable {
-  let tap: Point<CanvasSpace>?
-  let drag: Rect<CanvasSpace>?
-  let hover: Point<CanvasSpace>?
-  let isInsideCanvas: Bool
-}
+//struct PointerSnapshot: Sendable {
+//  let tap: Point<CanvasSpace>?
+//  let drag: Rect<CanvasSpace>?
+//  let hover: Point<CanvasSpace>?
+//  let isInsideCanvas: Bool
+//}

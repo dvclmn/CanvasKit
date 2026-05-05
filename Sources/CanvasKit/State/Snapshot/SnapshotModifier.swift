@@ -25,29 +25,31 @@ struct CanvasSnapshotModifier: ViewModifier {
       .environment(\.pointerTap, snapshot?.pointer.tap)
       .environment(\.pointerDrag, snapshot?.pointer.drag)
       .environment(\.pointerHover, snapshot?.pointer.hover)
-      .environment(\.interactionPhase, snapshot?.phase ?? .none)
+      .environment(\.interaction, snapshot?.interaction ?? .none)
+//      .environment(\.interactionPhase, snapshot?.phase ?? .none)
   }
 }
 
 extension CanvasSnapshotModifier {
-  private var snapshot: CanvasSnapshot? {
-    guard let artworkFrame, let canvasSize else { return nil }
-    let mapper = CoordinateSpaceMapper(frame: artworkFrame, canvasSize: canvasSize)
-
-    let tapMapped = pointer.tap.map { mapper.canvasPoint(from: $0) }
-    let hoverMapped = pointer.hover.map { mapper.canvasPoint(from: $0) }
-    let rectMapped = pointer.drag.map { mapper.canvasRect(from: $0) }
-    let isInside = hoverMapped.map { mapper.isInsideCanvas($0) } ?? false
-
-    return CanvasSnapshot(
-      transform: .init(transform: store.currentTransform),
-      pointer: .init(
-        tap: tapMapped,
-        drag: rectMapped,
-        hover: hoverMapped,
-        isInsideCanvas: isInside,
-      ),
-      phase: phase,
-    )
-  }
+//  private var snapshot: CanvasSnapshot? {
+//    guard let artworkFrame, let canvasSize else { return nil }
+//    let mapper = CoordinateSpaceMapper(frame: artworkFrame, canvasSize: canvasSize)
+//
+//    let tapMapped = pointer.tap.map { mapper.canvasPoint(from: $0) }
+//    let hoverMapped = pointer.hover.map { mapper.canvasPoint(from: $0) }
+//    let rectMapped = pointer.drag.map { mapper.canvasRect(from: $0) }
+//    let isInside = hoverMapped.map { mapper.isInsideCanvas($0) } ?? false
+//
+//    return CanvasSnapshot(
+//      transform: .init(transform: store.currentTransform),
+//      pointer: .init(
+//        tap: tapMapped,
+//        drag: rectMapped,
+//        hover: hoverMapped,
+//        isInsideCanvas: isInside,
+//      ),
+//      
+////      phase: phase,
+//    )
+//  }
 }

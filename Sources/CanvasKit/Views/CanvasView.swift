@@ -37,6 +37,8 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       /// do not sit above the tool picker.
       .modifier(InteractionModifiers())
 
+      .pointerStyleCompatible(store.pointerStyle)
+
       .toolPalette()
 
       /// Publishes current canvas transform values to the Environment
@@ -69,15 +71,13 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
 
       .modifier(CanvasToolKeyboardModifier(toolHandler: $store.toolHandler))
       .modifierKeys { store.updateModifiers($0) }
-    
+
       .bindModel(
         debounce: .noDebounce,
         $store.toolHandler.configuration,
         to: externalToolConfiguration,
       )
 
-      /// Set the resolved pointer style and add it to the Environment
-      .pointerStyleCompatible(store.pointerStyle)
       .environment(\.canvasSize, canvasSize)
       .environment(store)
 
