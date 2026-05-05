@@ -31,20 +31,20 @@ public struct CoordinateSpaceMapper {
     self.canvasSize = canvasSize
   }
 
-  public init(
-    zoom: Double,
-    panOffset: Size<ViewportSpace>,
-    canvasSize: Size<CanvasSpace>,
-  ) {
-    let origin: Point<ViewportSpace> = .init(fromOffset: panOffset)
-
-    let size: Size<ViewportSpace> = .init(
-      width: canvasSize.width * zoom,
-      height: canvasSize.height * zoom,
-    )
-
-    self.init(frame: .init(origin: origin, size: size), canvasSize: canvasSize)
-  }
+//  public init(
+//    zoom: Double,
+//    panOffset: Size<ViewportSpace>,
+//    canvasSize: Size<CanvasSpace>,
+//  ) {
+//    let origin: Point<ViewportSpace> = .init(fromOffset: panOffset)
+//
+//    let size: Size<ViewportSpace> = .init(
+//      width: canvasSize.width * zoom,
+//      height: canvasSize.height * zoom,
+//    )
+//
+//    self.init(frame: .init(origin: origin, size: size), canvasSize: canvasSize)
+//  }
 
 }
 

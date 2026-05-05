@@ -66,7 +66,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       .environment(\.activeInteraction, store.activeInteraction)
       .environment(store)
 
-      .debugTextOverlay(isEnabled: true)
+//      .debugTextOverlay(isEnabled: true)
 
   }
 }
