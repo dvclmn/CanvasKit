@@ -9,7 +9,7 @@ import GeometryPrimitives
 import InputPrimitives
 import SwiftUI
 
-struct CanvasSnapshotModifier: ViewModifier {
+struct PointerStateEnvironmentModifier: ViewModifier {
   @Environment(CanvasHandler.self) private var store
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.canvasSize) private var canvasSize
@@ -18,7 +18,7 @@ struct CanvasSnapshotModifier: ViewModifier {
   let artworkFrame: Rect<ViewportSpace>?
   
   let pointer: PointerState
-  let phase: InteractionPhase
+//  let phase: InteractionPhase
 
   func body(content: Content) -> some View {
     content

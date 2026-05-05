@@ -11,10 +11,10 @@ import SwiftUI
 
 /// Computed from `CanvasHandler` state and geometry.
 /// Holds only already-converted/mapped, consumer-ready values
-struct CanvasSnapshot: Sendable {
+struct PointerMappedSnapshot: Sendable {
 
-  let transform: TransformSnapshot
-  let pointer: PointerSnapshot
+//  let transform: TransformState
+  let pointer: PointerState<CanvasSpace>
 
   /// Phase of any in-progress gesture
   //  let phase: InteractionPhase
@@ -23,49 +23,23 @@ struct CanvasSnapshot: Sendable {
   //  let context: InteractionContext?
 
   init(
-    transform: TransformSnapshot,
-    pointer: PointerSnapshot,
+//    transform: TransformState,
+    pointer: PointerState<CanvasSpace>,
     interaction: ActiveInteraction,
       //    context: InteractionContext? = nil,
       //    interaction: InteractionKind? = nil,
       //    phase: InteractionPhase = .none,
   ) {
-    self.transform = transform
+//    self.transform = transform
     self.pointer = pointer
     self.interaction = interaction
     //    self.phase = phase
 
     //    self.activeInteraction = .init(kind: interaction, phase: phase)
   }
-
-  //  init(
-  //    zoom: Double,
-  //    pan: Size<ViewportSpace>,
-  //    rotation: Angle,
-  //    pointerTap: Point<CanvasSpace>? = nil,
-  //    pointerDrag: Rect<CanvasSpace>? = nil,
-  //    pointerHover: Point<CanvasSpace>? = nil,
-  //    isPointerInsideCanvas: Bool = false,
-  //    phase: InteractionPhase = .none,
-  //  ) {
-  //    self.init(
-  //      transform: .init(
-  //        translation: pan,
-  //        scale: zoom,
-  //        rotation: rotation,
-  //      ),
-  //      pointer: .init(
-  //        tap: pointerTap,
-  //        drag: pointerDrag,
-  //        hover: pointerHover,
-  //        isInsideCanvas: isPointerInsideCanvas,
-  //      ),
-  //      phase: phase,
-  //    )
-  //  }
 }
 
-extension CanvasSnapshot {
+extension PointerMappedSnapshot {
   static func createMapped(
     artworkFrame: Rect<ViewportSpace>?,
     canvasSize: Size<CanvasSpace>,
@@ -78,16 +52,17 @@ extension CanvasSnapshot {
     
     let tapMapped = pointerState.tap.map { mapper.canvasPoint(from: $0) }
     let hoverMapped = pointerState.hover.map { mapper.canvasPoint(from: $0) }
-    let rectMapped = pointerState.drag.map { mapper.canvasRect(from: $0) }
+    let dragMapped = pointerState.drag.map { mapper.canvasRect(from: $0) }
     let isInside = hoverMapped.map { mapper.isInsideCanvas($0) } ?? false
     
     return CanvasSnapshot(
-      transform: .init(transform: store.currentTransform),
+      transform: transform,
       pointer: .init(
-        tap: tapMapped,
-        drag: rectMapped,
-        hover: hoverMapped,
-        isInsideCanvas: isInside,
+        tap: tapMapped, hover: hoverMapped, drag: dragMapped
+//        tap: tapMapped,
+//        drag: rectMapped,
+//        hover: hoverMapped,
+//        isInsideCanvas: isInside,
       ),
       
       //      phase: phase,

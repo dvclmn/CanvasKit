@@ -12,15 +12,15 @@ import GeometryPrimitives
 
 /// Raw locations/geometry in screen space, no
 /// coordinate space mapping applied
-public struct PointerState: Sendable, Equatable {
-  public var tap: Point<ViewportSpace>?
-  public var hover: Point<ViewportSpace>?
-  public var drag: Rect<ViewportSpace>?
+public struct PointerState<Space>: Sendable, Equatable {
+  public var tap: Point<Space>?
+  public var hover: Point<Space>?
+  public var drag: Rect<Space>?
 
   public init(
-    tap: Point<ViewportSpace>? = nil,
-    hover: Point<ViewportSpace>? = nil,
-    drag: Rect<ViewportSpace>? = nil,
+    tap: Point<Space>? = nil,
+    hover: Point<Space>? = nil,
+    drag: Rect<Space>? = nil,
   ) {
     self.tap = tap
     self.hover = hover
@@ -28,6 +28,6 @@ public struct PointerState: Sendable, Equatable {
   }
 }
 
-extension PointerState {
-  public static let initial = PointerState()
-}
+//extension PointerState {
+//  public static let initial = PointerState()
+//}

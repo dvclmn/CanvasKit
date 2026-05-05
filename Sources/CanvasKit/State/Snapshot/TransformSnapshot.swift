@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 25/4/2026.
 //
 
-import GeometryPrimitives
-import SwiftUI
+//import GeometryPrimitives
+//import SwiftUI
 
 /// Consumer-ready transform values derived from `TransformState`.
 ///

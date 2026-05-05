@@ -13,29 +13,24 @@ import SwiftUI
 /// Environment
 /// `zoomLevel`, `panOffset`, and `rotation` available higher in the hierarchy
 /// than `CanvasView` itself.
-public struct TransformModifier: ViewModifier {
+public struct TransformStateEnvironmentModifier: ViewModifier {
   @Environment(CanvasHandler.self) private var store
-//  let transform: TransformState
-
   public func body(content: Content) -> some View {
-    
-
     content
-      .environment(\.zoomLevel, snapshot.zoomLevel)
-      .environment(\.panOffset, snapshot.panOffset)
-      .environment(\.rotation, snapshot.rotation)
+      .environment(\.zoomLevel, state.scale)
+      .environment(\.panOffset, state.translation.cgSize)
+      .environment(\.rotation, state.rotation)
   }
 }
 
-extension TransformModifier {
-  
+extension TransformStateEnvironmentModifier {
+  private var state: TransformState { store.currentTransform }
 }
 
 extension View {
   /// Adds the current canvas transform values to the environment.
-  public func canvasTransformEnvironment(
-//    _ transform: TransformState
-  ) -> some View {
-    self.modifier(TransformModifier())
+  public func canvasTransformEnvironment() -> some View
+  {
+    self.modifier(TransformStateEnvironmentModifier())
   }
 }
