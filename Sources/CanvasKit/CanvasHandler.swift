@@ -94,6 +94,13 @@ extension CanvasHandler {
 }
 
 extension CanvasHandler {
+  /// Based on selected tool — and maybe other factors in future
+  var minimumDragDistance: CGFloat {
+    let fallback: CGFloat = 5
+//    switch effectiveTool
+    guard let effectiveTool else { return fallback }
+    
+  }
 
   var activeInteraction: ActiveInteraction {
     guard let interactionContext else { return .none }

@@ -22,7 +22,7 @@ extension View {
   /// Provides the rectangle of the drag in `CanvasSpace`,
   /// along with the interaction's phase.
   public func onCanvasDrag(
-    perform action: @escaping (CanvasDragEvent<CanvasSpace>) -> Void
+    perform action: @escaping (CanvasDragEvent) -> Void
   ) -> ModifiedContent<Self, CanvasDragModifier> {
     self.modifier(CanvasDragModifier(action: action))
   }

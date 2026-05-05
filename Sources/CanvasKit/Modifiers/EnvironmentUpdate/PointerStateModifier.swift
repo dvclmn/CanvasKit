@@ -1,5 +1,5 @@
 //
-//  SnapshotModifier.swift
+//  PointerStateEnvironmentModifier.swift
 //  CanvasKit
 //
 //  Created by Dave Coleman on 12/4/2026.

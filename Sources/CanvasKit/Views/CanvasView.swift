@@ -41,17 +41,17 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
 
       .toolPalette()
 
-      /// Publishes current canvas transform values to the Environment
-      .canvasTransformEnvironment()
+      /// Adds canvas transform and mapped pointer values to the Environment
+      .updateTransformEnvironment()
+      .updatePointerEnvironment()
 
-      /// Adds mapped pointer values and interaction phase to the Environment
-      .modifier(
-        CanvasSnapshotModifier(
-          artworkFrame: store.artworkFrame,
-          pointer: store.pointer,
-          phase: store.interactionContext?.phase ?? .none,
-        )
-      )
+      //      .modifier(
+      //        CanvasSnapshotModifier(
+      //          artworkFrame: store.artworkFrame,
+      //          pointer: store.pointer,
+      //          phase: store.interactionContext?.phase ?? .none,
+      //        )
+      //      )
 
       //    .debugText {
       //      Labeled("Ext. Tool Config", value: externalToolConfiguration?.wrappedValue)
@@ -79,7 +79,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       )
 
       .environment(\.canvasSize, canvasSize)
-      .environment(\.interaction, store.activeInteraction)
+      .environment(\.activeInteraction, store.activeInteraction)
       .environment(store)
 
       .debugTextOverlay(isEnabled: true)

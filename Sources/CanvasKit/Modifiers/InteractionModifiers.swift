@@ -77,6 +77,7 @@ struct InteractionModifiers: ViewModifier {
       .onPointerDragGesture(
         behaviour: store.effectiveTool.dragBehaviour,
         isEnabled: isEnabled(for: .drag),
+        minimumDistance: <#T##CGFloat#>
       ) { payload, phase in
         guard let payload else { return }
         let adjustment = store.processedTransform(
