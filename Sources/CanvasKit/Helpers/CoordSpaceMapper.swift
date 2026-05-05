@@ -19,10 +19,7 @@ public struct CoordinateSpaceMapper {
   /// `size`: Expresses the canvas size scaled by zoom
   public let artworkFrame: Rect<ViewportSpace>
   public let canvasSize: Size<CanvasSpace>
-  //  public let zoom: Double
 
-  /// Zoom is expected to be provided already clamped to `zoomRange`.
-  /// Clamped zoom value available from the Environment as `zoomClamped`
   public init(
     frame: Rect<ViewportSpace>,
     canvasSize: Size<CanvasSpace>,
@@ -30,22 +27,6 @@ public struct CoordinateSpaceMapper {
     self.artworkFrame = frame
     self.canvasSize = canvasSize
   }
-
-//  public init(
-//    zoom: Double,
-//    panOffset: Size<ViewportSpace>,
-//    canvasSize: Size<CanvasSpace>,
-//  ) {
-//    let origin: Point<ViewportSpace> = .init(fromOffset: panOffset)
-//
-//    let size: Size<ViewportSpace> = .init(
-//      width: canvasSize.width * zoom,
-//      height: canvasSize.height * zoom,
-//    )
-//
-//    self.init(frame: .init(origin: origin, size: size), canvasSize: canvasSize)
-//  }
-
 }
 
 extension CoordinateSpaceMapper {
