@@ -79,7 +79,6 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       /// Set the resolved pointer style and add it to the Environment
       .pointerStyleCompatible(store.pointerStyle)
       .environment(\.canvasSize, canvasSize)
-      .environment(\.pointerStyle, store.pointerStyle)
       .environment(store)
 
       .debugTextOverlay(isEnabled: true)
