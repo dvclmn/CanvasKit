@@ -16,7 +16,7 @@ final class CanvasHandler {
   var pointer: PointerState<ViewportSpace> = .init()
 
   /// Only updated when `processedTransform()` is called
-  package var interactionContext: InteractionContext?
+  var lastInteractionContext: InteractionContext?
 
   var artworkFrame: Rect<ViewportSpace>?
   var currentTransform: TransformState = .identity
@@ -53,7 +53,7 @@ extension CanvasHandler {
       phase: phase,
       modifiers: modifiers,
     )
-    self.interactionContext = context
+    self.lastInteractionContext = context
 
     let resolver = CanvasInputResolver(
       context: context,
@@ -96,12 +96,19 @@ extension CanvasHandler {
 extension CanvasHandler {
 
   var activeInteraction: ActiveInteraction {
-    guard let interactionContext else { return .none }
+    guard let lastInteractionContext else { return .none }
     return .init(
-      kind: interactionContext.interaction.kind,
-      phase: interactionContext.phase,
+      kind: lastInteractionContext.interaction.kind,
+      phase: lastInteractionContext.phase,
     )
   }
+  
+//  var activeCapability: ToolCapability? {
+//    effectiveTool.inputCapabilities.first { capability in
+//      guard let lastInteractionContext else { return false }
+//      return capability.matches(lastInteractionContext)
+//    }
+//  }
 
   /// The runtime tool used to resolve canvas input right now.
   ///
@@ -109,23 +116,20 @@ extension CanvasHandler {
   /// committed/base selection only, use `toolHandler.committedTool`.
   var effectiveTool: any CanvasTool { toolHandler.effectiveTool }
 
-  @available(*, deprecated, renamed: "effectiveTool")
-  var activeTool: (any CanvasTool)? { effectiveTool }
-
 }
 
 extension CanvasHandler {
   func updateModifiers(_ modifiers: Modifiers) {
     toolHandler.updateModifiers(modifiers)
-    interactionContext = interactionContext?.withModifiers(modifiers)
+    lastInteractionContext = lastInteractionContext?.withModifiers(modifiers)
   }
 
   // TODO: Change how interactionContext is updated, as this pointer style
   // is possibly not being updated at the right cadence. interactionContext
   // is currently only updated when processedTransform() is run.
   var pointerStyle: PointerStyleCompatible? {
-    guard let interactionContext else { return nil }
-    return effectiveTool.resolvePointerStyle(context: interactionContext)
+    guard let lastInteractionContext else { return nil }
+    return effectiveTool.resolvePointerStyle(context: lastInteractionContext)
   }
 
 }

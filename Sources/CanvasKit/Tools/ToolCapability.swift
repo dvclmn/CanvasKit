@@ -26,6 +26,15 @@ public struct ToolCapability: Hashable, Sendable {
   }
 }
 
+
+extension ToolCapability {
+  func matches(_ context: InteractionContext) -> Bool {
+    guard interactionKind == context.interaction.kind else { return false }
+    guard let modifiers else { return true }
+    return context.modifiers.contains(modifiers)
+  }
+}
+
 extension ToolCapability: CustomStringConvertible {
   public var description: String {
     DisplayString {
@@ -33,16 +42,13 @@ extension ToolCapability: CustomStringConvertible {
       Labeled("Intent", value: intent)
       Labeled("Modifiers", value: modifiers)
     }.text
-//    let modifiersDescription = modifiers.map { "\($0)" } ?? "Any"
-//    return "\(interactionKind) -> \(intent) (\(modifiersDescription))"
+    //    let modifiersDescription = modifiers.map { "\($0)" } ?? "Any"
+    //    return "\(interactionKind) -> \(intent) (\(modifiersDescription))"
   }
 }
-
-extension ToolCapability {
-
-  static let swipeToPan = Self(interaction: .swipe, intent: .pan)
-  static let pinchToZoom = Self(interaction: .pinch, intent: .zoom)
-  static let rotateToRotate = Self(interaction: .rotate, intent: .rotate)
+  //  static let swipeToPan = Self(interaction: .swipe, intent: .pan)
+  //  static let pinchToZoom = Self(interaction: .pinch, intent: .zoom)
+  //  static let rotateToRotate = Self(interaction: .rotate, intent: .rotate)
 
   //  static let swipeToTranslate = Self(interaction: .swipe, adjustment: .translation)
   //  static let swipeToScale = Self(interaction: .swipe, adjustment: .scale)
@@ -78,19 +84,4 @@ extension ToolCapability {
   //    .tapToScale,
   //    .dragToScale,
   //  ]
-}
-
-extension ToolCapability {
-  func matches(_ context: InteractionContext) -> Bool {
-    guard interactionKind == context.interaction.kind else { return false }
-    guard let modifiers else { return true }
-    return context.modifiers.contains(modifiers)
-  }
-  //  func matches(
-  //    interaction: InteractionKind,
-  //    adjustment: AdjustmentKind?,
-  //  ) -> Bool {
-  //    guard interactionKind == interaction, let adjustment else { return false }
-  //    return adjustmentKind == adjustment
-  //  }
-}
+//}

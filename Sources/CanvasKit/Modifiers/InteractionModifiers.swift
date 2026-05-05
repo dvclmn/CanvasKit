@@ -59,7 +59,7 @@ struct InteractionModifiers: ViewModifier {
       }
 
       .onTapGesture(coordinateSpace: .named(ViewportSpace.viewport)) { location in
-        printTimestamped("Called `onTapGesture`")
+        //        printTimestamped("Called `onTapGesture`")
         guard isEnabled(for: .tap) else { return }
         let adjustment = store.processedTransform(
           .tap(location: location.viewportPoint),
@@ -76,7 +76,7 @@ struct InteractionModifiers: ViewModifier {
         minimumDistance: store.effectiveTool.dragConfiguration.minimumDistance,
       ) { payload, phase in
 
-        printTimestamped("Called `onPointerDragGesture`")
+        //        printTimestamped("Called `onPointerDragGesture`")
         guard let payload else { return }
         let adjustment = store.processedTransform(
           .drag(payload),
@@ -95,7 +95,9 @@ extension InteractionModifiers {
     store.currentTransform = adjustment
   }
 
-  private func isEnabled(for interaction: InteractionKind) -> Bool {
+  private func isEnabled(
+    for interaction: InteractionKind
+  ) -> Bool {
     let isEnabled: Bool
 
     switch interaction {
@@ -103,15 +105,11 @@ extension InteractionModifiers {
         isEnabled = true
 
       case .tap, .drag, .hover:
-        return store.effectiveTool.inputCapabilities.allSatisfy { capability in
-          guard let context = store.interactionContext else { return true }
-          return capability.matches(context)
+        /// Returns true if any of the current Tool's capabilities match this interaction
+        isEnabled = store.effectiveTool.inputCapabilities.contains { capability in
+          capability.interactionKind == interaction
         }
-    //        isEnabled = store.effectiveTool.inputCapabilities.contains { capability in
-    //          capability.interactionKind == interaction
-    //        }
     }
-
     return isEnabled
   }
 }

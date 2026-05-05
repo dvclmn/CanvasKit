@@ -49,6 +49,7 @@ struct CanvasCoreView<Content: View>: View {
 
       .debugText {
         Labeled("Modifiers", value: modifierKeys.displayString)
+        Labeled("Context", value: store.lastInteractionContext)
       }
 
   }
