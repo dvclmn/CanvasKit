@@ -18,12 +18,9 @@ struct PointerMappedSnapshot: Sendable {
 
 extension PointerMappedSnapshot {
   static func createMapped(
-    artworkFrame: Rect<ViewportSpace>,
-    canvasSize: Size<CanvasSpace>,
+    mapper: CoordinateSpaceMapper,
     pointerState: PointerState<ViewportSpace>,
   ) -> Self? {
-    let mapper = CoordinateSpaceMapper(frame: artworkFrame, canvasSize: canvasSize)
-
     let tapMapped = pointerState.tap.map { mapper.canvasPoint(from: $0) }
     let hoverMapped = pointerState.hover.map { mapper.canvasPoint(from: $0) }
     let dragMapped = pointerState.drag.map { mapper.canvasRect(from: $0) }

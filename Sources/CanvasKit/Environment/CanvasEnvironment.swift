@@ -16,6 +16,13 @@ extension EnvironmentValues {
 
   /// Aka artwork/document size. Used internally by CanvasKit only
   @Entry var canvasSize: Size<CanvasSpace>?
+
+  /// Resolved mapper between the visible viewport and artwork coordinates.
+  ///
+  /// This is available within the ``CanvasView`` hierarchy once the artwork
+  /// frame has been resolved from SwiftUI layout. The mapper uses the captured
+  /// artwork frame rather than recomputing from pan/zoom values.
+  @Entry public var canvasCoordinateSpaceMapper: CoordinateSpaceMapper?
   
   /// Current runtime transform state
 //  @Entry var transform: TransformState?

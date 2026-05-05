@@ -15,6 +15,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
 
   /// Populated when user wishes to handle their own transform state
   private let externalTransform: Binding<TransformState>?
+  private let externalCoordinateSpaceMapper: Binding<CoordinateSpaceMapper?>?
 
   /// Internal-only source of truth for transform state. If user passes in state,
   /// it is passed to this. If not, this gets a default initial value.
@@ -65,6 +66,18 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       .environment(\.canvasSize, canvasSize)
       .environment(\.activeInteraction, store.activeInteraction)
       .environment(store)
+      .onAppear {
+        syncExternalCoordinateSpaceMapper()
+      }
+      .onChange(of: store.artworkFrame) {
+        syncExternalCoordinateSpaceMapper()
+      }
+      .onChange(of: canvasSize) {
+        syncExternalCoordinateSpaceMapper()
+      }
+      .onDisappear {
+        externalCoordinateSpaceMapper?.wrappedValue = nil
+      }
 
 //      .debugTextOverlay(isEnabled: true)
 
@@ -78,14 +91,27 @@ extension CanvasView {
   public init(
     size: CGSize,
     transform: Binding<TransformState>,
+    coordinateSpaceMapper: Binding<CoordinateSpaceMapper?>? = nil,
     toolConfiguration: Binding<ToolConfiguration>? = nil,
     @ViewBuilder content: @escaping () -> Content,
   ) {
     let initialToolConfiguration = toolConfiguration?.wrappedValue ?? .default
     self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
     self.externalTransform = transform
+    self.externalCoordinateSpaceMapper = coordinateSpaceMapper
     self.externalToolConfiguration = toolConfiguration
     self._store = State(initialValue: .init(toolConfiguration: initialToolConfiguration))
     self.content = content
+  }
+}
+
+extension CanvasView {
+  private var coordinateSpaceMapper: CoordinateSpaceMapper? {
+    guard let frame = store.artworkFrame else { return nil }
+    return .init(frame: frame, canvasSize: canvasSize)
+  }
+
+  private func syncExternalCoordinateSpaceMapper() {
+    externalCoordinateSpaceMapper?.wrappedValue = coordinateSpaceMapper
   }
 }
