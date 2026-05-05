@@ -7,7 +7,23 @@
 
 import SwiftUI
 
+public struct PointerDragConfiguration: Sendable {
+  let behaviour: PointerDragBehaviour
+  let minimumDistance: CGFloat
+  
+  public init(
+    behaviour: PointerDragBehaviour = .marquee,
+    minimumDistance: CGFloat = 5,
+  ) {
+    self.behaviour = behaviour
+    self.minimumDistance = minimumDistance
+  }
+}
 
+extension PointerDragConfiguration {
+  public static let marquee: Self = .init(behaviour: .marquee)
+  public static let continuous: Self = .init(behaviour: .continuous(axes: .all))
+}
 
 /// Defines the drag interaction mode applied by `PointerDragModifier`.
 public enum PointerDragBehaviour: Equatable, Sendable {
@@ -25,10 +41,10 @@ public enum PointerDragBehaviour: Equatable, Sendable {
   case continuous(axes: Axis.Set)
 
   /// Drag gesture is inactive; no callbacks or state changes are produced.
-  case none
+//  case none
 
   /// Convenience for `.continuous(axes: .all)`.
-  public static var continuous: Self { .continuous(axes: .all) }
+//  public static var continuous: Self { .continuous(axes: .all) }
 }
 
 extension PointerDragBehaviour {
@@ -37,23 +53,23 @@ extension PointerDragBehaviour {
     switch self {
       case .marquee: "Marquee"
       case .continuous(let axes): "Continuous (\(axes))"
-      case .none: "None"
+//      case .none: "None"
     }
   }
 
   /// The axis constraint for continuous drags. Only applicable for
   /// `continuous`, returns `.all` for other modes
-//  public var axes: Axis.Set {
-//    if case .continuous(let axes) = self { return axes }
-//    return .all
-//  }
+  //  public var axes: Axis.Set {
+  //    if case .continuous(let axes) = self { return axes }
+  //    return .all
+  //  }
 
   public var isMarquee: Bool {
     if case .marquee = self { return true }
     return false
   }
 
-  public var isEnabled: Bool { self != .none }
+//  public var isEnabled: Bool { self != .none }
 }
 
 extension Axis.Set {

@@ -26,7 +26,6 @@ struct InteractionModifiers: ViewModifier {
           .swipe(delta: event.delta),
           phase: event.phase,
           modifiers: event.modifiers,
-          //          currentTransform: transform,
         )
         apply(adjustment)
       }
@@ -40,14 +39,12 @@ struct InteractionModifiers: ViewModifier {
           .pinch(scale: zoom),
           phase: phase,
           modifiers: modifierKeys,
-          //          currentTransform: transform,
         )
 
         /// Returns the scale so the modifier's internal Zoom
         /// stays in sync with transform state
         apply(adjustment)
         return adjustment?.scale
-        //        return apply(adjustment)?.scale
       }
 
       .onContinuousHover(coordinateSpace: .named(ViewportSpace.viewport)) { phase in
@@ -56,35 +53,35 @@ struct InteractionModifiers: ViewModifier {
           .hover(location.viewportPoint),
           phase: phase.interactionPhase,
           modifiers: modifierKeys,
-          //          currentTransform: transform,
         )
         apply(adjustment)
 
       }
 
       .onTapGesture(coordinateSpace: .named(ViewportSpace.viewport)) { location in
+        printTimestamped("Called `onTapGesture`")
         guard isEnabled(for: .tap) else { return }
         let adjustment = store.processedTransform(
           .tap(location: location.viewportPoint),
           phase: .ended,
           modifiers: modifierKeys,
-          //          currentTransform: transform,
         )
         apply(adjustment)
 
       }
 
       .onPointerDragGesture(
-        behaviour: store.effectiveTool.dragBehaviour,
+        behaviour: store.effectiveTool.dragConfiguration.behaviour,
         isEnabled: isEnabled(for: .drag),
-        minimumDistance: <#T##CGFloat#>
+        minimumDistance: store.effectiveTool.dragConfiguration.minimumDistance,
       ) { payload, phase in
+
+        printTimestamped("Called `onPointerDragGesture`")
         guard let payload else { return }
         let adjustment = store.processedTransform(
           .drag(payload),
           phase: phase,
           modifiers: modifierKeys,
-          //          currentTransform: transform,
         )
         apply(adjustment)
       }
@@ -92,15 +89,10 @@ struct InteractionModifiers: ViewModifier {
 }
 
 extension InteractionModifiers {
-  /// Has a return value only for the benefit of `onPinchGesture()`
-  //  @discardableResult
   private func apply(_ adjustment: TransformState?) {
-    //  private func apply(_ adjustment: TransformState?) -> TransformState? {
     guard var adjustment else { return }
-    //    guard var adjustment else { return nil }
     adjustment.scale = adjustment.scale.clamped(to: zoomRange)
     store.currentTransform = adjustment
-    //    return adjustment
   }
 
   private func isEnabled(for interaction: InteractionKind) -> Bool {
@@ -111,9 +103,13 @@ extension InteractionModifiers {
         isEnabled = true
 
       case .tap, .drag, .hover:
-        isEnabled = store.effectiveTool.inputCapabilities.contains { capability in
-          capability.interactionKind == interaction
+        return store.effectiveTool.inputCapabilities.allSatisfy { capability in
+          guard let context = store.interactionContext else { return true }
+          return capability.matches(context)
         }
+    //        isEnabled = store.effectiveTool.inputCapabilities.contains { capability in
+    //          capability.interactionKind == interaction
+    //        }
     }
 
     return isEnabled

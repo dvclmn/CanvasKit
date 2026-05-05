@@ -83,8 +83,8 @@ extension ToolCapability {
 extension ToolCapability {
   func matches(_ context: InteractionContext) -> Bool {
     guard interactionKind == context.interaction.kind else { return false }
-    guard let required = modifiers else { return true }  // nil = any
-    return context.modifiers.contains(required)
+    guard let modifiers else { return true }
+    return context.modifiers.contains(modifiers)
   }
   //  func matches(
   //    interaction: InteractionKind,

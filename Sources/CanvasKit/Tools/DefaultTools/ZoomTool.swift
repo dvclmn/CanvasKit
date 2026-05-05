@@ -18,7 +18,9 @@ public struct ZoomTool: CanvasTool {
 
   public init() {}
 
-  public var dragBehaviour: PointerDragBehaviour { .continuous(axes: .vertical) }
+  public var dragConfiguration: PointerDragConfiguration {
+    .init(behaviour: .continuous(axes: .vertical))
+  }
 
   /// modifiers: nil → matches drag/tap regardless of modifier state
   public var inputCapabilities: [ToolCapability] {

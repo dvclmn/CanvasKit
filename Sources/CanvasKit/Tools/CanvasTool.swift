@@ -26,7 +26,8 @@ public protocol CanvasTool: Sendable, Equatable, CustomStringConvertible, Identi
   var icon: String { get }
 
   /// The drag input policy active when this tool is selected.
-  var dragBehaviour: PointerDragBehaviour { get }
+  var dragConfiguration: PointerDragConfiguration { get }
+//  var dragBehaviour: PointerDragBehaviour { get }
 
   /// The interaction/adjustment pairs this tool can claim.
   var inputCapabilities: [ToolCapability] { get }

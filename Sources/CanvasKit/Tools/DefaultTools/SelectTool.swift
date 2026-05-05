@@ -18,7 +18,7 @@ public struct SelectTool: CanvasTool {
   public let name = "Select"
   public let icon = "cursorarrow"
 
-  public var dragBehaviour: PointerDragBehaviour { .marquee }
+  public var dragConfiguration: PointerDragConfiguration { .marquee }
   public var inputCapabilities: [ToolCapability] {
     [
       ToolCapability(interaction: .tap, intent: .select),
