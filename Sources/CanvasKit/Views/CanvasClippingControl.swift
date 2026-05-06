@@ -1,0 +1,120 @@
+//
+//  CanvasClippingControl.swift
+//  CanvasKit
+//
+//  Created by Dave Coleman on 5/5/2026.
+//
+
+import SwiftUI
+
+public struct CanvasClippingControl: View {
+  @Binding private var clipping: CanvasClipping
+  @State private var lastDimmingAmount: Double
+
+  private static let defaultDimmingAmount = 0.5
+
+  public init(_ clipping: Binding<CanvasClipping>) {
+    self._clipping = clipping
+    self._lastDimmingAmount = State(
+      initialValue: clipping.wrappedValue.preferredDimmingAmount(fallback: Self.defaultDimmingAmount)
+    )
+  }
+
+  public init(clipping: Binding<CanvasClipping>) {
+    self.init(clipping)
+  }
+
+  public var body: some View {
+    VStack(alignment: .leading, spacing: 8) {
+      Picker("Clipping", selection: mode) {
+        ForEach(CanvasClippingMode.allCases) { mode in
+          Text(mode.label).tag(mode)
+        }
+      }
+      .pickerStyle(.segmented)
+
+      if clipping.mode == .dimmed {
+        Slider(
+          value: dimmingAmount,
+          in: 0...1,
+        ) {
+          Text("Dimming")
+        } minimumValueLabel: {
+          Text("0")
+        } maximumValueLabel: {
+          Text("1")
+        }
+      }
+    }
+    .onChange(of: clipping) { _, newValue in
+      guard case .dimmed = newValue else { return }
+      lastDimmingAmount = newValue.normalisedDimmingAmount
+    }
+  }
+}
+
+private extension CanvasClippingControl {
+  var mode: Binding<CanvasClippingMode> {
+    Binding {
+      clipping.mode
+    } set: { newMode in
+      switch newMode {
+        case .clipped:
+          clipping = .clipped
+
+        case .dimmed:
+          clipping = .dimmed(CGFloat(lastDimmingAmount))
+
+        case .none:
+          clipping = .none
+      }
+    }
+  }
+
+  var dimmingAmount: Binding<Double> {
+    Binding {
+      clipping.preferredDimmingAmount(fallback: lastDimmingAmount)
+    } set: { newValue in
+      let normalisedValue = CanvasClipping.normaliseDimmingAmount(newValue)
+      lastDimmingAmount = normalisedValue
+      clipping = .dimmed(CGFloat(normalisedValue))
+    }
+  }
+}
+
+private enum CanvasClippingMode: String, CaseIterable, Identifiable {
+  case clipped
+  case dimmed
+  case none
+
+  var id: Self { self }
+
+  var label: String {
+    switch self {
+      case .clipped:
+        return "Clipped"
+      case .dimmed:
+        return "Dimmed"
+      case .none:
+        return "None"
+    }
+  }
+}
+
+private extension CanvasClipping {
+  var mode: CanvasClippingMode {
+    switch self {
+      case .clipped:
+        return .clipped
+      case .dimmed:
+        return .dimmed
+      case .none:
+        return .none
+    }
+  }
+
+  func preferredDimmingAmount(fallback: Double) -> Double {
+    guard case .dimmed = self else { return fallback }
+    return normalisedDimmingAmount
+  }
+}

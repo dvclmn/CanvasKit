@@ -8,7 +8,7 @@
 extension CanvasHandler {
   enum Constants {
     static let minZoomLowerBound: Double = 0.05
-    static let minZoomUpperBound: Double = 40
+    static let minZoomUpperBound: Double = 90
     static var zoomRangeConstrained: ClosedRange<Double> {
       Self.minZoomLowerBound...Self.minZoomUpperBound
     }

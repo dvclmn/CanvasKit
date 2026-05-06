@@ -17,13 +17,16 @@ enum Constants {
 struct ContentView: View {
   @State private var transform: TransformState
   @State private var toolConfiguration: ToolConfiguration
+  @State private var clipping: CanvasClipping
 
   init(
     transform: TransformState = .init(),
     toolConfiguration: ToolConfiguration = .default,
+    clipping: CanvasClipping = .clipped,
   ) {
     self._transform = State(initialValue: transform)
     self._toolConfiguration = State(initialValue: toolConfiguration)
+    self._clipping = State(initialValue: clipping)
   }
 
   var body: some View {
@@ -36,11 +39,20 @@ struct ContentView: View {
       Image(.sunflower)
         .resizable()
         .scaledToFill()
+        .canvasClipping(clipping)
       //      CanvasContentView()
-//              .canvasClipped(false)
     }
     .zoomRange(0.1...20)
     .toolPicker()
+
+//    .overlay(alignment: .topTrailing) {
+//      CanvasClippingControl($clipping)
+//        .frame(width: 240)
+//        .padding(10)
+//        .background(.regularMaterial)
+//        .clipShape(.rect(cornerRadius: 8))
+//        .padding()
+//    }
 
     .overlay(alignment: .bottomTrailing) {
 
@@ -57,6 +69,8 @@ struct ContentView: View {
       .clipShape(.rect(cornerRadius: 5))
       .padding(8)
     }
+    
+    .debugTextOverlay()
   }
 }
 

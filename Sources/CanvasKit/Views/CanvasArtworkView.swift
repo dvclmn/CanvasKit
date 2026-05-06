@@ -22,7 +22,7 @@ struct CanvasArtwork<Content: View>: View {
 
   var body: some View {
 
-    CanvasArtworkDecomposed(
+    ArtworkDecomposed(
       rounding: effectiveRounding,
       content: content,
     )
