@@ -65,6 +65,7 @@ extension EnvironmentValues {
   @Entry public var zoomLevel: Double = 1.0
 
   @Entry public var zoomRange: ClosedRange<Double> = 0.2...10
+  @Entry public var zoomSensitivity: Double = 0.5
 
   /// Returns `1.0` if `zoomLevel` is less than zero or NaN/infinite
   public var zoomClamped: Double {

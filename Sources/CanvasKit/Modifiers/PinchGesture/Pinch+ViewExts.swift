@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import InputPrimitives
 
 extension View {
 
@@ -24,6 +25,8 @@ extension View {
     )
   }
 }
+
+public typealias ZoomUpdate = (Double, InteractionPhase) -> Double?
 
 /// The caller owns zoom state. The modifier tracks gesture deltas and
 /// sends events; the callback returns the resolved zoom value.

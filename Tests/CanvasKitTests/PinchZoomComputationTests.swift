@@ -5,7 +5,6 @@
 //  Created by Dave Coleman on 8/5/2026.
 //
 
-import Foundation
 import Testing
 
 @testable import CanvasKit
@@ -46,14 +45,14 @@ struct PinchZoomComputationTests {
     #expect(isNear(zoomOutFactor * zoomInFactor, 1))
   }
 
-  @Test func responseStrengthCanTuneMagnificationCurve() {
-    let proposed = PinchZoomComputation.proposedZoom(
-      startZoom: 2,
-      magnification: 1.5,
-      responseStrength: log(2),
-    )
+  @Test func sensitivityCanTuneMagnificationCurve() {
+    let gentle = PinchZoomComputation.responseFactor(0, sensitivity: 0)
+    let standard = PinchZoomComputation.responseFactor(0, sensitivity: 0.5)
+    let strong = PinchZoomComputation.responseFactor(0, sensitivity: 1)
 
-    #expect(isNear(proposed, 2.8284))
+    #expect(isNear(gentle, 0.5))
+    #expect(isNear(standard, 0.25))
+    #expect(isNear(strong, 0.125))
   }
 
   @Test func invalidInputFallsBackToIdentityMagnification() {
