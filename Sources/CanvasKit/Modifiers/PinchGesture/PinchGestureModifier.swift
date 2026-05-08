@@ -6,6 +6,7 @@
 //
 
 import InputPrimitives
+import Foundation
 import SwiftUI
 
 /// Return a replacement zoom value for `(proposedZoom, phase)`,
@@ -20,8 +21,8 @@ public struct PinchGestureModifier: ViewModifier {
   /// Source of truth during the gesture.
   @State private var internalZoom: Double
 
-  /// Tracks incremental deltas within the current magnify gesture.
-  @State private var lastMagnification: Double = 1
+  /// Zoom level captured at the beginning of the current magnify gesture.
+  @State private var gestureStartZoom: Double = 1
 
   /// Helps with external sync.
   @State private var isGesturing: Bool = false
@@ -51,6 +52,7 @@ public struct PinchGestureModifier: ViewModifier {
         /// Update it when not currently gesturing.
         guard !isGesturing, let newValue else { return }
         internalZoom = clamped(newValue)
+        gestureStartZoom = internalZoom
       }
   }
 }
@@ -60,15 +62,14 @@ extension PinchGestureModifier {
     MagnifyGesture(minimumScaleDelta: 0.01)
       .onChanged { value in
         let isGestureStart = !isGesturing
-        if isGestureStart { lastMagnification = 1 }
+        if isGestureStart { gestureStartZoom = internalZoom }
 
         isGesturing = true
 
-        let delta = getDelta(from: value)
-        lastMagnification = value.magnification
-
-        let previousZoom = internalZoom
-        let proposedZoom = previousZoom * delta
+        let proposedZoom = PinchZoomComputation.proposedZoom(
+          startZoom: gestureStartZoom,
+          magnification: value.magnification,
+        )
 
         let resolved = resolvedZoom(
           phase: .changed,
@@ -86,7 +87,7 @@ extension PinchGestureModifier {
         commitZoom(resolved)
 
         isGesturing = false
-        lastMagnification = 1
+        gestureStartZoom = resolved
       }
   }
 
@@ -97,16 +98,6 @@ extension PinchGestureModifier {
     clamped(didUpdateZoom(proposed, phase) ?? proposed)
   }
 
-  /// MagnifyGesture reports absolute scale since start; convert to delta.
-  private func getDelta(from value: MagnifyGesture.Value) -> Double {
-    let safeLast =
-      lastMagnification.isFiniteAndGreaterThanZero
-      ? lastMagnification
-      : 1
-
-    return value.magnification / safeLast
-  }
-
   private func clamped(_ value: Double) -> Double {
     value.clamped(to: zoomRange)
   }
@@ -114,5 +105,34 @@ extension PinchGestureModifier {
   private func commitZoom(_ value: Double) {
     internalZoom = value
     externalZoom?.wrappedValue = value
+  }
+}
+
+enum PinchZoomComputation {
+  static let defaultResponseStrength: Double = log(2) / 0.5
+
+  static func proposedZoom(
+    startZoom: Double,
+    magnification: Double,
+    responseStrength: Double = defaultResponseStrength,
+  ) -> Double {
+    let safeStartZoom = startZoom.isFiniteAndGreaterThanZero ? startZoom : 1
+    return safeStartZoom * responseFactor(
+      magnification,
+      responseStrength: responseStrength,
+    )
+  }
+
+  static func responseFactor(
+    _ magnification: Double,
+    responseStrength: Double = defaultResponseStrength,
+  ) -> Double {
+    guard magnification.isFinite else { return 1 }
+
+    let normalisedMagnification = max(magnification, 0)
+    guard responseStrength.isFiniteAndGreaterThanZero else {
+      return normalisedMagnification
+    }
+    return exp((normalisedMagnification - 1) * responseStrength)
   }
 }
