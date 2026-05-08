@@ -11,7 +11,7 @@ import InputPrimitives
 import SwiftUI
 
 public struct CanvasView<Content: View>: View, CanvasAddressable {
-//  @Environment(\.canvasClipping) private var canvasClipping
+  //  @Environment(\.canvasClipping) private var canvasClipping
   @State private var store: CanvasHandler
 
   /// Populated when user wishes to handle their own transform state
@@ -39,18 +39,18 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       /// do not sit above the tool picker.
       .modifier(InteractionModifiers())
 
-//      .toolbar {
-//        ToolbarItem {
-//
-//          CanvasClippingControl(canvasClipping)
-//          //              .frame(width: 240)
-//          //              .padding(10)
-//          //              .background(.regularMaterial)
-//          //              .clipShape(.rect(cornerRadius: 8))
-//          //              .padding()
-//
-//        }
-//      }
+      //      .toolbar {
+      //        ToolbarItem {
+      //
+      //          CanvasClippingControl(canvasClipping)
+      //          //              .frame(width: 240)
+      //          //              .padding(10)
+      //          //              .background(.regularMaterial)
+      //          //              .clipShape(.rect(cornerRadius: 8))
+      //          //              .padding()
+      //
+      //        }
+      //      }
 
       .pointerStyleCompatible(store.pointerStyle)
 

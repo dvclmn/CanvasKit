@@ -47,10 +47,12 @@ struct CanvasCoreView<Content: View>: View {
         alignment: canvasAnchor.toAlignment,
       ) { FrameCaptureView($0) }
 
-//      .debugText {
-//        Labeled("Modifiers", value: modifierKeys.displayString)
+      .debugText {
+        
+        Labeled("Zoom", value: store.currentTransform.scale.displayString)
+        Labeled("Modifiers", value: modifierKeys.displayString)
 //        Labeled("Context", value: store.lastInteractionContext)
-//      }
+      }
 
   }
 }
