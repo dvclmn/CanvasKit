@@ -17,7 +17,10 @@ import SwiftUI
 @Observable
 final class ToolHandler {
 
-  var configuration: ToolConfiguration = .default
+  let tools: Tools
+  var selection: ToolSelection
+
+  //  var configuration: ToolConfiguration = .default
 
   /// Active key-held overrides, most recent last.
   ///
@@ -29,12 +32,26 @@ final class ToolHandler {
   private var heldKeys: Set<KeyEquivalent> = []
   private var modifiers: Modifiers = []
 
-  init(configuration: ToolConfiguration = .default) {
-    self.configuration = configuration
+  init(
+    tools: Tools = .default,
+    selection: ToolSelection = .default,
+
+  ) {
+    self.tools = tools
+    self.selection = selection
   }
 }
 
 extension ToolHandler {
+  
+  var configuration: ToolConfiguration {
+    .init(
+      tools: tools.tools,
+      bindings: tools.bindings,
+      committedToolKind: selection.committedToolKind,
+      springLoadDelay: tools.springLoadDelay
+    )
+  }
 
   /// The tool used to resolve canvas input right now.
   ///
@@ -110,26 +127,6 @@ extension ToolHandler {
         overrides[i].isArmed = true
       }
     }
-  }
-
-  @available(*, deprecated, renamed: "effectiveToolKind")
-  var toolKind: CanvasToolKind { effectiveToolKind }
-
-  @available(*, deprecated, renamed: "committedTool")
-  var baseTool: any CanvasTool { committedTool }
-
-  @available(*, deprecated, renamed: "armedSpringLoadedTool")
-  var springLoadedTool: (any CanvasTool)? { armedSpringLoadedTool }
-
-  @available(*, deprecated, renamed: "hasArmedSpringLoad")
-  var isSpringLoaded: Bool { hasArmedSpringLoad }
-
-  @available(*, deprecated, renamed: "pendingSpringLoadArmingDelay")
-  var pendingArmingTimeRemaining: TimeInterval? { pendingSpringLoadArmingDelay }
-
-  @available(*, deprecated, renamed: "armPendingSpringLoads()")
-  func armSpringLoadsIfReady() {
-    armPendingSpringLoads()
   }
 }
 

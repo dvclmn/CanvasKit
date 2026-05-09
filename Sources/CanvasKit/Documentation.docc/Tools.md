@@ -34,3 +34,58 @@ Public surface:
 - `ToolConfiguration` owns tools, bindings, and committed/base kind
 - `ToolHandler` resolves the effective runtime tool, including key-held overrides
 - `onCanvasToolAction` surfaces tool-emitted domain events
+
+
+---
+
+ToolRegistry: “these are the tools this canvas/project supports”
+ToolSelection: “this is the user’s current committed tool”
+ToolHandler: “given keys/modifiers/temporary overrides, what is effective right now?”
+
+Example of progressive disclosure for tools:
+
+```swift
+CanvasView(
+  size: size,
+  tools: .default
+) {
+  content
+}
+  
+```
+
+More custom:
+
+```
+CanvasView(
+  size: size,
+  tools: ToolRegistry(
+    tools: [
+      SelectTool(),
+      PanTool(),
+      ZoomTool(),
+      BrushTool(),
+    ]
+  )
+) {
+  content
+}
+
+```
+
+External state example:
+
+```
+@State private var toolSelection = ToolSelection(.select)
+
+CanvasView(
+  size: size,
+  tools: projectTools,
+  toolSelection: $toolSelection
+) {
+  content
+}
+  
+```
+
+

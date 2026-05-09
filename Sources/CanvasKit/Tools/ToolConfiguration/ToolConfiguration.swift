@@ -21,27 +21,27 @@ import SwiftUI
 /// Registering a tool with an existing `CanvasToolKind` replaces the previous
 /// tool for that kind, which makes it easy to customise built-in tools while
 /// keeping their identity stable.
-public struct ToolConfiguration: Sendable {
+struct ToolConfiguration: Sendable {
 
   /// The registered tools, ordered by the app's chosen preference.
-  public package(set) var tools: [any CanvasTool]
+  var tools: [any CanvasTool]
 
   /// The key-to-tool mapping list.
-  public var bindings: [ToolBinding]
+  var bindings: [ToolBinding]
 
   /// The user's committed/base tool selection.
   ///
   /// This is the persistent selection only. It does not include spring-loaded
   /// or otherwise key-held overrides. Use `ToolHandler.effectiveToolKind` for
   /// the runtime tool currently used to resolve canvas input.
-  public var committedToolKind: CanvasToolKind
+  var committedToolKind: CanvasToolKind
 
   /// Sticky threshold for `.sticky` bindings.
   ///
   /// A `.sticky` shortcut released before this delay commits its target as the
   /// new base tool. If it remains held beyond this delay, it becomes a
   /// spring-load and reverts on release.
-  public var springLoadDelay: TimeInterval
+  var springLoadDelay: TimeInterval
 
   public init(
     tools: [any CanvasTool] = .defaultTools,
