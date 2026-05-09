@@ -22,7 +22,7 @@ public struct PointerDragConfiguration: Sendable {
 
 extension PointerDragConfiguration {
   public static let marquee: Self = .init(behaviour: .marquee)
-  public static let continuous: Self = .init(behaviour: .continuous(axes: .all))
+  public static let continuous: Self = .init(behaviour: .continuous(axes: .both))
 }
 
 /// Defines the drag interaction mode applied by `PointerDragModifier`.
@@ -38,7 +38,7 @@ public enum PointerDragBehaviour: Equatable, Sendable {
   ///
   /// Each new drag begins from the offset committed by the previous drag, so
   /// movement compounds over time. Pass a `GeometryAxis/Set` to lock to an axis.
-  case continuous(axes: Axis.Set)
+  case continuous(axes: Axis.Set = .both)
 
   /// Drag gesture is inactive; no callbacks or state changes are produced.
 //  case none
@@ -73,5 +73,5 @@ extension PointerDragBehaviour {
 }
 
 extension Axis.Set {
-  static var all: Axis.Set { [.horizontal, .vertical] }
+  public static var both: Axis.Set { [.horizontal, .vertical] }
 }

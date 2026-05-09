@@ -34,6 +34,7 @@ public protocol CanvasTool: Sendable, Equatable, CustomStringConvertible, Identi
 
   /// Resolve the pointer style for the current interaction context.
   func resolvePointerStyle(context: InteractionContext) -> PointerStyleCompatible
+//  func resolvePointerStyle(context: InteractionContext) -> PointerStyleCompatible
 
   /// Resolve an interaction into a canvas adjustment and optional domain action.
   ///
