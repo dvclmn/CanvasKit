@@ -8,19 +8,9 @@
 import CoreUtilities
 
 extension ToolConfiguration {
-  static func containsTool(
-    _ kind: CanvasToolKind,
-    in tools: [any CanvasTool],
-  ) -> Bool {
-    firstIndex(of: kind, in: tools) != nil
-  }
 
-  static func firstIndex(
-    of kind: CanvasToolKind,
-    in tools: [any CanvasTool],
-  ) -> Int? {
-    tools.firstIndex { $0.kind == kind }
-  }
+
+  
 
   /// Whether the committed/base tool kind currently refers to a registered tool.
   public var isCommittedToolKindValid: Bool {

@@ -17,7 +17,7 @@ import SwiftUI
 @Observable
 final class ToolHandler {
 
-  let tools: Tools
+  let registry: Tools
   var selection: ToolSelection
 
   //  var configuration: ToolConfiguration = .default
@@ -37,21 +37,70 @@ final class ToolHandler {
     selection: ToolSelection = .default,
 
   ) {
-    self.tools = tools
+    self.registry = tools
     self.selection = selection
   }
 }
 
+// MARK: - Computed helpers
 extension ToolHandler {
-  
-  var configuration: ToolConfiguration {
-    .init(
-      tools: tools.tools,
-      bindings: tools.bindings,
-      committedToolKind: selection.committedToolKind,
-      springLoadDelay: tools.springLoadDelay
+  public var tools: [any CanvasTool] { registry.tools }
+  public var committedToolKind: CanvasToolKind { selection.committedToolKind }
+}
+
+// MARK: - Tool
+extension ToolHandler {
+
+  /// The registered tool for the committed selection, if any.
+  ///
+  /// This returns `nil` only if external code has assigned an invalid
+  /// ``committedToolKind`` directly. Normal configuration mutations repair the
+  /// committed kind automatically.
+  public var committedTool: (any CanvasTool)? {
+    registeredTool(for: committedToolKind)
+  }
+
+  /// The committed tool, or a safe fallback if the committed kind is invalid.
+  public var committedToolOrDefault: any CanvasTool {
+    committedTool ?? tools.first ?? SelectTool()
+  }
+
+  public func registeredTool(for kind: CanvasToolKind) -> (any CanvasTool)? {
+    guard let index = Tools.firstIndex(of: kind, in: tools) else { return nil }
+    return tools[index]
+  }
+}
+
+// MARK: - Tool Kind
+extension ToolHandler {
+
+  /// The committed tool kind if it is still registered; otherwise the default
+  /// fallback tool kind.
+  public var committedToolKindOrDefault: CanvasToolKind {
+    Tools.committedToolKindOrDefault(
+      selection.committedToolKind,
+      in: tools,
     )
   }
+
+  /// Commit a new base tool selection.
+  ///
+  /// This changes the persistent selection stored in ``ToolConfiguration``.
+  /// It does not represent temporary runtime overrides; those live in
+  /// `ToolHandler`.
+  //  public func commitTool(_ kind: CanvasToolKind) {
+  //    guard Tools.containsTool(kind, in: tools) else { return }
+  //    committedToolKind = kind
+  //  }
+
+  //  var configuration: ToolConfiguration {
+  //    .init(
+  //      tools: tools.tools,
+  //      bindings: tools.bindings,
+  //      committedToolKind: selection.committedToolKind,
+  //      springLoadDelay: tools.springLoadDelay
+  //    )
+  //  }
 
   /// The tool used to resolve canvas input right now.
   ///
@@ -82,9 +131,9 @@ extension ToolHandler {
   }
 
   /// The committed/base tool, excluding key-held overrides.
-  var committedTool: any CanvasTool {
-    configuration.committedToolOrDefault
-  }
+  //  var committedTool: any CanvasTool {
+  //    committedToolOrDefault
+  //  }
 
   /// The most recent armed spring-loaded tool, or `nil`.
   ///

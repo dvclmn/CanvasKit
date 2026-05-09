@@ -84,30 +84,23 @@ extension ToolConfiguration {
 
   public static var `default`: Self { .init() }
 
-  static func defaultToolKind(in tools: [any CanvasTool]) -> CanvasToolKind {
-    tools.first?.kind ?? .select
-  }
 
-  static func committedToolKindOrDefault(
-    _ kind: CanvasToolKind?,
-    in tools: [any CanvasTool],
-  ) -> CanvasToolKind {
-    guard let kind, containsTool(kind, in: tools) else {
-      return defaultToolKind(in: tools)
-    }
-    return kind
-  }
+
+//  static func committedToolKindOrDefault(
+//    _ kind: CanvasToolKind?,
+//    in tools: [any CanvasTool],
+//  ) -> CanvasToolKind {
+//    guard let kind, containsTool(kind, in: tools) else {
+//      return defaultToolKind(in: tools)
+//    }
+//    return kind
+//  }
 
   /// The first registered tool kind, or `select` if the catalogue is empty.
   public var defaultToolKind: CanvasToolKind {
     Self.defaultToolKind(in: tools)
   }
 
-  /// The committed tool kind if it is still registered; otherwise the default
-  /// fallback tool kind.
-  public var committedToolKindOrDefault: CanvasToolKind {
-    Self.committedToolKindOrDefault(committedToolKind, in: tools)
-  }
 
   /// Bindings whose targets do not correspond to any registered tool.
   public var invalidBindings: [ToolBinding] {
@@ -128,25 +121,8 @@ extension ToolConfiguration {
     }
   }
 
-  /// The registered tool for the committed selection, if any.
-  ///
-  /// This returns `nil` only if external code has assigned an invalid
-  /// ``committedToolKind`` directly. Normal configuration mutations repair the
-  /// committed kind automatically.
-  public var committedTool: (any CanvasTool)? {
-    registeredTool(for: committedToolKind)
-  }
 
-  /// The committed tool, or a safe fallback if the committed kind is invalid.
-  public var committedToolOrDefault: any CanvasTool {
-    committedTool ?? tools.first ?? SelectTool()
-  }
 
-  /// Returns the registered tool for the given kind, if any.
-  public func registeredTool(for kind: CanvasToolKind) -> (any CanvasTool)? {
-    guard let index = Self.firstIndex(of: kind, in: tools) else { return nil }
-    return tools[index]
-  }
 
   @available(
     *,
