@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import BasePrimitives
 import CoreUtilities
 
 struct CanvasToolKeyboardModifier: ViewModifier {

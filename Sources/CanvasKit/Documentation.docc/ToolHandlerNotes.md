@@ -3,7 +3,7 @@
 Example setup
 
 ```swift
-// 1. Create a value-type configuration in app state:
+// 1. Create a value-type tool catalogue in app state:
 @State private var toolConfiguration = ToolConfiguration()
 
 // 2. Hand it to CanvasView:
@@ -22,12 +22,12 @@ let shortcut = toolConfiguration.shortcut(for: .zoom)
 // 4. Replace a built-in tool by reusing its kind:
 //    MyZoomTool.kind = .zoom
 toolConfiguration.register(MyZoomTool())
-toolConfiguration.commitTool(.zoom)
 ```
 
 Terminology:
 
-- `ToolConfiguration.committedToolKind` is the persistent/base selection.
+- `ToolConfiguration` is the durable tool catalogue and binding policy.
+- `ToolSelection.committedToolKind` is the persistent/base selection.
 - `ToolHandler.effectiveToolKind` is the tool being used right now, including
   temporary overrides such as Space-held Pan.
 - `.hold` bindings arm immediately; `.sticky` bindings commit on quick release

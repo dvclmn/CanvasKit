@@ -10,17 +10,17 @@ import SwiftUI
 
 /// Manages tool selection, spring-loading, and key bindings.
 ///
-/// This is internal runtime machinery layered on top of ``ToolConfiguration``.
-/// The configuration stores the committed/base tool. The handler adds transient
-/// key-held overrides and exposes the effective tool used to resolve canvas
-/// input right now.
+/// This is internal runtime machinery layered on top of ``ToolConfiguration``:
+/// configuration describes the tool catalogue and binding policy, while the
+/// handler owns committed selection, transient key-held overrides, and the
+/// effective tool used to resolve canvas input right now.
 @Observable
 final class ToolHandler {
 
-  let registry: Tools
+  var configuration: ToolConfiguration {
+    didSet { repairSelectionForCurrentConfiguration() }
+  }
   var selection: ToolSelection
-
-  //  var configuration: ToolConfiguration = .default
 
   /// Active key-held overrides, most recent last.
   ///
@@ -33,18 +33,18 @@ final class ToolHandler {
   private var modifiers: Modifiers = []
 
   init(
-    tools: Tools = .default,
-    selection: ToolSelection = .default,
-
+    configuration: ToolConfiguration = .default,
+    selection: ToolSelection? = nil,
   ) {
-    self.registry = tools
-    self.selection = selection
+    self.configuration = configuration
+    let initialSelection = selection ?? .init(committedToolKind: configuration.defaultToolKind)
+    self.selection = Self.normalisedSelection(initialSelection, for: configuration)
   }
 }
 
 // MARK: - Computed helpers
 extension ToolHandler {
-  public var tools: [any CanvasTool] { registry.tools }
+  public var tools: [any CanvasTool] { configuration.tools }
   public var committedToolKind: CanvasToolKind { selection.committedToolKind }
 }
 
@@ -53,9 +53,9 @@ extension ToolHandler {
 
   /// The registered tool for the committed selection, if any.
   ///
-  /// This returns `nil` only if external code has assigned an invalid
-  /// ``committedToolKind`` directly. Normal configuration mutations repair the
-  /// committed kind automatically.
+  /// This returns `nil` only if selection has somehow drifted away from the
+  /// current catalogue. Normal configuration mutations repair selection
+  /// automatically.
   public var committedTool: (any CanvasTool)? {
     registeredTool(for: committedToolKind)
   }
@@ -66,8 +66,7 @@ extension ToolHandler {
   }
 
   public func registeredTool(for kind: CanvasToolKind) -> (any CanvasTool)? {
-    guard let index = Tools.firstIndex(of: kind, in: tools) else { return nil }
-    return tools[index]
+    configuration.registeredTool(for: kind)
   }
 }
 
@@ -77,38 +76,18 @@ extension ToolHandler {
   /// The committed tool kind if it is still registered; otherwise the default
   /// fallback tool kind.
   public var committedToolKindOrDefault: CanvasToolKind {
-    Tools.committedToolKindOrDefault(
-      selection.committedToolKind,
-      in: tools,
-    )
+    configuration.containsTool(selection.committedToolKind)
+      ? selection.committedToolKind
+      : configuration.defaultToolKind
   }
-
-  /// Commit a new base tool selection.
-  ///
-  /// This changes the persistent selection stored in ``ToolConfiguration``.
-  /// It does not represent temporary runtime overrides; those live in
-  /// `ToolHandler`.
-  //  public func commitTool(_ kind: CanvasToolKind) {
-  //    guard Tools.containsTool(kind, in: tools) else { return }
-  //    committedToolKind = kind
-  //  }
-
-  //  var configuration: ToolConfiguration {
-  //    .init(
-  //      tools: tools.tools,
-  //      bindings: tools.bindings,
-  //      committedToolKind: selection.committedToolKind,
-  //      springLoadDelay: tools.springLoadDelay
-  //    )
-  //  }
 
   /// The tool used to resolve canvas input right now.
   ///
   /// This includes pending sticky shortcuts and armed spring-loads. If no
-  /// key-held override is active, this falls back to ``committedTool``.
+  /// key-held override is active, this falls back to ``committedToolOrDefault``.
   var effectiveTool: any CanvasTool {
-    guard let last = overrides.last else { return committedTool }
-    return registeredTool(for: last.binding.target) ?? committedTool
+    guard let last = overrides.last else { return committedToolOrDefault }
+    return registeredTool(for: last.binding.target) ?? committedToolOrDefault
   }
 
   /// The kind of ``effectiveTool``.
@@ -129,11 +108,6 @@ extension ToolHandler {
   func activationStatus(for kind: CanvasToolKind) -> ToolActivationStatus? {
     overrides.last(where: { $0.binding.target == kind })?.activationStatus
   }
-
-  /// The committed/base tool, excluding key-held overrides.
-  //  var committedTool: any CanvasTool {
-  //    committedToolOrDefault
-  //  }
 
   /// The most recent armed spring-loaded tool, or `nil`.
   ///
@@ -185,13 +159,14 @@ extension ToolHandler {
 
   func setCommittedTool(_ tool: any CanvasTool) {
     configuration.register(tool)
-    configuration.committedToolKind = tool.kind
+    selection.committedToolKind = tool.kind
     overrides.removeAll()
   }
 
   /// Set the committed/base tool by kind, looking it up in the registry.
   func setCommittedTool(kind: CanvasToolKind) {
-    configuration.commitTool(kind)
+    guard configuration.containsTool(kind) else { return }
+    selection.committedToolKind = kind
     overrides.removeAll()
   }
 
@@ -316,8 +291,19 @@ extension ToolHandler {
     overrides.removeAll { $0.key == key && ($0.binding.mode == .hold || $0.binding.mode == .sticky) }
   }
 
-  private func registeredTool(for kind: CanvasToolKind) -> (any CanvasTool)? {
-    configuration.registeredTool(for: kind)
+  private static func normalisedSelection(
+    _ selection: ToolSelection,
+    for configuration: ToolConfiguration,
+  ) -> ToolSelection {
+    guard configuration.containsTool(selection.committedToolKind) else {
+      return .init(committedToolKind: configuration.defaultToolKind)
+    }
+    return selection
+  }
+
+  private func repairSelectionForCurrentConfiguration() {
+    selection = Self.normalisedSelection(selection, for: configuration)
+    overrides.removeAll { !configuration.containsTool($0.binding.target) }
   }
 
   var keysToWatch: Set<KeyEquivalent> {

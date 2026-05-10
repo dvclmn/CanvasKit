@@ -33,7 +33,7 @@ private struct PublicTool: CanvasTool {
   let name = "Public Tool"
   let icon = "hammer"
 
-  var dragBehaviour: PointerDragBehaviour { .continuous }
+  var dragConfiguration: PointerDragConfiguration { .continuous }
   var inputCapabilities: [ToolCapability] {
     [
       ToolCapability(interaction: .drag, intent: .pan),

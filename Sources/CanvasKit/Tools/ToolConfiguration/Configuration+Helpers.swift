@@ -5,36 +5,15 @@
 //  Created by Dave Coleman on 2/5/2026.
 //
 
+import BasePrimitives
 import CoreUtilities
-
-extension ToolConfiguration {
-
-
-  
-
-  /// Whether the committed/base tool kind currently refers to a registered tool.
-  public var isCommittedToolKindValid: Bool {
-    Self.containsTool(committedToolKind, in: tools)
-  }
-
-  @available(
-    *,
-    deprecated,
-    renamed: "isCommittedToolKindValid",
-    message: "`selection` here means committed/base selection only, not runtime effective tool state."
-  )
-  public var isSelectionValid: Bool {
-    isCommittedToolKindValid
-  }
-
-}
 
 // MARK: - Equatability
 
 extension ToolConfiguration: Equatable {
 
   public static func == (lhs: Self, rhs: Self) -> Bool {
-    lhs.bindings == rhs.bindings && lhs.committedToolKind == rhs.committedToolKind
+    lhs.bindings == rhs.bindings
       && lhs.springLoadDelay == rhs.springLoadDelay
       && lhs.tools.elementsEqual(rhs.tools, by: Self.toolsAreEqual)
   }
@@ -58,9 +37,7 @@ extension ToolConfiguration: CustomStringConvertible {
     DisplayString {
       Labeled("Tools", value: tools)
       Labeled("Bindings", value: bindings)
-      Labeled("Committed Tool Kind", value: committedToolKind)
       Labeled("Spring Load Delay", value: springLoadDelay)
-      Labeled("Is Committed Tool Kind Valid", value: isCommittedToolKindValid)
     }.text
   }
 }

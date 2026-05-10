@@ -18,26 +18,29 @@ extension CanvasToolKind {
 
 struct ToolConfigurationTests {
 
-  @Test func initialSelectionDefaultsToFirstRegisteredTool() {
+  @Test func defaultToolKindDefaultsToFirstRegisteredTool() {
     let configuration = ToolConfiguration(
       tools: [BrushTool(), SelectTool(), ZoomTool()],
       bindings: [],
     )
+    let handler = ToolHandler(configuration: configuration)
 
-    #expect(configuration.committedToolKind == .brush)
     #expect(configuration.defaultToolKind == .brush)
-    #expect(configuration.committedToolKindOrDefault == .brush)
+    #expect(handler.committedToolKind == .brush)
+    #expect(handler.committedToolKindOrDefault == .brush)
   }
 
-  @Test func invalidInitialSelectionNormalisesToDefaultTool() {
+  @Test func invalidInitialSelectionNormalisesToDefaultToolInHandler() {
     let configuration = ToolConfiguration(
       tools: [BrushTool(), SelectTool()],
       bindings: [],
-      committedToolKind: .zoom,
+    )
+    let handler = ToolHandler(
+      configuration: configuration,
+      selection: .init(committedToolKind: .zoom),
     )
 
-    #expect(configuration.committedToolKind == .brush)
-    #expect(configuration.isCommittedToolKindValid)
+    #expect(handler.committedToolKind == .brush)
   }
 
   @Test func duplicateToolKindsKeepFirstPositionButReplaceValue() {
@@ -51,15 +54,18 @@ struct ToolConfigurationTests {
   }
 
   @Test func selectingMissingToolDoesNothing() {
-    var configuration = ToolConfiguration(
+    let configuration = ToolConfiguration(
       tools: [SelectTool(), BrushTool()],
       bindings: [],
-      committedToolKind: .brush,
+    )
+    let handler = ToolHandler(
+      configuration: configuration,
+      selection: .init(committedToolKind: .brush),
     )
 
-    configuration.commitTool(.zoom)
+    handler.setCommittedTool(kind: .zoom)
 
-    #expect(configuration.committedToolKind == .brush)
+    #expect(handler.committedToolKind == .brush)
   }
 
   @Test func invalidAndDuplicateBindingsAreSurfacedSeparatelyFromActiveBindings() {
@@ -77,22 +83,37 @@ struct ToolConfigurationTests {
     #expect(configuration.duplicateBindings.map(\.target) == [.brush])
   }
 
-  @Test func setToolsNormalisesOrderAndRepairsSelection() {
+  @Test func setToolsNormalisesOrder() {
     var configuration = ToolConfiguration(
       tools: [SelectTool(), ZoomTool()],
       bindings: [],
-      committedToolKind: .zoom,
     )
 
     configuration.setTools([BrushTool(), CustomZoomTool(name: "Zoom B"), BrushTool()])
 
     #expect(configuration.tools.map(\.kind) == [.brush, .zoom])
-    #expect(configuration.committedToolKind == .zoom)
+    #expect(configuration.defaultToolKind == .brush)
 
     configuration.setTools([BrushTool()])
 
-    #expect(configuration.committedToolKind == .brush)
-    #expect(configuration.committedToolOrDefault.kind == .brush)
+    #expect(configuration.tools.map(\.kind) == [.brush])
+    #expect(configuration.defaultToolKind == .brush)
+  }
+
+  @Test func handlerRepairsSelectionWhenConfigurationChanges() {
+    let configuration = ToolConfiguration(
+      tools: [SelectTool(), ZoomTool()],
+      bindings: [],
+    )
+    let handler = ToolHandler(
+      configuration: configuration,
+      selection: .init(committedToolKind: .zoom),
+    )
+
+    handler.configuration.setTools([BrushTool()])
+
+    #expect(handler.committedToolKind == .brush)
+    #expect(handler.effectiveTool.kind == .brush)
   }
 
   @Test func moveToolReordersExistingToolOnly() {
@@ -118,8 +139,7 @@ struct ToolHandlerTests {
         .init(.keyOnly("z"), target: .zoom, mode: .sticky)
       ],
     )
-    let handler = ToolHandler()
-    handler.configuration = configuration
+    let handler = ToolHandler(configuration: configuration)
 
     handler.handleKeyDown("z")
 
@@ -135,23 +155,24 @@ struct ToolHandlerTests {
         .init(KeyboardShortcut("b", modifiers: [.shift]), target: .brush, mode: .sticky),
         .init(KeyboardShortcut("b", modifiers: [.shift, .command]), target: .zoom, mode: .sticky),
       ],
-      committedToolKind: .select,
     )
-    let handler = ToolHandler()
-    handler.configuration = configuration
+    let handler = ToolHandler(
+      configuration: configuration,
+      selection: .init(committedToolKind: .select),
+    )
 
     handler.updateModifiers([.shift, .command])
     handler.handleKeyDown("b")
     #expect(handler.effectiveTool.kind == .zoom)
     handler.handleKeyUp("b")
-    #expect(handler.configuration.committedToolKind == .zoom)
+    #expect(handler.committedToolKind == .zoom)
 
-    handler.configuration.commitTool(.select)
+    handler.setCommittedTool(kind: .select)
     handler.updateModifiers([.shift])
     handler.handleKeyDown("b")
     #expect(handler.effectiveTool.kind == .brush)
     handler.handleKeyUp("b")
-    #expect(handler.configuration.committedToolKind == .brush)
+    #expect(handler.committedToolKind == .brush)
   }
 
   @Test func stickyShortPressCommitsSelection() {
@@ -160,11 +181,12 @@ struct ToolHandlerTests {
       bindings: [
         .init(.keyOnly("b"), target: .brush, mode: .sticky)
       ],
-      committedToolKind: .select,
       springLoadDelay: 0.2,
     )
-    let handler = ToolHandler()
-    handler.configuration = configuration
+    let handler = ToolHandler(
+      configuration: configuration,
+      selection: .init(committedToolKind: .select),
+    )
 
     handler.handleKeyDown("b")
     #expect(handler.effectiveTool.kind == .brush)
@@ -173,7 +195,7 @@ struct ToolHandlerTests {
 
     handler.handleKeyUp("b")
 
-    #expect(handler.configuration.committedToolKind == .brush)
+    #expect(handler.committedToolKind == .brush)
     #expect(handler.overrides.isEmpty)
   }
 
@@ -183,11 +205,12 @@ struct ToolHandlerTests {
       bindings: [
         .init(.keyOnly("b"), target: .brush, mode: .sticky)
       ],
-      committedToolKind: .select,
       springLoadDelay: 0.01,
     )
-    let handler = ToolHandler()
-    handler.configuration = configuration
+    let handler = ToolHandler(
+      configuration: configuration,
+      selection: .init(committedToolKind: .select),
+    )
 
     handler.handleKeyDown("b")
     Thread.sleep(forTimeInterval: 0.02)
@@ -199,7 +222,7 @@ struct ToolHandlerTests {
 
     handler.handleKeyUp("b")
 
-    #expect(handler.configuration.committedToolKind == .select)
+    #expect(handler.committedToolKind == .select)
     #expect(handler.effectiveTool.kind == .select)
     #expect(handler.overrides.isEmpty)
   }
@@ -210,10 +233,11 @@ struct ToolHandlerTests {
       bindings: [
         .init(.keyOnly("b"), target: .brush, mode: .hold)
       ],
-      committedToolKind: .select,
     )
-    let handler = ToolHandler()
-    handler.configuration = configuration
+    let handler = ToolHandler(
+      configuration: configuration,
+      selection: .init(committedToolKind: .select),
+    )
 
     handler.handleKeyDown("b")
     #expect(handler.effectiveTool.kind == .brush)
@@ -222,7 +246,7 @@ struct ToolHandlerTests {
 
     handler.handleKeyUp("b")
 
-    #expect(handler.configuration.committedToolKind == .select)
+    #expect(handler.committedToolKind == .select)
     #expect(handler.effectiveTool.kind == .select)
     #expect(handler.overrides.isEmpty)
   }
@@ -233,10 +257,11 @@ struct ToolHandlerTests {
       bindings: [
         .init(.keyOnly("b"), target: .brush, mode: .hold)
       ],
-      committedToolKind: .select,
     )
-    let handler = ToolHandler()
-    handler.configuration = configuration
+    let handler = ToolHandler(
+      configuration: configuration,
+      selection: .init(committedToolKind: .select),
+    )
 
     handler.handleKeyDown("b")
     handler.handleKeyDown("b")
@@ -251,7 +276,7 @@ private struct BrushTool: CanvasTool {
   let name: String = "Brush"
   let icon: String = "paintbrush"
 
-  var dragBehaviour: PointerDragBehaviour { .continuous }
+  var dragConfiguration: PointerDragConfiguration { .continuous }
   var inputCapabilities: [ToolCapability] {
     [ToolCapability(interaction: .drag, intent: .adjustBrushSize)]
   }
@@ -271,7 +296,9 @@ private struct CustomZoomTool: CanvasTool {
   let name: String
   let icon: String = "magnifyingglass.circle"
 
-  var dragBehaviour: PointerDragBehaviour { .continuous(axes: .vertical) }
+  var dragConfiguration: PointerDragConfiguration {
+    .init(behaviour: .continuous(axes: .vertical))
+  }
   var inputCapabilities: [ToolCapability] {
     [ToolCapability(interaction: .drag, intent: .zoom)]
   }

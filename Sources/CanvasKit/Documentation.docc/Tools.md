@@ -31,7 +31,8 @@ Public surface:
 
 - `CanvasTool` defines a tool
 - `CanvasToolKind` gives it a stable identity
-- `ToolConfiguration` owns tools, bindings, and committed/base kind
+- `ToolConfiguration` owns tools, bindings, and spring-load policy
+- `ToolSelection` owns the committed/base kind
 - `ToolHandler` resolves the effective runtime tool, including key-held overrides
 - `onCanvasToolAction` surfaces tool-emitted domain events
 
@@ -87,5 +88,4 @@ CanvasView(
 }
   
 ```
-
 

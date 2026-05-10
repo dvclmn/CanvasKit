@@ -5,6 +5,7 @@
 //  Created by Dave Coleman on 12/4/2026.
 //
 
+import BasePrimitives
 import CoreUtilities
 import InputPrimitives
 

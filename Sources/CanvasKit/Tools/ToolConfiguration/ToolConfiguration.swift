@@ -8,62 +8,50 @@
 import InputPrimitives
 import SwiftUI
 
-/// Durable, value-type tool state for app code.
+/// Durable, value-type tool catalogue for app code.
 ///
-/// This owns the tool catalogue, keyboard bindings, the committed/base tool
-/// kind, and the spring-load timing policy. Keep this in app state if you want
-/// the tool setup to be persisted or edited.
+/// This owns the registered tools, keyboard bindings, and spring-load timing
+/// policy. Keep this in app state if you want the tool setup to be persisted
+/// or edited.
 ///
 /// `ToolConfiguration` deliberately does not know about transient runtime state
-/// such as a Space-held Pan override. For the tool that is actually active right
-/// now, ask `ToolHandler` for `effectiveTool` / `effectiveToolKind`.
+/// such as the committed selection or a Space-held Pan override. For the
+/// committed selection, ask ``ToolHandler`` / ``ToolSelection``. For the tool
+/// that is actually active right now, ask `ToolHandler` for `effectiveTool` /
+/// `effectiveToolKind`.
 ///
 /// Registering a tool with an existing `CanvasToolKind` replaces the previous
 /// tool for that kind, which makes it easy to customise built-in tools while
 /// keeping their identity stable.
-struct ToolConfiguration: Sendable {
+public struct ToolConfiguration: Sendable {
 
   /// The registered tools, ordered by the app's chosen preference.
-  var tools: [any CanvasTool]
+  public var tools: [any CanvasTool]
 
   /// The key-to-tool mapping list.
-  var bindings: [ToolBinding]
-
-  /// The user's committed/base tool selection.
-  ///
-  /// This is the persistent selection only. It does not include spring-loaded
-  /// or otherwise key-held overrides. Use `ToolHandler.effectiveToolKind` for
-  /// the runtime tool currently used to resolve canvas input.
-  var committedToolKind: CanvasToolKind
+  public var bindings: [ToolBinding]
 
   /// Sticky threshold for `.sticky` bindings.
   ///
   /// A `.sticky` shortcut released before this delay commits its target as the
   /// new base tool. If it remains held beyond this delay, it becomes a
   /// spring-load and reverts on release.
-  var springLoadDelay: TimeInterval
+  public var springLoadDelay: TimeInterval
 
   public init(
     tools: [any CanvasTool] = .defaultTools,
     bindings: [ToolBinding] = ToolBinding.defaultBindings(),
-    committedToolKind: CanvasToolKind? = nil,
     springLoadDelay: TimeInterval = 0.15,
   ) {
-    let normalisedTools = Self.normalisedTools(tools)
-    self.tools = normalisedTools
+    self.tools = Self.normalisedTools(tools)
     self.bindings = bindings
-    self.committedToolKind = Self.committedToolKindOrDefault(
-      committedToolKind,
-      in: normalisedTools,
-    )
     self.springLoadDelay = springLoadDelay
   }
 
   @available(
     *,
     deprecated,
-    renamed: "init(tools:bindings:committedToolKind:springLoadDelay:)",
-    message: "`selectedToolKind` means the committed/base selection only. Use `committedToolKind` to avoid confusing it with runtime effective tool state."
+    message: "ToolConfiguration no longer stores committed selection. Pass the selection to ToolHandler / ToolSelection instead."
   )
   public init(
     tools: [any CanvasTool] = .defaultTools,
@@ -74,7 +62,24 @@ struct ToolConfiguration: Sendable {
     self.init(
       tools: tools,
       bindings: bindings,
-      committedToolKind: selectedToolKind,
+      springLoadDelay: springLoadDelay,
+    )
+  }
+
+  @available(
+    *,
+    deprecated,
+    message: "ToolConfiguration no longer stores committed selection. Pass the selection to ToolHandler / ToolSelection instead."
+  )
+  public init(
+    tools: [any CanvasTool] = .defaultTools,
+    bindings: [ToolBinding] = ToolBinding.defaultBindings(),
+    committedToolKind: CanvasToolKind?,
+    springLoadDelay: TimeInterval = 0.15,
+  ) {
+    self.init(
+      tools: tools,
+      bindings: bindings,
       springLoadDelay: springLoadDelay,
     )
   }
@@ -84,32 +89,34 @@ extension ToolConfiguration {
 
   public static var `default`: Self { .init() }
 
-
-
-//  static func committedToolKindOrDefault(
-//    _ kind: CanvasToolKind?,
-//    in tools: [any CanvasTool],
-//  ) -> CanvasToolKind {
-//    guard let kind, containsTool(kind, in: tools) else {
-//      return defaultToolKind(in: tools)
-//    }
-//    return kind
-//  }
-
   /// The first registered tool kind, or `select` if the catalogue is empty.
   public var defaultToolKind: CanvasToolKind {
-    Self.defaultToolKind(in: tools)
+    tools.first?.kind ?? .select
   }
 
+  /// Returns the registered tool for the given kind, if any.
+  public func registeredTool(for kind: CanvasToolKind) -> (any CanvasTool)? {
+    guard let index = firstIndex(of: kind) else { return nil }
+    return tools[index]
+  }
+
+  /// Whether the catalogue contains a tool with the given kind.
+  public func containsTool(_ kind: CanvasToolKind) -> Bool {
+    firstIndex(of: kind) != nil
+  }
+
+  func firstIndex(of kind: CanvasToolKind) -> Int? {
+    tools.firstIndex { $0.kind == kind }
+  }
 
   /// Bindings whose targets do not correspond to any registered tool.
   public var invalidBindings: [ToolBinding] {
-    bindings.filter { !Self.containsTool($0.target, in: tools) }
+    bindings.filter { !containsTool($0.target) }
   }
 
   /// Bindings that are valid for the current registered tool catalogue.
   public var activeBindings: [ToolBinding] {
-    bindings.filter { Self.containsTool($0.target, in: tools) }
+    bindings.filter { containsTool($0.target) }
   }
 
   /// Bindings that reuse an already-seen shortcut, creating precedence ties.
@@ -119,50 +126,6 @@ extension ToolConfiguration {
       let wasInserted = seen.insert(binding.shortcut).inserted
       return !wasInserted
     }
-  }
-
-
-
-
-  @available(
-    *,
-    deprecated,
-    renamed: "committedToolKind",
-    message: "`selectedToolKind` is committed/base state only. Use `committedToolKind`, or ask `ToolHandler.effectiveToolKind` for runtime state."
-  )
-  public var selectedToolKind: CanvasToolKind {
-    get { committedToolKind }
-    set { committedToolKind = newValue }
-  }
-
-  @available(
-    *,
-    deprecated,
-    renamed: "committedToolKindOrDefault",
-    message: "This is still committed/base state only; it does not include spring-loaded overrides."
-  )
-  public var resolvedSelectionKind: CanvasToolKind {
-    committedToolKindOrDefault
-  }
-
-  @available(
-    *,
-    deprecated,
-    renamed: "committedTool",
-    message: "`selectedTool` is committed/base state only. Use `committedTool`, or ask `ToolHandler.effectiveTool` for runtime state."
-  )
-  public var selectedTool: (any CanvasTool)? {
-    committedTool
-  }
-
-  @available(
-    *,
-    deprecated,
-    renamed: "committedToolOrDefault",
-    message: "This is still committed/base state only; it does not include spring-loaded overrides."
-  )
-  public var resolvedSelectedTool: any CanvasTool {
-    committedToolOrDefault
   }
 
   @available(

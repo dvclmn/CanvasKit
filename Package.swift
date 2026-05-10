@@ -17,7 +17,10 @@ let package = Package(
   targets: [
     .target(
       name: "CanvasKit",
-      dependencies: [.product(name: "CoreUtilities", package: "BasePrimitives")]
+      dependencies: [
+        .product(name: "BasePrimitives", package: "BasePrimitives"),
+        .product(name: "CoreUtilities", package: "BasePrimitives"),
+      ]
     ),
     
     .testTarget(

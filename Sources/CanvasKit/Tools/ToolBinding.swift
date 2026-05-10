@@ -5,6 +5,7 @@
 //  Created by Dave Coleman on 13/3/2026.
 //
 
+import BasePrimitives
 import CoreUtilities
 import InputPrimitives
 import SwiftUI
@@ -47,9 +48,15 @@ extension KeyboardShortcut {
 extension ToolBinding: CustomStringConvertible {
   public var description: String {
     DisplayString {
-      Labeled("Shortcut", value: shortcut.displayString())
+      Labeled("Shortcut", value: shortcut.description)
       Labeled("Target Tool Kind", value: target)
       Labeled("Activation Mode", value: mode.rawValue)
     }.text
+  }
+}
+
+extension KeyboardShortcut {
+  fileprivate var description: String {
+    "\(Modifiers(from: modifiers).displayString)\(String(describing: key))"
   }
 }

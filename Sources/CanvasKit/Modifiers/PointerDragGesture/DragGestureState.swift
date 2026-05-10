@@ -61,9 +61,6 @@ extension DragGestureState {
         let size = Size<ViewportSpace>(fromCGSize: constrained)
         let location = Point<ViewportSpace>(fromPoint: gestureValue.location)
         return .delta(size, location: location)
-
-    //      case .none:
-    //        return nil
     }
   }
 
@@ -71,11 +68,7 @@ extension DragGestureState {
   mutating func end() { previousTranslation = nil }
 
   /// Zeroes out movement on locked axes.
-  private func applyAxis(
-    _ axes: Axis.Set,
-    //    _ axes: GeometryAxis.Set,
-    delta: CGSize,
-  ) -> CGSize {
+  private func applyAxis(_ axes: Axis.Set, delta: CGSize) -> CGSize {
     switch axes {
       case .horizontal: CGSize(width: delta.width, height: 0)
       case .vertical: CGSize(width: 0, height: delta.height)
