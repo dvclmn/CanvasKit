@@ -7,8 +7,8 @@
 
 /// Describes the runtime state of a key-held tool override.
 ///
-/// This is intentionally separate from ``ActivationMode``:
-/// `ActivationMode` describes the configured behaviour of a binding, while
+/// This is intentionally separate from ``ToolActivationMode``:
+/// `ToolActivationMode` describes the configured behaviour of a binding, while
 /// `ToolActivationStatus` describes what is happening right now.
 enum ToolActivationStatus: Sendable, Hashable {
 

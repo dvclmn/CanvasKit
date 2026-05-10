@@ -21,12 +21,12 @@ import SwiftUI
 public struct ToolBinding: Hashable, Sendable, Equatable {
   public let shortcut: KeyboardShortcut
   public let target: CanvasToolKind
-  public let mode: ActivationMode
+  public let mode: ToolActivationMode
 
   public init(
     _ shortcut: KeyboardShortcut,
     target: CanvasToolKind,
-    mode: ActivationMode,
+    mode: ToolActivationMode,
   ) {
     self.shortcut = shortcut
     self.target = target

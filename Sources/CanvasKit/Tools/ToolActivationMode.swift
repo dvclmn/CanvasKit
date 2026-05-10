@@ -1,11 +1,11 @@
 //
-//  ActivationMode.swift
+//  ToolActivationMode.swift
 //  CanvasKit
 //
 //  Created by Dave Coleman on 6/4/2026.
 //
 
-public enum ActivationMode: String, Sendable, Hashable {
+public enum ToolActivationMode: String, Sendable, Hashable {
   
   /// Spring-load immediately while the key is held.
   ///

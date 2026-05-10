@@ -9,7 +9,7 @@ import SwiftUI
 
 /// A transient key-held tool override.
 ///
-/// Behaviour depends on the binding's `ActivationMode`:
+/// Behaviour depends on the binding's `ToolActivationMode`:
 ///
 /// - `.hold` (e.g. Space → Pan): Arms immediately. The tool is active
 ///   for as long as the key is held and reverts on release — a brief tap

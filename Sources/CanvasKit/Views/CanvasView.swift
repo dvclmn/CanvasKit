@@ -18,11 +18,6 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   private let externalTransform: Binding<TransformState>?
   private let externalCoordinateSpaceMapper: Binding<CoordinateSpaceMapper?>?
 
-  /// Internal-only source of truth for transform state. If user passes in state,
-  /// it is passed to this. If not, this gets a default initial value.
-  /// External and internal state is kept in sync via `bindModel`.
-  //  @State private var localTransform: TransformState
-
   /// Populated when user wishes to handle their own tool configuration state.
   private let externalToolConfiguration: Binding<ToolConfiguration>?
 
@@ -38,22 +33,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       /// These wrap the canvas only, so their invisible event-capture overlays
       /// do not sit above the tool picker.
       .modifier(InteractionModifiers())
-
-      //      .toolbar {
-      //        ToolbarItem {
-      //
-      //          CanvasClippingControl(canvasClipping)
-      //          //              .frame(width: 240)
-      //          //              .padding(10)
-      //          //              .background(.regularMaterial)
-      //          //              .clipShape(.rect(cornerRadius: 8))
-      //          //              .padding()
-      //
-      //        }
-      //      }
-
       .pointerStyleCompatible(store.pointerStyle)
-
       .toolPalette()
 
       /// Adds canvas transform and mapped pointer values to the Environment
@@ -67,19 +47,19 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
         $store.currentTransform,
         to: externalTransform,
       )
-
-      .modifier(CanvasToolKeyboardModifier(toolHandler: $store.toolHandler))
-      .modifierKeys { store.updateModifiers($0) }
-
       .bindModel(
         debounce: .noDebounce,
         $store.toolHandler.configuration,
         to: externalToolConfiguration,
       )
 
+      .modifier(CanvasToolKeyboardModifier(toolHandler: $store.toolHandler))
+      .modifierKeys { store.updateModifiers($0) }
+
       .environment(\.canvasSize, canvasSize)
       .environment(\.activeInteraction, store.activeInteraction)
       .environment(store)
+    
       .onAppear {
         syncExternalCoordinateSpaceMapper()
       }
