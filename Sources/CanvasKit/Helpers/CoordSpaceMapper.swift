@@ -8,7 +8,7 @@
 import Foundation
 import GeometryPrimitives
 
-public struct CoordinateSpaceMapper {
+public struct CoordinateSpaceMapper: Equatable {
 
   /// The canvas artwork as it's situated in the Viewport,
   /// captured via Anchor preference key in `CanvasCoreView`.

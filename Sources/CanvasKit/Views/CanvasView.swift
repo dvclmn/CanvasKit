@@ -52,6 +52,10 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
         $store.toolHandler.configuration,
         to: externalToolConfiguration,
       )
+      .syncValue(coordinateSpaceMapper, to: externalCoordinateSpaceMapper)
+      .onDisappear {
+        externalCoordinateSpaceMapper?.wrappedValue = nil
+      }
 
       .modifier(CanvasToolKeyboardModifier(toolHandler: $store.toolHandler))
       .modifierKeys { store.updateModifiers($0) }
@@ -59,16 +63,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       .environment(\.canvasSize, canvasSize)
       .environment(\.activeInteraction, store.activeInteraction)
       .environment(store)
-    
-      .onAppear {
-        syncExternalCoordinateSpaceMapper()
-      }
-      .onChange(of: store.artworkFrame) {
-        syncExternalCoordinateSpaceMapper()
-      }
-      .onChange(of: canvasSize) {
-        syncExternalCoordinateSpaceMapper()
-      }
+
       .onDisappear {
         externalCoordinateSpaceMapper?.wrappedValue = nil
       }
@@ -103,9 +98,5 @@ extension CanvasView {
   private var coordinateSpaceMapper: CoordinateSpaceMapper? {
     guard let frame = store.artworkFrame else { return nil }
     return .init(frame: frame, canvasSize: canvasSize)
-  }
-
-  private func syncExternalCoordinateSpaceMapper() {
-    externalCoordinateSpaceMapper?.wrappedValue = coordinateSpaceMapper
   }
 }
