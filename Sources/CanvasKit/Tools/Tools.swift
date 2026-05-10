@@ -26,59 +26,54 @@ public struct Tools: Sendable {
 
 extension Tools {
   public static var `default`: Self { .init() }
-  
-  func defaultToolKind(
-//    in tools: [any CanvasTool]
-  ) -> CanvasToolKind {
+
+  func defaultToolKind(//    in tools: [any CanvasTool]
+    ) -> CanvasToolKind
+  {
     tools.first?.kind ?? .select
   }
-  
-  static func firstIndex(
+
+  func firstIndex(
     of kind: CanvasToolKind,
-    in tools: [any CanvasTool],
+//    in tools: [any CanvasTool],
   ) -> Int? {
     tools.firstIndex { $0.kind == kind }
   }
-  
+
   func containsTool(
-    _ kind: CanvasToolKind,
-//    in tools: [any CanvasTool],
+    _ kind: CanvasToolKind
+    //    in tools: [any CanvasTool],
   ) -> Bool {
-    Self.firstIndex(of: kind, in: tools) != nil
+    firstIndex(of: kind) != nil
   }
 }
 
-
 extension Tools {
 
-
-  
   /// The committed tool, or a safe fallback if the committed kind is invalid.
-//  public var committedToolOrDefault: any CanvasTool {
-//    committedTool ?? tools.first ?? SelectTool()
-//  }
+  //  public var committedToolOrDefault: any CanvasTool {
+  //    committedTool ?? tools.first ?? SelectTool()
+  //  }
 
   /// Returns the registered tool for the given kind, if any.
-//  public func registeredTool(for kind: CanvasToolKind) -> (any CanvasTool)? {
-//    guard let index = Self.firstIndex(of: kind, in: tools) else { return nil }
-//    return tools[index]
-//  }
+  //  public func registeredTool(for kind: CanvasToolKind) -> (any CanvasTool)? {
+  //    guard let index = Self.firstIndex(of: kind, in: tools) else { return nil }
+  //    return tools[index]
+  //  }
 }
 
-
 extension Tools {
-  
-  
+
   func committedToolKindOrDefault(
-    _ kind: CanvasToolKind?,
-//    in tools: [any CanvasTool],
+    _ kind: CanvasToolKind?
+    //    in tools: [any CanvasTool],
   ) -> CanvasToolKind {
     guard let kind, containsTool(kind) else {
       return defaultToolKind()
     }
     return kind
   }
-  
+
   /// Provides similar functionality to an ordered set. Ensures
   /// Tools will display in the order they are
   /// - Tool selection fallback is the first tool in the array. Place the tool
@@ -99,48 +94,46 @@ extension Tools {
 }
 
 extension Tools {
-  
 
   /// Register or replace a tool by kind.
-//  public mutating func register(_ tool: any CanvasTool) {
-//    if let index = Self.firstIndex(of: tool.kind, in: tools) {
-//      tools[index] = tool
-//    } else {
-//      tools.append(tool)
-//    }
-//  }
+  //  public mutating func register(_ tool: any CanvasTool) {
+  //    if let index = Self.firstIndex(of: tool.kind, in: tools) {
+  //      tools[index] = tool
+  //    } else {
+  //      tools.append(tool)
+  //    }
+  //  }
 
   /// Register or replace multiple tools by kind.
-//  public mutating func register(_ tools: [any CanvasTool]) {
-//    tools.forEach { self.register($0) }
-//  }
+  //  public mutating func register(_ tools: [any CanvasTool]) {
+  //    tools.forEach { self.register($0) }
+  //  }
 
   /// Replace the registered tools wholesale, preserving the ordered-unique invariant.
-//  public mutating func setTools(_ tools: [any CanvasTool]) {
-//    self.tools = Self.normalisedTools(tools)
-//    committedToolKind = Self.committedToolKindOrDefault(committedToolKind, in: self.tools)
-//  }
+  //  public mutating func setTools(_ tools: [any CanvasTool]) {
+  //    self.tools = Self.normalisedTools(tools)
+  //    committedToolKind = Self.committedToolKindOrDefault(committedToolKind, in: self.tools)
+  //  }
 
   /// Reorder an existing tool to a new position within the catalogue.
-//  public mutating func moveTool(kind: CanvasToolKind, to newIndex: Int) {
-//    guard let currentIndex = Self.firstIndex(of: kind, in: tools) else { return }
-//    let tool = tools.remove(at: currentIndex)
-//    let clampedIndex = max(0, min(newIndex, tools.count))
-//    tools.insert(tool, at: clampedIndex)
-//  }
+  //  public mutating func moveTool(kind: CanvasToolKind, to newIndex: Int) {
+  //    guard let currentIndex = Self.firstIndex(of: kind, in: tools) else { return }
+  //    let tool = tools.remove(at: currentIndex)
+  //    let clampedIndex = max(0, min(newIndex, tools.count))
+  //    tools.insert(tool, at: clampedIndex)
+  //  }
 
   /// Remove a registered tool by kind.
-//  public mutating func removeTool(kind: CanvasToolKind) {
-//    tools.removeAll { $0.kind == kind }
-//    if committedToolKind == kind {
-//      committedToolKind = Self.defaultToolKind(in: tools)
-//    }
-//  }
+  //  public mutating func removeTool(kind: CanvasToolKind) {
+  //    tools.removeAll { $0.kind == kind }
+  //    if committedToolKind == kind {
+  //      committedToolKind = Self.defaultToolKind(in: tools)
+  //    }
+  //  }
 
   /// Replace the keyboard bindings wholesale.
-//  public mutating func setBindings(_ bindings: [ToolBinding]) {
-//    self.bindings = bindings
-//  }
-
+  //  public mutating func setBindings(_ bindings: [ToolBinding]) {
+  //    self.bindings = bindings
+  //  }
 
 }
