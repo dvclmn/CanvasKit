@@ -13,8 +13,6 @@ struct CanvasArtwork<Content: View>: View {
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.canvasAnchor) private var canvasAnchor
 
-//  let transform: TransformState
-
   let rounding: Double = 4
   let lineWidth: Double = 1
 
@@ -23,10 +21,10 @@ struct CanvasArtwork<Content: View>: View {
   var body: some View {
 
     ArtworkDecomposed(
-      rounding: effectiveRounding,
+      rounding: unZoomed(rounding),
       content: content,
     )
-    
+
     /// Visual indication of Canvas artwork bounds
     .overlay { ArtworkOutline() }
 
@@ -55,19 +53,17 @@ extension CanvasArtwork {
 
   @ViewBuilder
   private func ArtworkOutline() -> some View {
-    RoundedRectangle(cornerRadius: effectiveRounding)
+    RoundedRectangle(cornerRadius: unZoomed(rounding))
       .fill(.clear)
       .stroke(
         .regularMaterial.opacity(0.9),
-        lineWidth: lineWidth.removingZoom(
-          store.currentTransform.scale,
-          across: zoomRange,
-        ),
+        lineWidth: unZoomed(lineWidth),
       )
       .allowsHitTesting(false)
   }
 
-  private var effectiveRounding: Double {
-    rounding.removingZoom(store.currentTransform.scale, across: zoomRange)
+  private func unZoomed(_ value: Double) -> Double {
+    value.removingZoom(store.currentTransform.scale, across: zoomRange)
   }
+
 }

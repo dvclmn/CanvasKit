@@ -15,13 +15,11 @@ public struct CanvasClippingControl: View {
 
   public init(_ clipping: Binding<CanvasClipping>) {
     self._clipping = clipping
-    self._lastDimmingAmount = State(
-      initialValue: clipping.wrappedValue.preferredDimmingAmount(fallback: Self.defaultDimmingAmount)
-    )
-  }
 
-  public init(clipping: Binding<CanvasClipping>) {
-    self.init(clipping)
+    let dimming = clipping.wrappedValue.preferredDimmingAmount(
+      fallback: Self.defaultDimmingAmount
+    )
+    self._lastDimmingAmount = State(initialValue: dimming)
   }
 
   public var body: some View {
@@ -53,8 +51,8 @@ public struct CanvasClippingControl: View {
   }
 }
 
-private extension CanvasClippingControl {
-  var mode: Binding<CanvasClippingMode> {
+extension CanvasClippingControl {
+  fileprivate var mode: Binding<CanvasClippingMode> {
     Binding {
       clipping.mode
     } set: { newMode in
@@ -71,7 +69,7 @@ private extension CanvasClippingControl {
     }
   }
 
-  var dimmingAmount: Binding<Double> {
+  fileprivate var dimmingAmount: Binding<Double> {
     Binding {
       clipping.preferredDimmingAmount(fallback: lastDimmingAmount)
     } set: { newValue in
@@ -101,8 +99,8 @@ private enum CanvasClippingMode: String, CaseIterable, Identifiable {
   }
 }
 
-private extension CanvasClipping {
-  var mode: CanvasClippingMode {
+extension CanvasClipping {
+  fileprivate var mode: CanvasClippingMode {
     switch self {
       case .clipped:
         return .clipped
@@ -113,7 +111,7 @@ private extension CanvasClipping {
     }
   }
 
-  func preferredDimmingAmount(fallback: Double) -> Double {
+  fileprivate func preferredDimmingAmount(fallback: Double) -> Double {
     guard case .dimmed = self else { return fallback }
     return normalisedDimmingAmount
   }

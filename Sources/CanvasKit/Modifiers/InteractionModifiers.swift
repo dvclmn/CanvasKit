@@ -32,6 +32,7 @@ struct InteractionModifiers: ViewModifier {
 
       .onPinchGesture(
         initial: store.currentTransform.scale,
+        zoom: $store.currentTransform.scale,
         isEnabled: isEnabled(for: .pinch),
       ) { zoom, phase in
 
@@ -44,6 +45,7 @@ struct InteractionModifiers: ViewModifier {
         /// Returns the scale so the modifier's internal Zoom
         /// stays in sync with transform state
         apply(adjustment)
+//        return store.currentTransform.scale
         return adjustment?.scale
       }
 

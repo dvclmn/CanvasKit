@@ -35,13 +35,14 @@ extension View {
   /// Return `nil` from `didUpdateZoom` to accept the proposed zoom.
   public func onPinchGesture(
     initial: Double = 1,
+    zoom: Binding<Double>? = nil,
     isEnabled: Bool = true,
     didUpdateZoom: @escaping ZoomUpdate,
   ) -> some View {
     self.modifier(
       PinchGestureModifier(
         initial: initial,
-        zoom: nil,
+        zoom: zoom,
         isEnabled: isEnabled,
         didUpdateZoom: didUpdateZoom,
       )
