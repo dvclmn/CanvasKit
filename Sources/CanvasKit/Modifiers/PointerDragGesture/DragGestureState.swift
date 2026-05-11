@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 14/1/2026.
 //
 
-import GeometryPrimitives
+// import GeometryPrimitives
 import SwiftUI
 
 /// Internal state machine for ``PointerDragModifier``.

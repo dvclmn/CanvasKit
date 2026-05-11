@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import GeometryPrimitives
+// import GeometryPrimitives
 
 public struct CoordinateSpaceMapper: Equatable {
 

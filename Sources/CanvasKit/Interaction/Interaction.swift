@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 16/3/2026.
 //
 
-import GeometryPrimitives
+// import GeometryPrimitives
 import SwiftUI
 
 /// Each case corresponds directly to a modifier in `InteractionModifiers`.

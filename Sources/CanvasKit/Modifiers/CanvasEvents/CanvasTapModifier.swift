@@ -6,7 +6,7 @@
 //
 
 import CoreUtilities
-import GeometryPrimitives
+// import GeometryPrimitives
 import SwiftUI
 
 public struct CanvasTapModifier: ViewModifier {

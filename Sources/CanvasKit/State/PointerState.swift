@@ -8,7 +8,7 @@
 import CoreGraphics
 //import InteractionKit
 
-import GeometryPrimitives
+// import GeometryPrimitives
 
 /// Raw locations/geometry in screen space, no
 /// coordinate space mapping applied

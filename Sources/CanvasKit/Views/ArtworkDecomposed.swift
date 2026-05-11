@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import GeometryPrimitives
+// import GeometryPrimitives
 
 /// Uses SwiftUI subview APIs for granular control over canvas clipping.
 ///

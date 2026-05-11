@@ -6,7 +6,7 @@
 //
 
 import CanvasKit
-import GeometryPrimitives
+// import GeometryPrimitives
 import CoreUtilities
 import SwiftUI
 

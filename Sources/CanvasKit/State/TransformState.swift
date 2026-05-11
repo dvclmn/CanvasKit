@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 1/3/2026.
 //
 
-import GeometryPrimitives
+// import GeometryPrimitives
 import SwiftUI
 
 public struct TransformState: Sendable, Equatable {

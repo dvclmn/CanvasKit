@@ -7,7 +7,7 @@
 
 import BasePrimitives
 import CoreUtilities
-import GeometryPrimitives
+// import GeometryPrimitives
 import SwiftUI
 
 struct CanvasCoreView<Content: View>: View {
