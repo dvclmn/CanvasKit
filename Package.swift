@@ -11,7 +11,7 @@ let package = Package(
     .library(name: "CanvasKit", targets: ["CanvasKit"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/dvclmn/BasePrimitives", branch: "main"),
+    .package(url: "https://github.com/dvclmn/BasePrimitives", from: "0.1.0"),
     .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
   ],
   targets: [
