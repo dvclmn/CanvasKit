@@ -12,13 +12,11 @@ struct CanvasDemoApp: App {
   var body: some Scene {
     DocumentGroup(newDocument: CanvasDemoDocument()) { file in
       ContentView()
-        //            .environment(store)
-        //            .environment(\.popup, popup)
-        //                    .readModifierKeys()
         .environment(\.artwork, file.$document.text)
         .focusedSceneValue(\.artwork, file.$document.text)
         .focusedSceneValue(\.documentURL, file.fileURL)
     }
+    .windowStyle(.hiddenTitleBar)
   }
 }
 
