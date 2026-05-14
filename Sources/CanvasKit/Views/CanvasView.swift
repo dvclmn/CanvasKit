@@ -52,6 +52,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
         $store.toolHandler.configuration,
         to: externalToolConfiguration,
       ) { newValue in
+        guard let newValue else { return }
         store.toolHandler.repairSelection(for: newValue)
       }
       .syncValue(
@@ -66,7 +67,6 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       .modifier(CanvasToolKeyboardModifier(toolHandler: $store.toolHandler))
       .modifierKeys { store.updateModifiers($0) }
 
-      //      .environment(\.canvasSize, canvasSize)
       .environment(\.canvasCoordinateSpaceMapper, store.coordinateSpaceMapper(in: explicitCanvasSize))
       .environment(\.activeInteraction, store.activeInteraction)
       .environment(store)

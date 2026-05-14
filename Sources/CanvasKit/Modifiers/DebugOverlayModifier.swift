@@ -17,7 +17,7 @@ struct DebugOverlayModifier: ViewModifier {
     content
       .debugText {
         Indented("Tools") {
-          for tool in store.toolHandler.configuration.tools {
+          for tool in store.toolHandler.configuration?.tools ?? [] {
             Indented(tool.name) {
               Labeled("Input Capabilities", value: tool.inputCapabilities)
               //            if let context = store.interactionContext {

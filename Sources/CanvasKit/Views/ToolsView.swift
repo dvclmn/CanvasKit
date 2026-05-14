@@ -18,7 +18,9 @@ struct ToolsView: View {
 
     VStack(spacing: 6) {
 
-      MainTools()
+      if let configuration = store.toolHandler.configuration {
+        MainTools(configuration)
+      }
 
       Divider()
         .frame(width: toolbarWidth * 0.7)
@@ -51,12 +53,12 @@ struct ToolsView: View {
 extension ToolsView {
 
   @ViewBuilder
-  private func MainTools() -> some View {
+  private func MainTools(_ configuration: ToolConfiguration) -> some View {
 
     VStack(alignment: .leading, spacing: 0) {
 
-      if !store.toolHandler.configuration.tools.isEmpty {
-        ForEach(store.toolHandler.configuration.tools, id: \.kind) { tool in
+      if !configuration.tools.isEmpty {
+        ForEach(configuration.tools, id: \.kind) { tool in
           ToolButton(for: tool)
         }
 
@@ -90,7 +92,7 @@ extension ToolsView {
       //        }
       //              .background(.white.opacity(isToolActive(tool) ? 0.06 : 0))
     }
-    
+
     .foregroundStyle(.blue)
     .help(tool.name)
     //    .buttonStyle(.glassProminent)

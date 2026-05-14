@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-enum ToolUseStatus {
-  case defaults
-  case custom(Binding<ToolConfiguration>)
-  case disabled
-}
+//enum ToolUseStatus {
+//  case defaults
+//  case custom(Binding<ToolConfiguration>)
+//  case disabled
+//}

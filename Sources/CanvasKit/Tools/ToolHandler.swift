@@ -17,10 +17,10 @@ import SwiftUI
 @Observable
 final class ToolHandler {
 
-  var configuration: ToolConfiguration
-//  var configuration: ToolConfiguration {
-//    didSet { repairSelectionForCurrentConfiguration() }
-//  }
+  var configuration: ToolConfiguration?
+  //  var configuration: ToolConfiguration {
+  //    didSet { repairSelectionForCurrentConfiguration() }
+  //  }
   var selection: ToolSelection
 
   /// Active key-held overrides, most recent last.
@@ -38,14 +38,15 @@ final class ToolHandler {
     selection: ToolSelection? = nil,
   ) {
     self.configuration = configuration
-    let initialSelection = selection ?? .init(committedToolKind: configuration.defaultToolKind)
+    let initialSelection = selection ?? .init(kind: configuration.defaultToolKind)
     self.selection = Self.normalisedSelection(initialSelection, for: configuration)
   }
 }
 
 // MARK: - Computed helpers
 extension ToolHandler {
-  public var tools: [any CanvasTool] { configuration.tools }
+  public var isToolUseEnabled: Bool { configuration != nil }
+  public var tools: [any CanvasTool] { configuration?.tools ?? [] }
   public var committedToolKind: CanvasToolKind { selection.committedToolKind }
 }
 
@@ -67,7 +68,7 @@ extension ToolHandler {
   }
 
   public func registeredTool(for kind: CanvasToolKind) -> (any CanvasTool)? {
-    configuration.registeredTool(for: kind)
+    configuration?.registeredTool(for: kind)
   }
 }
 
@@ -76,11 +77,12 @@ extension ToolHandler {
 
   /// The committed tool kind if it is still registered; otherwise the default
   /// fallback tool kind.
-  public var committedToolKindOrDefault: CanvasToolKind {
-    configuration.containsTool(selection.committedToolKind)
-      ? selection.committedToolKind
-      : configuration.defaultToolKind
-  }
+  //  public var committedToolKindOrDefault: CanvasToolKind {
+  //    guard let configuration else { return configuration. }
+  //    configuration?.containsTool(selection.committedToolKind)
+  //      ? selection.committedToolKind
+  //      : configuration.defaultToolKind
+  //  }
 
   /// The tool used to resolve canvas input right now.
   ///
@@ -127,6 +129,7 @@ extension ToolHandler {
   /// The keyboard modifier uses this to schedule ``armPendingSpringLoads``.
   /// Returns `nil` when there are no pending sticky overrides.
   var pendingSpringLoadArmingDelay: TimeInterval? {
+    guard let configuration else { return nil }
     let now = Date()
     let remainingTimes = overrides.compactMap { ovr -> TimeInterval? in
       guard ovr.binding.mode == .sticky, !ovr.isArmed, heldKeys.contains(ovr.key) else { return nil }
@@ -140,6 +143,7 @@ extension ToolHandler {
   /// Arms any pending `.sticky` overrides whose hold duration has exceeded
   /// `springLoadDelay` and whose key is still held.
   func armPendingSpringLoads() {
+    guard let configuration else { return }
     let now = Date()
     for i in overrides.indices {
       let o = overrides[i]
@@ -159,14 +163,14 @@ extension ToolHandler {
 extension ToolHandler {
 
   func setCommittedTool(_ tool: any CanvasTool) {
-    configuration.register(tool)
+    configuration?.register(tool)
     selection.committedToolKind = tool.kind
     overrides.removeAll()
   }
 
   /// Set the committed/base tool by kind, looking it up in the registry.
   func setCommittedTool(kind: CanvasToolKind) {
-    guard configuration.containsTool(kind) else { return }
+    guard let configuration, configuration.containsTool(kind) else { return }
     selection.committedToolKind = kind
     overrides.removeAll()
   }
@@ -182,11 +186,11 @@ extension ToolHandler {
   }
 
   func setBindings(_ bindings: [ToolBinding]) {
-    configuration.setBindings(bindings)
+    configuration?.setBindings(bindings)
   }
 
   func registerTools(_ tools: [any CanvasTool]) {
-    configuration.register(tools)
+    configuration?.register(tools)
   }
 
   func handleKeyDown(_ key: KeyEquivalent) {
@@ -221,7 +225,7 @@ extension ToolHandler {
   /// Returns the first shortcut key bound to the given tool kind, if any.
   /// Useful for displaying keyboard shortcuts in menus and tooltips.
   func shortcut(for kind: CanvasToolKind) -> KeyboardShortcut? {
-    configuration.shortcut(for: kind)
+    configuration?.shortcut(for: kind)
   }
 }
 
@@ -230,7 +234,8 @@ extension ToolHandler {
 extension ToolHandler {
 
   private func matchingBindings(for key: KeyEquivalent) -> [ToolBinding] {
-    configuration.activeBindings
+    guard let configuration else { return [] }
+    return configuration.activeBindings
       .enumerated()
       .filter { _, binding in
         binding.shortcut.key == key && binding.modifiers.isSubset(of: modifiers)
@@ -297,7 +302,7 @@ extension ToolHandler {
     for configuration: ToolConfiguration,
   ) -> ToolSelection {
     guard configuration.containsTool(selection.committedToolKind) else {
-      return .init(committedToolKind: configuration.defaultToolKind)
+      return .init(kind: configuration.defaultToolKind)
     }
     return selection
   }
@@ -308,7 +313,8 @@ extension ToolHandler {
   }
 
   var keysToWatch: Set<KeyEquivalent> {
-    Set(configuration.activeBindings.map(\.shortcut.key))
+    guard let configuration else { return [] }
+    return Set(configuration.activeBindings.map(\.shortcut.key))
   }
 }
 
