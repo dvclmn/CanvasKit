@@ -17,9 +17,10 @@ import SwiftUI
 @Observable
 final class ToolHandler {
 
-  var configuration: ToolConfiguration {
-    didSet { repairSelectionForCurrentConfiguration() }
-  }
+  var configuration: ToolConfiguration
+//  var configuration: ToolConfiguration {
+//    didSet { repairSelectionForCurrentConfiguration() }
+//  }
   var selection: ToolSelection
 
   /// Active key-held overrides, most recent last.
@@ -301,9 +302,9 @@ extension ToolHandler {
     return selection
   }
 
-  private func repairSelectionForCurrentConfiguration() {
-    selection = Self.normalisedSelection(selection, for: configuration)
-    overrides.removeAll { !configuration.containsTool($0.binding.target) }
+  func repairSelection(for newConfiguration: ToolConfiguration) {
+    selection = Self.normalisedSelection(selection, for: newConfiguration)
+    overrides.removeAll { !newConfiguration.containsTool($0.binding.target) }
   }
 
   var keysToWatch: Set<KeyEquivalent> {

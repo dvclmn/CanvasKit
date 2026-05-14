@@ -51,7 +51,9 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
         debounce: .noDebounce,
         $store.toolHandler.configuration,
         to: externalToolConfiguration,
-      )
+      ) { newValue in
+        store.toolHandler.repairSelection(for: newValue)
+      }
       .syncValue(
         store.coordinateSpaceMapper(in: explicitCanvasSize),
         to: externalCoordinateSpaceMapper,

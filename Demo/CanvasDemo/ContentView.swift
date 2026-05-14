@@ -31,7 +31,7 @@ struct ContentView: View {
   var body: some View {
 
     CanvasView(
-      size: Constants.canvasSize,
+//      size: Constants.canvasSize,
       transform: $transform,
       toolConfiguration: $toolConfiguration,
     ) {

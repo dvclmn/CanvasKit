@@ -5,13 +5,13 @@
 //  Created by Dave Coleman on 28/2/2026.
 //
 
-
 import SwiftUI
 
 struct CanvasArtwork<Content: View>: View {
   @Environment(CanvasHandler.self) private var store
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.canvasAnchor) private var canvasAnchor
+  @Environment(\.explicitCanvasSize) private var explicitCanvasSize
 
   let rounding: Double = 4
   let lineWidth: Double = 1
@@ -24,11 +24,11 @@ struct CanvasArtwork<Content: View>: View {
       rounding: unZoomed(rounding),
       content: content,
     )
-    
-    .viewSize(capture: .size, mode: .noDebounce) { geometry in
-      //      guard explicitCanvasSize == nil else { return }
-      //      store.measuredCanvasSize = Size<CanvasSpace>(fromCGSize: size)
-      
+
+    .viewSize(capture: .size, mode: .noDebounce) { size in
+      guard explicitCanvasSize == nil else { return }
+      store.measuredCanvasSize = Size<CanvasSpace>(fromCGSize: size)
+
     }
 
     /// Visual indication of Canvas artwork bounds

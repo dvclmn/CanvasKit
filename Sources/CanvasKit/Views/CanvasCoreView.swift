@@ -7,7 +7,6 @@
 
 import BasePrimitives
 import CoreUtilities
-
 import SwiftUI
 
 struct CanvasCoreView<Content: View>: View {
@@ -23,11 +22,7 @@ struct CanvasCoreView<Content: View>: View {
 
   var body: some View {
     Color.clear
-      //      .contentShape(Rectangle())
-      .overlay {
-        CanvasArtwork(content: content)
-        //        .allowsHitTesting(false)
-      }
+      .overlay { CanvasArtwork(content: content) }
       .frame(
         maxWidth: .infinity,
         maxHeight: .infinity,
@@ -48,10 +43,8 @@ struct CanvasCoreView<Content: View>: View {
       ) { FrameCaptureView($0) }
 
       .debugText {
-        
         Labeled("Zoom", value: store.currentTransform.scale.displayString)
         Labeled("Modifiers", value: modifierKeys.displayString)
-//        Labeled("Context", value: store.lastInteractionContext)
       }
 
   }
