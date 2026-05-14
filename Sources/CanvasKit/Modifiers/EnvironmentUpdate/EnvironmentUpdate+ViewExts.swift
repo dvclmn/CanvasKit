@@ -15,11 +15,12 @@ extension View {
 
   /// Adds the current mapped pointer values to the environment.
   public func updatePointerEnvironment(
-    in resolvedSize: Size<CanvasSpace>
+//    in explicitSize: Size<CanvasSpace>?,
+//    using mapper: CoordinateSpaceMapper
   ) -> some View {
     self.modifier(
-      PointerStateEnvironmentModifier(
-        resolvedSize: resolvedSize
+      PointerEnvironmentModifier(
+//        explicitCanvasSize: explicitSize
       )
     )
   }

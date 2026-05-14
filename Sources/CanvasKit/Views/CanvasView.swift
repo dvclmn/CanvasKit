@@ -38,7 +38,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
 
       /// Adds canvas transform and mapped pointer values to the Environment
       .updateTransformEnvironment()
-      .updatePointerEnvironment(in: )
+      .updatePointerEnvironment()
 
       /// In cases where transform state is owned externally,
       /// ensures both local and external are kept in sync
@@ -52,7 +52,11 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
         $store.toolHandler.configuration,
         to: externalToolConfiguration,
       )
-      .syncValue(coordinateSpaceMapper, to: externalCoordinateSpaceMapper)
+      .syncValue(
+        store.coordinateSpaceMapper(in: explicitCanvasSize),
+        to: externalCoordinateSpaceMapper,
+      )
+
       .onDisappear {
         externalCoordinateSpaceMapper?.wrappedValue = nil
       }
@@ -61,6 +65,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       .modifierKeys { store.updateModifiers($0) }
 
       //      .environment(\.canvasSize, canvasSize)
+      .environment(\.canvasCoordinateSpaceMapper, store.coordinateSpaceMapper(in: explicitCanvasSize))
       .environment(\.activeInteraction, store.activeInteraction)
       .environment(store)
 
@@ -94,9 +99,9 @@ extension CanvasView {
   }
 }
 
-extension CanvasView {
-  private var coordinateSpaceMapper: CoordinateSpaceMapper? {
-    guard let frame = store.artworkFrame else { return nil }
-    return .init(frame: frame, canvasSize: canvasSize)
-  }
-}
+//extension CanvasView {
+//  private var coordinateSpaceMapper: CoordinateSpaceMapper? {
+//    guard let frame = store.artworkFrame else { return nil }
+//    return .init(frame: frame, canvasSize: canvasSize)
+//  }
+//}

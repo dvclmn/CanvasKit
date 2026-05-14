@@ -5,7 +5,6 @@
 //  Created by Dave Coleman on 8/3/2026.
 //
 
-
 import InputPrimitives
 import SwiftUI
 
@@ -20,7 +19,7 @@ final class CanvasHandler {
 
   var artworkFrame: Rect<ViewportSpace>?
   var currentTransform: TransformState = .identity
-  
+
   var measuredCanvasSize: Size<CanvasSpace>?
 
   init(toolConfiguration: ToolConfiguration = .default) {
@@ -96,7 +95,16 @@ extension CanvasHandler {
 }
 
 extension CanvasHandler {
-  
+
+  // Moved this here, so it can be used by both
+  // CanvasView and 
+  func coordinateSpaceMapper(in size: Size<CanvasSpace>?) -> CoordinateSpaceMapper? {
+    guard let artworkFrame,
+      let resolvedSize = resolvedCanvasSize(for: size)
+    else { return nil }
+    return .init(frame: artworkFrame, canvasSize: resolvedSize)
+  }
+
   func resolvedCanvasSize(for size: Size<CanvasSpace>?) -> Size<CanvasSpace>? {
     size ?? measuredCanvasSize
   }
@@ -108,13 +116,13 @@ extension CanvasHandler {
       phase: lastInteractionContext.phase,
     )
   }
-  
-//  var activeCapability: ToolCapability? {
-//    effectiveTool.inputCapabilities.first { capability in
-//      guard let lastInteractionContext else { return false }
-//      return capability.matches(lastInteractionContext)
-//    }
-//  }
+
+  //  var activeCapability: ToolCapability? {
+  //    effectiveTool.inputCapabilities.first { capability in
+  //      guard let lastInteractionContext else { return false }
+  //      return capability.matches(lastInteractionContext)
+  //    }
+  //  }
 
   /// The runtime tool used to resolve canvas input right now.
   ///

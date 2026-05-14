@@ -8,13 +8,15 @@
 import SwiftUI
 
 struct CanvasSizeFrameModifier: ViewModifier {
-  @Environment(\.canvasSize) private var canvasSize
+  
+//  let explicitCanvasSize: Size<CanvasSpace>?
+  @Environment(\.explicitCanvasSize) private var explicitCanvasSize
   
   func body(content: Content) -> some View {
     content
       .frame(
-        width: canvasSize?.width,
-        height: canvasSize?.height,
+        width: explicitCanvasSize?.width,
+        height: explicitCanvasSize?.height,
       )
 
   }

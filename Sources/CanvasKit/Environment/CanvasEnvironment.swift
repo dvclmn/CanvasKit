@@ -14,8 +14,9 @@ import SwiftUI
 /// I can change internal/package to public
 extension EnvironmentValues {
 
-  /// Aka artwork/document size. Used internally by CanvasKit only
-//  @Entry var canvasSize: Size<CanvasSpace>?
+  /// A concrete canvas size, if passed by the caller. If value is nil, canvas size
+  /// will be inferred via `CanvasHandler/resolvedCanvasSize(for:)`.
+  @Entry var explicitCanvasSize: Size<CanvasSpace>?
   
   @Entry public var canvasClipping: Binding<CanvasClipping> = .constant(.clipped)
 
@@ -51,9 +52,6 @@ extension EnvironmentValues {
   @Entry package var pointerDrag: Rect<CanvasSpace>?
   @Entry package var pointerHover: Point<CanvasSpace>?
 
-  // TODO: If BasePrimitives/InputPrimitives owns InteractionPhase,
-  // maybe it should be added as Env value there, not here
-//  @Entry package var interactionPhase: InteractionPhase = .none
   @Entry var activeInteraction: ActiveInteraction = .none
   
 

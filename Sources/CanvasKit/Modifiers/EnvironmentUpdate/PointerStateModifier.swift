@@ -8,31 +8,34 @@
 import InputPrimitives
 import SwiftUI
 
-struct PointerStateEnvironmentModifier: ViewModifier {
+struct PointerEnvironmentModifier: ViewModifier {
   @Environment(CanvasHandler.self) private var store
-  //  @Environment(\.canvasSize) private var canvasSize
+    @Environment(\.explicitCanvasSize) private var explicitCanvasSize
 
-  let explicitCanvasSize: Size<CanvasSpace>?
+//  let explicitCanvasSize: Size<CanvasSpace>?
+  //  let mapper: CoordinateSpaceMapper
   //  let resolvedSize: Size<CanvasSpace>
   func body(content: Content) -> some View {
     content
-      .environment(\.canvasCoordinateSpaceMapper, mapper)
+      //      .environment(\.canvasCoordinateSpaceMapper, mapper)
       .environment(\.pointerTap, snapshot?.pointer.tap)
       .environment(\.pointerDrag, snapshot?.pointer.drag)
       .environment(\.pointerHover, snapshot?.pointer.hover)
   }
 }
 
-extension PointerStateEnvironmentModifier {
-  private var mapper: CoordinateSpaceMapper? {
-    guard let frame = store.artworkFrame,
-      let size = store.resolvedCanvasSize(for: explicitCanvasSize)
-    else { return nil }
-    return .init(frame: frame, canvasSize: size)
-  }
+extension PointerEnvironmentModifier {
+
+  //  private var mapper: CoordinateSpaceMapper? {
+  //    guard let frame = store.artworkFrame,
+  //      let size = store.resolvedCanvasSize(for: explicitCanvasSize)
+  //    else { return nil }
+  //    return .init(frame: frame, canvasSize: size)
+  //  }
 
   private var snapshot: PointerMappedSnapshot? {
-    guard let mapper else { return nil }
+    guard let mapper = store.coordinateSpaceMapper(in: explicitCanvasSize) else { return nil }
+    //    guard let mapper else { return nil }
     return .createMapped(
       mapper: mapper,
       pointerState: store.pointer,
