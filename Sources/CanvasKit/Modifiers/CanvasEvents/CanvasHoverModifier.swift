@@ -6,7 +6,7 @@
 //
 
 import CoreUtilities
-// import GeometryPrimitives
+
 import SwiftUI
 
 public struct CanvasHoverModifier: ViewModifier {

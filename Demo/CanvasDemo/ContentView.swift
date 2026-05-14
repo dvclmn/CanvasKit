@@ -6,7 +6,6 @@
 //
 
 import CanvasKit
-// import GeometryPrimitives
 import CoreUtilities
 import SwiftUI
 
@@ -45,14 +44,14 @@ struct ContentView: View {
     .zoomRange(0.1...20)
     .toolPicker()
 
-//    .overlay(alignment: .topTrailing) {
-//      CanvasClippingControl($clipping)
-//        .frame(width: 240)
-//        .padding(10)
-//        .background(.regularMaterial)
-//        .clipShape(.rect(cornerRadius: 8))
-//        .padding()
-//    }
+    //    .overlay(alignment: .topTrailing) {
+    //      CanvasClippingControl($clipping)
+    //        .frame(width: 240)
+    //        .padding(10)
+    //        .background(.regularMaterial)
+    //        .clipShape(.rect(cornerRadius: 8))
+    //        .padding()
+    //    }
 
     .overlay(alignment: .bottomTrailing) {
 
@@ -64,12 +63,12 @@ struct ContentView: View {
       .foregroundStyle(.tertiary)
       .padding(.horizontal, 6)
       .padding(.vertical, 3)
-//      .background(.gray.opacity(0.15))
+      //      .background(.gray.opacity(0.15))
       .background(.regularMaterial)
       .clipShape(.rect(cornerRadius: 5))
       .padding(8)
     }
-    
+
     .debugTextOverlay()
   }
 }

@@ -8,10 +8,13 @@ let package = Package(
     .macOS("14.0")
   ],
   products: [
-    .library(name: "CanvasKit", targets: ["CanvasKit"]),
+    .library(name: "CanvasKit", targets: ["CanvasKit"])
   ],
   dependencies: [
-    .package(url: "https://github.com/dvclmn/BasePrimitives", .upToNextMinor(from: "0.1.0")),
+    .package(
+      url: "https://github.com/dvclmn/BasePrimitives",
+      .upToNextMinor(from: "0.1.0"),
+    ),
     .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
   ],
   targets: [
@@ -20,13 +23,13 @@ let package = Package(
       dependencies: [
         .product(name: "BasePrimitives", package: "BasePrimitives"),
         .product(name: "CoreUtilities", package: "BasePrimitives"),
-      ]
+      ],
     ),
-    
+
     .testTarget(
       name: "CanvasKitTests",
       dependencies: ["CanvasKit"],
-      exclude: ["CanvasKit.xctestplan"]
+      exclude: ["CanvasKit.xctestplan"],
     ),
   ],
 )

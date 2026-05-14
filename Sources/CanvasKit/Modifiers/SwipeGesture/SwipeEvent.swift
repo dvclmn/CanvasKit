@@ -6,7 +6,7 @@
 //
 
 
-// import GeometryPrimitives
+
 import InputPrimitives
 
 public typealias SwipeOutput = (SwipeEvent) -> Void
