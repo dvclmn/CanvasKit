@@ -20,6 +20,8 @@ final class CanvasHandler {
 
   var artworkFrame: Rect<ViewportSpace>?
   var currentTransform: TransformState = .identity
+  
+  var measuredCanvasSize: Size<CanvasSpace>?
 
   init(toolConfiguration: ToolConfiguration = .default) {
     self.toolHandler = .init(configuration: toolConfiguration)
@@ -94,6 +96,10 @@ extension CanvasHandler {
 }
 
 extension CanvasHandler {
+  
+  func resolvedCanvasSize(for size: Size<CanvasSpace>?) -> Size<CanvasSpace>? {
+    size ?? measuredCanvasSize
+  }
 
   var activeInteraction: ActiveInteraction {
     guard let lastInteractionContext else { return .none }

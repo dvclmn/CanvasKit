@@ -6,7 +6,6 @@
 //
 
 import CoreUtilities
-
 import InputPrimitives
 import SwiftUI
 
@@ -21,7 +20,8 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   /// Populated when user wishes to handle their own tool configuration state.
   private let externalToolConfiguration: Binding<ToolConfiguration>?
 
-  let canvasSize: Size<CanvasSpace>
+  let explicitCanvasSize: Size<CanvasSpace>?
+  //  let canvasSize: Size<CanvasSpace>
   let content: () -> Content
 
   public var body: some View {
@@ -38,7 +38,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
 
       /// Adds canvas transform and mapped pointer values to the Environment
       .updateTransformEnvironment()
-      .updatePointerEnvironment()
+      .updatePointerEnvironment(in: )
 
       /// In cases where transform state is owned externally,
       /// ensures both local and external are kept in sync
@@ -60,7 +60,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       .modifier(CanvasToolKeyboardModifier(toolHandler: $store.toolHandler))
       .modifierKeys { store.updateModifiers($0) }
 
-      .environment(\.canvasSize, canvasSize)
+      //      .environment(\.canvasSize, canvasSize)
       .environment(\.activeInteraction, store.activeInteraction)
       .environment(store)
 
@@ -78,14 +78,14 @@ extension CanvasView {
 
   /// Externally-owned transform state and Tools configuration.
   public init(
-    size: CGSize,
-    transform: Binding<TransformState>,
+    size: CGSize? = nil,
+    transform: Binding<TransformState>? = nil,
     coordinateSpaceMapper: Binding<CoordinateSpaceMapper?>? = nil,
     toolConfiguration: Binding<ToolConfiguration>? = nil,
     @ViewBuilder content: @escaping () -> Content,
   ) {
     let initialToolConfiguration = toolConfiguration?.wrappedValue ?? .default
-    self.canvasSize = Size<CanvasSpace>(fromCGSize: size)
+    self.explicitCanvasSize = size.map { Size<CanvasSpace>(fromCGSize: $0) }
     self.externalTransform = transform
     self.externalCoordinateSpaceMapper = coordinateSpaceMapper
     self.externalToolConfiguration = toolConfiguration

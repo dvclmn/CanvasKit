@@ -66,10 +66,10 @@ struct ContentView: View {
       //      .background(.gray.opacity(0.15))
       .background(.regularMaterial)
       .clipShape(.rect(cornerRadius: 5))
-      .padding(8)
+      .padding()
     }
 
-    .debugTextOverlay()
+    .debugTextOverlay(isEnabled: false)
   }
 }
 

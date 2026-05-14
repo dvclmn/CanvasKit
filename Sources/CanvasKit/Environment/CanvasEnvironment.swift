@@ -15,7 +15,7 @@ import SwiftUI
 extension EnvironmentValues {
 
   /// Aka artwork/document size. Used internally by CanvasKit only
-  @Entry var canvasSize: Size<CanvasSpace>?
+//  @Entry var canvasSize: Size<CanvasSpace>?
   
   @Entry public var canvasClipping: Binding<CanvasClipping> = .constant(.clipped)
 

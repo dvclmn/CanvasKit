@@ -5,14 +5,15 @@
 //  Created by Dave Coleman on 12/4/2026.
 //
 
-
 import InputPrimitives
 import SwiftUI
 
 struct PointerStateEnvironmentModifier: ViewModifier {
   @Environment(CanvasHandler.self) private var store
-  @Environment(\.canvasSize) private var canvasSize
+  //  @Environment(\.canvasSize) private var canvasSize
 
+  let explicitCanvasSize: Size<CanvasSpace>?
+  //  let resolvedSize: Size<CanvasSpace>
   func body(content: Content) -> some View {
     content
       .environment(\.canvasCoordinateSpaceMapper, mapper)
@@ -24,8 +25,10 @@ struct PointerStateEnvironmentModifier: ViewModifier {
 
 extension PointerStateEnvironmentModifier {
   private var mapper: CoordinateSpaceMapper? {
-    guard let frame = store.artworkFrame, let canvasSize else { return nil }
-    return .init(frame: frame, canvasSize: canvasSize)
+    guard let frame = store.artworkFrame,
+      let size = store.resolvedCanvasSize(for: explicitCanvasSize)
+    else { return nil }
+    return .init(frame: frame, canvasSize: size)
   }
 
   private var snapshot: PointerMappedSnapshot? {

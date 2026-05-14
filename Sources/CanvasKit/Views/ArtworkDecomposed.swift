@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 /// Uses SwiftUI subview APIs for granular control over canvas clipping.
 ///
 /// This drives modifier `canvasClipping(_:)`, giving the user control

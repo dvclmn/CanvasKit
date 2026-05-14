@@ -24,6 +24,12 @@ struct CanvasArtwork<Content: View>: View {
       rounding: unZoomed(rounding),
       content: content,
     )
+    
+    .viewSize(capture: .size, mode: .noDebounce) { geometry in
+      //      guard explicitCanvasSize == nil else { return }
+      //      store.measuredCanvasSize = Size<CanvasSpace>(fromCGSize: size)
+      
+    }
 
     /// Visual indication of Canvas artwork bounds
     .overlay { ArtworkOutline() }
