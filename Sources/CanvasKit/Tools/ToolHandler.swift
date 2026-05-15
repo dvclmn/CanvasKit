@@ -21,7 +21,7 @@ final class ToolHandler {
   //  var configuration: ToolConfiguration {
   //    didSet { repairSelectionForCurrentConfiguration() }
   //  }
-  var selection: ToolSelection
+  var selection: ToolSelection?
 
   /// Active key-held overrides, most recent last.
   ///
@@ -34,12 +34,20 @@ final class ToolHandler {
   private var modifiers: Modifiers = []
 
   init(
-    configuration: ToolConfiguration = .default,
+    configuration: ToolConfiguration?,
     selection: ToolSelection? = nil,
   ) {
     self.configuration = configuration
-    let initialSelection = selection ?? .init(kind: configuration.defaultToolKind)
-    self.selection = Self.normalisedSelection(initialSelection, for: configuration)
+
+    if let configuration {
+
+      let initialSelection: ToolSelection = selection ?? .init(kind: configuration.defaultToolKind)
+      //      let initialSelection: ToolSelection? = selection ?? configuration.map {  }
+      self.selection = Self.normalisedSelection(initialSelection, for: configuration)
+
+    } else {
+      self.selection = nil
+    }
   }
 }
 
@@ -47,7 +55,7 @@ final class ToolHandler {
 extension ToolHandler {
   public var isToolUseEnabled: Bool { configuration != nil }
   public var tools: [any CanvasTool] { configuration?.tools ?? [] }
-  public var committedToolKind: CanvasToolKind { selection.committedToolKind }
+  public var committedToolKind: CanvasToolKind? { selection?.committedToolKind }
 }
 
 // MARK: - Tool
@@ -59,7 +67,8 @@ extension ToolHandler {
   /// current catalogue. Normal configuration mutations repair selection
   /// automatically.
   public var committedTool: (any CanvasTool)? {
-    registeredTool(for: committedToolKind)
+    guard let committedToolKind else { return nil }
+    return registeredTool(for: committedToolKind)
   }
 
   /// The committed tool, or a safe fallback if the committed kind is invalid.
@@ -164,14 +173,14 @@ extension ToolHandler {
 
   func setCommittedTool(_ tool: any CanvasTool) {
     configuration?.register(tool)
-    selection.committedToolKind = tool.kind
+    selection?.committedToolKind = tool.kind
     overrides.removeAll()
   }
 
   /// Set the committed/base tool by kind, looking it up in the registry.
   func setCommittedTool(kind: CanvasToolKind) {
     guard let configuration, configuration.containsTool(kind) else { return }
-    selection.committedToolKind = kind
+    selection?.committedToolKind = kind
     overrides.removeAll()
   }
 
@@ -298,10 +307,12 @@ extension ToolHandler {
   }
 
   private static func normalisedSelection(
-    _ selection: ToolSelection,
+    _ selection: ToolSelection?,
     for configuration: ToolConfiguration,
   ) -> ToolSelection {
-    guard configuration.containsTool(selection.committedToolKind) else {
+    guard let selection,
+      configuration.containsTool(selection.committedToolKind)
+    else {
       return .init(kind: configuration.defaultToolKind)
     }
     return selection

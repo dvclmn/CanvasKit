@@ -15,7 +15,8 @@ enum Constants {
 
 struct ContentView: View {
   @State private var transform: TransformState
-  @State private var toolConfiguration: ToolConfiguration
+  private let toolConfiguration: ToolConfiguration
+//  @State private var toolConfiguration: ToolConfiguration
   @State private var clipping: CanvasClipping
 
   init(
@@ -24,7 +25,8 @@ struct ContentView: View {
     clipping: CanvasClipping = .clipped,
   ) {
     self._transform = State(initialValue: transform)
-    self._toolConfiguration = State(initialValue: toolConfiguration)
+    self.toolConfiguration = toolConfiguration
+//    self._toolConfiguration = State(initialValue: toolConfiguration)
     self._clipping = State(initialValue: clipping)
   }
 
@@ -33,7 +35,8 @@ struct ContentView: View {
     CanvasView(
 //      size: Constants.canvasSize,
       transform: $transform,
-      toolConfiguration: $toolConfiguration,
+      toolConfiguration: toolConfiguration,
+//      toolConfiguration: $toolConfiguration,
     ) {
       Image(.sunflower)
         .resizable()

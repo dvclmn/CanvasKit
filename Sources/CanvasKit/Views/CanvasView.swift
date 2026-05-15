@@ -17,11 +17,8 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   private let externalTransform: Binding<TransformState>?
   private let externalCoordinateSpaceMapper: Binding<CoordinateSpaceMapper?>?
 
-  /// Populated when user wishes to handle their own tool configuration state.
-  private let externalToolConfiguration: Binding<ToolConfiguration>?
-
+  ///
   let explicitCanvasSize: Size<CanvasSpace>?
-  //  let canvasSize: Size<CanvasSpace>
   let content: () -> Content
 
   public var body: some View {
@@ -47,14 +44,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
         $store.currentTransform,
         to: externalTransform,
       )
-      .bindModel(
-        debounce: .noDebounce,
-        $store.toolHandler.configuration,
-        to: externalToolConfiguration,
-      ) { newValue in
-        guard let newValue else { return }
-        store.toolHandler.repairSelection(for: newValue)
-      }
+
       .syncValue(
         store.coordinateSpaceMapper(in: explicitCanvasSize),
         to: externalCoordinateSpaceMapper,
@@ -75,8 +65,6 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
         externalCoordinateSpaceMapper?.wrappedValue = nil
       }
 
-    //      .debugTextOverlay(isEnabled: true)
-
   }
 }
 
@@ -88,22 +76,17 @@ extension CanvasView {
     size: CGSize? = nil,
     transform: Binding<TransformState>? = nil,
     coordinateSpaceMapper: Binding<CoordinateSpaceMapper?>? = nil,
-    toolConfiguration: Binding<ToolConfiguration>? = nil,
+    toolConfiguration: ToolConfiguration? = nil,
     @ViewBuilder content: @escaping () -> Content,
   ) {
-    let initialToolConfiguration = toolConfiguration?.wrappedValue ?? .default
     self.explicitCanvasSize = size.map { Size<CanvasSpace>(fromCGSize: $0) }
     self.externalTransform = transform
     self.externalCoordinateSpaceMapper = coordinateSpaceMapper
-    self.externalToolConfiguration = toolConfiguration
-    self._store = State(initialValue: .init(toolConfiguration: initialToolConfiguration))
+    self._store = State(
+      initialValue: .init(
+        toolConfiguration: toolConfiguration
+      )
+    )
     self.content = content
   }
 }
-
-//extension CanvasView {
-//  private var coordinateSpaceMapper: CoordinateSpaceMapper? {
-//    guard let frame = store.artworkFrame else { return nil }
-//    return .init(frame: frame, canvasSize: canvasSize)
-//  }
-//}

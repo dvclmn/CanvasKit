@@ -22,7 +22,7 @@ final class CanvasHandler {
 
   var measuredCanvasSize: Size<CanvasSpace>?
 
-  init(toolConfiguration: ToolConfiguration = .default) {
+  init(toolConfiguration: ToolConfiguration?) {
     self.toolHandler = .init(configuration: toolConfiguration)
   }
 }
@@ -97,7 +97,7 @@ extension CanvasHandler {
 extension CanvasHandler {
 
   // Moved this here, so it can be used by both
-  // CanvasView and 
+  // CanvasView and
   func coordinateSpaceMapper(in size: Size<CanvasSpace>?) -> CoordinateSpaceMapper? {
     guard let artworkFrame,
       let resolvedSize = resolvedCanvasSize(for: size)
