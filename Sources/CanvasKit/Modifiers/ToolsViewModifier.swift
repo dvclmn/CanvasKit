@@ -1,5 +1,5 @@
 //
-//  ToolsViewModifier.swift
+//  ToolsPaletteViewModifier.swift
 //  CanvasKit
 //
 //  Created by Dave Coleman on 3/5/2026.
@@ -7,12 +7,9 @@
 
 import SwiftUI
 
-struct ToolsViewModifier: ViewModifier {
-  @Environment(CanvasHandler.self) private var store
+struct ToolsPaletteViewModifier: ViewModifier {
   @Environment(\.isShowingToolPicker) private var isShowingToolPicker
   @Environment(\.toolPickerAlignment) private var toolPickerAlignment
-
-//  @Binding var transform: TransformState
 
   func body(content: Content) -> some View {
     content
@@ -21,10 +18,5 @@ struct ToolsViewModifier: ViewModifier {
           ToolsView()
         }
       }
-  }
-}
-extension View {
-  public func toolPalette() -> some View {
-    self.modifier(ToolsViewModifier())
   }
 }

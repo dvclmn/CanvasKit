@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct ToolPickerModifier: ViewModifier {
+public struct ToolsPaletteEnvironmentModifier: ViewModifier {
 
   let isShowing: Bool
   let alignment: Alignment
@@ -20,14 +20,12 @@ public struct ToolPickerModifier: ViewModifier {
 
 extension View where Self: CanvasAddressable {
 
-  /// The minimum zoom range lower bound is `0.05`;
-  /// values less than this will be clamped.
   public func toolPicker(
     _ isShowing: Bool = true,
     alignment: Alignment = .topLeading,
-  ) -> ModifiedContent<Self, ToolPickerModifier> {
+  ) -> ModifiedContent<Self, ToolsPaletteEnvironmentModifier> {
     self.modifier(
-      ToolPickerModifier(isShowing: isShowing, alignment: alignment)
+      ToolsPaletteEnvironmentModifier(isShowing: isShowing, alignment: alignment)
     )
   }
 }
