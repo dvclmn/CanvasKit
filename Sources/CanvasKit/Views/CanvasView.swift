@@ -10,16 +10,35 @@ import InputPrimitives
 import SwiftUI
 
 public struct CanvasView<Content: View>: View, CanvasAddressable {
-  //  @Environment(\.canvasClipping) private var canvasClipping
   @State private var store: CanvasHandler
 
   /// Populated when user wishes to handle their own transform state
   private let externalTransform: Binding<TransformState>?
   private let externalCoordinateSpaceMapper: Binding<CoordinateSpaceMapper?>?
 
-  ///
+  /// Used only if a user passes in a canvas size value.
+  /// Otherwise size is measured internally
   let explicitCanvasSize: Size<CanvasSpace>?
   let content: () -> Content
+  
+  /// Main initialiser
+  public init(
+    size: CGSize? = nil,
+    transform: Binding<TransformState>? = nil,
+    coordinateSpaceMapper: Binding<CoordinateSpaceMapper?>? = nil,
+    toolConfiguration: ToolConfiguration? = nil,
+    @ViewBuilder content: @escaping () -> Content,
+  ) {
+    self.explicitCanvasSize = size.map { Size<CanvasSpace>(fromCGSize: $0) }
+    self.externalTransform = transform
+    self.externalCoordinateSpaceMapper = coordinateSpaceMapper
+    self._store = State(
+      initialValue: .init(
+        toolConfiguration: toolConfiguration
+      )
+    )
+    self.content = content
+  }
 
   public var body: some View {
     @Bindable var store = store
@@ -71,22 +90,4 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
 // MARK: - Inits
 extension CanvasView {
 
-  /// Externally-owned transform state and Tools configuration.
-  public init(
-    size: CGSize? = nil,
-    transform: Binding<TransformState>? = nil,
-    coordinateSpaceMapper: Binding<CoordinateSpaceMapper?>? = nil,
-    toolConfiguration: ToolConfiguration? = nil,
-    @ViewBuilder content: @escaping () -> Content,
-  ) {
-    self.explicitCanvasSize = size.map { Size<CanvasSpace>(fromCGSize: $0) }
-    self.externalTransform = transform
-    self.externalCoordinateSpaceMapper = coordinateSpaceMapper
-    self._store = State(
-      initialValue: .init(
-        toolConfiguration: toolConfiguration
-      )
-    )
-    self.content = content
-  }
 }

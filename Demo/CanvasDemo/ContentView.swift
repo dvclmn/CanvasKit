@@ -16,7 +16,6 @@ enum Constants {
 struct ContentView: View {
   @State private var transform: TransformState
   private let toolConfiguration: ToolConfiguration
-//  @State private var toolConfiguration: ToolConfiguration
   @State private var clipping: CanvasClipping
 
   init(
@@ -26,53 +25,41 @@ struct ContentView: View {
   ) {
     self._transform = State(initialValue: transform)
     self.toolConfiguration = toolConfiguration
-//    self._toolConfiguration = State(initialValue: toolConfiguration)
     self._clipping = State(initialValue: clipping)
   }
 
   var body: some View {
 
-    CanvasView(
-//      size: Constants.canvasSize,
-      transform: $transform,
-      toolConfiguration: toolConfiguration,
-//      toolConfiguration: $toolConfiguration,
-    ) {
-      Image(.sunflower)
-        .resizable()
-        .scaledToFill()
-        .canvasClipping(clipping)
-      //      CanvasContentView()
+    CanvasView {
+      Text("Hello")
     }
-    .zoomRange(0.1...20)
-    .toolPicker()
-
-    //    .overlay(alignment: .topTrailing) {
-    //      CanvasClippingControl($clipping)
-    //        .frame(width: 240)
-    //        .padding(10)
-    //        .background(.regularMaterial)
-    //        .clipShape(.rect(cornerRadius: 8))
-    //        .padding()
-    //    }
-
-    .overlay(alignment: .bottomTrailing) {
-
-      Text(
-        "Photo by [Linus Belanger](https://unsplash.com/@linusbelanger?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/photos/a-single-sunflower-blooms-against-a-bright-blue-sky-ysB8453OSbI?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)"
-      )
-      .tint(.secondary.opacity(0.85))
-      .font(.callout)
-      .foregroundStyle(.tertiary)
-      .padding(.horizontal, 6)
-      .padding(.vertical, 3)
-      //      .background(.gray.opacity(0.15))
-      .background(.regularMaterial)
-      .clipShape(.rect(cornerRadius: 5))
-      .padding()
-    }
+//    CanvasView(
+//      //      size: Constants.canvasSize,
+//      transform: $transform,
+//      toolConfiguration: toolConfiguration,
+//    ) {
+//
+//      //      SunflowerImage()
+//      CanvasContentView()
+//    }
+//    .zoomRange(0.1...20)
+//    .toolPicker()
+//
+//    .overlay(alignment: .bottomTrailing) {
+//      SunflowerAttributionView()
+//    }
 
     .debugTextOverlay(isEnabled: false)
+  }
+}
+
+extension ContentView {
+  @ViewBuilder
+  private func SunflowerImage() -> some View {
+    Image(.sunflower)
+      .resizable()
+      .scaledToFill()
+      .canvasClipping(clipping)
   }
 }
 
