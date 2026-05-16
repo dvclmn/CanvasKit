@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct ToolsPaletteViewModifier: ViewModifier {
-  @Environment(\.isShowingToolPicker) private var isShowingToolPicker
-  @Environment(\.toolPickerAlignment) private var toolPickerAlignment
+  @Environment(\.isShowingToolPalette) private var isShowingToolPalette
+  @Environment(\.toolPaletteAlignment) private var toolPaletteAlignment
 
   func body(content: Content) -> some View {
     content
-      .overlay(alignment: toolPickerAlignment) {
-        if isShowingToolPicker {
+      .overlay(alignment: toolPaletteAlignment) {
+        if isShowingToolPalette {
           ToolsView()
         }
       }

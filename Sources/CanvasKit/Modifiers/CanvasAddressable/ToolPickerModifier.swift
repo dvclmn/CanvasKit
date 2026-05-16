@@ -1,5 +1,5 @@
 //
-//  ToolPickerModifier.swift
+//  ToolPaletteModifier.swift
 //  CanvasKit
 //
 //  Created by Dave Coleman on 29/4/2026.
@@ -13,14 +13,14 @@ public struct ToolsPaletteEnvironmentModifier: ViewModifier {
   let alignment: Alignment
   public func body(content: Content) -> some View {
     content
-      .environment(\.isShowingToolPicker, isShowing)
-      .environment(\.toolPickerAlignment, alignment)
+      .environment(\.isShowingToolPalette, isShowing)
+      .environment(\.toolPaletteAlignment, alignment)
   }
 }
 
 extension View where Self: CanvasAddressable {
 
-  public func toolPicker(
+  public func toolPalette(
     _ isShowing: Bool = true,
     alignment: Alignment = .topLeading,
   ) -> ModifiedContent<Self, ToolsPaletteEnvironmentModifier> {

@@ -24,8 +24,8 @@ extension EnvironmentValues {
   /// artwork frame rather than recomputing from pan/zoom values.
   @Entry public var canvasCoordinateSpaceMapper: CoordinateSpaceMapper?
 
-  @Entry var isShowingToolPicker: Bool = false
-  @Entry var toolPickerAlignment: Alignment = .topLeading
+  @Entry var isShowingToolPalette: Bool = false
+  @Entry var toolPaletteAlignment: Alignment = .topLeading
 
   /// `canvasAnchor` is useful for both Canvas and Grid domains.
   /// Describes the anchor point for layout in ``CanvasArtworkView``.
