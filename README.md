@@ -1,7 +1,7 @@
 # CanvasKit
 
 
-[![macOS][macos-badge]][macos-url] [![Platforms][platforms-badge]][platforms-url] [![Documentation][documentation-badge]][documentation-url] [![License][license-badge]][license-url] [![Commit activity][commits-badge]][commits-url]
+[![Platforms][platforms-badge]][platforms-url] [![Documentation][documentation-badge]][documentation-url] [![License][license-badge]][license-url]
 
 A SwiftUI container View that 
 
@@ -9,7 +9,8 @@ that aims to provide a subset of features standard in graphics applications.
 
 
 > [!NOTE]
-> CanvasKit is in beta, so features and APIs may change as it evolves. Please keep this in mind when trying it out, and I encourage your feedback.
+> CanvasKit is in beta, so expect rough edges. Features/APIs may change as it evolves, but the guts are here. 
+> CanvasKit is in beta, so features and APIs may change as it evolves. Please keep this in mind when trying it out
  
 
 - Standard viewport navigation such pan and zoom (rotate is on it's way), via both trackpad gestures and pointer events. [Read more]()
@@ -19,6 +20,9 @@ that aims to provide a subset of features standard in graphics applications.
 
 
 This works with any SwiftUI View, whether an Image, Text, or your own custom views.
+
+## Contents
+
 
 
 ## Features
@@ -65,9 +69,19 @@ struct ContentView: View {
 
 ```
 
+## Documentation
+
+Online documentation can be found here: https://swiftpackageindex.com/dvclmn/CanvasKit/main/documentation
+
 ## Limitations
 
 - Zoom
+
+## Supporters & Sponsors
+
+Open source projects thrive on the generosity and support of people like you. If you find this project valuable, please consider extending your support. Contributing to the project not only sustains its growth, but also helps drive innovation and improve its features.
+
+To support this project, you can become a sponsor through GitHub Sponsors. Your contribution will be greatly appreciated and will help keep the project alive and thriving. Thanks for your consideration!
 
 
 You may also find the below libraries interesting:
@@ -87,8 +101,3 @@ You may also find the below libraries interesting:
 [license-url]: https://github.com/dvclmn/CanvasKit/blob/HEAD/LICENSE.md
 [license-badge]: https://img.shields.io/github/license/dvclmn/CanvasKit?label=License
 
-[commits-badge]: https://img.shields.io/github/commit-activity/w/dvclmn/CanvasKit
-[commits-url]: https://img.shields.io/github/commit-activity/w/dvclmn/CanvasKit
-
-[macos-url]: https://img.shields.io/badge/macOS-14.0%2B-brown
-[macos-badge]: https://img.shields.io/badge/macOS-14.0%2B-brown

@@ -25,10 +25,12 @@ struct CanvasArtwork<Content: View>: View {
       content: content,
     )
 
-    .viewSize(capture: .size, mode: .noDebounce) { size in
-      guard explicitCanvasSize == nil else { return }
-      store.measuredCanvasSize = Size<CanvasSpace>(fromCGSize: size)
+    .onGeometryChange(for: CGSize.self) { proxy in
+      proxy.size
 
+    } action: { newValue in
+      guard explicitCanvasSize == nil else { return }
+      store.measuredCanvasSize = Size<CanvasSpace>(fromCGSize: newValue)
     }
 
     /// Visual indication of Canvas artwork bounds
