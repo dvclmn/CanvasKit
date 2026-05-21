@@ -5,8 +5,6 @@
 //  Created by Dave Coleman on 24/4/2026.
 //
 
-import BasePrimitives
-import CoreUtilities
 import SwiftUI
 
 struct ToolsView: View {
