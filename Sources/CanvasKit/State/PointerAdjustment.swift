@@ -5,9 +5,6 @@
 //  Created by Dave Coleman on 8/4/2026.
 //
 
-
-
-
 /// Also previously held by `CanvasAdjustment`
 ///
 /// I think I'm struggling keeping this types strainght partially
@@ -24,7 +21,6 @@ public enum PointerAdjustment: Sendable {
   case hover(Point<ViewportSpace>)
   case drag(Rect<ViewportSpace>)
 }
-
 
 extension PointerAdjustment: CustomStringConvertible {
   public var description: String {

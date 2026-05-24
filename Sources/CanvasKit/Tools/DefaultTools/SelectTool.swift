@@ -5,9 +5,8 @@
 //  Created by Dave Coleman on 12/3/2026.
 //
 
-
 import SwiftUI
-import InputPrimitives
+import ViewTools
 
 // MARK: - Select Tool
 
@@ -22,9 +21,9 @@ public struct SelectTool: CanvasTool {
   public var inputCapabilities: [ToolCapability] {
     [
       ToolCapability(interaction: .tap, intent: .select),
-      ToolCapability(interaction: .drag, intent: .drawMarquee)
-      ]
-//    ToolCapability.selection
+      ToolCapability(interaction: .drag, intent: .drawMarquee),
+    ]
+    //    ToolCapability.selection
   }
 
   public init() {}
@@ -46,10 +45,10 @@ public struct SelectTool: CanvasTool {
       }
 
     return .handled(adjustment)
-//    return .init(
-//      for: context.interaction,
-//      adjustment: adjustment,
-//      action: .none,
-//    )
+    //    return .init(
+    //      for: context.interaction,
+    //      adjustment: adjustment,
+    //      action: .none,
+    //    )
   }
 }

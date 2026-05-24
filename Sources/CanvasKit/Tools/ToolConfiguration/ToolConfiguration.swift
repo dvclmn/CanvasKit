@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 15/4/2026.
 //
 
-import InputPrimitives
+import ViewTools
 import SwiftUI
 
 /// Durable, value-type tool catalogue for app code.

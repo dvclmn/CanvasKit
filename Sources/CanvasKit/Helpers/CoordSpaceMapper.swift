@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 public struct CoordinateSpaceMapper: Equatable {
 
   /// The canvas artwork as it's situated in the Viewport,

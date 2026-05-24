@@ -5,7 +5,8 @@
 //  Created by Dave Coleman on 8/3/2026.
 //
 
-import InputPrimitives
+import CoreTools
+import ViewTools
 import SwiftUI
 
 @Observable

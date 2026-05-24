@@ -5,7 +5,6 @@
 //  Created by Dave Coleman on 24/6/2025.
 //
 
-#if canImport(AppKit)
 import SwiftUI
 
 struct SwipeGestureView: NSViewRepresentable {
@@ -25,4 +24,3 @@ struct SwipeGestureView: NSViewRepresentable {
 
   func updateNSView(_ nsView: SwipeTrackingNSView, context: Context) {}
 }
-#endif

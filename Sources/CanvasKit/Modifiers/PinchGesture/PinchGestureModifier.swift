@@ -5,9 +5,7 @@
 //  Created by Dave Coleman on 24/6/2025.
 //
 
-import CoreUtilities
-import Foundation
-import InputPrimitives
+import CoreTools
 import SwiftUI
 
 /// Return a replacement zoom value for `(proposedZoom, phase)`,

@@ -7,8 +7,7 @@
 
 #if canImport(AppKit)
 import AppKit
-
-import InputPrimitives
+import CoreTools
 
 /// Chose the word Swipe instead of Pan:
 ///

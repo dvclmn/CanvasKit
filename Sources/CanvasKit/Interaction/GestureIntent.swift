@@ -19,9 +19,9 @@ public enum InteractionIntent: String, Sendable {
   // These two are undefined currently, need work
   case select
   case drawMarquee
-  
+
   // Don't know how to handle this one yet
-  case custom // undefined
+  case custom  // undefined
 }
 
 extension InteractionIntent: CustomStringConvertible {

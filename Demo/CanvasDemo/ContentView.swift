@@ -6,7 +6,6 @@
 //
 
 import CanvasKit
-import CoreUtilities
 import SwiftUI
 
 enum Constants {
@@ -33,23 +32,23 @@ struct ContentView: View {
     CanvasView {
       Text("Hello")
     }
-//    CanvasView(
-//      //      size: Constants.canvasSize,
-//      transform: $transform,
-//      toolConfiguration: toolConfiguration,
-//    ) {
-//
-//      //      SunflowerImage()
-//      CanvasContentView()
-//    }
-//    .zoomRange(0.1...20)
-//    .toolPicker()
-//
-//    .overlay(alignment: .bottomTrailing) {
-//      SunflowerAttributionView()
-//    }
+    //    CanvasView(
+    //      //      size: Constants.canvasSize,
+    //      transform: $transform,
+    //      toolConfiguration: toolConfiguration,
+    //    ) {
+    //
+    //      //      SunflowerImage()
+    //      CanvasContentView()
+    //    }
+    //    .zoomRange(0.1...20)
+    //    .toolPicker()
+    //
+    //    .overlay(alignment: .bottomTrailing) {
+    //      SunflowerAttributionView()
+    //    }
 
-    .debugTextOverlay(isEnabled: false)
+//    .debugTextOverlay(isEnabled: false)
   }
 }
 

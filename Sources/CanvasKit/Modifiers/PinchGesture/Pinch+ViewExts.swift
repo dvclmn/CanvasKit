@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import InputPrimitives
+import CoreTools
 
 extension View {
 

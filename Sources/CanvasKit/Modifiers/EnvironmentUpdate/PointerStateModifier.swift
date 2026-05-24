@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 12/4/2026.
 //
 
-import InputPrimitives
+import CoreTools
 import SwiftUI
 
 struct PointerEnvironmentModifier: ViewModifier {

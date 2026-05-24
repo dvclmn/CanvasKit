@@ -5,8 +5,7 @@
 //  Created by Dave Coleman on 11/3/2026.
 //
 
-import CoreUtilities
-
+import CoreTools
 import SwiftUI
 
 struct InteractionModifiers: ViewModifier {

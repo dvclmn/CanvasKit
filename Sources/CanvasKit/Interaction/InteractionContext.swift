@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 18/3/2026.
 //
 
+import CoreTools
 import Foundation
-import InputPrimitives
 
 /// Describes the current interaction, as it is happening right now.
 /// Can be used to compare against ``ToolCapability``s to

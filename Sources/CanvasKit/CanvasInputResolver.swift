@@ -5,8 +5,7 @@
 //  Created by Dave Coleman on 2/4/2026.
 //
 
-
-import InputPrimitives
+import CoreTools
 import SwiftUI
 
 /// Centralises input resolution for `CanvasHandler`.
@@ -47,9 +46,9 @@ extension CanvasInputResolver {
     )
   }
 
-//  var pointerStyle: PointerStyleCompatible? {
-//    effectiveTool?.resolvePointerStyle(context: context)
-//  }
+  //  var pointerStyle: PointerStyleCompatible? {
+  //    effectiveTool?.resolvePointerStyle(context: context)
+  //  }
 }
 
 // MARK: - Base Adjustment (Tool Use inactive)

@@ -5,8 +5,7 @@
 //  Created by Dave Coleman on 8/4/2026.
 //
 
-
-import InputPrimitives
+import CoreTools
 import SwiftUI
 
 /// Previously held by `CanvasAdjustment`
@@ -51,7 +50,7 @@ extension TransformAdjustment {
 }
 
 extension TransformAdjustment {
-  
+
   /// Creates a new state, based on the transform property that changed
   public func updatedState(_ current: TransformState) -> TransformState {
     var new = current

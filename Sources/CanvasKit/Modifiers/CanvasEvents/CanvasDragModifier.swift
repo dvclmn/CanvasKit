@@ -5,9 +5,7 @@
 //  Created by Dave Coleman on 23/3/2026.
 //
 
-import CoreUtilities
-
-import InputPrimitives
+import CoreTools
 import SwiftUI
 
 public struct CanvasDragModifier: ViewModifier {

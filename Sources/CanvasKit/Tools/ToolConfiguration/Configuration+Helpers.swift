@@ -7,8 +7,6 @@
 
 import CoreTools
 
-// MARK: - Equatability
-
 extension ToolConfiguration: Equatable {
 
   public static func == (lhs: Self, rhs: Self) -> Bool {

@@ -5,8 +5,7 @@
 //  Created by Dave Coleman on 21/4/2026.
 //
 
-import CoreUtilities
-import InputPrimitives
+import CoreTools
 import SwiftUI
 
 extension EnvironmentValues {
