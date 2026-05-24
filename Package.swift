@@ -18,8 +18,8 @@ let package = Package(
     .target(
       name: "CanvasKit",
       dependencies: [
-        .product(name: "BasePrimitives", package: "BasePrimitives")
-        //        .product(name: "CoreUtilities", package: "BasePrimitives"),
+        .product(name: "CoreTools", package: "ToolKit"),
+        .product(name: "ViewTools", package: "ToolKit"),
       ],
     ),
 

@@ -5,9 +5,7 @@
 //  Created by Dave Coleman on 12/4/2026.
 //
 
-import BasePrimitives
-import CoreUtilities
-import InputPrimitives
+import ViewTools
 
 /// A Tool Capability allows the tool author to declare what should happen
 /// when a user performs one of the six ``InteractionKind``s.

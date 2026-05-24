@@ -6,8 +6,7 @@
 //
 
 import SwiftUI
-import BasePrimitives
-import CoreUtilities
+import CoreTools
 
 struct DebugOverlayModifier: ViewModifier {
   @Environment(CanvasHandler.self) private var store

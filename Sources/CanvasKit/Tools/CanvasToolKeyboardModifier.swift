@@ -6,8 +6,7 @@
 //
 
 import SwiftUI
-import BasePrimitives
-import CoreUtilities
+import ViewTools
 
 struct CanvasToolKeyboardModifier: ViewModifier {
 

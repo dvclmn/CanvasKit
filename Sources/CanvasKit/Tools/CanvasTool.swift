@@ -5,9 +5,8 @@
 //  Created by Dave Coleman on 12/3/2026.
 //
 
-import InputPrimitives
-import BasePrimitives
-import CoreUtilities
+import CoreTools
+import ViewTools
 import SwiftUI
 
 /// A canvas tool defines how pointer interactions (tap, drag) are interpreted.
