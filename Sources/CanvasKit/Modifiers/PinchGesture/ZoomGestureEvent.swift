@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreTools
+import ViewTools
 
 /// It may be that later I use this when doing more complex processing on the zoom
 /// value, for zooming around a focus point / cursor etc

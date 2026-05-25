@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ViewTools
 import CoreTools
 
 extension View {

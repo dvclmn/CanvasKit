@@ -6,18 +6,22 @@
 //
 
 import ViewTools
+import CoreTools
+import SwiftUI
 
 /// A Tool Capability allows the tool author to declare what should happen
 /// when a user performs one of the six ``InteractionKind``s.
-public struct ToolCapability: Hashable, Sendable {
+public struct ToolCapability: Sendable {
   public let interactionKind: InteractionKind
   public let intent: InteractionIntent
-  public let modifiers: Modifiers?
+  public let modifiers: EventModifiers?
+//  public let modifiers: Modifiers?
 
   public init(
     interaction: InteractionKind,
     intent: InteractionIntent? = nil,
-    modifiers: Modifiers? = nil,
+    modifiers: EventModifiers? = nil,
+//    modifiers: Modifiers? = nil,
   ) {
     self.interactionKind = interaction
     self.intent = intent ?? .custom

@@ -7,6 +7,7 @@
 
 import CoreTools
 import SwiftUI
+import ViewTools
 
 /// Return a replacement zoom value for `(proposedZoom, phase)`,
 /// or `nil` to accept the gesture's proposal
@@ -138,7 +139,8 @@ enum PinchZoomComputation {
   }
 
   static func responseStrength(for sensitivity: Double) -> Double {
-    let normalisedSensitivity = sensitivity.isFinite
+    let normalisedSensitivity =
+      sensitivity.isFinite
       ? sensitivity.clamped(to: 0...1)
       : defaultSensitivity
 

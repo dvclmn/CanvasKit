@@ -7,6 +7,7 @@
 
 #if canImport(AppKit)
 import AppKit
+import ViewTools
 import CoreTools
 
 /// Chose the word Swipe instead of Pan:

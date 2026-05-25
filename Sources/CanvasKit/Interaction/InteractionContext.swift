@@ -7,6 +7,7 @@
 
 import CoreTools
 import Foundation
+import ViewTools
 
 /// Describes the current interaction, as it is happening right now.
 /// Can be used to compare against ``ToolCapability``s to

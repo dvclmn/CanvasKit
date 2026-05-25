@@ -6,6 +6,7 @@
 //
 
 import CoreTools
+import ViewTools
 import SwiftUI
 
 /// Computed from `CanvasHandler` state and geometry.

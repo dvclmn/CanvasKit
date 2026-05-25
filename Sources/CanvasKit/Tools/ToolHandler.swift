@@ -7,6 +7,7 @@
 
 import CoreTools
 import SwiftUI
+import ViewTools
 
 /// Manages tool selection, spring-loading, and key bindings.
 ///

@@ -7,6 +7,7 @@
 
 import CoreTools
 import SwiftUI
+import ViewTools
 
 /// Previously held by `CanvasAdjustment`
 ///
