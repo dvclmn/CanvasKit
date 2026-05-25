@@ -6,7 +6,7 @@
 //
 
 import CoreTools
-import Foundation
+import SwiftUI
 import ViewTools
 
 /// Describes the current interaction, as it is happening right now.
@@ -15,12 +15,13 @@ import ViewTools
 public struct InteractionContext: Sendable {
   public let interaction: Interaction
   public let phase: InteractionPhase
-  public let modifiers: Modifiers
+  public let modifiers: EventModifiers
+//  public let modifiers: Modifiers
 
   public init(
     interaction: Interaction,
     phase: InteractionPhase,
-    modifiers: Modifiers,
+    modifiers: EventModifiers,
   ) {
     self.interaction = interaction
     self.phase = phase
@@ -29,7 +30,7 @@ public struct InteractionContext: Sendable {
 }
 
 extension InteractionContext {
-  public func withModifiers(_ modifiers: Modifiers) -> Self {
+  public func withModifiers(_ modifiers: EventModifiers) -> Self {
     .init(
       interaction: interaction,
       phase: phase,

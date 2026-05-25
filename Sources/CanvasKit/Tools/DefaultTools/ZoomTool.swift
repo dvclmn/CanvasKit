@@ -59,7 +59,7 @@ public struct ZoomTool: CanvasTool {
           .transform(
             .zoomAdjustment(
               for: currentTransform,
-              by: context.modifiers.isHoldingOption ? 0.8 : 1.25,
+              by: context.modifiers.contains(.option) ? 0.8 : 1.25,
             )
           )
 
@@ -70,7 +70,8 @@ public struct ZoomTool: CanvasTool {
 
   private func deltaDrag(
     _ delta: Size<ViewportSpace>,
-    modifiers: Modifiers,
+    modifiers: EventModifiers,
+//    modifiers: Modifiers,
     transform: TransformState,
   ) -> InteractionAdjustment {
     var factor = ZoomComputation.factorFromDelta(

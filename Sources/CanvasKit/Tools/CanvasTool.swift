@@ -6,15 +6,16 @@
 //
 
 import CoreTools
-import ViewTools
 import SwiftUI
+import ViewTools
 
 /// A canvas tool defines how pointer interactions (tap, drag) are interpreted.
 ///
 /// Global gestures (swipe→pan, pinch→zoom) are handled centrally
 /// by `CanvasHandler` and never reach `resolvePointerInteraction()`.
 /// Tools only receive pointer events: taps and drags. This may change in future, not sure yet
-public protocol CanvasTool: Sendable, Equatable, CustomStringConvertible, Identifiable where ID == CanvasToolKind {
+public protocol CanvasTool: Sendable, Equatable, CustomStringConvertible, Identifiable
+where ID == CanvasToolKind {
 
   /// The tool's identity, used for keyboard binding lookups and registry.
   var kind: CanvasToolKind { get }
@@ -27,14 +28,12 @@ public protocol CanvasTool: Sendable, Equatable, CustomStringConvertible, Identi
 
   /// The drag input policy active when this tool is selected.
   var dragConfiguration: PointerDragConfiguration { get }
-//  var dragBehaviour: PointerDragBehaviour { get }
 
   /// The interaction/adjustment pairs this tool can claim.
   var inputCapabilities: [ToolCapability] { get }
 
   /// Resolve the pointer style for the current interaction context.
   func resolvePointerStyle(context: InteractionContext) -> PointerStyleCompatible
-//  func resolvePointerStyle(context: InteractionContext) -> PointerStyleCompatible
 
   /// Resolve an interaction into a canvas adjustment and optional domain action.
   ///
@@ -52,27 +51,26 @@ public protocol CanvasTool: Sendable, Equatable, CustomStringConvertible, Identi
 extension CanvasTool {
   public var id: CanvasToolKind { kind }
 
-  /// This is the default capability contract for a tool that has not opted into
-  /// anything more specific.
-//  public var inputCapabilities: [ToolCapability] {
-//    ToolCapability.canvasBasics
-//  }
-  
-  public var description: String {
-    DisplayString {
-      Labeled("Name", value: name)
-//      Labeled("Kind", value: kind) // Usually same as name
-      Labeled("Capabilities", value: inputCapabilities)
-    }.text
+  public static var defaultTools: [any CanvasTool] {
+    [SelectTool(), PanTool(), ZoomTool()]
   }
+
+  public var description: String {
+    """
+    Name: \(name)
+    Capabilities: \(inputCapabilities)
+    """
+  }
+  
+//  public var description: String {
+//    DisplayString {
+//      Labeled("Name", value: name)
+//      //      Labeled("Kind", value: kind) // Usually same as name
+//      Labeled("Capabilities", value: inputCapabilities)
+//    }.text
+//  }
 }
 
 extension CanvasTool where Self == SelectTool {
   public static var `default`: any CanvasTool { SelectTool() }
-}
-
-extension Array where Element == (any CanvasTool) {
-  public static var defaultTools: Self {
-    [SelectTool(), PanTool(), ZoomTool()]
-  }
 }
