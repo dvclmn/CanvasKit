@@ -1,6 +1,6 @@
 //
 //  CanvasArtworkBoundsPreference.swift
-//  BaseHelpers
+//  CanvasKit
 //
 //  Created by Dave Coleman on 6/3/2026.
 //

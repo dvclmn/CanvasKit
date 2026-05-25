@@ -1,6 +1,6 @@
 //
 //  ToolBinding.swift
-//  BaseHelpers
+//  CanvasKit
 //
 //  Created by Dave Coleman on 13/3/2026.
 //

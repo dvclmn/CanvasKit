@@ -1,6 +1,6 @@
 //
 //  PanEvent.swift
-//  BaseHelpers
+//  CanvasKit
 //
 //  Created by Dave Coleman on 17/3/2026.
 //

@@ -1,6 +1,6 @@
 //
 //  CanvasSurfaceView.swift
-//  BaseHelpers
+//  CanvasKit
 //
 //  Created by Dave Coleman on 28/2/2026.
 //

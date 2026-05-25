@@ -1,6 +1,6 @@
 //
 //  CanvasInputResolver.swift
-//  BaseHelpers
+//  CanvasKit
 //
 //  Created by Dave Coleman on 2/4/2026.
 //

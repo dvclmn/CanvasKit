@@ -1,6 +1,6 @@
 //
 //  OnCanvasDragModifier.swift
-//  BaseHelpers
+//  CanvasKit
 //
 //  Created by Dave Coleman on 23/3/2026.
 //

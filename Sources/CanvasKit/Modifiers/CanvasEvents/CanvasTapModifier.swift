@@ -1,6 +1,6 @@
 //
 //  CanvasTapModifier.swift
-//  BaseHelpers
+//  CanvasKit
 //
 //  Created by Dave Coleman on 20/3/2026.
 //

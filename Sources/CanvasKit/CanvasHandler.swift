@@ -1,6 +1,6 @@
 //
 //  CanvasHandler.swift
-//  BaseHelpers
+//  CanvasKit
 //
 //  Created by Dave Coleman on 8/3/2026.
 //
