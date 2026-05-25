@@ -34,7 +34,8 @@ public struct ToolBinding: Hashable, Sendable, Equatable {
 }
 
 extension ToolBinding {
-  var modifiers: Modifiers { .init(from: shortcut.modifiers) }
+  var modifiers: EventModifiers { shortcut.modifiers }
+//  var modifiers: Modifiers { .init(from: shortcut.modifiers) }
 
 }
 

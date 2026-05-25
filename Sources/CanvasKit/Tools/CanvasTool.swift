@@ -51,9 +51,9 @@ where ID == CanvasToolKind {
 extension CanvasTool {
   public var id: CanvasToolKind { kind }
 
-  public static var defaultTools: [any CanvasTool] {
-    [SelectTool(), PanTool(), ZoomTool()]
-  }
+//  public static var defaultTools: [any CanvasTool] {
+//    [SelectTool(), PanTool(), ZoomTool()]
+//  }
 
   public var description: String {
     """
@@ -73,4 +73,10 @@ extension CanvasTool {
 
 extension CanvasTool where Self == SelectTool {
   public static var `default`: any CanvasTool { SelectTool() }
+}
+
+extension Array where Element == (any CanvasTool) {
+  public static var defaultTools: Self {
+    [SelectTool(), PanTool(), ZoomTool()]
+  }
 }

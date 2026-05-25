@@ -32,7 +32,7 @@ final class ToolHandler {
   var overrides: [ToolOverride] = []
 
   private var heldKeys: Set<KeyEquivalent> = []
-  private var modifiers: Modifiers = []
+  private var modifiers: EventModifiers = []
 
   init(
     configuration: ToolConfiguration?,
@@ -228,7 +228,7 @@ extension ToolHandler {
     cancelAllToolOverrides()
   }
 
-  func updateModifiers(_ modifiers: Modifiers) {
+  func updateModifiers(_ modifiers: EventModifiers) {
     self.modifiers = modifiers
   }
 

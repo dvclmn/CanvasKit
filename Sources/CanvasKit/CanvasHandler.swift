@@ -46,7 +46,8 @@ extension CanvasHandler {
   func processedTransform(
     _ interaction: Interaction,
     phase: InteractionPhase,
-    modifiers: Modifiers,
+    modifiers: EventModifiers,
+//    modifiers: Modifiers,
     //    currentTransform: TransformState,
   ) -> TransformState? {
 
@@ -134,7 +135,7 @@ extension CanvasHandler {
 }
 
 extension CanvasHandler {
-  func updateModifiers(_ modifiers: Modifiers) {
+  func updateModifiers(_ modifiers: EventModifiers) {
     toolHandler.updateModifiers(modifiers)
     lastInteractionContext = lastInteractionContext?.withModifiers(modifiers)
   }

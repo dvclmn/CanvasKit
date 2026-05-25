@@ -82,7 +82,7 @@ extension TransformAdjustment {
   static func swipeAdjustment(
     for transform: TransformState,
     delta: Size<ViewportSpace>,
-    modifiers: Modifiers,
+    modifiers: EventModifiers,
   ) -> TransformAdjustment {
 
     /// If Option is held during a Swipe, it is interpreted as Zoom, not Pan
