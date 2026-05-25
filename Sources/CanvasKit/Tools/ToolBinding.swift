@@ -47,11 +47,11 @@ extension KeyboardShortcut {
 
 extension ToolBinding: CustomStringConvertible {
   public var description: String {
-    DisplayString {
-      Labeled("Shortcut", value: shortcut.description)
-      Labeled("Target Tool Kind", value: target)
-      Labeled("Activation Mode", value: mode.rawValue)
-    }.text
+    """
+    Shortcut: \(shortcut.description)
+    Target Tool Kind: \(target)
+    Activation Mode: \(mode.rawValue)
+    """
   }
 }
 

@@ -43,7 +43,7 @@ struct CanvasToolKeyboardModifier: ViewModifier {
       .onDisappear {
         springLoadArmingTask?.cancel()
       }
-      .debugText("Is CanvasView focused? \(isFocused)")
+//      .debugText("Is CanvasView focused? \(isFocused)")
   }
 }
 

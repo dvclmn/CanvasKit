@@ -51,24 +51,13 @@ where ID == CanvasToolKind {
 extension CanvasTool {
   public var id: CanvasToolKind { kind }
 
-//  public static var defaultTools: [any CanvasTool] {
-//    [SelectTool(), PanTool(), ZoomTool()]
-//  }
-
   public var description: String {
     """
     Name: \(name)
     Capabilities: \(inputCapabilities)
     """
   }
-  
-//  public var description: String {
-//    DisplayString {
-//      Labeled("Name", value: name)
-//      //      Labeled("Kind", value: kind) // Usually same as name
-//      Labeled("Capabilities", value: inputCapabilities)
-//    }.text
-//  }
+
 }
 
 extension CanvasTool where Self == SelectTool {

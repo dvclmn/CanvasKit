@@ -5,8 +5,6 @@
 //  Created by Dave Coleman on 2/5/2026.
 //
 
-import CoreTools
-
 extension ToolConfiguration: Equatable {
 
   public static func == (lhs: Self, rhs: Self) -> Bool {
@@ -31,10 +29,10 @@ extension ToolConfiguration: Equatable {
 
 extension ToolConfiguration: CustomStringConvertible {
   public var description: String {
-    DisplayString {
-      Labeled("Tools", value: tools)
-      Labeled("Bindings", value: bindings)
-      Labeled("Spring Load Delay", value: springLoadDelay)
-    }.text
+    """
+    Tools: \(tools)
+    Bindings: \(bindings)
+    Spring Load Delay: \(springLoadDelay)
+    """
   }
 }
