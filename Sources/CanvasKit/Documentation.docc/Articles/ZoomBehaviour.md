@@ -1,5 +1,8 @@
 # Zoom Behaviour
 
+Zoom can be adjusted in multiple
+CanvasKit provides multiple ways to adjust zoom, supporting gestures and tools for smooth, predictable scaling. This article explains each supported zoom interaction and how zoom values are managed.
+
 CanvasKit has three current zoom paths:
 
 - Pinch gestures.
@@ -23,21 +26,3 @@ CanvasView(size: documentSize) {
 }
 .zoomRange(0.1...12)
 .zoomSensitivity(0.4)
-```
-
-## Swipe zoom
-
-Swipe normally pans. Holding Option during a swipe interprets the vertical delta
-as a zoom adjustment instead.
-
-## Zoom tool
-
-The built-in ``ZoomTool`` claims tap and drag:
-
-- Tap zooms in.
-- Option-tap zooms out.
-- Vertical drag zooms continuously.
-- Option-drag inverts the drag zoom direction.
-
-The tool emits transform adjustments, so it works with both internally owned and
-externally bound ``TransformState``.

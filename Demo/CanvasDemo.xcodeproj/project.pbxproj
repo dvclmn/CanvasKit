@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F68B52142FC9961B0002097E /* Article.md in Resources */ = {isa = PBXBuildFile; fileRef = F68B52132FC9961B0002097E /* Article.md */; };
 		F6EC03962F9CCCBD0005E730 /* CanvasKit in Frameworks */ = {isa = PBXBuildFile; productRef = F6EC03952F9CCCBD0005E730 /* CanvasKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		F67418692F10DEC9004B8381 /* CanvasDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CanvasDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F68B52132FC9961B0002097E /* Article.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = Article.md; path = ../Sources/CanvasKit/Documentation.docc/Article.md; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -50,6 +52,7 @@
 		F67418602F10DEC9004B8381 = {
 			isa = PBXGroup;
 			children = (
+				F68B52132FC9961B0002097E /* Article.md */,
 				F674186B2F10DEC9004B8381 /* CanvasDemo */,
 				F6F810AB2FC2F7DB00F608C9 /* Frameworks */,
 				F674186A2F10DEC9004B8381 /* Products */,
@@ -138,6 +141,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F68B52142FC9961B0002097E /* Article.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
