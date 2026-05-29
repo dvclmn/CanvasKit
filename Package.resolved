@@ -1,15 +1,6 @@
 {
-  "originHash" : "5ac1866400d6bfc21ce3c16368c39fa8783991f8be5399e282593b1b708ad220",
+  "originHash" : "d742ee710eb7e06fdca686463261fbf8a6ae8aecf393ba417f2a2e43dae5b8d8",
   "pins" : [
-    {
-      "identity" : "baseprimitives",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/dvclmn/BasePrimitives",
-      "state" : {
-        "revision" : "5d71fcfda62177d79745ba485995e2d2a5c64a0b",
-        "version" : "0.1.0"
-      }
-    },
     {
       "identity" : "swift-docc-plugin",
       "kind" : "remoteSourceControl",
