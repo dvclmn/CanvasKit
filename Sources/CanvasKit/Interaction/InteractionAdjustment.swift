@@ -5,12 +5,9 @@
 //  Created by Dave Coleman on 8/4/2026.
 //
 
-/// Provides an interface for a Canvas Tool to describe how it
-/// should mutate Canvas state when it performs some action.
+/// Describes a state change produced by an interaction or tool.
 ///
-/// Additional context is passed to the tool using ``Inter``
-///
-/// See ``CanvasTool/resolvePointerInteraction(context:currentTransform:)``
+/// See ``CanvasTool/resolveInteraction(context:currentTransform:)``.
 public enum InteractionAdjustment: Sendable {
   case transform(TransformAdjustment)
   case pointer(PointerAdjustment)

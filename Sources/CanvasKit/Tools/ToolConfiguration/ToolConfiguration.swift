@@ -16,7 +16,7 @@ import SwiftUI
 ///
 /// `ToolConfiguration` deliberately does not know about transient runtime state
 /// such as the committed selection or a Space-held Pan override. For the
-/// committed selection, ask ``ToolHandler`` / ``ToolSelection``. For the tool
+/// committed selection, ask `ToolHandler` / ``ToolSelection``. For the tool
 /// that is actually active right now, ask `ToolHandler` for `effectiveTool` /
 /// `effectiveToolKind`.
 ///

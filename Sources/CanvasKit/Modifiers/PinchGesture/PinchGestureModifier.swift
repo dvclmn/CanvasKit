@@ -9,10 +9,9 @@ import CoreTools
 import SwiftUI
 import ViewTools
 
-/// Return a replacement zoom value for `(proposedZoom, phase)`,
-/// or `nil` to accept the gesture's proposal
+/// Converts a SwiftUI `MagnifyGesture` into resolved zoom values.
 ///
-/// Note: Zoom `Double` value not clamped. This is handled per-domain.
+/// The modifier clamps committed zoom values to the current `zoomRange`.
 public struct PinchGestureModifier: ViewModifier {
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.zoomSensitivity) private var zoomSensitivity
@@ -23,7 +22,7 @@ public struct PinchGestureModifier: ViewModifier {
   /// Zoom level captured at the beginning of the current magnify gesture.
   @State private var gestureStartZoom: Double = 1
 
-  /// Helps with external sync.
+  /// Prevents external binding updates from resetting in-progress gestures.
   @State private var isGesturing: Bool = false
 
   private let externalZoom: Binding<Double>?
@@ -144,11 +143,11 @@ enum PinchZoomComputation {
       ? sensitivity.clamped(to: 0...1)
       : defaultSensitivity
 
-    /// Maps user sensitivity to exponential response in powers of two.
-    ///
-    /// - `0.0`: gentle, full inward pinch gives `0.5x`
-    /// - `0.5`: standard, full inward pinch gives `0.25x`
-    /// - `1.0`: strong, full inward pinch gives `0.125x`
+    // Maps user sensitivity to exponential response in powers of two.
+    //
+    // - `0.0`: gentle, full inward pinch gives `0.5x`
+    // - `0.5`: standard, full inward pinch gives `0.25x`
+    // - `1.0`: strong, full inward pinch gives `0.125x`
     return log(2) * (1 + 2 * normalisedSensitivity)
   }
 }

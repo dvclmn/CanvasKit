@@ -9,8 +9,11 @@ import ViewTools
 import CoreTools
 import SwiftUI
 
-/// A Tool Capability allows the tool author to declare what should happen
-/// when a user performs one of the six ``InteractionKind``s.
+/// Declares an interaction kind that a tool is willing to resolve.
+///
+/// `modifiers == nil` matches regardless of modifier state. When modifiers are
+/// provided, the current event modifiers must contain them for the capability to
+/// match.
 public struct ToolCapability: Sendable {
   public let interactionKind: InteractionKind
   public let intent: InteractionIntent

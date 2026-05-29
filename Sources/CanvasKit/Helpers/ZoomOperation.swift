@@ -7,11 +7,9 @@
 
 import Foundation
 
-/// Note: This previously had associated values for fit/fill to provide
-/// geometry info, needed to actually calculate what fit/fill looks like.
-/// Not sure whether this should come back, or be handled elsewhere
+/// Describes a zoom command that can be resolved against a subject and viewport.
 public enum ZoomOperation: Sendable {
-  case identity  // 100% / no zoom
+  case identity
   case zoom(CGFloat)
   case fit
   case fill
@@ -19,13 +17,7 @@ public enum ZoomOperation: Sendable {
 
 extension ZoomOperation {
 
-  /// ```
-  /// state = adjustment
-  ///   .resolve(current: state, artwork: artwork, viewport: viewport)
-  ///   .clamped()
-  ///   .withPhase(.active)
-  ///
-  ///   ```
+  /// Resolves the command to a concrete scale value.
   public func resolve(
     subject: CGSize,
     viewport: CGSize
@@ -56,8 +48,7 @@ extension ZoomOperation {
     padding: CGFloat = 40
   ) -> (CGFloat, CGFloat) {
 
-    /// Calculate available space after padding
-    
+    // Calculate available space after padding.
     let viewportAvailable = CGSize(
       width: viewport.width - (padding * 2),
       height: viewport.height - (padding * 2)

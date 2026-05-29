@@ -33,19 +33,19 @@ struct CanvasArtwork<Content: View>: View {
       store.measuredCanvasSize = Size<CanvasSpace>(fromCGSize: newValue)
     }
 
-    /// Visual indication of Canvas artwork bounds
+    // Visual indication of Canvas artwork bounds.
     .overlay { ArtworkOutline() }
 
-    /// `CanvasSpace` namespace declared before pan/zoom applied
+    // `CanvasSpace` namespace declared before pan/zoom applied.
     .coordinateSpace(.named(CanvasSpace.canvas))
 
-    /// Artwork bounds captured here
+    // Artwork bounds captured here.
     .anchorPreference(key: ArtworkBoundsAnchorKey.self, value: .bounds) { $0 }
 
-    /// Important: For transforms the order needs to be 1. Scale, 2. Rotation, 3. Offset
+    // Important: For transforms the order needs to be 1. Scale, 2. Rotation, 3. Offset.
     .scaleEffect(store.currentTransform.scale.clamped(to: zoomRange))
 
-    /// Note: Rotation not yet supported, coming in future versions
+    // Rotation is modelled but not yet wired to user input.
     .rotationEffect(store.currentTransform.rotation, anchor: .center)
     .offset(store.currentTransform.translation.cgSize)
 

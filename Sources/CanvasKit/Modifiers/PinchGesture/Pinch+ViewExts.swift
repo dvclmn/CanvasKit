@@ -11,7 +11,7 @@ import CoreTools
 
 extension View {
 
-  /// Binding-driven zoom.
+  /// Adds a pinch gesture that writes resolved zoom values to a binding.
   public func onPinchGesture(
     zoom: Binding<Double>,
     isEnabled: Bool = true,
@@ -29,11 +29,12 @@ extension View {
 
 public typealias ZoomUpdate = (Double, InteractionPhase) -> Double?
 
-/// The caller owns zoom state. The modifier tracks gesture deltas and
-/// sends events; the callback returns the resolved zoom value.
 extension View {
 
-  /// Return `nil` from `didUpdateZoom` to accept the proposed zoom.
+  /// Adds a pinch gesture that reports proposed zoom values before they commit.
+  ///
+  /// Return `nil` from `didUpdateZoom` to accept the proposed zoom, or return a
+  /// replacement value to apply app-specific policy.
   public func onPinchGesture(
     initial: Double = 1,
     zoom: Binding<Double>? = nil,

@@ -21,8 +21,6 @@ public enum ToolActivationMode: String, Sendable, Hashable {
   /// base tool. If it is held beyond the delay, it arms as a spring-load and
   /// reverts on release.
   case sticky
-
-  /// Press to toggle on/off
-  /// UPDATE: Switching off for now until I can implement properly
+  // Reserved for a future toggle mode once the runtime behaviour is defined.
 //  case toggle
 }

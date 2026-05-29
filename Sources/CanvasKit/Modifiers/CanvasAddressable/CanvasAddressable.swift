@@ -7,19 +7,11 @@
 
 import SwiftUI
 
-/// ``CanvasView`` declares conformance to this.
+/// Marker protocol for views that can receive CanvasKit-specific modifiers.
 ///
-/// Allows CanvasKit-only View modifiers to define View extensions
-/// that will only show in autocomplete results when:
-/// a) Defined directly on `CanvasView` itself
-/// b) Defined after other existing CanvasKit modifiers
-///
-/// This way CanvasKit-specific modifiers do not pollute autocomplete
-/// results for other SwiftUI views.
-///
-/// Example modifiers: `ZoomRangeModifier`, `ArtworkOutlineModifier`
+/// ``CanvasView`` conforms to this so modifiers such as
+/// `zoomRange(_:)` are offered only on canvas-related chains.
 public protocol CanvasAddressable {}
 
-/// Preserve CanvasAddressable across modifiers,
-/// rather than losing this context via opaque `some View`
+/// Preserves ``CanvasAddressable`` across modifier chains.
 extension ModifiedContent: CanvasAddressable where Content: CanvasAddressable {}

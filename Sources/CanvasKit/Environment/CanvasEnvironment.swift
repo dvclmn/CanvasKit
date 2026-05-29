@@ -26,12 +26,7 @@ extension EnvironmentValues {
   @Entry var isShowingToolPalette: Bool = false
   @Entry var toolPaletteAlignment: Alignment = .topLeading
 
-  /// `canvasAnchor` is useful for both Canvas and Grid domains.
-  /// Describes the anchor point for layout in ``CanvasArtworkView``.
-  /// Important for coordinate space calculations.
-  ///
-  /// Though I don't think there's any usefulness in having
-  /// it configurable?
+  /// Anchor point used to lay out artwork within the viewport.
   @Entry var canvasAnchor: UnitPoint = .center
   @Entry var canvasBackground: Color = Color(white: 0.04)
 

@@ -35,13 +35,12 @@ extension CanvasHandler {
   /// 1. Global gestures (swipe, pinch, hover) are handled centrally here.
   /// Tools never see these events.
   ///
-  /// Pointer interactions (tap, drag) are forwarded to the effective tool's
-  /// `resolvePointerInteraction()` method when the tool claims that
-  /// interaction/adjustment pair via `inputCapabilities`.
+  /// Claimed interactions are forwarded to the effective tool's
+  /// ``CanvasTool/resolveInteraction(context:currentTransform:)`` method.
   ///
   /// Returns an optional to allow a no-op in ``InteractionModifiers``,
   /// so that interaction modifiers that don't need to touch Transform state
-  /// don't inadvertantly write it to `identity`.
+  /// don't inadvertently write it to `identity`.
   //  func handleInteraction(
   func processedTransform(
     _ interaction: Interaction,

@@ -23,8 +23,9 @@ extension View {
   /// - Parameters:
   ///   - coordinateSpace: Coordinate space for the underlying `DragGesture`.
   ///   - behaviour: The drag mode (`.continuous`, `.marquee`, or `.none`).
+  ///   - isEnabled: Whether the gesture is active.
   ///   - marqueeColour: The colour to render the marquee rectangle, if needed.
-  ///  - minimumDistance: Minimum drag distance before the gesture activates.
+  ///   - minimumDistance: Minimum drag distance before the gesture activates.
   ///   - didUpdatePayload: Callback receiving the drag payload and phase.
   public func onPointerDragGesture(
     behaviour: PointerDragBehaviour,

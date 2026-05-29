@@ -49,7 +49,7 @@ public enum ZoomComputation: Sendable {
   ) -> CGFloat {
     let contribution = (delta.width * weights.x) + (delta.height * weights.y)
     
-    /// Clamp user-facing sensitivity to 0...1, then scale by maxPerPoint to get per-point gain
+    // Clamp user-facing sensitivity to 0...1, then scale by maxPerPoint to get per-point gain.
     let clamped = max(0, min(1, sensitivity))
     let perPoint = clamped * maxPerPoint
     let raw = 1.0 + (contribution * perPoint)

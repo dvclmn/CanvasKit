@@ -27,6 +27,8 @@ extension View {
   }
 
   /// Respond to a `CanvasView` pointer hover operation.
+  ///
+  /// The callback receives `.ended` when the pointer leaves the canvas.
   public func onCanvasHover(
     perform action: @escaping (CanvasHoverPhase) -> Void
       //    perform action: @escaping (Point<CanvasSpace>) -> Void

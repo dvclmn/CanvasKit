@@ -10,11 +10,7 @@ import AppKit
 import ViewTools
 import CoreTools
 
-/// Chose the word Swipe instead of Pan:
-///
-/// - To signal that this gesture can/should be useful outside of just Panning
-/// - I was getting confused when trying to model Interactions, Gesture, State
-///   etc for CanvasKit and InteractionKit. Removing the word Pan helped
+/// Captures AppKit scroll-wheel events as CanvasKit swipe gestures.
 class SwipeTrackingNSView: NSView {
   var onSwipeGesture: SwipeOutput?
 

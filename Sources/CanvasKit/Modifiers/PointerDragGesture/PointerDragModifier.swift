@@ -36,13 +36,10 @@ struct PointerDragModifier: ViewModifier {
   /// Local marquee rect for the overlay — only populated in marquee mode.
   @State private var marqueeRect: Rect<ViewportSpace>?
 
-  /// The drag mode passed from the parent (via environment → modifier init).
+  /// The drag mode passed from the parent.
+  ///
   /// Stored as a `let` so SwiftUI refreshes it on every re-render, allowing
   /// `onChange(of: behaviour)` to detect tool switches.
-  ///
-  /// Reminder to self: Do NOT derive this from `dragState.behaviour`
-  /// — that creates a circular dependency where `onChange` never fires
-  /// because `@State` preserves across re-renders.
   let behaviour: PointerDragBehaviour
   let isEnabled: Bool
   let marqueeColour: Color
@@ -59,7 +56,7 @@ struct PointerDragModifier: ViewModifier {
         isEnabled: behaviour.isMarquee,
       )
       .onChange(of: behaviour, initial: true) { _, newValue in
-        /// Update `DragGestureState` so it has the right behaviour
+        // Update `DragGestureState` so it has the right behaviour.
         dragState.behaviour = newValue
         dragState.end()
         marqueeRect = nil

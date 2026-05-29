@@ -9,11 +9,10 @@ import CoreTools
 import SwiftUI
 import ViewTools
 
-/// A canvas tool defines how pointer interactions (tap, drag) are interpreted.
+/// A canvas tool defines how selected interactions are interpreted.
 ///
-/// Global gestures (swipe→pan, pinch→zoom) are handled centrally
-/// by `CanvasHandler` and never reach `resolvePointerInteraction()`.
-/// Tools only receive pointer events: taps and drags. This may change in future, not sure yet
+/// CanvasKit applies default behaviour for unclaimed interactions, while tools
+/// may opt into specific ``InteractionKind`` values through ``inputCapabilities``.
 public protocol CanvasTool: Sendable, Equatable, CustomStringConvertible, Identifiable
 where ID == CanvasToolKind {
 
@@ -29,19 +28,16 @@ where ID == CanvasToolKind {
   /// The drag input policy active when this tool is selected.
   var dragConfiguration: PointerDragConfiguration { get }
 
-  /// The interaction/adjustment pairs this tool can claim.
+  /// The interaction kinds this tool can resolve.
   var inputCapabilities: [ToolCapability] { get }
 
   /// Resolve the pointer style for the current interaction context.
   func resolvePointerStyle(context: InteractionContext) -> PointerStyleCompatible
 
-  /// Resolve an interaction into a canvas adjustment and optional domain action.
+  /// Resolves an interaction into a canvas adjustment.
   ///
   /// Only called for sources the tool opted into via `inputCapabilities`.
-  /// Global canvas gestures remain available even when a tool omits them.
-  ///
-  /// This allows a Tool to declare what should happen when it is selected,
-  /// and certain interaction events happen
+  /// Return `.passthrough` to let CanvasKit fall back to its default behaviour.
   func resolveInteraction(
     context: InteractionContext,
     currentTransform: TransformState,

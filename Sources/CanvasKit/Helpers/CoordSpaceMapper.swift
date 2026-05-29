@@ -9,13 +9,12 @@ import Foundation
 
 public struct CoordinateSpaceMapper: Equatable {
 
-  /// The canvas artwork as it's situated in the Viewport,
-  /// captured via Anchor preference key in `CanvasCoreView`.
+  /// The canvas artwork as positioned in viewport coordinates.
   ///
-  /// `origin`:  Expresses the offset from the Viewport origin (top left),
+  /// `origin`: Expresses the offset from the viewport origin (top-left)
   /// to the top left corner of the artwork.
   ///
-  /// `size`: Expresses the canvas size scaled by zoom
+  /// `size`: Expresses the canvas size after zoom has been applied.
   public let artworkFrame: Rect<ViewportSpace>
   public let canvasSize: Size<CanvasSpace>
 
@@ -47,13 +46,13 @@ extension CoordinateSpaceMapper {
       heightZoom = 1.0
     }
 
-    /// Check for NaN, Inf, or negative scales as well
+    // Check for NaN, Inf, or negative scales as well.
     let validWidth = widthZoom.isFinite && widthZoom > 0
     let validHeight = heightZoom.isFinite && heightZoom > 0
 
-    /// Use minimum valid zoom, fallback to 1.0 if both are invalid
+    // Use minimum valid zoom, fallback to 1.0 if both are invalid.
     if validWidth && validHeight {
-      /// If they differ significantly:
+      // If they differ significantly:
       if abs(widthZoom - heightZoom) > 0.001 {
         print("Warning: Zoom level is showing non-uniform scaling.")
       }
@@ -71,30 +70,30 @@ extension CoordinateSpaceMapper {
   }
 
   /// ```
-  /// // canvas → screen: scale first, then translate
+  /// // canvas -> viewport: scale first, then translate
   /// // viewportPoint = zoom * canvasPoint + artworkFrame.origin
   /// let canvasToViewport = CGAffineTransform(
   ///   translationX: artworkFrame.minX,
   ///   y: artworkFrame.minY
   /// ).scaledBy(x: zoom, y: zoom)
   /// //  ^ .scaledBy() prepends the scale, so the effective order is:
-  /// //    scale the point, *then* apply the translation — which is what we want
+  /// //    scale the point, then apply the translation.
   /// ```
 
-  /// Transforms a canvas-space point to a screen-space point.
-  /// Encodes: screenPoint = zoom × canvasPoint + artworkFrame.origin
+  /// Transforms a canvas-space point to a viewport-space point.
+  /// Encodes: `viewportPoint = zoom * canvasPoint + artworkFrame.origin`.
   public var canvasToViewport: CGAffineTransform {
     CGAffineTransform(translationX: artworkFrame.minX, y: artworkFrame.minY)
       .scaledBy(x: zoom, y: zoom)
   }
 
-  /// The inverse: transforms a screen-space point to a canvas-space point.
-  /// Encodes: canvasPoint = (screenPoint - artworkFrame.origin) / zoom
+  /// Transforms a viewport-space point to a canvas-space point.
+  /// Encodes: `canvasPoint = (viewportPoint - artworkFrame.origin) / zoom`.
   public var viewportToCanvas: CGAffineTransform {
     canvasToViewport.inverted()
   }
 
-  /// Convert screen-space point to canvas-space
+  /// Converts a viewport-space point to canvas-space.
   public func canvasPoint(from screenPoint: Point<ViewportSpace>) -> Point<CanvasSpace> {
     Point<CanvasSpace>(
       x: (screenPoint.x - artworkFrame.minX) / zoom,
@@ -102,7 +101,7 @@ extension CoordinateSpaceMapper {
     )
   }
 
-  /// Convert canvas-space point to screen-space
+  /// Converts a canvas-space point to viewport-space.
   func screenPoint(from canvasPoint: Point<CanvasSpace>) -> Point<ViewportSpace> {
     Point<ViewportSpace>(
       x: artworkFrame.minX + canvasPoint.x * zoom,
@@ -110,7 +109,7 @@ extension CoordinateSpaceMapper {
     )
   }
 
-  /// Convert screen-space rect to canvas-space
+  /// Converts a viewport-space rect to canvas-space.
   public func canvasRect(from viewportRect: Rect<ViewportSpace>) -> Rect<CanvasSpace> {
     let origin = canvasPoint(from: viewportRect.origin)
     return Rect<CanvasSpace>(

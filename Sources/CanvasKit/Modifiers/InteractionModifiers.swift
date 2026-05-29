@@ -41,8 +41,8 @@ struct InteractionModifiers: ViewModifier {
           modifiers: modifierKeysNative,
         )
 
-        /// Returns the scale so the modifier's internal Zoom
-        /// stays in sync with transform state
+        // Return the scale so the modifier's internal zoom
+        // stays in sync with transform state.
         apply(adjustment)
 //        return store.currentTransform.scale
         return adjustment?.scale
@@ -106,7 +106,7 @@ extension InteractionModifiers {
         isEnabled = true
 
       case .tap, .drag, .hover:
-        /// Returns true if any of the current Tool's capabilities match this interaction
+        // Returns true if any of the current tool's capabilities match this interaction.
         isEnabled = store.effectiveTool.inputCapabilities.contains { capability in
           capability.interactionKind == interaction
         }

@@ -9,25 +9,11 @@ import CoreTools
 import SwiftUI
 import ViewTools
 
-/// Previously held by `CanvasAdjustment`
+/// A single change to one part of ``TransformState``.
 ///
-/// `TransformAdjustment` is distinct from `PointerAdjustment`.
-/// A transform adjustment can come from either a pointer or a gesture interaction.
-///
-/// E.g. a pointer drag can express a zoom in/out, thus adjusting transform's scale.
-///
-/// This enum corresponds to `TransformState`. Useful for expressing
-/// a *single* adjustment, rather than all three.
-///
-/// Important: Property names `translation`, `scale` and `rotation`
-/// are intentionally generic, to discourage direct association with e.g. pan/zoom/rotate.
-/// Whilst the default usage for these is providing values to `offset`,
-/// `scaleEffect` and `rotationEffect` SwiftUI modifiers, that is not
-/// the only way they can be used. These transformations
-/// can be applied in a range of other scenarios, such as
-///
-// TODO: List more examples for above
-// I'm thinking of the different ways gestures can be used
+/// Transform adjustments are intentionally phrased as translation, scale, and
+/// rotation rather than pan, zoom, and rotate so they can be produced by
+/// gestures, pointer tools, or app-defined input.
 public enum TransformAdjustment: Sendable {
   case translation(Size<ViewportSpace>)
   case scale(Double)
@@ -36,11 +22,8 @@ public enum TransformAdjustment: Sendable {
 
 extension TransformAdjustment {
 
-  /// Certain Transform adjustments can only be mutated by
-  /// compatible interactions.
-  ///
-  /// UPDATE: I think this may limit how tools may wish to declare
-  /// some capacibilities? Have turned off for now.
+  // Potential future validation: restrict transform adjustments to compatible
+  // interaction kinds once tool capabilities have settled.
   //  var supportedInteractions: InteractionKind.Set {
   //    switch self {
   //      case .translation: [.swipe, .drag]
@@ -85,12 +68,12 @@ extension TransformAdjustment {
     modifiers: EventModifiers,
   ) -> TransformAdjustment {
 
-    /// If Option is held during a Swipe, it is interpreted as Zoom, not Pan
+    // If Option is held during a swipe, it is interpreted as zoom, not pan.
     guard modifiers.contains(.option) else {
       return .panAdjustment(for: transform, delta: delta)
     }
 
-    /// Each point contributes up to 0.5% zoom change at sensitivity = 1.0
+    // Each point contributes up to 0.5% zoom change at sensitivity = 1.0.
     let factor = ZoomComputation.factorFromDelta(
       CGSize(width: 0, height: delta.cgSize.height),
       weights: .vertical,

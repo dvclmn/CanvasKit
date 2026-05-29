@@ -11,11 +11,8 @@ import ViewTools
 
 struct SwipeGestureModifier: ViewModifier {
 
-  /// My usual approach for modifiers is that they are captured higher up the
-  /// hierarchy, and available in the environment. However the way swipe
-  /// (scrollwheel) events are captured for this modifier (see `SwipeTrackingNSView`)
-  /// disrupts that process, so any modifiers detected during the swipe events are
-  /// held here and added to the Environment.
+  // Swipe events are captured by `SwipeTrackingNSView`, so modifier keys seen
+  // on the source `NSEvent` are bridged back into the SwiftUI environment here.
   @State private var modifiers: Modifiers = []
 
   let isEnabled: Bool
@@ -29,13 +26,13 @@ struct SwipeGestureModifier: ViewModifier {
             self.modifiers = event.modifiers
             action(event)
           }
-          /// This adds the modifiers to the Environment. This is also done separately
-          /// by `InteractionKit/ModifierKeysModifier`, but thankfully
-          /// they don't seem to clash.
-          ///
-          /// In this case, the modifiers come from the NSEvent via `scrollWheel(with:)`
-          /// in `SwipeTrackingNSView`, as this gesture, when active, seems to
-          /// block/override reading of modifiers in `ModifierKeysModifier`
+          // This adds the modifiers to the Environment. This is also done separately
+          // by `InteractionKit/ModifierKeysModifier`, but thankfully
+          // they don't seem to clash.
+          //
+          // In this case, the modifiers come from the NSEvent via `scrollWheel(with:)`
+          // in `SwipeTrackingNSView`, as this gesture, when active, seems to
+          // block/override reading of modifiers in `ModifierKeysModifier`.
           .environment(\.modifierKeys, modifiers)
         }
       }

@@ -9,10 +9,9 @@ import SwiftUI
 
 /// Each case corresponds directly to a modifier in `InteractionModifiers`.
 public enum Interaction: Sendable {
-  /// ``SwiftUI/View/onSwipeGesture(isEnabled:perform:)``
+  /// Input from `onSwipeGesture(isEnabled:perform:)`.
   case swipe(delta: Size<ViewportSpace>)  // onSwipeGesture
-  /// Proposed absolute zoom level (not delta) from
-  ///  ``SwiftUI/View/onPinchGesture(initial:isEnabled:didUpdateZoom:)``.
+  /// Proposed absolute zoom level from `onPinchGesture`.
   case pinch(scale: Double)  // onPinchGesture
   case rotation(angle: Angle)  // (Not yet supported)
   case tap(location: Point<ViewportSpace>)  // onTapGesture
@@ -46,7 +45,7 @@ extension Interaction: CustomStringConvertible {
   }
 }
 
-/// Not currently in use
+// Reserved for future pointer-button specific interactions.
 enum PointerButton: String, Sendable {
   case primary
   case secondary

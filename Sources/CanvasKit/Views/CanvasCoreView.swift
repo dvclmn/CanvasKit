@@ -31,11 +31,11 @@ struct CanvasCoreView<Content: View>: View {
       .drawingGroup(opaque: true)
       //      .ignoresSafeArea(edges: .top)
 
-      /// View now covers full width/height provided to it, no longer
-      /// cares about pan zoom etc, so is considered `ViewportSpace`
+      // View now covers full width/height provided to it, no longer
+      // cares about pan zoom etc, so is considered `ViewportSpace`.
       .coordinateSpace(.named(ViewportSpace.viewport))
 
-      /// This resolves the `CanvasSpace`
+      // This resolves the `CanvasSpace`.
       .overlayPreferenceValue(
         ArtworkBoundsAnchorKey.self,
         alignment: canvasAnchor.toAlignment,

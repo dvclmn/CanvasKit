@@ -13,11 +13,9 @@ extension DragGesture.Value {
     case standard
     case predicted
   }
-  /// Will return `predictedEndLocation` for the end location,
-  /// if `usingPredicated` is true. Otherwise will return `location`
+  /// Creates a rect from an explicit start point to the chosen drag end point.
   ///
-  /// Note: Using explicit parameter for `start`, in case this comes from
-  /// a stored start location, rather than the 'live' one from the Gesture.
+  /// Use `.predicted` to end the rect at `predictedEndLocation`.
   public func toRect(
     from start: CGPoint,
     end locationKind: EndLocationKind,

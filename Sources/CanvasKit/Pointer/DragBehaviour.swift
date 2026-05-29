@@ -34,10 +34,7 @@ public enum PointerDragBehaviour: Equatable, Sendable {
   /// Typical use: lasso/marquee selection over a canvas or list.
   case marquee
 
-  /// An accumulated offset that persists across drag gestures.
-  ///
-  /// Each new drag begins from the offset committed by the previous drag, so
-  /// movement compounds over time. Pass a `GeometryAxis/Set` to lock to an axis.
+  /// Frame-to-frame drag deltas, optionally constrained to an axis.
   case continuous(axes: Axis.Set = .both)
 }
 

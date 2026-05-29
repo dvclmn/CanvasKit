@@ -19,7 +19,7 @@ extension CanvasInputResolver {
 
   func resolve() -> InteractionAdjustment? {
 
-    /// 1. Does the effective tool declare a matching capability?
+    // 1. Does the effective tool declare a matching capability?
     if let tool = effectiveTool,
       tool.inputCapabilities.contains(where: { $0.matches(context) })
     {
@@ -38,8 +38,8 @@ extension CanvasInputResolver {
       }
     }
 
-    /// If not, fall back to defaults, which ensures that basics like
-    /// Swipe to pan, Pinch to Zoom etc work as expected.
+    // If not, fall back to defaults, which ensures that basics like
+    // Swipe to pan, Pinch to Zoom etc work as expected.
     return Self.defaultResolution(
       for: context,
       currentTransform: transform,

@@ -21,7 +21,7 @@ public struct ZoomTool: CanvasTool {
     .init(behaviour: .continuous(axes: .vertical))
   }
 
-  /// modifiers: nil → matches drag/tap regardless of modifier state
+  /// Matches drag and tap regardless of modifier state.
   public var inputCapabilities: [ToolCapability] {
     [
       ToolCapability(interaction: .drag, intent: .zoom, modifiers: nil),
@@ -78,7 +78,7 @@ public struct ZoomTool: CanvasTool {
       delta.cgSize,
       weights: .upRight,
     )
-    /// Hold Option to invert the zoom direction during drag, mirroring tap behaviour
+    // Hold Option to invert the zoom direction during drag, mirroring tap behaviour.
     if modifiers.contains(.option) {
       factor = 1 / max(factor, 0.0001)
     }

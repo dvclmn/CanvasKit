@@ -12,16 +12,23 @@ import SwiftUI
 public struct CanvasView<Content: View>: View, CanvasAddressable {
   @State private var store: CanvasHandler
 
-  /// Populated when user wishes to handle their own transform state
+  /// Populated when the caller owns transform state externally.
   private let externalTransform: Binding<TransformState>?
   private let externalCoordinateSpaceMapper: Binding<CoordinateSpaceMapper?>?
 
   /// Used only if a user passes in a canvas size value.
-  /// Otherwise size is measured internally
+  /// Otherwise size is measured internally.
   let explicitCanvasSize: Size<CanvasSpace>?
   let content: () -> Content
   
-  /// Main initialiser
+  /// Creates an interactive canvas around SwiftUI content.
+  ///
+  /// - Parameters:
+  ///   - size: Optional fixed canvas size. Pass `nil` to measure the content.
+  ///   - transform: Optional external source of truth for pan, zoom, and rotation.
+  ///   - coordinateSpaceMapper: Optional binding that receives the current mapper.
+  ///   - toolConfiguration: Optional custom tool catalogue and shortcut policy.
+  ///   - content: The artwork or document view rendered inside the canvas.
   public init(
     size: CGSize? = nil,
     transform: Binding<TransformState>? = nil,
@@ -45,20 +52,20 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
 
     CanvasCoreView(content: content)
 
-      /// User input modifiers, `onSwipeGesture`, `onTapGesture`, etc.
-      /// These wrap the canvas only, so their invisible event-capture overlays
-      /// do not sit above the tool picker.
+      // User input modifiers, `onSwipeGesture`, `onTapGesture`, etc.
+      // These wrap the canvas only, so their invisible event-capture overlays
+      // do not sit above the tool picker.
       .modifier(InteractionModifiers())
       .pointerStyleCompatible(store.pointerStyle)
     
       .modifier(ToolsPaletteViewModifier())
 
-      /// Adds canvas transform and mapped pointer values to the Environment
+      // Adds canvas transform and mapped pointer values to the Environment.
       .updateTransformEnvironment()
       .updatePointerEnvironment()
 
-      /// In cases where transform state is owned externally,
-      /// ensures both local and external are kept in sync
+      // In cases where transform state is owned externally,
+      // ensures both local and external are kept in sync.
       .bindModel(
         debounce: .noDebounce,
         $store.currentTransform,
