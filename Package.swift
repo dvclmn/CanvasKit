@@ -12,8 +12,9 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
-//    .package(url: "https://github.com/dvclmn/ToolKit", .upToNextMinor(from: "0.1.0")),
-    .package(path: "../../ToolKit")
+    .package(url: "https://github.com/dvclmn/ToolKit", .upToNextMinor(from: "0.1.0")),
+    // Seems like the only way to temporarily use local version, rather than remote, for swift CLI?
+//    .package(path: "../../ToolKit")
   ],
   targets: [
     .target(
