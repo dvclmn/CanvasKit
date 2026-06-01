@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-private import ViewTools
 
 /// When selected, pointer click-drag zooms (vertical axis).
 /// Tap to zoom in, Option+tap to zoom out.
@@ -31,7 +30,7 @@ public struct ZoomTool: CanvasTool {
 
   public func resolvePointerStyle(
     context: InteractionContext
-  ) -> PointerStyleCompatible {
+  ) -> CanvasPointerStyle {
     context.modifiers.contains(.option) ? .zoomOut : .zoomIn
   }
 

@@ -15,6 +15,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   /// Populated when the caller owns transform state externally.
   private let externalTransform: Binding<TransformState>?
   private let externalCoordinateSpaceMapper: Binding<CoordinateSpaceMapper?>?
+  private let externalPointerStyle: Binding<CanvasPointerStyle?>?
 
   /// Used only if a user passes in a canvas size value.
   /// Otherwise size is measured internally.
@@ -27,18 +28,21 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   ///   - size: Optional fixed canvas size. Pass `nil` to measure the content.
   ///   - transform: Optional external source of truth for pan, zoom, and rotation.
   ///   - coordinateSpaceMapper: Optional binding that receives the current mapper.
+  ///   - pointerStyle: Optional binding that receives the style resolved by the current tool.
   ///   - toolConfiguration: Optional custom tool catalogue and shortcut policy.
   ///   - content: The artwork or document view rendered inside the canvas.
   public init(
     size: CGSize? = nil,
     transform: Binding<TransformState>? = nil,
     coordinateSpaceMapper: Binding<CoordinateSpaceMapper?>? = nil,
+    pointerStyle: Binding<CanvasPointerStyle?>? = nil,
     toolConfiguration: ToolConfiguration? = nil,
     @ViewBuilder content: @escaping () -> Content,
   ) {
     self.explicitCanvasSize = size.map { Size<CanvasSpace>(fromCGSize: $0) }
     self.externalTransform = transform
     self.externalCoordinateSpaceMapper = coordinateSpaceMapper
+    self.externalPointerStyle = pointerStyle
     self._store = State(
       initialValue: .init(
         toolConfiguration: toolConfiguration
@@ -56,7 +60,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       // These wrap the canvas only, so their invisible event-capture overlays
       // do not sit above the tool picker.
       .modifier(InteractionModifiers())
-      .pointerStyleCompatible(store.pointerStyle)
+      .canvasPointerStyle(store.pointerStyle)
     
       .modifier(ToolsPaletteViewModifier())
 
@@ -77,9 +81,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
         to: externalCoordinateSpaceMapper,
       )
 
-      .onDisappear {
-        externalCoordinateSpaceMapper?.wrappedValue = nil
-      }
+      .syncValue(store.pointerStyle, to: externalPointerStyle)
 
       .modifier(CanvasToolKeyboardModifier(toolHandler: $store.toolHandler))
       .modifierKeys { store.updateModifiers($0) }
@@ -90,6 +92,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
 
       .onDisappear {
         externalCoordinateSpaceMapper?.wrappedValue = nil
+        externalPointerStyle?.wrappedValue = nil
       }
 
   }

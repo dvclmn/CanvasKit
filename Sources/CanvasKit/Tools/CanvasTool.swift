@@ -7,7 +7,6 @@
 
 private import CoreTools
 import SwiftUI
-private import ViewTools
 
 /// A canvas tool defines how selected interactions are interpreted.
 ///
@@ -32,7 +31,7 @@ where ID == CanvasToolKind {
   var inputCapabilities: [ToolCapability] { get }
 
   /// Resolve the pointer style for the current interaction context.
-  func resolvePointerStyle(context: InteractionContext) -> PointerStyleCompatible
+  func resolvePointerStyle(context: InteractionContext) -> CanvasPointerStyle
 
   /// Resolves an interaction into a canvas adjustment.
   ///

@@ -46,9 +46,6 @@ extension CanvasInputResolver {
     )
   }
 
-  //  var pointerStyle: PointerStyleCompatible? {
-  //    effectiveTool?.resolvePointerStyle(context: context)
-  //  }
 }
 
 // MARK: - Base Adjustment (Tool Use inactive)

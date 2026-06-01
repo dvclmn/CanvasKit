@@ -6,7 +6,6 @@
 //
 
 private import CoreTools
-private import ViewTools
 import SwiftUI
 
 @Observable
@@ -140,7 +139,7 @@ extension CanvasHandler {
   // TODO: Change how interactionContext is updated, as this pointer style
   // is possibly not being updated at the right cadence. interactionContext
   // is currently only updated when processedTransform() is run.
-  var pointerStyle: PointerStyleCompatible? {
+  var pointerStyle: CanvasPointerStyle? {
     guard let lastInteractionContext else { return nil }
     return effectiveTool.resolvePointerStyle(context: lastInteractionContext)
   }

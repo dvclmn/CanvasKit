@@ -25,6 +25,7 @@ or keyboard shortcuts.
 ### Interaction Model
 
 - <doc:CanvasTools>
+- <doc:PointerStyles>
 - <doc:InputInteractions>
 - <doc:ZoomBehaviour>
 
@@ -33,6 +34,7 @@ or keyboard shortcuts.
 - ``CanvasView``
 - ``TransformState``
 - ``CoordinateSpaceMapper``
+- ``CanvasPointerStyle``
 
 ### Tools
 

@@ -5,7 +5,6 @@
 //  Created by Dave Coleman on 12/3/2026.
 //
 
-private import ViewTools
 import SwiftUI
 
 /// When selected, pointer click-drag pans the canvas.
@@ -26,7 +25,7 @@ public struct PanTool: CanvasTool {
 
   public func resolvePointerStyle(
     context: InteractionContext
-  ) -> PointerStyleCompatible {
+  ) -> CanvasPointerStyle {
     context.isPointerDragging ? .grabActive : .grabIdle
   }
 

@@ -55,7 +55,7 @@ struct BrushTool: CanvasTool {
 
   func resolvePointerStyle(
     context: InteractionContext
-  ) -> PointerStyleCompatible {
+  ) -> CanvasPointerStyle {
     .default
   }
 
@@ -92,3 +92,16 @@ let configuration = ToolConfiguration(
 
 Return `.handled(...)` when the tool has resolved the interaction. Return
 `.passthrough` when CanvasKit should continue to its default behaviour.
+
+## Pointer style
+
+Tools return ``CanvasPointerStyle`` rather than SwiftUI's native `PointerStyle`.
+That keeps the public tool API available to CanvasKit's supported platform
+range while still allowing CanvasKit to apply native pointer styles where the
+operating system supports them.
+
+On macOS 15 and later, ``CanvasView`` maps the resolved ``CanvasPointerStyle``
+to SwiftUI's native pointer style support. On macOS 14, SwiftUI does not expose
+that API, so CanvasKit leaves cursor mutation to the app. Pass a `pointerStyle`
+binding to ``CanvasView`` if the app needs to bridge the semantic style into its
+own AppKit compatibility layer.

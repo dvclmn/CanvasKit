@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-private import ViewTools
 
 // MARK: - Select Tool
 
@@ -30,7 +29,7 @@ public struct SelectTool: CanvasTool {
 
   public func resolvePointerStyle(
     context: InteractionContext
-  ) -> PointerStyleCompatible { .default }
+  ) -> CanvasPointerStyle { .default }
 
   public func resolveInteraction(
     context: InteractionContext,
