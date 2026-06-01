@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import ViewTools
+private import ViewTools
 
 /// When selected, pointer click-drag zooms (vertical axis).
 /// Tap to zoom in, Option+tap to zoom out.

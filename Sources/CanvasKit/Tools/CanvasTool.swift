@@ -5,9 +5,9 @@
 //  Created by Dave Coleman on 12/3/2026.
 //
 
-import CoreTools
+private import CoreTools
 import SwiftUI
-import ViewTools
+private import ViewTools
 
 /// A canvas tool defines how selected interactions are interpreted.
 ///

@@ -5,9 +5,9 @@
 //  Created by Dave Coleman on 8/4/2026.
 //
 
-import CoreTools
+private import CoreTools
 import SwiftUI
-import ViewTools
+private import ViewTools
 
 /// A single change to one part of ``TransformState``.
 ///

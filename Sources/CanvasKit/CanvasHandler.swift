@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 8/3/2026.
 //
 
-import CoreTools
-import ViewTools
+private import CoreTools
+private import ViewTools
 import SwiftUI
 
 @Observable

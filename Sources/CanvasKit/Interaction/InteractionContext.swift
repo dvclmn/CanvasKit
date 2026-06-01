@@ -5,9 +5,9 @@
 //  Created by Dave Coleman on 18/3/2026.
 //
 
-import CoreTools
+private import CoreTools
 import SwiftUI
-import ViewTools
+private import ViewTools
 
 /// Describes the current interaction, as it is happening right now.
 /// Can be used to compare against ``ToolCapability``s to

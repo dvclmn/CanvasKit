@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 12/4/2026.
 //
 
-import ViewTools
-import CoreTools
+private import ViewTools
+private import CoreTools
 import SwiftUI
 
 /// Declares an interaction kind that a tool is willing to resolve.

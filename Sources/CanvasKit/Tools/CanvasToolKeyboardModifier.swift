@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import ViewTools
+private import ViewTools
 
 struct CanvasToolKeyboardModifier: ViewModifier {
 

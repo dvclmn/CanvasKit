@@ -7,8 +7,8 @@
 
 #if canImport(AppKit)
 import AppKit
-import ViewTools
-import CoreTools
+private import ViewTools
+private import CoreTools
 
 /// Captures AppKit scroll-wheel events as CanvasKit swipe gestures.
 class SwipeTrackingNSView: NSView {

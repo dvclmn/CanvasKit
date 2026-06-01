@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 8/5/2026.
 //
 
-import CoreTools
+private import CoreTools
 import SwiftUI
 
 public struct ZoomSensitivityModifier: ViewModifier {

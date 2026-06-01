@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 17/3/2026.
 //
 
-import ViewTools
+private import ViewTools
 
 public typealias SwipeOutput = (SwipeEvent) -> Void
 

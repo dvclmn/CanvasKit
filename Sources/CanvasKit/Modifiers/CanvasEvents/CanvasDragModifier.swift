@@ -5,14 +5,13 @@
 //  Created by Dave Coleman on 23/3/2026.
 //
 
-import CoreTools
+private import CoreTools
 import SwiftUI
-import ViewTools
+private import ViewTools
 
 public struct CanvasDragModifier: ViewModifier {
   @Environment(\.pointerDrag) private var pointerDrag
   @Environment(\.activeInteraction) private var activeInteraction
-  //  @Environment(\.interactionPhase) private var interactionPhase
 
   let action: (CanvasDragEvent) -> Void
   public func body(content: Content) -> some View {
@@ -24,17 +23,7 @@ public struct CanvasDragModifier: ViewModifier {
             phase: activeInteraction.phase,
           )
           action(event)
-          //          action
         }
-        //        guard let pointerDrag else {
-        //          printMissing("pointerDrag", for: "CanvasDragModifier")
-        //          return
-        //        }
-        //        guard activeInteraction.kind == .drag else {
-        //          print("Expected `InteractionKind/drag`, got: \(activeInteraction.kind)")
-        //          return
-        //        }
-
       }
   }
 }

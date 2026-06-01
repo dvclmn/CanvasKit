@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 24/6/2025.
 //
 
-import CoreTools
-import ViewTools
+private import CoreTools
+private import ViewTools
 import SwiftUI
 
 public struct CanvasView<Content: View>: View, CanvasAddressable {

@@ -6,8 +6,8 @@
 //
 
 import SwiftUI
-import ViewTools
-import CoreTools
+private import ViewTools
+private import CoreTools
 
 extension View {
 

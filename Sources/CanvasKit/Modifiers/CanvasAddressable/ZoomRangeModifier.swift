@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 4/4/2026.
 //
 
-import CoreTools
+private import CoreTools
 import SwiftUI
 
 public struct ZoomRangeModifier: ViewModifier {

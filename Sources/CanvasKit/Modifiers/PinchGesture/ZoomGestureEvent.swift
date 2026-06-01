@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import CoreTools
-import ViewTools
+private import CoreTools
+private import ViewTools
 
 @available(
   *, deprecated, renamed: "ZoomUpdate",

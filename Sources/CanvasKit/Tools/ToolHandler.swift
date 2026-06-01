@@ -5,9 +5,9 @@
 //  Created by Dave Coleman on 8/7/2025.
 //
 
-import CoreTools
+private import CoreTools
 import SwiftUI
-import ViewTools
+private import ViewTools
 
 /// Manages tool selection, spring-loading, and key bindings.
 ///

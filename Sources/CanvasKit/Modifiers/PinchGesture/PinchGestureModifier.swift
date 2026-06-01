@@ -5,9 +5,9 @@
 //  Created by Dave Coleman on 24/6/2025.
 //
 
-import CoreTools
+private import CoreTools
 import SwiftUI
-import ViewTools
+private import ViewTools
 
 /// Converts a SwiftUI `MagnifyGesture` into resolved zoom values.
 ///
