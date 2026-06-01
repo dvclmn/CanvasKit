@@ -16,7 +16,6 @@ public struct InteractionContext: Sendable {
   public let interaction: Interaction
   public let phase: InteractionPhase
   public let modifiers: EventModifiers
-//  public let modifiers: Modifiers
 
   public init(
     interaction: Interaction,

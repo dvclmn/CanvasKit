@@ -71,7 +71,6 @@ public struct ZoomTool: CanvasTool {
   private func deltaDrag(
     _ delta: Size<ViewportSpace>,
     modifiers: EventModifiers,
-//    modifiers: Modifiers,
     transform: TransformState,
   ) -> InteractionAdjustment {
     var factor = ZoomComputation.factorFromDelta(

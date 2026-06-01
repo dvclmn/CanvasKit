@@ -5,9 +5,9 @@
 //  Created by Dave Coleman on 13/3/2026.
 //
 
-private import ViewTools
 private import CoreTools
 import SwiftUI
+private import ViewTools
 
 /// Maps a key input to a tool activation with a given mode.
 ///
@@ -35,8 +35,6 @@ public struct ToolBinding: Hashable, Sendable, Equatable {
 
 extension ToolBinding {
   var modifiers: EventModifiers { shortcut.modifiers }
-//  var modifiers: Modifiers { .init(from: shortcut.modifiers) }
-
 }
 
 extension KeyboardShortcut {

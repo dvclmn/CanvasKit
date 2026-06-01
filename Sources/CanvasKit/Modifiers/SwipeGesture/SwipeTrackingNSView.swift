@@ -7,6 +7,7 @@
 
 #if canImport(AppKit)
 import AppKit
+import SwiftUI
 private import ViewTools
 private import CoreTools
 
@@ -18,13 +19,13 @@ class SwipeTrackingNSView: NSView {
     let locationInView = convert(event.locationInWindow, from: nil)
     let delta = CGSize(width: event.scrollingDeltaX, height: event.scrollingDeltaY)
     let phase = InteractionPhase(from: event.phase)
-    let modifiers = Modifiers(from: event)
+    let modifiers: EventModifiers = .init(from: event.modifierFlags)
 
     let eventData = SwipeEvent(
       delta: delta.viewportSize,
       location: locationInView.viewportPoint,
       phase: phase,
-      modifiers: modifiers
+      modifiers: modifiers,
     )
     onSwipeGesture?(eventData)
   }

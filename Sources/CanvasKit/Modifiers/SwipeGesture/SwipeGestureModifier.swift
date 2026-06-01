@@ -23,7 +23,7 @@ struct SwipeGestureModifier: ViewModifier {
       .overlay {
         if isEnabled {
           SwipeGestureView { event in
-            self.modifiers = event.modifiers
+            self.modifiers = Modifiers(from: event.modifiers)
             action(event)
           }
           // This adds the modifiers to the Environment. This is also done separately

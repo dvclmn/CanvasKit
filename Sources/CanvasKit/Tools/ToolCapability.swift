@@ -18,13 +18,11 @@ public struct ToolCapability: Sendable {
   public let interactionKind: InteractionKind
   public let intent: InteractionIntent
   public let modifiers: EventModifiers?
-//  public let modifiers: Modifiers?
 
   public init(
     interaction: InteractionKind,
     intent: InteractionIntent? = nil,
     modifiers: EventModifiers? = nil,
-//    modifiers: Modifiers? = nil,
   ) {
     self.interactionKind = interaction
     self.intent = intent ?? .custom

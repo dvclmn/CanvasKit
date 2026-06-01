@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 17/3/2026.
 //
 
-private import ViewTools
+import SwiftUI
 
 public typealias SwipeOutput = (SwipeEvent) -> Void
 
@@ -16,7 +16,7 @@ public struct SwipeEvent {
 
   /// Will be added to the environment, but also included
   /// here in case direct access is needed
-  public let modifiers: Modifiers
+  public let modifiers: EventModifiers
 }
 
 extension SwipeEvent {
