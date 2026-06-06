@@ -15,12 +15,12 @@ import SwiftUI
 /// provided, the current event modifiers must contain them for the capability to
 /// match.
 public struct ToolCapability: Sendable {
-  public let interactionKind: InteractionKind
+  public let interactionKind: Interaction.Kind
   public let intent: InteractionIntent
   public let modifiers: EventModifiers?
 
   public init(
-    interaction: InteractionKind,
+    interaction: Interaction.Kind,
     intent: InteractionIntent? = nil,
     modifiers: EventModifiers? = nil,
   ) {

@@ -11,7 +11,7 @@ import SwiftUI
 /// A canvas tool defines how selected interactions are interpreted.
 ///
 /// CanvasKit applies default behaviour for unclaimed interactions, while tools
-/// may opt into specific ``InteractionKind`` values through ``inputCapabilities``.
+/// may opt into specific ``Interaction.Kind`` values through ``inputCapabilities``.
 public protocol CanvasTool: Sendable, Equatable, CustomStringConvertible, Identifiable
 where ID == CanvasToolKind {
 

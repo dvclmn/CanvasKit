@@ -98,7 +98,7 @@ extension InteractionModifiers {
   }
 
   private func isEnabled(
-    for interaction: InteractionKind
+    for interaction: Interaction.Kind
   ) -> Bool {
     let isEnabled: Bool
 

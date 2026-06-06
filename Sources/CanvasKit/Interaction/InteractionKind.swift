@@ -10,31 +10,33 @@
 /// Swipe, pinch, and rotate are viewport gestures. Tap, drag, and hover are
 /// pointer events captured in viewport coordinates and, where needed, mapped
 /// into ``CanvasSpace``.
-public enum InteractionKind: CaseIterable, Hashable, Sendable {
-
-  // Viewport gestures
-  case swipe
-  case pinch
-  case rotate
-
-  // Pointer events
-  case tap
-  case drag
-  case hover
-
-  var asSet: Set {
-    switch self {
-      case .swipe: .swipe
-      case .pinch: .pinch
-      case .rotate: .rotate
-      case .tap: .tap
-      case .drag: .drag
-      case .hover: .hover
+extension Interaction {
+  public enum Kind: CaseIterable, Hashable, Sendable {
+    
+    // Viewport gestures
+    case swipe
+    case pinch
+    case rotate
+    
+    // Pointer events
+    case tap
+    case drag
+    case hover
+    
+    var asSet: Set {
+      switch self {
+        case .swipe: .swipe
+        case .pinch: .pinch
+        case .rotate: .rotate
+        case .tap: .tap
+        case .drag: .drag
+        case .hover: .hover
+      }
     }
   }
 }
 
-extension InteractionKind: CustomStringConvertible {
+extension Interaction.Kind: CustomStringConvertible {
   public var description: String {
     switch self {
       case .swipe: "Swipe"
@@ -49,7 +51,7 @@ extension InteractionKind: CustomStringConvertible {
 }
 
 // MARK: - Set
-extension InteractionKind {
+extension Interaction.Kind {
 
   struct Set: OptionSet, Sendable {
     let rawValue: Int
@@ -70,21 +72,21 @@ extension InteractionKind {
   }
 }
 
-extension InteractionKind.Set {
-  init(_ kind: InteractionKind) {
+extension Interaction.Kind.Set {
+  init(_ kind: Interaction.Kind) {
     self = kind.asSet
   }
 
-  init<S: Sequence>(_ kinds: S) where S.Element == InteractionKind {
+  init<S: Sequence>(_ kinds: S) where S.Element == Interaction.Kind {
     self = kinds.reduce(into: []) { $0.formUnion($1.asSet) }
   }
 
-  func contains(_ kind: InteractionKind) -> Bool { contains(kind.asSet) }
+  func contains(_ kind: Interaction.Kind) -> Bool { contains(kind.asSet) }
 
-  var kinds: [InteractionKind] { InteractionKind.allCases.filter(self.contains) }
+  var kinds: [Interaction.Kind] { Interaction.Kind.allCases.filter(self.contains) }
 }
 
-extension InteractionKind.Set: CustomStringConvertible {
+extension Interaction.Kind.Set: CustomStringConvertible {
   public var description: String {
     kinds.map { $0.description }.joined(separator: ", ")
   }

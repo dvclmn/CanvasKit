@@ -38,7 +38,7 @@ extension PointerMappedSnapshot {
 }
 
 struct ActiveInteraction: Sendable {
-  let kind: InteractionKind?
+  let kind: Interaction.Kind?
   let phase: InteractionPhase
 
   static let none: Self = .init(kind: nil, phase: .none)

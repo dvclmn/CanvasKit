@@ -3,7 +3,7 @@
 CanvasKit separates input source, interaction intent, and state mutation.
 
 Input arrives as an ``Interaction``. Each interaction has an
-``InteractionKind`` such as swipe, pinch, tap, drag, or hover. A tool can then
+``Interaction.Kind`` such as swipe, pinch, tap, drag, or hover. A tool can then
 declare the kinds it wants to handle with ``ToolCapability``.
 
 ## Default handling

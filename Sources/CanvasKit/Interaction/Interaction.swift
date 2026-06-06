@@ -20,7 +20,7 @@ public enum Interaction: Sendable {
 }
 
 extension Interaction {
-  public var kind: InteractionKind {
+  public var kind: Interaction.Kind {
     switch self {
       case .swipe: .swipe
       case .pinch: .pinch
