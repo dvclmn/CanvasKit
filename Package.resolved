@@ -1,5 +1,5 @@
 {
-  "originHash" : "d742ee710eb7e06fdca686463261fbf8a6ae8aecf393ba417f2a2e43dae5b8d8",
+  "originHash" : "980565e5eb8ced785868532af054353ac0fde9d7f94a61fc74865149f23b3ee9",
   "pins" : [
     {
       "identity" : "swift-docc-plugin",
@@ -17,6 +17,15 @@
       "state" : {
         "revision" : "b45d1f2ed151d057b54504d653e0da5552844e34",
         "version" : "1.0.0"
+      }
+    },
+    {
+      "identity" : "toolkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dvclmn/ToolKit",
+      "state" : {
+        "revision" : "c62262eccc1efd28da1838d41f8290580885f302",
+        "version" : "0.2.0"
       }
     }
   ],

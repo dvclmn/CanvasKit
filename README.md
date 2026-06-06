@@ -12,7 +12,7 @@ It wraps ordinary SwiftUI content (the "Canvas") in an interactive viewport. You
 ## Contents
 - [Quick Start](#quick-start)
 - [Current Status](#current-status)
-- [Installation](#requirements-and-installation)
+- [Installation](#installation)
 - [What CanvasKit Provides](#what-canvaskit-provides)
 - [Usage](#common-usage)
 - [Use Cases](#use-cases)

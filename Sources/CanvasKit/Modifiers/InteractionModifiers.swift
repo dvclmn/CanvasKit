@@ -7,10 +7,11 @@
 
 private import CoreTools
 import SwiftUI
+private import ViewTools
 
 struct InteractionModifiers: ViewModifier {
   @Environment(CanvasHandler.self) private var store
-  @Environment(\.modifierKeysNative) private var modifierKeysNative
+  @Environment(\.modifierKeys) private var modifierKeys
   @Environment(\.zoomRange) private var zoomRange
 
   func body(content: Content) -> some View {
@@ -24,7 +25,7 @@ struct InteractionModifiers: ViewModifier {
         let adjustment = store.processedTransform(
           .swipe(delta: event.delta),
           phase: event.phase,
-          modifiers: modifierKeysNative,
+          modifiers: modifierKeys.canvasEventModifiers,
         )
         apply(adjustment)
       }
@@ -38,7 +39,7 @@ struct InteractionModifiers: ViewModifier {
         let adjustment = store.processedTransform(
           .pinch(scale: zoom),
           phase: phase,
-          modifiers: modifierKeysNative,
+          modifiers: modifierKeys.canvasEventModifiers,
         )
 
         // Return the scale so the modifier's internal zoom
@@ -53,7 +54,7 @@ struct InteractionModifiers: ViewModifier {
         let adjustment = store.processedTransform(
           .hover(location.viewportPoint),
           phase: phase.interactionPhase,
-          modifiers: modifierKeysNative,
+          modifiers: modifierKeys.canvasEventModifiers,
         )
         apply(adjustment)
 
@@ -65,7 +66,7 @@ struct InteractionModifiers: ViewModifier {
         let adjustment = store.processedTransform(
           .tap(location: location.viewportPoint),
           phase: .ended,
-          modifiers: modifierKeysNative,
+          modifiers: modifierKeys.canvasEventModifiers,
         )
         apply(adjustment)
 
@@ -82,7 +83,7 @@ struct InteractionModifiers: ViewModifier {
         let adjustment = store.processedTransform(
           .drag(payload),
           phase: phase,
-          modifiers: modifierKeysNative,
+          modifiers: modifierKeys.canvasEventModifiers,
         )
         apply(adjustment)
       }

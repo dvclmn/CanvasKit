@@ -7,13 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F68B52142FC9961B0002097E /* Article.md in Resources */ = {isa = PBXBuildFile; fileRef = F68B52132FC9961B0002097E /* Article.md */; };
 		F6EC03962F9CCCBD0005E730 /* CanvasKit in Frameworks */ = {isa = PBXBuildFile; productRef = F6EC03952F9CCCBD0005E730 /* CanvasKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		F67418692F10DEC9004B8381 /* CanvasDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CanvasDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		F68B52132FC9961B0002097E /* Article.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = Article.md; path = ../Sources/CanvasKit/Documentation.docc/Article.md; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -52,7 +50,6 @@
 		F67418602F10DEC9004B8381 = {
 			isa = PBXGroup;
 			children = (
-				F68B52132FC9961B0002097E /* Article.md */,
 				F674186B2F10DEC9004B8381 /* CanvasDemo */,
 				F6F810AB2FC2F7DB00F608C9 /* Frameworks */,
 				F674186A2F10DEC9004B8381 /* Products */,
@@ -108,7 +105,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2620;
-				LastUpgradeCheck = 2620;
+				LastUpgradeCheck = 2650;
 				TargetAttributes = {
 					F67418682F10DEC9004B8381 = {
 						CreatedOnToolsVersion = 26.2;
@@ -141,7 +138,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F68B52142FC9961B0002097E /* Article.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -166,6 +162,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = F2W5BX3D7F;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -200,6 +197,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = F2W5BX3D7F;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -260,6 +258,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = F2W5BX3D7F;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -285,6 +284,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -324,6 +324,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = F2W5BX3D7F;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -342,6 +343,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 			};
 			name = Release;

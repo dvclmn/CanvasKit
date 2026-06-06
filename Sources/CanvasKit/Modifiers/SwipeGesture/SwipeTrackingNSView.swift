@@ -19,7 +19,7 @@ class SwipeTrackingNSView: NSView {
     let locationInView = convert(event.locationInWindow, from: nil)
     let delta = CGSize(width: event.scrollingDeltaX, height: event.scrollingDeltaY)
     let phase = InteractionPhase(from: event.phase)
-    let modifiers: EventModifiers = .init(from: event.modifierFlags)
+    let modifiers = Modifiers(from: event).canvasEventModifiers
 
     let eventData = SwipeEvent(
       delta: delta.viewportSize,

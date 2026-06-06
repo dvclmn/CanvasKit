@@ -84,7 +84,9 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       .syncValue(store.pointerStyle, to: externalPointerStyle)
 
       .modifier(CanvasToolKeyboardModifier(toolHandler: $store.toolHandler))
-      .modifierKeys { store.updateModifiers($0) }
+      .modifierKeys { modifiers in
+        store.updateModifiers(modifiers.canvasEventModifiers)
+      }
 
       .environment(\.canvasCoordinateSpaceMapper, store.coordinateSpaceMapper(in: explicitCanvasSize))
       .environment(\.activeInteraction, store.activeInteraction)
