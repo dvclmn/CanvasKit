@@ -72,7 +72,7 @@ extension ToolsView {
   private func ToolButton(for tool: any CanvasTool) -> some View {
 
     Button {
-      store.toolHandler.setCommittedTool(kind: tool.kind)
+      store.toolHandler.setCommittedTool(id: tool.id)
     } label: {
       Label(tool.name, systemImage: tool.icon)
         .foregroundStyle(toolForegroundColour(for: tool))
@@ -97,11 +97,11 @@ extension ToolsView {
 
   }
   func isToolActive(_ tool: any CanvasTool) -> Bool {
-    store.toolHandler.effectiveToolKind == tool.kind
+    store.toolHandler.effectiveToolID == tool.id
   }
 
   func toolForegroundColour(for tool: any CanvasTool) -> Color {
-    switch store.toolHandler.activationStatus(for: tool.kind) {
+    switch store.toolHandler.activationStatus(for: tool.id) {
       case .nonCommittingHold:
         return .blue
 

@@ -12,7 +12,7 @@ import SwiftUI
 /// The default selection tool. Pointer drag produces a marquee rectangle;
 /// taps register tap locations.
 public struct SelectTool: CanvasTool {
-  public let kind: CanvasToolKind = .select
+  public let id: CanvasToolID = .select
   public let name = "Select"
   public let icon = "cursorarrow"
 
@@ -22,7 +22,6 @@ public struct SelectTool: CanvasTool {
       ToolCapability(interaction: .tap, intent: .select),
       ToolCapability(interaction: .drag, intent: .drawMarquee),
     ]
-    //    ToolCapability.selection
   }
 
   public init() {}
@@ -44,10 +43,5 @@ public struct SelectTool: CanvasTool {
       }
 
     return .handled(adjustment)
-    //    return .init(
-    //      for: context.interaction,
-    //      adjustment: adjustment,
-    //      action: .none,
-    //    )
   }
 }

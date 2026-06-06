@@ -36,7 +36,7 @@
 //}
 //
 //private struct StubTool: CanvasTool {
-//  let kind: CanvasToolKind = .init(rawValue: "stub")
+//  let kind: CanvasToolID = .init(rawValue: "stub")
 //  let name = "Stub"
 //  let icon = "questionmark"
 //

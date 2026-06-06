@@ -5,7 +5,7 @@ interaction context.
 
 ```swift
 struct ZoomTool: CanvasTool {
-  let kind: CanvasToolKind = .zoom
+  let id: CanvasToolID = .zoom
   let name = "Zoom"
   let icon = "magnifyingglass"
 

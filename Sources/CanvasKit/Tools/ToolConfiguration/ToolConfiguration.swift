@@ -18,10 +18,10 @@ import SwiftUI
 /// such as the committed selection or a Space-held Pan override. For the
 /// committed selection, ask `ToolHandler` / ``ToolSelection``. For the tool
 /// that is actually active right now, ask `ToolHandler` for `effectiveTool` /
-/// `effectiveToolKind`.
+/// `effectiveToolID`.
 ///
-/// Registering a tool with an existing `CanvasToolKind` replaces the previous
-/// tool for that kind, which makes it easy to customise built-in tools while
+/// Registering a tool with an existing `CanvasToolID` replaces the previous
+/// tool for that ID, which makes it easy to customise built-in tools while
 /// keeping their identity stable.
 public struct ToolConfiguration: Sendable {
 
@@ -47,66 +47,30 @@ public struct ToolConfiguration: Sendable {
     self.bindings = bindings
     self.springLoadDelay = springLoadDelay
   }
-
-  @available(
-    *,
-    deprecated,
-    message: "ToolConfiguration no longer stores committed selection. Pass the selection to ToolHandler / ToolSelection instead."
-  )
-  public init(
-    tools: [any CanvasTool] = .defaultTools,
-    bindings: [ToolBinding] = ToolBinding.defaultBindings(),
-    selectedToolKind: CanvasToolKind?,
-    springLoadDelay: TimeInterval = 0.15,
-  ) {
-    self.init(
-      tools: tools,
-      bindings: bindings,
-      springLoadDelay: springLoadDelay,
-    )
-  }
-
-  @available(
-    *,
-    deprecated,
-    message: "ToolConfiguration no longer stores committed selection. Pass the selection to ToolHandler / ToolSelection instead."
-  )
-  public init(
-    tools: [any CanvasTool] = .defaultTools,
-    bindings: [ToolBinding] = ToolBinding.defaultBindings(),
-    committedToolKind: CanvasToolKind?,
-    springLoadDelay: TimeInterval = 0.15,
-  ) {
-    self.init(
-      tools: tools,
-      bindings: bindings,
-      springLoadDelay: springLoadDelay,
-    )
-  }
 }
 
 extension ToolConfiguration {
 
   public static var `default`: Self { .init() }
 
-  /// The first registered tool kind, or `select` if the catalogue is empty.
-  public var defaultToolKind: CanvasToolKind {
-    tools.first?.kind ?? .select
+  /// The first registered tool id, or `select` if the catalogue is empty.
+  public var defaultToolID: CanvasToolID {
+    tools.first?.id ?? .select
   }
 
-  /// Returns the registered tool for the given kind, if any.
-  public func registeredTool(for kind: CanvasToolKind) -> (any CanvasTool)? {
-    guard let index = firstIndex(of: kind) else { return nil }
+  /// Returns the registered tool for the given id, if any.
+  public func registeredTool(for id: CanvasToolID) -> (any CanvasTool)? {
+    guard let index = firstIndex(of: id) else { return nil }
     return tools[index]
   }
 
-  /// Whether the catalogue contains a tool with the given kind.
-  public func containsTool(_ kind: CanvasToolKind) -> Bool {
-    firstIndex(of: kind) != nil
+  /// Whether the catalogue contains a tool with the given id.
+  public func containsTool(_ id: CanvasToolID) -> Bool {
+    firstIndex(of: id) != nil
   }
 
-  func firstIndex(of kind: CanvasToolKind) -> Int? {
-    tools.firstIndex { $0.kind == kind }
+  func firstIndex(of id: CanvasToolID) -> Int? {
+    tools.firstIndex { $0.id == id }
   }
 
   /// Bindings whose targets do not correspond to any registered tool.
@@ -134,12 +98,12 @@ extension ToolConfiguration {
     renamed: "registeredTool(for:)",
     message: "Use `registeredTool(for:)` to make it clear this is a catalogue lookup, not runtime tool resolution."
   )
-  public func tool(for kind: CanvasToolKind) -> (any CanvasTool)? {
-    registeredTool(for: kind)
+  public func tool(for id: CanvasToolID) -> (any CanvasTool)? {
+    registeredTool(for: id)
   }
 
-  /// Returns the first sticky shortcut for the given kind, if any.
-  public func shortcut(for kind: CanvasToolKind) -> KeyboardShortcut? {
-    activeBindings.first { $0.target == kind && $0.mode == .sticky }?.shortcut
+  /// Returns the first sticky shortcut for the given id, if any.
+  public func shortcut(for id: CanvasToolID) -> KeyboardShortcut? {
+    activeBindings.first { $0.target == id && $0.mode == .sticky }?.shortcut
   }
 }

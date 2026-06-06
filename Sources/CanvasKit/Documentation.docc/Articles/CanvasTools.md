@@ -38,12 +38,12 @@ Create a tool by conforming to ``CanvasTool`` and declaring the interactions it
 claims.
 
 ```swift
-extension CanvasToolKind {
+extension CanvasToolID {
   static let brush = Self("brush")
 }
 
 struct BrushTool: CanvasTool {
-  let kind: CanvasToolKind = .brush
+  let id: CanvasToolID = .brush
   let name = "Brush"
   let icon = "paintbrush"
 
@@ -69,7 +69,7 @@ struct BrushTool: CanvasTool {
 ```
 
 Register custom tools by building a configuration. Reusing a built-in
-``CanvasToolKind`` replaces that tool while keeping shortcuts and selection
+``CanvasToolID`` replaces that tool while keeping shortcuts and selection
 identity stable.
 
 ```swift

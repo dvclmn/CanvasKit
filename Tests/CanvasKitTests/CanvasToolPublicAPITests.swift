@@ -29,7 +29,7 @@
 //}
 //
 //private struct PublicTool: CanvasTool {
-//  let kind: CanvasToolKind = "public-tool"
+//  let kind: CanvasToolID = "public-tool"
 //  let name = "Public Tool"
 //  let icon = "hammer"
 //

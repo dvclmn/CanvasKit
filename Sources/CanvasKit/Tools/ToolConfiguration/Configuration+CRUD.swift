@@ -15,7 +15,7 @@ extension ToolConfiguration {
   package static func normalisedTools(_ tools: [any CanvasTool]) -> [any CanvasTool] {
     var result: [any CanvasTool] = []
     for tool in tools {
-      if let index = result.firstIndex(where: { $0.kind == tool.kind }) {
+      if let index = result.firstIndex(where: { $0.id == tool.id }) {
         result[index] = tool
       } else {
         result.append(tool)
@@ -24,16 +24,16 @@ extension ToolConfiguration {
     return result
   }
 
-  /// Register or replace a tool by kind.
+  /// Register or replace a tool by id.
   public mutating func register(_ tool: any CanvasTool) {
-    if let index = firstIndex(of: tool.kind) {
+    if let index = firstIndex(of: tool.id) {
       tools[index] = tool
     } else {
       tools.append(tool)
     }
   }
 
-  /// Register or replace multiple tools by kind.
+  /// Register or replace multiple tools by id.
   public mutating func register(_ tools: [any CanvasTool]) {
     tools.forEach { self.register($0) }
   }
@@ -44,16 +44,16 @@ extension ToolConfiguration {
   }
 
   /// Reorder an existing tool to a new position within the catalogue.
-  public mutating func moveTool(kind: CanvasToolKind, to newIndex: Int) {
-    guard let currentIndex = firstIndex(of: kind) else { return }
+  public mutating func moveTool(id: CanvasToolID, to newIndex: Int) {
+    guard let currentIndex = firstIndex(of: id) else { return }
     let tool = tools.remove(at: currentIndex)
     let clampedIndex = max(0, min(newIndex, tools.count))
     tools.insert(tool, at: clampedIndex)
   }
 
-  /// Remove a registered tool by kind.
-  public mutating func removeTool(kind: CanvasToolKind) {
-    tools.removeAll { $0.kind == kind }
+  /// Remove a registered tool by id.
+  public mutating func removeTool(id: CanvasToolID) {
+    tools.removeAll { $0.id == id }
   }
 
   /// Replace the keyboard bindings wholesale.

@@ -5,11 +5,9 @@
 //  Created by Dave Coleman on 28/4/2026.
 //
 
-/// Starting with finite/default intents at first
+/// A way to attach meaning to a user interaction
 public enum InteractionIntent: String, Sendable {
 
-  /// Important: Need to see Modifiers to properly resolve. E.g. a Swipe
-  /// gesture resolves to Pan by default; with Option it becomes Zoom.
   case pan
   case zoom
   case rotate

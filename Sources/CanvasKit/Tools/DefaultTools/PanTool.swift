@@ -9,7 +9,7 @@ import SwiftUI
 
 /// When selected, pointer click-drag pans the canvas.
 public struct PanTool: CanvasTool {
-  public let kind: CanvasToolKind = .pan
+  public let id: CanvasToolID = .pan
   public let name = "Pan"
   public let icon = "hand.raised"
 

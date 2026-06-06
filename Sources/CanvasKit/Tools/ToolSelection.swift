@@ -7,10 +7,10 @@
 
 /// Mutable user/session state.
 public struct ToolSelection: Sendable, Equatable {
-  public var committedToolKind: CanvasToolKind
+  public var committedToolID: CanvasToolID
 
-  public init(kind committedToolKind: CanvasToolKind = .select) {
-    self.committedToolKind = committedToolKind
+  public init(kind committedToolID: CanvasToolID = .select) {
+    self.committedToolID = committedToolID
   }
 }
 

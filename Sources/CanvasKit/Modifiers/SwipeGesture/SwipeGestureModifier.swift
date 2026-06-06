@@ -11,8 +11,8 @@ private import ViewTools
 
 struct SwipeGestureModifier: ViewModifier {
 
-  // Swipe events are captured by `SwipeTrackingNSView`, so modifier keys seen
-  // on the source `NSEvent` are bridged back into the SwiftUI environment here.
+  /// Swipe events are captured by `SwipeTrackingNSView`, so modifier keys seen
+  /// on the source `NSEvent` are bridged back into the SwiftUI environment here.
   @State private var modifiers: Modifiers = []
 
   let isEnabled: Bool
@@ -40,7 +40,7 @@ struct SwipeGestureModifier: ViewModifier {
 }
 extension View {
   /// Typically used for Pan, but useful for other swipe-y things too.
-  public func onSwipeGesture(
+  func onSwipeGesture(
     isEnabled: Bool = true,
     perform action: @escaping SwipeOutput,
   ) -> some View {

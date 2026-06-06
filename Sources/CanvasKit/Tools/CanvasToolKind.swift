@@ -1,5 +1,5 @@
 //
-//  ToolKind.swift
+//  CanvasToolID.swift
 //  CanvasKit
 //
 //  Created by Dave Coleman on 12/3/2026.
@@ -9,11 +9,11 @@ import Foundation
 
 /// An extensible tool identity. New tools can be defined by extending this type:
 /// ```swift
-/// extension CanvasToolKind {
+/// extension CanvasToolID {
 ///   public static let brush = Self("brush")
 /// }
 /// ```
-public struct CanvasToolKind: RawRepresentable, Hashable, Sendable, Equatable, ExpressibleByStringLiteral {
+public struct CanvasToolID: RawRepresentable, Hashable, Sendable, Equatable, ExpressibleByStringLiteral {
   public let rawValue: String
 
   public init(rawValue: String) { self.rawValue = rawValue }
@@ -27,6 +27,6 @@ public struct CanvasToolKind: RawRepresentable, Hashable, Sendable, Equatable, E
   }
 }
 
-extension CanvasToolKind: CustomStringConvertible {
+extension CanvasToolID: CustomStringConvertible {
   public var description: String { rawValue }
 }

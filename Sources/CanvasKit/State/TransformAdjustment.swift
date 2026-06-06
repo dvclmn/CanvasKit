@@ -22,19 +22,6 @@ public enum TransformAdjustment: Sendable {
 
 extension TransformAdjustment {
 
-  // Potential future validation: restrict transform adjustments to compatible
-  // interaction kinds once tool capabilities have settled.
-  //  var supportedInteractions: InteractionKind.Set {
-  //    switch self {
-  //      case .translation: [.swipe, .drag]
-  //      case .scale: [.swipe, .pinch, .tap, .drag]
-  //      case .rotation: [.swipe, .rotate, .drag]
-  //    }
-  //  }
-}
-
-extension TransformAdjustment {
-
   /// Creates a new state, based on the transform property that changed
   public func updatedState(_ current: TransformState) -> TransformState {
     var new = current

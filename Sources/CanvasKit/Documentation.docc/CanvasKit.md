@@ -39,7 +39,7 @@ or keyboard shortcuts.
 ### Tools
 
 - ``CanvasTool``
-- ``CanvasToolKind``
+- ``CanvasToolID``
 - ``ToolConfiguration``
 - ``ToolBinding``
 - ``ToolCapability``

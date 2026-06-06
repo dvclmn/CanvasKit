@@ -9,9 +9,7 @@ import SwiftUI
 
 /// Each case corresponds directly to a modifier in `InteractionModifiers`.
 public enum Interaction: Sendable {
-  /// Input from `onSwipeGesture(isEnabled:perform:)`.
   case swipe(delta: Size<ViewportSpace>)  // onSwipeGesture
-  /// Proposed absolute zoom level from `onPinchGesture`.
   case pinch(scale: Double)  // onPinchGesture
   case rotation(angle: Angle)  // (Not yet supported)
   case tap(location: Point<ViewportSpace>)  // onTapGesture

@@ -11,7 +11,7 @@
 //
 //@testable import CanvasKit
 //
-//extension CanvasToolKind {
+//extension CanvasToolID {
 //  static let brush = Self("brush")
 //}
 //
@@ -271,7 +271,7 @@
 //}
 //
 //private struct BrushTool: CanvasTool {
-//  let kind: CanvasToolKind = .brush
+//  let kind: CanvasToolID = .brush
 //  let name: String = "Brush"
 //  let icon: String = "paintbrush"
 //
@@ -291,7 +291,7 @@
 //}
 //
 //private struct CustomZoomTool: CanvasTool {
-//  let kind: CanvasToolKind = .zoom
+//  let kind: CanvasToolID = .zoom
 //  let name: String
 //  let icon: String = "magnifyingglass.circle"
 //

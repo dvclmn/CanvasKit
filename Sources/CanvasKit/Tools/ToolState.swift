@@ -10,5 +10,5 @@
 public protocol ToolState {
   
   // From `ToolHandler.setCommittedTool(kind:)`
-  func setSelected(_ kind: CanvasToolKind)
+  func setSelected(_ kind: CanvasToolID)
 }

@@ -45,7 +45,7 @@ struct InteractionModifiers: ViewModifier {
         // Return the scale so the modifier's internal zoom
         // stays in sync with transform state.
         apply(adjustment)
-//        return store.currentTransform.scale
+        //        return store.currentTransform.scale
         return adjustment?.scale
       }
 

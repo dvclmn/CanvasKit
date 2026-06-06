@@ -10,7 +10,7 @@ import SwiftUI
 /// When selected, pointer click-drag zooms (vertical axis).
 /// Tap to zoom in, Option+tap to zoom out.
 public struct ZoomTool: CanvasTool {
-  public let kind: CanvasToolKind = .zoom
+  public let id: CanvasToolID = .zoom
   public let name = "Zoom"
   public let icon = "magnifyingglass"
 

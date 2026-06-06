@@ -42,7 +42,7 @@ final class ToolHandler {
 
     if let configuration {
 
-      let initialSelection: ToolSelection = selection ?? .init(kind: configuration.defaultToolKind)
+      let initialSelection: ToolSelection = selection ?? .init(id: configuration.defaultToolID)
       //      let initialSelection: ToolSelection? = selection ?? configuration.map {  }
       self.selection = Self.normalisedSelection(initialSelection, for: configuration)
 
@@ -56,7 +56,7 @@ final class ToolHandler {
 extension ToolHandler {
   public var isToolUseEnabled: Bool { configuration != nil }
   public var tools: [any CanvasTool] { configuration?.tools ?? [] }
-  public var committedToolKind: CanvasToolKind? { selection?.committedToolKind }
+  public var committedToolID: CanvasToolID? { selection?.committedToolID }
 }
 
 // MARK: - Tool
@@ -68,8 +68,8 @@ extension ToolHandler {
   /// current catalogue. Normal configuration mutations repair selection
   /// automatically.
   public var committedTool: (any CanvasTool)? {
-    guard let committedToolKind else { return nil }
-    return registeredTool(for: committedToolKind)
+    guard let committedToolID else { return nil }
+    return registeredTool(for: committedToolID)
   }
 
   /// The committed tool, or a safe fallback if the committed kind is invalid.
@@ -77,22 +77,12 @@ extension ToolHandler {
     committedTool ?? tools.first ?? SelectTool()
   }
 
-  public func registeredTool(for kind: CanvasToolKind) -> (any CanvasTool)? {
+  public func registeredTool(for kind: CanvasToolID) -> (any CanvasTool)? {
     configuration?.registeredTool(for: kind)
   }
 }
 
-// MARK: - Tool Kind
 extension ToolHandler {
-
-  /// The committed tool kind if it is still registered; otherwise the default
-  /// fallback tool kind.
-  //  public var committedToolKindOrDefault: CanvasToolKind {
-  //    guard let configuration else { return configuration. }
-  //    configuration?.containsTool(selection.committedToolKind)
-  //      ? selection.committedToolKind
-  //      : configuration.defaultToolKind
-  //  }
 
   /// The tool used to resolve canvas input right now.
   ///
@@ -104,7 +94,7 @@ extension ToolHandler {
   }
 
   /// The kind of ``effectiveTool``.
-  var effectiveToolKind: CanvasToolKind { effectiveTool.kind }
+  var effectiveToolID: CanvasToolID { effectiveTool.id }
 
   /// The activation status of the currently effective key-held override.
   ///
@@ -118,7 +108,7 @@ extension ToolHandler {
   ///
   /// This is useful for toolbar/debug UI that wants to style individual tool
   /// buttons according to their transient activation state.
-  func activationStatus(for kind: CanvasToolKind) -> ToolActivationStatus? {
+  func activationStatus(for kind: CanvasToolID) -> ToolActivationStatus? {
     overrides.last(where: { $0.binding.target == kind })?.activationStatus
   }
 
@@ -174,14 +164,14 @@ extension ToolHandler {
 
   func setCommittedTool(_ tool: any CanvasTool) {
     configuration?.register(tool)
-    selection?.committedToolKind = tool.kind
+    selection?.committedToolID = tool.id
     overrides.removeAll()
   }
 
   /// Set the committed/base tool by kind, looking it up in the registry.
-  func setCommittedTool(kind: CanvasToolKind) {
-    guard let configuration, configuration.containsTool(kind) else { return }
-    selection?.committedToolKind = kind
+  func setCommittedTool(id: CanvasToolID) {
+    guard let configuration, configuration.containsTool(id) else { return }
+    selection?.committedToolID = id
     overrides.removeAll()
   }
 
@@ -191,7 +181,7 @@ extension ToolHandler {
   }
 
   @available(*, deprecated, renamed: "setCommittedTool(kind:)")
-  func setBaseTool(kind: CanvasToolKind) {
+  func setBaseTool(kind: CanvasToolID) {
     setCommittedTool(kind: kind)
   }
 
@@ -234,7 +224,7 @@ extension ToolHandler {
 
   /// Returns the first shortcut key bound to the given tool kind, if any.
   /// Useful for displaying keyboard shortcuts in menus and tooltips.
-  func shortcut(for kind: CanvasToolKind) -> KeyboardShortcut? {
+  func shortcut(for kind: CanvasToolID) -> KeyboardShortcut? {
     configuration?.shortcut(for: kind)
   }
 }
@@ -312,9 +302,9 @@ extension ToolHandler {
     for configuration: ToolConfiguration,
   ) -> ToolSelection {
     guard let selection,
-      configuration.containsTool(selection.committedToolKind)
+      configuration.containsTool(selection.committedToolID)
     else {
-      return .init(kind: configuration.defaultToolKind)
+      return .init(kind: configuration.defaultToolID)
     }
     return selection
   }

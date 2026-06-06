@@ -13,10 +13,10 @@ import SwiftUI
 /// CanvasKit applies default behaviour for unclaimed interactions, while tools
 /// may opt into specific ``Interaction.Kind`` values through ``inputCapabilities``.
 public protocol CanvasTool: Sendable, Equatable, CustomStringConvertible, Identifiable
-where ID == CanvasToolKind {
+where ID == CanvasToolID {
 
   /// The tool's identity, used for keyboard binding lookups and registry.
-  var kind: CanvasToolKind { get }
+  var id: CanvasToolID { get }
 
   /// Display name for toolbar UI.
   var name: String { get }
@@ -44,7 +44,7 @@ where ID == CanvasToolKind {
 }
 
 extension CanvasTool {
-  public var id: CanvasToolKind { kind }
+//  public var id: CanvasToolID { kind }
 
   public var description: String {
     """

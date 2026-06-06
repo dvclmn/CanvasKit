@@ -19,12 +19,12 @@ private import ViewTools
 /// that only spring-loads it temporarily.
 public struct ToolBinding: Hashable, Sendable, Equatable {
   public let shortcut: KeyboardShortcut
-  public let target: CanvasToolKind
+  public let target: CanvasToolID
   public let mode: ToolActivationMode
 
   public init(
     _ shortcut: KeyboardShortcut,
-    target: CanvasToolKind,
+    target: CanvasToolID,
     mode: ToolActivationMode,
   ) {
     self.shortcut = shortcut
