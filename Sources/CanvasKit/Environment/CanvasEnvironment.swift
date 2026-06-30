@@ -37,6 +37,7 @@ extension EnvironmentValues {
   @Entry var pointerDrag: Rect<CanvasSpace>?
   @Entry var pointerHover: Point<CanvasSpace>?
 
+  @Entry var latestInteraction: InteractionSnapshot = .none
   @Entry var activeInteraction: ActiveInteraction = .none
 
   @Entry public var panOffset: CGSize = .zero

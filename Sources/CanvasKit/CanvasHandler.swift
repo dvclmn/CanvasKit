@@ -14,8 +14,11 @@ final class CanvasHandler {
   var toolHandler: ToolHandler
   var pointer: PointerState<ViewportSpace> = .init()
 
-  /// Only updated when `processedTransform()` is called
+  /// Complete context for the most recent interaction that carried enough
+  /// detail to be resolved by the tool pipeline.
   var lastInteractionContext: InteractionContext?
+  var latestInteraction: InteractionSnapshot = .none
+  private var activeInteractionContexts: [Interaction.Kind: InteractionContext] = [:]
 
   var artworkFrame: Rect<ViewportSpace>?
   var currentTransform: TransformState = .identity
@@ -53,6 +56,8 @@ extension CanvasHandler {
       modifiers: modifiers,
     )
     self.lastInteractionContext = context
+    self.latestInteraction = .init(context: context)
+    updateActiveInteraction(with: context)
 
     let resolver = CanvasInputResolver(
       context: context,
@@ -90,12 +95,41 @@ extension CanvasHandler {
       case .none: return transform
     }
   }
+
+  func endInteraction(
+    _ kind: Interaction.Kind,
+    phase: InteractionPhase,
+    modifiers: EventModifiers,
+  ) {
+    latestInteraction = .init(kind: kind, phase: phase)
+    activeInteractionContexts[kind] = nil
+
+    if let context = lastInteractionContext,
+      context.interaction.kind == kind
+    {
+      lastInteractionContext = context
+        .withPhase(phase)
+        .withModifiers(modifiers)
+    }
+
+    if kind == .hover {
+      pointer.hover = nil
+    }
+  }
+
+  private func updateActiveInteraction(with context: InteractionContext) {
+    let kind = context.interaction.kind
+
+    if context.phase.isActive {
+      activeInteractionContexts[kind] = context
+    } else {
+      activeInteractionContexts[kind] = nil
+    }
+  }
 }
 
 extension CanvasHandler {
 
-  // Moved this here, so it can be used by both
-  // CanvasView and
   func coordinateSpaceMapper(in size: Size<CanvasSpace>?) -> CoordinateSpaceMapper? {
     guard let artworkFrame,
       let resolvedSize = resolvedCanvasSize(for: size)
@@ -108,19 +142,9 @@ extension CanvasHandler {
   }
 
   var activeInteraction: ActiveInteraction {
-    guard let lastInteractionContext else { return .none }
-    return .init(
-      kind: lastInteractionContext.interaction.kind,
-      phase: lastInteractionContext.phase,
-    )
+    guard !activeInteractionContexts.isEmpty else { return .none }
+    return .init(contextsByKind: activeInteractionContexts)
   }
-
-  //  var activeCapability: ToolCapability? {
-  //    effectiveTool.inputCapabilities.first { capability in
-  //      guard let lastInteractionContext else { return false }
-  //      return capability.matches(lastInteractionContext)
-  //    }
-  //  }
 
   /// The runtime tool used to resolve canvas input right now.
   ///
@@ -134,6 +158,9 @@ extension CanvasHandler {
   func updateModifiers(_ modifiers: EventModifiers) {
     toolHandler.updateModifiers(modifiers)
     lastInteractionContext = lastInteractionContext?.withModifiers(modifiers)
+    activeInteractionContexts = activeInteractionContexts.mapValues { context in
+      context.withModifiers(modifiers)
+    }
   }
 
   // TODO: Change how interactionContext is updated, as this pointer style

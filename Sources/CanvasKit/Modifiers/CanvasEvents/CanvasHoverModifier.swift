@@ -10,18 +10,12 @@ import SwiftUI
 
 public struct CanvasHoverModifier: ViewModifier {
   @Environment(\.pointerHover) private var pointerHover
-//  @Environment(\.activeInteraction) private var activeInteraction
-  //  @Environment(\.interactionPhase) private var interactionPhase
 
   let action: (CanvasHoverPhase) -> Void
 
   public func body(content: Content) -> some View {
     content
       .onChange(of: pointerHover) {
-        //        guard let pointerHover else {
-        //          printMissing("pointerHover", for: "CanvasHoverModifier")
-        //          return
-        //        }
         action(CanvasHoverPhase(from: pointerHover))
       }
   }

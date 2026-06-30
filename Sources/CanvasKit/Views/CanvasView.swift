@@ -6,8 +6,8 @@
 //
 
 private import CoreTools
-private import ViewTools
 import SwiftUI
+private import ViewTools
 
 public struct CanvasView<Content: View>: View, CanvasAddressable {
   @State private var store: CanvasHandler
@@ -21,7 +21,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   /// Otherwise size is measured internally.
   let explicitCanvasSize: Size<CanvasSpace>?
   let content: () -> Content
-  
+
   /// Creates an interactive canvas around SwiftUI content.
   ///
   /// - Parameters:
@@ -61,7 +61,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       // do not sit above the tool picker.
       .modifier(InteractionModifiers())
       .canvasPointerStyle(store.pointerStyle)
-    
+
       .modifier(ToolsPaletteViewModifier())
 
       // Adds canvas transform and mapped pointer values to the Environment.
@@ -83,12 +83,16 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
 
       .syncValue(store.pointerStyle, to: externalPointerStyle)
 
-      .modifier(CanvasToolKeyboardModifier(toolHandler: $store.toolHandler))
+      // Listens for keys pressed based on ToolHandler's `keysToWatch`
+      .onCanvasToolKeyboardPress()
+
+      // Listens for Modifier key presses and adds to Environment
       .modifierKeys { modifiers in
-        store.updateModifiers(modifiers.canvasEventModifiers)
+        store.updateModifiers(.init(from: modifiers))
       }
 
       .environment(\.canvasCoordinateSpaceMapper, store.coordinateSpaceMapper(in: explicitCanvasSize))
+      .environment(\.latestInteraction, store.latestInteraction)
       .environment(\.activeInteraction, store.activeInteraction)
       .environment(store)
 

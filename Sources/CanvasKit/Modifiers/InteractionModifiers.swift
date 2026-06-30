@@ -25,7 +25,8 @@ struct InteractionModifiers: ViewModifier {
         let adjustment = store.processedTransform(
           .swipe(delta: event.delta),
           phase: event.phase,
-          modifiers: modifierKeys.canvasEventModifiers,
+          modifiers: event.modifiers,
+//          modifiers: modifierKeys.canvasEventModifiers,
         )
         apply(adjustment)
       }
@@ -39,22 +40,30 @@ struct InteractionModifiers: ViewModifier {
         let adjustment = store.processedTransform(
           .pinch(scale: zoom),
           phase: phase,
-          modifiers: modifierKeys.canvasEventModifiers,
+          modifiers: modifiers,
         )
 
         // Return the scale so the modifier's internal zoom
         // stays in sync with transform state.
         apply(adjustment)
-        //        return store.currentTransform.scale
         return adjustment?.scale
       }
 
       .onContinuousHover(coordinateSpace: .named(ViewportSpace.viewport)) { phase in
-        guard isEnabled(for: .hover), let location = phase.location else { return }
+        guard isEnabled(for: .hover) else { return }
+        guard let location = phase.location else {
+          store.endInteraction(
+            .hover,
+            phase: phase.interactionPhase,
+            modifiers: modifiers,
+          )
+          return
+        }
+
         let adjustment = store.processedTransform(
           .hover(location.viewportPoint),
           phase: phase.interactionPhase,
-          modifiers: modifierKeys.canvasEventModifiers,
+          modifiers: modifiers,
         )
         apply(adjustment)
 
@@ -66,7 +75,7 @@ struct InteractionModifiers: ViewModifier {
         let adjustment = store.processedTransform(
           .tap(location: location.viewportPoint),
           phase: .ended,
-          modifiers: modifierKeys.canvasEventModifiers,
+          modifiers: modifiers,
         )
         apply(adjustment)
 
@@ -79,11 +88,21 @@ struct InteractionModifiers: ViewModifier {
       ) { payload, phase in
 
         //        printTimestamped("Called `onPointerDragGesture`")
-        guard let payload else { return }
+        guard let payload else {
+          if phase.isTerminal {
+            store.endInteraction(
+              .drag,
+              phase: phase,
+              modifiers: modifiers,
+            )
+          }
+          return
+        }
+
         let adjustment = store.processedTransform(
           .drag(payload),
           phase: phase,
-          modifiers: modifierKeys.canvasEventModifiers,
+          modifiers: modifiers,
         )
         apply(adjustment)
       }
@@ -91,6 +110,7 @@ struct InteractionModifiers: ViewModifier {
 }
 
 extension InteractionModifiers {
+  private var modifiers: EventModifiers { .init(from: modifierKeys) }
   private func apply(_ adjustment: TransformState?) {
     guard var adjustment else { return }
     adjustment.scale = adjustment.scale.clamped(to: zoomRange)

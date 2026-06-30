@@ -9,8 +9,8 @@ import SwiftUI
 private import ViewTools
 
 struct CanvasToolKeyboardModifier: ViewModifier {
+  @Environment(CanvasHandler.self) private var store
 
-  @Binding var toolHandler: ToolHandler
   @FocusState private var isFocused: Bool
   @State private var springLoadArmingTask: Task<Void, Never>?
 
@@ -23,17 +23,17 @@ struct CanvasToolKeyboardModifier: ViewModifier {
         isFocused = true
       }
       .onKeyPress(
-        keys: toolHandler.keysToWatch,
+        keys: store.toolHandler.keysToWatch,
         phases: .all,
       ) { result in
 
         switch result.phase {
           case .up:
-            toolHandler.handleKeyUp(result.key)
+            store.toolHandler.handleKeyUp(result.key)
             schedulePendingSpringLoadArming()
 
           case .down:
-            toolHandler.handleKeyDown(result.key)
+            store.toolHandler.handleKeyDown(result.key)
             schedulePendingSpringLoadArming()
           default: break
         }
@@ -57,7 +57,7 @@ extension CanvasToolKeyboardModifier {
   private func schedulePendingSpringLoadArming() {
     springLoadArmingTask?.cancel()
 
-    guard let delay = toolHandler.pendingSpringLoadArmingDelay else {
+    guard let delay = store.toolHandler.pendingSpringLoadArmingDelay else {
       springLoadArmingTask = nil
       return
     }
@@ -67,8 +67,14 @@ extension CanvasToolKeyboardModifier {
       try? await Task.sleep(nanoseconds: nanoseconds)
       guard !Task.isCancelled else { return }
 
-      toolHandler.armPendingSpringLoads()
+      store.toolHandler.armPendingSpringLoads()
       schedulePendingSpringLoadArming()
     }
+  }
+}
+
+extension View {
+  func onCanvasToolKeyboardPress() -> some View {
+    self.modifier(CanvasToolKeyboardModifier())
   }
 }

@@ -48,6 +48,9 @@ extension InteractionPhase {
   public var isActive: Bool {
     self == .began || self == .changed || self == .stationary || self == .mayBegin
   }
+
+  public var isTerminal: Bool { !isActive }
+
   public var name: String {
     switch self {
       case .mayBegin: "May Begin"

@@ -11,7 +11,7 @@ private import ViewTools
 
 public struct CanvasDragModifier: ViewModifier {
   @Environment(\.pointerDrag) private var pointerDrag
-  @Environment(\.activeInteraction) private var activeInteraction
+  @Environment(\.latestInteraction) private var latestInteraction
 
   let action: (CanvasDragEvent) -> Void
   public func body(content: Content) -> some View {
@@ -20,7 +20,7 @@ public struct CanvasDragModifier: ViewModifier {
         if let pointerDrag {
           let event = CanvasDragEvent(
             rect: pointerDrag,
-            phase: activeInteraction.phase,
+            phase: latestInteraction.phase(for: .drag) ?? .none,
           )
           action(event)
         }

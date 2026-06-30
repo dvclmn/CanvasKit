@@ -37,6 +37,14 @@ extension InteractionContext {
     )
   }
 
+  public func withPhase(_ phase: InteractionPhase) -> Self {
+    .init(
+      interaction: interaction,
+      phase: phase,
+      modifiers: modifiers,
+    )
+  }
+
   public var isPointerDragging: Bool {
     guard case .drag = interaction else { return false }
     return phase.isActive
