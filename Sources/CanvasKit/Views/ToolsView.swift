@@ -56,7 +56,7 @@ extension ToolsView {
     VStack(alignment: .leading, spacing: 0) {
 
       if !configuration.tools.isEmpty {
-        ForEach(configuration.tools, id: \.kind) { tool in
+        ForEach(configuration.tools, id: \.id) { tool in
           ToolButton(for: tool)
         }
 

@@ -6,6 +6,7 @@
 //
 
 private import CoreTools
+private import ViewTools
 import SwiftUI
 
 struct CanvasCoreView<Content: View>: View {

@@ -72,13 +72,13 @@ extension ToolHandler {
     return registeredTool(for: committedToolID)
   }
 
-  /// The committed tool, or a safe fallback if the committed kind is invalid.
+  /// The committed tool, or a safe fallback if the committed id is invalid.
   public var committedToolOrDefault: any CanvasTool {
     committedTool ?? tools.first ?? SelectTool()
   }
 
-  public func registeredTool(for kind: CanvasToolID) -> (any CanvasTool)? {
-    configuration?.registeredTool(for: kind)
+  public func registeredTool(for id: CanvasToolID) -> (any CanvasTool)? {
+    configuration?.registeredTool(for: id)
   }
 }
 
@@ -93,7 +93,7 @@ extension ToolHandler {
     return registeredTool(for: last.binding.target) ?? committedToolOrDefault
   }
 
-  /// The kind of ``effectiveTool``.
+  /// The id of ``effectiveTool``.
   var effectiveToolID: CanvasToolID { effectiveTool.id }
 
   /// The activation status of the currently effective key-held override.
@@ -103,13 +103,13 @@ extension ToolHandler {
     overrides.last?.activationStatus
   }
 
-  /// The activation status for a tool kind, if that tool currently has a
+  /// The activation status for a tool id, if that tool currently has a
   /// key-held override in the stack.
   ///
   /// This is useful for toolbar/debug UI that wants to style individual tool
   /// buttons according to their transient activation state.
-  func activationStatus(for kind: CanvasToolID) -> ToolActivationStatus? {
-    overrides.last(where: { $0.binding.target == kind })?.activationStatus
+  func activationStatus(for id: CanvasToolID) -> ToolActivationStatus? {
+    overrides.last(where: { $0.binding.target == id })?.activationStatus
   }
 
   /// The most recent armed spring-loaded tool, or `nil`.
@@ -168,7 +168,7 @@ extension ToolHandler {
     overrides.removeAll()
   }
 
-  /// Set the committed/base tool by kind, looking it up in the registry.
+  /// Set the committed/base tool by id, looking it up in the registry.
   func setCommittedTool(id: CanvasToolID) {
     guard let configuration, configuration.containsTool(id) else { return }
     selection?.committedToolID = id
@@ -180,9 +180,9 @@ extension ToolHandler {
     setCommittedTool(tool)
   }
 
-  @available(*, deprecated, renamed: "setCommittedTool(kind:)")
-  func setBaseTool(kind: CanvasToolID) {
-    setCommittedTool(kind: kind)
+  @available(*, deprecated, renamed: "setCommittedTool(id:)")
+  func setBaseTool(id: CanvasToolID) {
+    setCommittedTool(id: id)
   }
 
   func setBindings(_ bindings: [ToolBinding]) {
@@ -222,10 +222,10 @@ extension ToolHandler {
     self.modifiers = modifiers
   }
 
-  /// Returns the first shortcut key bound to the given tool kind, if any.
+  /// Returns the first shortcut key bound to the given tool id, if any.
   /// Useful for displaying keyboard shortcuts in menus and tooltips.
-  func shortcut(for kind: CanvasToolID) -> KeyboardShortcut? {
-    configuration?.shortcut(for: kind)
+  func shortcut(for id: CanvasToolID) -> KeyboardShortcut? {
+    configuration?.shortcut(for: id)
   }
 }
 
@@ -287,7 +287,7 @@ extension ToolHandler {
     if let override = overrides.last(where: { $0.key == key && $0.binding.mode == .sticky }) {
       if override.isArmed == false {
         // Short press: commit to the tool. This clears the override stack.
-        setCommittedTool(kind: override.binding.target)
+        setCommittedTool(id: override.binding.target)
         return
       }
       // Long hold: spring-loaded only; fall through to removal to revert.
@@ -304,7 +304,7 @@ extension ToolHandler {
     guard let selection,
       configuration.containsTool(selection.committedToolID)
     else {
-      return .init(kind: configuration.defaultToolID)
+      return .init(id: configuration.defaultToolID)
     }
     return selection
   }

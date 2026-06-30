@@ -9,7 +9,7 @@
 public struct ToolSelection: Sendable, Equatable {
   public var committedToolID: CanvasToolID
 
-  public init(kind committedToolID: CanvasToolID = .select) {
+  public init(id committedToolID: CanvasToolID = .select) {
     self.committedToolID = committedToolID
   }
 }
