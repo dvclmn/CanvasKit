@@ -18,6 +18,7 @@ final class CanvasHandler {
   /// detail to be resolved by the tool pipeline.
   var lastInteractionContext: InteractionContext?
   var latestInteraction: InteractionSnapshot = .none
+  
   private var activeInteractionContexts: [Interaction.Kind: InteractionContext] = [:]
 
   var artworkFrame: Rect<ViewportSpace>?

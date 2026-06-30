@@ -13,7 +13,7 @@ private import CoreTools
 
 /// Captures AppKit scroll-wheel events as CanvasKit swipe gestures.
 class SwipeTrackingNSView: NSView {
-  var onSwipeGesture: SwipeOutput?
+  var onSwipeGesture: SwipeHandler?
 
   override func scrollWheel(with event: NSEvent) {
     let locationInView = convert(event.locationInWindow, from: nil)
@@ -27,7 +27,11 @@ class SwipeTrackingNSView: NSView {
       phase: phase,
       modifiers: modifiers,
     )
-    onSwipeGesture?(eventData)
+
+    guard onSwipeGesture?(eventData) == true else {
+      super.scrollWheel(with: event)
+      return
+    }
   }
 }
 #endif

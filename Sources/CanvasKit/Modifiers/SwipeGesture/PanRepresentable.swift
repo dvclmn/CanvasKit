@@ -7,20 +7,22 @@
 
 import SwiftUI
 
-struct SwipeGestureView: NSViewRepresentable {
-  let onSwipeGesture: SwipeOutput
+typealias SwipeHandler = (SwipeEvent) -> Bool
 
-  init(_ onSwipeGesture: @escaping SwipeOutput) {
+struct SwipeGestureView: NSViewRepresentable {
+  let onSwipeGesture: SwipeHandler
+
+  init(_ onSwipeGesture: @escaping SwipeHandler) {
     self.onSwipeGesture = onSwipeGesture
   }
 
   func makeNSView(context: Context) -> SwipeTrackingNSView {
     let view = SwipeTrackingNSView()
-    view.onSwipeGesture = { event in
-      self.onSwipeGesture(event)
-    }
+    view.onSwipeGesture = onSwipeGesture
     return view
   }
 
-  func updateNSView(_ nsView: SwipeTrackingNSView, context: Context) {}
+  func updateNSView(_ nsView: SwipeTrackingNSView, context: Context) {
+    nsView.onSwipeGesture = onSwipeGesture
+  }
 }

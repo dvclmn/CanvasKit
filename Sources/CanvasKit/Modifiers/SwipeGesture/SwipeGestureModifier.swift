@@ -10,12 +10,8 @@ import SwiftUI
 private import ViewTools
 
 struct SwipeGestureModifier: ViewModifier {
-
-  /// Swipe events are captured by `SwipeTrackingNSView`, so modifier keys seen
-  /// on the source `NSEvent` are bridged back into the SwiftUI environment here.
-  @State private var modifiers: Modifiers = []
-
   let isEnabled: Bool
+  let shouldReceive: (SwipeEvent) -> Bool
   let action: SwipeOutput
 
   func body(content: Content) -> some View {
@@ -23,17 +19,10 @@ struct SwipeGestureModifier: ViewModifier {
       .overlay {
         if isEnabled {
           SwipeGestureView { event in
-            self.modifiers = Modifiers(from: event.modifiers)
+            guard shouldReceive(event) else { return false }
             action(event)
+            return true
           }
-          // This adds the modifiers to the Environment. This is also done separately
-          // by `InteractionKit/ModifierKeysModifier`, but thankfully
-          // they don't seem to clash.
-          //
-          // In this case, the modifiers come from the NSEvent via `scrollWheel(with:)`
-          // in `SwipeTrackingNSView`, as this gesture, when active, seems to
-          // block/override reading of modifiers in `ModifierKeysModifier`.
-          .environment(\.modifierKeys, modifiers)
         }
       }
   }
@@ -42,10 +31,49 @@ extension View {
   /// Typically used for Pan, but useful for other swipe-y things too.
   func onSwipeGesture(
     isEnabled: Bool = true,
+    shouldReceive: @escaping (SwipeEvent) -> Bool = { _ in true },
     perform action: @escaping SwipeOutput,
   ) -> some View {
     self.modifier(
       SwipeGestureModifier(
+        isEnabled: isEnabled,
+        shouldReceive: shouldReceive,
+        action: action,
+      )
+    )
+  }
+}
+
+private struct ViewportSwipeModifier: ViewModifier {
+  let requiredModifiers: EventModifiers
+  let isEnabled: Bool
+  let action: ViewportSwipeOutput
+
+  func body(content: Content) -> some View {
+    content.onSwipeGesture(
+      isEnabled: isEnabled,
+      shouldReceive: { event in
+        event.matches(requiredModifiers: requiredModifiers)
+      },
+      perform: action,
+    )
+  }
+}
+
+extension View {
+
+  /// Responds to two-finger trackpad swipe events in the view's viewport.
+  ///
+  /// `requiredModifiers` is matched as a subset, so `.option` also matches
+  /// Option-Shift. Events that do not match are passed up the responder chain.
+  public func onViewportSwipe(
+    requiredModifiers: EventModifiers = [],
+    isEnabled: Bool = true,
+    perform action: @escaping ViewportSwipeOutput,
+  ) -> some View {
+    self.modifier(
+      ViewportSwipeModifier(
+        requiredModifiers: requiredModifiers,
         isEnabled: isEnabled,
         action: action,
       )
