@@ -51,7 +51,7 @@ extension InteractionPhase {
 
   public var isTerminal: Bool { !isActive }
 
-  public var name: String {
+  public var displayName: String {
     switch self {
       case .mayBegin: "May Begin"
       default: rawValue.capitalized
@@ -94,5 +94,11 @@ extension InteractionPhase {
         default: .none
       }
 
+  }
+}
+
+extension InteractionPhase: CustomStringConvertible {
+  public var description: String {
+    "InteractionPhase[\(displayName)]"
   }
 }

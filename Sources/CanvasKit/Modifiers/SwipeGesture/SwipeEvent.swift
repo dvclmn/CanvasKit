@@ -8,8 +8,8 @@
 import SwiftUI
 
 public typealias SwipeOutput = (SwipeEvent) -> Void
-public typealias ViewportSwipeEvent = SwipeEvent
-public typealias ViewportSwipeOutput = (ViewportSwipeEvent) -> Void
+//public typealias ViewportSwipeEvent = SwipeEvent
+//public typealias ViewportSwipeOutput = (ViewportSwipeEvent) -> Void
 
 public struct SwipeEvent {
   public let delta: Size<ViewportSpace>
@@ -38,5 +38,11 @@ extension SwipeEvent {
 
   public func matches(requiredModifiers: EventModifiers) -> Bool {
     modifiers.contains(requiredModifiers)
+  }
+}
+
+extension SwipeEvent: CustomStringConvertible {
+  public var description: String {
+    "SwipeEvent(delta: \(delta), location: \(location), phase: \(phase), modifiers: \(modifiers.displayName))"
   }
 }

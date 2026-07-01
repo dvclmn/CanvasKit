@@ -55,7 +55,7 @@ extension InteractionContext: CustomStringConvertible {
   public var description: String {
     """
     Interaction: \(interaction)
-    Phase: \(phase.name)
+    Phase: \(phase.displayName)
     Modifiers: \(modifiers)
     """
   }

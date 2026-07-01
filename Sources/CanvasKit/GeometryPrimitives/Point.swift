@@ -61,6 +61,12 @@ extension Point {
   public static var zero: Self { .init(x: 0, y: 0) }
 }
 
+extension Point: CustomStringConvertible {
+  public var description: String {
+    "Point(x: \(x), y: \(y))"
+  }
+}
+
 // MARK: - Arithmetic
 
 /// Subtracting two points in the same space yields a size (displacement vector).

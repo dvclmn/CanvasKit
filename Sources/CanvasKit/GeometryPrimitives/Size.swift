@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 3/3/2026.
 //
 
-import Foundation
 import CoreGraphics
+import Foundation
 
 /// Allows differentiating one `CGSize` from another, to make it clearer
 /// and easier to move between different coordinate spaces, with compile-time safety.
@@ -45,5 +45,11 @@ extension CGSize {
 
   public init<Space>(fromSize size: Size<Space>) {
     self.init(width: size.width, height: size.height)
+  }
+}
+
+extension Size: CustomStringConvertible {
+  public var description: String {
+    "Size(width: \(width), height: \(height))"
   }
 }

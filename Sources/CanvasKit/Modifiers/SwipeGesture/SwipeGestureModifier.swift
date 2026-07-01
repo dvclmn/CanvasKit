@@ -47,7 +47,7 @@ extension View {
 private struct ViewportSwipeModifier: ViewModifier {
   let requiredModifiers: EventModifiers
   let isEnabled: Bool
-  let action: ViewportSwipeOutput
+  let action: SwipeOutput
 
   func body(content: Content) -> some View {
     content.onSwipeGesture(
@@ -69,7 +69,7 @@ extension View {
   public func onViewportSwipe(
     requiredModifiers: EventModifiers = [],
     isEnabled: Bool = true,
-    perform action: @escaping ViewportSwipeOutput,
+    perform action: @escaping SwipeOutput,
   ) -> some View {
     self.modifier(
       ViewportSwipeModifier(
