@@ -87,10 +87,7 @@ https://github.com/dvclmn/CanvasKit
 ```swift
 // Package.swift
 dependencies: [
-  .package(
-    url: "https://github.com/dvclmn/CanvasKit", 
-    .upToNextMinor(from: "0.1.0")
-  )
+  .package(url: "https://github.com/dvclmn/CanvasKit", from: "0.1.0")
 ]
 ```
 

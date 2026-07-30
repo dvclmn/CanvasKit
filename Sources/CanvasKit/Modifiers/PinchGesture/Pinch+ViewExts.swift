@@ -5,9 +5,9 @@
 //  Created by Dave Coleman on 17/3/2026.
 //
 
+private import CoreTools
 import SwiftUI
 private import ViewTools
-private import CoreTools
 
 extension View {
 
