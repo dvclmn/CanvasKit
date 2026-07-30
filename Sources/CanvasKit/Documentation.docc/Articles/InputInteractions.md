@@ -38,3 +38,18 @@ claim specific interactions.
 Raw pointer input is captured in ``ViewportSpace``. CanvasKit maps pointer
 events into ``CanvasSpace`` using ``CoordinateSpaceMapper`` before publishing
 `onCanvasTap`, `onCanvasDrag`, and `onCanvasHover` callbacks.
+
+## Standalone viewport input
+
+Use ``SwiftUI/View/onViewportSwipe(requiredModifiers:isEnabled:perform:)`` or ``SwiftUI/View/onViewportPinch(isEnabled:perform:)`` when an app needs physical viewport input without adopting ``CanvasView`` or CanvasKit's transform policy.
+
+``ViewportPinchEvent`` reports both start-relative ``ViewportPinchEvent/magnification`` and incremental ``ViewportPinchEvent/magnificationDelta``. The first recognised sample has an ``InteractionPhase/began`` phase, later samples use ``InteractionPhase/changed``, and the terminal sample uses ``InteractionPhase/ended``. CanvasKit does not report a cancelled phase because SwiftUI's `MagnifyGesture` does not distinguish cancellation in its public callbacks.
+
+```swift
+WaveformView()
+  .onViewportPinch { event in
+    lineWidth *= event.magnificationDelta
+  }
+```
+
+This event route does not apply `zoomSensitivity`, clamp to `zoomRange`, or mutate a ``TransformState``. Use `onPinchGesture(zoom:isEnabled:)` when CanvasKit should own standard viewport zoom behaviour.

@@ -32,7 +32,7 @@ struct ViewportSwipeEventTests {
 
   private func makeEvent(
     modifiers: EventModifiers
-  ) -> ViewportSwipeEvent {
+  ) -> SwipeEvent {
     .init(
       delta: .zero,
       location: .zero,

@@ -59,5 +59,6 @@ or keyboard shortcuts.
 - ``CanvasDragEvent``
 - ``CanvasHoverPhase``
 - ``CanvasClipping``
+- ``ViewportPinchEvent``
 - ``ZoomRangeModifier``
 - ``ZoomSensitivityModifier``

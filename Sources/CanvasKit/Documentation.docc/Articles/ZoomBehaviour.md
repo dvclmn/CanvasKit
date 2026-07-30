@@ -1,6 +1,5 @@
 # Zoom Behaviour
 
-Zoom can be adjusted in multiple
 CanvasKit provides multiple ways to adjust zoom, supporting gestures and tools for smooth, predictable scaling. This article explains each supported zoom interaction and how zoom values are managed.
 
 CanvasKit has three current zoom paths:
@@ -19,6 +18,8 @@ commits the resolved value.
 
 `zoomSensitivity(_:)` controls the response curve on a `0...1` scale. Lower
 values are gentler; higher values cover more zoom range per gesture.
+
+For non-zoom mappings, ``SwiftUI/View/onViewportPinch(isEnabled:perform:)`` exposes neutral start-relative and incremental magnification without applying CanvasKit's zoom sensitivity or range policy.
 
 ```swift
 CanvasView(size: documentSize) {
