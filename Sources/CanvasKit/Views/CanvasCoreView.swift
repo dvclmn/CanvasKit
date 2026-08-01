@@ -6,8 +6,8 @@
 //
 
 private import CoreTools
-private import ViewTools
 import SwiftUI
+private import ViewTools
 
 struct CanvasCoreView<Content: View>: View {
   @Environment(CanvasHandler.self) private var store
@@ -15,8 +15,6 @@ struct CanvasCoreView<Content: View>: View {
   @Environment(\.canvasBackground) private var canvasBackground
   @Environment(\.canvasAnchor) private var canvasAnchor
   @Environment(\.zoomRange) private var zoomRange
-
-  //  @Binding var transform: TransformState
 
   @ViewBuilder var content: () -> Content
 

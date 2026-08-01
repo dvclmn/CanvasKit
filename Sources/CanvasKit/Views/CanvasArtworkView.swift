@@ -27,8 +27,9 @@ struct CanvasArtwork<Content: View>: View {
 
     .onGeometryChange(for: CGSize.self) { proxy in
       proxy.size
-
     } action: { newValue in
+      // If an explicit size is provided by user, then there's
+      // No need to measure the geometry manually
       guard explicitCanvasSize == nil else { return }
       store.measuredCanvasSize = Size<CanvasSpace>(fromCGSize: newValue)
     }

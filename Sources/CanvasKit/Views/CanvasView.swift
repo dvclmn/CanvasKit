@@ -61,7 +61,6 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       // do not sit above the tool picker.
       .modifier(InteractionModifiers())
       .canvasPointerStyle(store.pointerStyle)
-
       .modifier(ToolsPaletteViewModifier())
 
       // Adds canvas transform and mapped pointer values to the Environment.
@@ -92,6 +91,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       }
 
       .environment(\.canvasCoordinateSpaceMapper, store.coordinateSpaceMapper(in: explicitCanvasSize))
+      .environment(\.explicitCanvasSize, explicitCanvasSize)
       .environment(\.latestInteraction, store.latestInteraction)
       .environment(\.activeInteraction, store.activeInteraction)
       .environment(store)

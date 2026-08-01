@@ -27,6 +27,7 @@ struct ArtworkDecomposed<Content: View>: View {
       Group(subviews: content()) { subviews in
         SubViews(subviews)
       }
+      
     } else {
       ZStack(content: content)
         .canvasSizeFrame()
