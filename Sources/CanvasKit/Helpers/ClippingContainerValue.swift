@@ -8,12 +8,13 @@
 import SwiftUI
 
 /// Describes how canvas artwork should be displayed outside the canvas bounds.
-public enum CanvasClipping: Equatable {
+public enum CanvasClipping: Hashable, Codable, Sendable {
 
   /// Clip artwork to the rounded canvas rect.
   case clipped
 
-  /// Obscure artwork outside the rounded canvas rect by the supplied amount.
+  /// Reduce the opacity of artwork outside the rounded canvas rect by the
+  /// supplied amount.
   ///
   /// Values are clamped to `0...1`. `0` behaves like `none`
   /// and `1` behaves like `clipped`.
@@ -66,6 +67,16 @@ extension CanvasClipping {
       case .dimmed where normalisedDimmingAmount <= 0: .none
       case .dimmed where normalisedDimmingAmount >= 1: .clipped
       default: self
+    }
+  }
+}
+
+extension CanvasClipping: CustomStringConvertible {
+  public var description: String {
+    switch self {
+      case .clipped: "Clipped"
+      case .dimmed(let amount): "Dimmed(\(amount))"
+      case .none: "No clipping"
     }
   }
 }

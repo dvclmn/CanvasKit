@@ -12,7 +12,6 @@ private import ViewTools
 struct CanvasCoreView<Content: View>: View {
   @Environment(CanvasHandler.self) private var store
   @Environment(\.modifierKeys) private var modifierKeys
-//  @Environment(\.canvasBackground) private var canvasBackground
   @Environment(\.canvasAnchor) private var canvasAnchor
   @Environment(\.zoomRange) private var zoomRange
 
@@ -26,8 +25,7 @@ struct CanvasCoreView<Content: View>: View {
         maxHeight: .infinity,
         alignment: canvasAnchor.toAlignment,
       )
-//      .background(canvasBackground)
-//      .drawingGroup(opaque: true)
+//      .clipped()
       //      .ignoresSafeArea(edges: .top)
 
       // View now covers full width/height provided to it, no longer

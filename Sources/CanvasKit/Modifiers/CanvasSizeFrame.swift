@@ -19,6 +19,7 @@ struct CanvasSizeFrameModifier: ViewModifier {
         width: explicitCanvasSize?.width,
         height: explicitCanvasSize?.height,
       )
+//      .border(Color.mint.opacity(0.3))
 //      .debugText {
 //        Labeled("Explicit Canvas Size", value: explicitCanvasSize)
 //      }

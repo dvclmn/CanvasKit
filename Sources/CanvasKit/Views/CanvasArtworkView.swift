@@ -65,7 +65,13 @@ extension CanvasArtwork {
     RoundedRectangle(cornerRadius: unZoomed(rounding))
       .fill(.clear)
       .stroke(
-        .regularMaterial.opacity(0.9),
+        .gray.opacity(0.2),
+        lineWidth: unZoomed(lineWidth),
+      )
+      // The goal here is to add just a hint of the canvas artwork's
+      // colour(s) in the stroke, via the material
+      .stroke(
+        .regularMaterial.opacity(0.2),
         lineWidth: unZoomed(lineWidth),
       )
       .allowsHitTesting(false)
