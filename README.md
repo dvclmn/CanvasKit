@@ -116,7 +116,6 @@ CanvasView(size: documentSize) {
 }
 .zoomRange(0.1...8)
 .zoomSensitivity(0.45)
-.canvasBackground(Color(white: 0.08))
 ```
 
 Use a transform binding when the rest of your app needs to inspect or mutate the current viewport transform:

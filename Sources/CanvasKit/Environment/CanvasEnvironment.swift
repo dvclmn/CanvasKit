@@ -28,7 +28,7 @@ extension EnvironmentValues {
 
   /// Anchor point used to lay out artwork within the viewport.
   @Entry var canvasAnchor: UnitPoint = .center
-  @Entry var canvasBackground: Color = Color(white: 0.04)
+//  @Entry var canvasBackground: Color = Color(white: 0.04)
 
   /// Pointer Tap, Drag and Hover are added to the environment as
   /// an internal convenience. For user access, see Canvas event

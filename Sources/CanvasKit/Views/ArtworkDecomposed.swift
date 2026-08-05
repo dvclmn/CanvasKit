@@ -16,7 +16,7 @@ import SwiftUI
 /// Modifier `canvasSizeFrame()` is placed before
 /// `clipShape(_:style:)`, so that clipping matches canvas size correctly.
 struct ArtworkDecomposed<Content: View>: View {
-  @Environment(\.canvasBackground) private var canvasBackground
+//  @Environment(\.canvasBackground) private var canvasBackground
 
   let rounding: Double
   @ViewBuilder var content: () -> Content
@@ -67,41 +67,3 @@ extension ArtworkDecomposed {
   }
 }
 
-private struct CanvasOutsideDimmer: View {
-  let cornerRadius: Double
-  let dimmingAmount: Double
-  let colour: Color
-
-  private let outsideExtent: CGFloat = 100_000
-
-  var body: some View {
-    GeometryReader { proxy in
-      OutsideCanvasShape(
-        size: proxy.size,
-        cornerRadius: cornerRadius,
-        outsideExtent: outsideExtent,
-      )
-      .fill(colour.opacity(dimmingAmount), style: FillStyle(eoFill: true))
-    }
-    .allowsHitTesting(false)
-  }
-}
-
-private struct OutsideCanvasShape: Shape {
-  let size: CGSize
-  let cornerRadius: Double
-  let outsideExtent: CGFloat
-
-  func path(in rect: CGRect) -> Path {
-    let canvasRect = CGRect(origin: .zero, size: size)
-    let outsideRect = canvasRect.insetBy(dx: -outsideExtent, dy: -outsideExtent)
-
-    return Path { path in
-      path.addRect(outsideRect)
-      path.addRoundedRect(
-        in: canvasRect,
-        cornerSize: CGSize(width: cornerRadius, height: cornerRadius),
-      )
-    }
-  }
-}

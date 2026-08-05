@@ -19,9 +19,9 @@ struct CanvasSizeFrameModifier: ViewModifier {
         width: explicitCanvasSize?.width,
         height: explicitCanvasSize?.height,
       )
-      .debugText {
-        Labeled("Explicit Canvas Size", value: explicitCanvasSize)
-      }
+//      .debugText {
+//        Labeled("Explicit Canvas Size", value: explicitCanvasSize)
+//      }
 
   }
 }

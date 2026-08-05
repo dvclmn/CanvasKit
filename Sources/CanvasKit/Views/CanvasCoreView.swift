@@ -26,8 +26,8 @@ struct CanvasCoreView<Content: View>: View {
         maxHeight: .infinity,
         alignment: canvasAnchor.toAlignment,
       )
-      .background(canvasBackground)
-      .drawingGroup(opaque: true)
+//      .background(canvasBackground)
+//      .drawingGroup(opaque: true)
       //      .ignoresSafeArea(edges: .top)
 
       // View now covers full width/height provided to it, no longer
