@@ -16,7 +16,7 @@ import SwiftUI
 /// Modifier `canvasSizeFrame()` is placed before
 /// `clipShape(_:style:)`, so that clipping matches canvas size correctly.
 struct ArtworkDecomposed<Content: View>: View {
-//  @Environment(\.canvasBackground) private var canvasBackground
+  //  @Environment(\.canvasBackground) private var canvasBackground
 
   let rounding: Double
   @ViewBuilder var content: () -> Content
@@ -27,7 +27,7 @@ struct ArtworkDecomposed<Content: View>: View {
       Group(subviews: content()) { subviews in
         SubViews(subviews)
       }
-      
+
     } else {
       ZStack(content: content)
         .canvasSizeFrame()
@@ -49,14 +49,28 @@ extension ArtworkDecomposed {
 
           case .dimmed:
             subview
+              .border(Color.purple.opacity(0.3))
               .canvasSizeFrame()
-              .overlay {
-                CanvasOutsideDimmer(
-                  cornerRadius: rounding,
-                  dimmingAmount: subview.containerValues.canvasClipping.normalisedDimmingAmount,
-                  colour: canvasBackground,
-                )
+            
+//              .overlay {
+              .mask {
+                
+                
+                
+//                Rectangle()
+//                  .fill(.brown)
+//                  .canvasSizeFrame()
+//                  .opacity(0.4)
+                
+                
               }
+          //              .overlay {
+          //                CanvasOutsideDimmer(
+          //                  cornerRadius: rounding,
+          //                  dimmingAmount: subview.containerValues.canvasClipping.normalisedDimmingAmount,
+          //                  colour: canvasBackground,
+          //                )
+          //              }
 
           case .none:
             subview
@@ -66,4 +80,3 @@ extension ArtworkDecomposed {
     }
   }
 }
-
