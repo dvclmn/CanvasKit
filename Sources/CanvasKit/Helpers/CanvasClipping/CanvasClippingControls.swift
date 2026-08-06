@@ -8,7 +8,7 @@
 import SwiftUI
 
 public struct CanvasClippingControls: View {
-  
+
   @Binding private var clipping: CanvasClipping
   @State private var lastDimmingAmount: Double
 
@@ -25,24 +25,25 @@ public struct CanvasClippingControls: View {
 
   public var body: some View {
     VStack(alignment: .leading, spacing: 8) {
-      Picker("Clipping", selection: $clipping.meta) {
-        ForEach(CanvasClippingMode.allCases) { mode in
-          Text(mode.label).tag(mode)
+      Picker("Clipping", selection: meta) {
+        ForEach(CanvasClipping.Meta.allCases) { mode in
+          Text(mode.displayString).tag(mode)
         }
       }
       .pickerStyle(.segmented)
 
-      if clipping.mode == .dimmed {
+      if clipping.meta == .dimmed {
         Slider(
           value: dimmingAmount,
           in: 0...1,
         ) {
           Text("Dimming")
-        } minimumValueLabel: {
-          Text("0")
-        } maximumValueLabel: {
-          Text("1")
         }
+        //        minimumValueLabel: {
+        //          Text("0")
+        //        } maximumValueLabel: {
+        //          Text("1")
+        //        }
       }
     }
     .onChange(of: clipping) { _, newValue in
@@ -53,22 +54,18 @@ public struct CanvasClippingControls: View {
 }
 
 extension CanvasClippingControls {
-//  fileprivate var mode: Binding<CanvasClippingMode> {
-//    Binding {
-//      clipping.mode
-//    } set: { newMode in
-//      switch newMode {
-//        case .clipped:
-//          clipping = .clipped
-//
-//        case .dimmed:
-//          clipping = .dimmed(CGFloat(lastDimmingAmount))
-//
-//        case .none:
-//          clipping = .none
-//      }
-//    }
-//  }
+  fileprivate var meta: Binding<CanvasClipping.Meta> {
+    Binding {
+      clipping.meta
+
+    } set: { newMode in
+      switch newMode {
+        case .clipped: self.clipping = .clipped
+        case .dimmed: self.clipping = .dimmed(CGFloat(lastDimmingAmount))
+        case .none: self.clipping = .none
+      }
+    }
+  }
 
   fileprivate var dimmingAmount: Binding<Double> {
     Binding {
@@ -82,17 +79,6 @@ extension CanvasClippingControls {
 }
 
 extension CanvasClipping {
-//  fileprivate var mode: CanvasClippingMode {
-//    switch self {
-//      case .clipped:
-//        return .clipped
-//      case .dimmed:
-//        return .dimmed
-//      case .none:
-//        return .none
-//    }
-//  }
-
   fileprivate func preferredDimmingAmount(fallback: Double) -> Double {
     guard case .dimmed = self else { return fallback }
     return normalisedDimmingAmount

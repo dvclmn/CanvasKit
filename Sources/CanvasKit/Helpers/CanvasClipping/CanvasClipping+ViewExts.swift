@@ -5,6 +5,8 @@
 //  Created by Dave Coleman on 6/8/2026.
 //
 
+import SwiftUI
+
 extension View {
   /// Controls how this canvas layer is displayed outside the rounded canvas rect.
   @ViewBuilder

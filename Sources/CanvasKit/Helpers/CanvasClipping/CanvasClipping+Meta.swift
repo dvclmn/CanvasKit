@@ -7,7 +7,7 @@
 
 // Helps with Picker controls
 extension CanvasClipping {
-  enum Meta {
+  enum Meta: String, CaseIterable, Identifiable {
     case clipped
     case dimmed
     case none
@@ -15,6 +15,7 @@ extension CanvasClipping {
 }
 
 extension CanvasClipping.Meta {
+  var id: String { rawValue }
   var displayString: String {
     let parent: CanvasClipping = .init(fromMeta: self)
     return parent.displayString(showsDimmingValue: false)
@@ -34,20 +35,12 @@ extension CanvasClipping {
 }
 
 extension CanvasClipping {
-  
+
   var meta: Meta {
-    get {
-      switch self {
-        case .clipped: .clipped
-        case .dimmed(let cGFloat): .dimmed
-        case .none: .none
-      }
-    }
-    
-    set {
-      switch newValue {
-          
-      }
+    switch self {
+      case .clipped: .clipped
+      case .dimmed(let cGFloat): .dimmed
+      case .none: .none
     }
   }
 }
