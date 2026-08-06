@@ -37,7 +37,6 @@ struct CanvasCoreView<Content: View>: View {
         ArtworkBoundsAnchorKey.self,
         alignment: canvasAnchor.toAlignment,
       ) { FrameCaptureView($0) }
-
   }
 }
 

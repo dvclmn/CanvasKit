@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-public struct CanvasClippingControl: View {
+public struct CanvasClippingControls: View {
+  
   @Binding private var clipping: CanvasClipping
   @State private var lastDimmingAmount: Double
 
@@ -24,7 +25,7 @@ public struct CanvasClippingControl: View {
 
   public var body: some View {
     VStack(alignment: .leading, spacing: 8) {
-      Picker("Clipping", selection: mode) {
+      Picker("Clipping", selection: $clipping.meta) {
         ForEach(CanvasClippingMode.allCases) { mode in
           Text(mode.label).tag(mode)
         }
@@ -51,23 +52,23 @@ public struct CanvasClippingControl: View {
   }
 }
 
-extension CanvasClippingControl {
-  fileprivate var mode: Binding<CanvasClippingMode> {
-    Binding {
-      clipping.mode
-    } set: { newMode in
-      switch newMode {
-        case .clipped:
-          clipping = .clipped
-
-        case .dimmed:
-          clipping = .dimmed(CGFloat(lastDimmingAmount))
-
-        case .none:
-          clipping = .none
-      }
-    }
-  }
+extension CanvasClippingControls {
+//  fileprivate var mode: Binding<CanvasClippingMode> {
+//    Binding {
+//      clipping.mode
+//    } set: { newMode in
+//      switch newMode {
+//        case .clipped:
+//          clipping = .clipped
+//
+//        case .dimmed:
+//          clipping = .dimmed(CGFloat(lastDimmingAmount))
+//
+//        case .none:
+//          clipping = .none
+//      }
+//    }
+//  }
 
   fileprivate var dimmingAmount: Binding<Double> {
     Binding {
@@ -80,36 +81,17 @@ extension CanvasClippingControl {
   }
 }
 
-private enum CanvasClippingMode: String, CaseIterable, Identifiable {
-  case clipped
-  case dimmed
-  case none
-
-  var id: Self { self }
-
-  var label: String {
-    switch self {
-      case .clipped:
-        return "Clipped"
-      case .dimmed:
-        return "Dimmed"
-      case .none:
-        return "None"
-    }
-  }
-}
-
 extension CanvasClipping {
-  fileprivate var mode: CanvasClippingMode {
-    switch self {
-      case .clipped:
-        return .clipped
-      case .dimmed:
-        return .dimmed
-      case .none:
-        return .none
-    }
-  }
+//  fileprivate var mode: CanvasClippingMode {
+//    switch self {
+//      case .clipped:
+//        return .clipped
+//      case .dimmed:
+//        return .dimmed
+//      case .none:
+//        return .none
+//    }
+//  }
 
   fileprivate func preferredDimmingAmount(fallback: Double) -> Double {
     guard case .dimmed = self else { return fallback }
