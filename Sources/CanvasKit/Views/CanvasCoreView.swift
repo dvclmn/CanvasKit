@@ -25,7 +25,7 @@ struct CanvasCoreView<Content: View>: View {
         maxHeight: .infinity,
         alignment: canvasAnchor.toAlignment,
       )
-//      .clipped()
+      .clipped()
       //      .ignoresSafeArea(edges: .top)
 
       // View now covers full width/height provided to it, no longer

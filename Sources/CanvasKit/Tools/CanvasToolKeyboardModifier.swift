@@ -16,12 +16,11 @@ struct CanvasToolKeyboardModifier: ViewModifier {
 
   func body(content: Content) -> some View {
     content
+      // A canvas may receive keyboard focus through user interaction, but appearing during a
+      // SwiftUI update must not displace an active editor or other first responder.
       .focusable(true)
       .focused($isFocused)
       .focusEffectDisabled()
-      .onAppear {
-        isFocused = true
-      }
       .onKeyPress(
         keys: store.toolHandler.keysToWatch,
         phases: .all,
