@@ -10,8 +10,8 @@ private import CoreTools
 private import ViewTools
 
 @available(
-  *, deprecated, renamed: "ZoomUpdate",
-  message: "Considering deprecating this more verbose Zoom event type, in favour of simple Double value"
+  *, deprecated,
+  message: "Use ZoomProposal with ZoomResolver."
 )
 public typealias ZoomEventUpdate = (ZoomGestureEvent, InteractionPhase) -> Double?
 

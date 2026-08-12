@@ -1,6 +1,6 @@
 //
-//  ZoomViewModifier.swift
-//  Lilypad
+//  PinchGestureModifier.swift
+//  CanvasKit
 //
 //  Created by Dave Coleman on 24/6/2025.
 //
@@ -12,6 +12,8 @@ private import ViewTools
 /// Converts a SwiftUI `MagnifyGesture` into resolved zoom values.
 ///
 /// The modifier clamps committed zoom values to the current `zoomRange`.
+/// While a pinch is active, gesture proposals take precedence over concurrent
+/// external binding changes so neither source resets the in-progress gesture.
 public struct PinchGestureModifier: ViewModifier {
   @Environment(\.zoomRange) private var zoomRange
   @Environment(\.zoomSensitivity) private var zoomSensitivity
@@ -28,29 +30,40 @@ public struct PinchGestureModifier: ViewModifier {
   private let externalZoom: Binding<Double>?
 
   let isEnabled: Bool
-  let didUpdateZoom: ZoomUpdate
+  let resolve: ZoomResolver
 
   init(
-    initial: Double,
+    initialZoom: Double,
     zoom: Binding<Double>? = nil,
     isEnabled: Bool,
-    didUpdateZoom: @escaping ZoomUpdate,
+    resolve: @escaping ZoomResolver,
   ) {
-    self._internalZoom = State(initialValue: initial)
+    self._internalZoom = State(initialValue: initialZoom)
     self.externalZoom = zoom
     self.isEnabled = isEnabled
-    self.didUpdateZoom = didUpdateZoom
+    self.resolve = resolve
   }
 
   public func body(content: Content) -> some View {
     content
       .gesture(magnifyGesture, isEnabled: isEnabled)
 
+      // The latest bound value wins if it changed between initialisation and insertion.
+      .onAppear {
+        synchroniseIdleZoom(from: externalZoom?.wrappedValue ?? internalZoom)
+      }
+
       // External source changed (e.g. reset / slider / programmatic change).
       .onChange(of: externalZoom?.wrappedValue) { _, newValue in
-        guard !isGesturing, let newValue else { return }
-        internalZoom = clamped(newValue)
-        gestureStartZoom = internalZoom
+        guard let newValue else { return }
+        synchroniseIdleZoom(from: newValue)
+      }
+
+      // Disabling an active gesture returns ownership to the external source.
+      .onChange(of: isEnabled) { _, isEnabled in
+        guard !isEnabled else { return }
+        isGesturing = false
+        synchroniseIdleZoom(from: externalZoom?.wrappedValue ?? internalZoom)
       }
   }
 }
@@ -71,8 +84,10 @@ extension PinchGestureModifier {
         )
 
         let resolved = resolvedZoom(
-          phase: .changed,
-          proposed: proposedZoom,
+          ZoomProposal(
+            proposedZoom: proposedZoom,
+            phase: .changed,
+          )
         )
         commitZoom(resolved)
       }
@@ -80,8 +95,10 @@ extension PinchGestureModifier {
         let previousZoom = internalZoom
         let finalZoom = clamped(previousZoom)
         let resolved = resolvedZoom(
-          phase: .ended,
-          proposed: finalZoom,
+          ZoomProposal(
+            proposedZoom: finalZoom,
+            phase: .ended,
+          )
         )
         commitZoom(resolved)
 
@@ -90,11 +107,12 @@ extension PinchGestureModifier {
       }
   }
 
-  private func resolvedZoom(
-    phase: InteractionPhase,
-    proposed: Double,
-  ) -> Double {
-    clamped(didUpdateZoom(proposed, phase) ?? proposed)
+  private func resolvedZoom(_ proposal: ZoomProposal) -> Double {
+    PinchZoomComputation.resolvedZoom(
+      proposal,
+      in: zoomRange,
+      resolve: resolve,
+    )
   }
 
   private func clamped(_ value: Double) -> Double {
@@ -104,6 +122,18 @@ extension PinchGestureModifier {
   private func commitZoom(_ value: Double) {
     internalZoom = value
     externalZoom?.wrappedValue = value
+  }
+
+  private func synchroniseIdleZoom(from value: Double) {
+    guard !isGesturing else { return }
+
+    let resolved = clamped(value)
+    internalZoom = resolved
+    gestureStartZoom = resolved
+
+    if let externalZoom, externalZoom.wrappedValue != resolved {
+      externalZoom.wrappedValue = resolved
+    }
   }
 }
 
@@ -121,6 +151,14 @@ enum PinchZoomComputation {
         magnification,
         sensitivity: sensitivity,
       )
+  }
+
+  static func resolvedZoom(
+    _ proposal: ZoomProposal,
+    in range: ClosedRange<Double>,
+    resolve: ZoomResolver,
+  ) -> Double {
+    resolve(proposal).clamped(to: range)
   }
 
   static func responseFactor(

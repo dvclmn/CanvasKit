@@ -32,21 +32,20 @@ struct InteractionModifiers: ViewModifier {
       }
 
       .onPinchGesture(
-        initial: store.currentTransform.scale,
         zoom: $store.currentTransform.scale,
         isEnabled: isEnabled(for: .pinch),
-      ) { zoom, phase in
+      ) { proposal in
 
         let adjustment = store.processedTransform(
-          .pinch(scale: zoom),
-          phase: phase,
+          .pinch(scale: proposal.proposedZoom),
+          phase: proposal.phase,
           modifiers: modifiers,
         )
 
-        // Return the scale so the modifier's internal zoom
-        // stays in sync with transform state.
+        // Resolve to the processed transform so the modifier's working zoom
+        // stays aligned with any tool-specific transform policy.
         apply(adjustment)
-        return adjustment?.scale
+        return adjustment?.scale ?? proposal.proposedZoom
       }
 
       .onContinuousHover(coordinateSpace: .named(ViewportSpace.viewport)) { phase in

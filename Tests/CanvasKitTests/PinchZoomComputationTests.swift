@@ -72,6 +72,43 @@ struct PinchZoomComputationTests {
 
     #expect(isNear(proposed, 0.5))
   }
+
+  @Test func resolverReceivesTheCompleteZoomProposal() {
+    let proposal = ZoomProposal(
+      proposedZoom: 2,
+      phase: .changed,
+    )
+    var receivedZoom: Double?
+    var receivedPhase: InteractionPhase?
+
+    let resolved = PinchZoomComputation.resolvedZoom(
+      proposal,
+      in: 0.1...10,
+    ) { proposal in
+      receivedZoom = proposal.proposedZoom
+      receivedPhase = proposal.phase
+      return 3
+    }
+
+    #expect(receivedZoom == 2)
+    #expect(receivedPhase == .changed)
+    #expect(resolved == 3)
+  }
+
+  @Test func resolvedZoomIsClampedAfterAppPolicy() {
+    let proposal = ZoomProposal(
+      proposedZoom: 2,
+      phase: .ended,
+    )
+
+    let resolved = PinchZoomComputation.resolvedZoom(
+      proposal,
+      in: 0.5...4,
+      resolve: { _ in 12 },
+    )
+
+    #expect(resolved == 4)
+  }
 }
 
 private func isNear(
