@@ -33,6 +33,8 @@ CanvasView(
 }
 ```
 
+The binding is authoritative when the canvas appears. A newly inserted ``CanvasView`` hydrates its local handler from the binding before synchronising subsequent changes in both directions. Keeping the binding above a conditional canvas subtree therefore preserves its transform when that subtree is removed and recreated.
+
 External ownership is useful for programmatic operations:
 
 ```swift

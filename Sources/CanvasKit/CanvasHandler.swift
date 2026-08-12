@@ -26,8 +26,12 @@ final class CanvasHandler {
 
   var measuredCanvasSize: Size<CanvasSpace>?
 
-  init(toolConfiguration: ToolConfiguration?) {
+  init(
+    toolConfiguration: ToolConfiguration?,
+    currentTransform: TransformState = .identity,
+  ) {
     self.toolHandler = .init(configuration: toolConfiguration)
+    self.currentTransform = currentTransform
   }
 }
 
