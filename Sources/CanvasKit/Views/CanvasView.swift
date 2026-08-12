@@ -66,6 +66,9 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       .updateTransformEnvironment()
       .updatePointerEnvironment()
 
+      // TODO: ToolKit's `bindModel(debounce:_:to:initially:perform:)`
+      // should be able to handle the below now, as it's been updated
+      //
       // When transform state is externally owned, hydrate the local handler
       // before synchronising subsequent changes in both directions.
       .onAppear {
@@ -107,14 +110,14 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   }
 }
 
-private extension CanvasView {
-  func synchroniseTransformFromExternal(_ transform: TransformState?) {
+extension CanvasView {
+  fileprivate func synchroniseTransformFromExternal(_ transform: TransformState?) {
     guard let transform else { return }
     guard store.currentTransform != transform else { return }
     store.currentTransform = transform
   }
 
-  func synchroniseExternalTransform(from transform: TransformState) {
+  fileprivate func synchroniseExternalTransform(from transform: TransformState) {
     guard let externalTransform else { return }
     guard externalTransform.wrappedValue != transform else { return }
     externalTransform.wrappedValue = transform
