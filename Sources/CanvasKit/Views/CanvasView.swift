@@ -53,6 +53,8 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   }
 
   public var body: some View {
+    @Bindable var store = store
+
     CanvasCoreView(content: content)
 
       // User input modifiers, `onSwipeGesture`, `onTapGesture`, etc.
@@ -66,20 +68,15 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       .updateTransformEnvironment()
       .updatePointerEnvironment()
 
-      // TODO: ToolKit's `bindModel(debounce:_:to:initially:perform:)`
-      // should be able to handle the below now, as it's been updated
-      //
-      // When transform state is externally owned, hydrate the local handler
-      // before synchronising subsequent changes in both directions.
-      .onAppear {
-        synchroniseTransformFromExternal(externalTransform?.wrappedValue)
-      }
-      .onChange(of: store.currentTransform) { _, transform in
-        synchroniseExternalTransform(from: transform)
-      }
-      .onChange(of: externalTransform?.wrappedValue) { _, transform in
-        synchroniseTransformFromExternal(transform)
-      }
+      // The external binding owns the transform when supplied. On appearance,
+      // hydrate this CanvasView's newly created handler from that value; then
+      // keep local interaction updates and external programmatic updates in sync.
+      .bindModel(
+        debounce: .noDebounce,
+        $store.currentTransform,
+        to: externalTransform,
+        initially: .viewToModel,
+      )
 
       .syncValue(
         store.coordinateSpaceMapper(in: explicitCanvasSize),
@@ -107,20 +104,6 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
         externalPointerStyle?.wrappedValue = nil
       }
 
-  }
-}
-
-extension CanvasView {
-  fileprivate func synchroniseTransformFromExternal(_ transform: TransformState?) {
-    guard let transform else { return }
-    guard store.currentTransform != transform else { return }
-    store.currentTransform = transform
-  }
-
-  fileprivate func synchroniseExternalTransform(from transform: TransformState) {
-    guard let externalTransform else { return }
-    guard externalTransform.wrappedValue != transform else { return }
-    externalTransform.wrappedValue = transform
   }
 }
 
