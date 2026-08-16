@@ -26,7 +26,7 @@ struct InteractionModifiers: ViewModifier {
           .swipe(delta: event.delta),
           phase: event.phase,
           modifiers: event.modifiers,
-//          modifiers: modifierKeys.canvasEventModifiers,
+          //          modifiers: modifierKeys.canvasEventModifiers,
         )
         apply(adjustment)
       }
@@ -109,7 +109,10 @@ struct InteractionModifiers: ViewModifier {
 }
 
 extension InteractionModifiers {
-  private var modifiers: EventModifiers { .init(from: modifierKeys) }
+  private var modifiers: EventModifiers {
+    guard let modifierKeys else { return [] }
+    return .init(from: modifierKeys)
+  }
   private func apply(_ adjustment: TransformState?) {
     guard var adjustment else { return }
     adjustment.scale = adjustment.scale.clamped(to: zoomRange)

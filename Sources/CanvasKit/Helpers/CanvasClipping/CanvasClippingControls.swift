@@ -9,13 +9,18 @@ import SwiftUI
 
 public struct CanvasClippingControls: View {
 
-  @Binding private var clipping: CanvasClipping
   @State private var lastDimmingAmount: Double
-
   private static let defaultDimmingAmount = 0.5
 
-  public init(_ clipping: Binding<CanvasClipping>) {
+  @Binding private var clipping: CanvasClipping
+  private let spacing: CGFloat
+
+  public init(
+    _ clipping: Binding<CanvasClipping>,
+    spacing: CGFloat = 10,
+  ) {
     self._clipping = clipping
+    self.spacing = spacing
 
     let dimming = clipping.wrappedValue.preferredDimmingAmount(
       fallback: Self.defaultDimmingAmount
@@ -24,7 +29,7 @@ public struct CanvasClippingControls: View {
   }
 
   public var body: some View {
-    VStack(alignment: .leading, spacing: 8) {
+    VStack(alignment: .leading, spacing: spacing) {
       Picker("Clipping", selection: meta) {
         ForEach(CanvasClipping.Meta.allCases) { mode in
           Text(mode.displayString).tag(mode)

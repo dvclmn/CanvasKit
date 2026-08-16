@@ -11,7 +11,7 @@ private import ViewTools
 
 struct CanvasCoreView<Content: View>: View {
   @Environment(CanvasHandler.self) private var store
-  @Environment(\.modifierKeys) private var modifierKeys
+//  @Environment(\.modifierKeys) private var modifierKeys
   @Environment(\.canvasAnchor) private var canvasAnchor
   @Environment(\.zoomRange) private var zoomRange
 
