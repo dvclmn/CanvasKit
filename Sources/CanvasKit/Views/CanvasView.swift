@@ -59,7 +59,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
 
       // User input modifiers, `onSwipeGesture`, `onTapGesture`, etc.
       // These wrap the canvas only, so their invisible event-capture overlays
-      // do not sit above the tool picker.
+      // don't sit above the tool picker.
       .modifier(InteractionModifiers())
       .canvasPointerStyle(store.pointerStyle)
       .modifier(ToolsPaletteViewModifier())

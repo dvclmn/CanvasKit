@@ -48,14 +48,14 @@ extension ArtworkDecomposed {
           case .dimmed:
             subview
               .canvasSizeFrame()
-//              .border(Color.indigo.opacity(0.3))
-//              .overlay {
-//              .mask {
-//                CanvasDimmingMask(
-//                  cornerRadius: rounding,
-//                  dimmingAmount: subview.containerValues.canvasClipping.normalisedDimmingAmount,
-//                )
-//              }
+              //                            .border(Color.indigo.opacity(0.3))
+              //              .overlay {
+              .mask {
+                CanvasDimmingMask(
+                  cornerRadius: rounding,
+                  dimmingAmount: subview.containerValues.canvasClipping.normalisedDimmingAmount,
+                )
+              }
 
           case .none:
             subview

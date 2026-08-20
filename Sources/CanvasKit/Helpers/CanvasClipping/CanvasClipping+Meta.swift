@@ -39,7 +39,7 @@ extension CanvasClipping {
   var meta: Meta {
     switch self {
       case .clipped: .clipped
-      case .dimmed(let cGFloat): .dimmed
+      case .dimmed: .dimmed
       case .none: .none
     }
   }
