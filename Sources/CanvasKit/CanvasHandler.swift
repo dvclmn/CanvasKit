@@ -13,7 +13,7 @@ final class CanvasHandler {
 
   var toolHandler: ToolHandler
   var pointer: PointerState<ViewportSpace> = .init()
-//  var pointerDragEvent: PointerDragSnapshot<ViewportSpace>?
+  //  var pointerDragEvent: PointerDragSnapshot<ViewportSpace>?
 
   /// Complete context for the most recent interaction that carried enough
   /// detail to be resolved by the tool pipeline.
@@ -129,10 +129,11 @@ extension CanvasHandler {
     _ payload: PointerDragPayload,
     phase: InteractionPhase,
   ) {
-    guard let event = PointerDragSnapshot<ViewportSpace>(
-      payload: payload,
-      phase: phase,
-    )
+    guard
+      let event = PointerDragSnapshot<ViewportSpace>(
+        payload: payload,
+        phase: phase,
+      )
     else { return }
 
     pointer.latestDrag = event
@@ -152,7 +153,8 @@ extension CanvasHandler {
     if let context = lastInteractionContext,
       context.interaction.kind == kind
     {
-      lastInteractionContext = context
+      lastInteractionContext =
+        context
         .withPhase(phase)
         .withModifiers(modifiers)
     }
@@ -173,7 +175,7 @@ extension CanvasHandler {
     else { return }
 
     pointer.latestDrag = event.withPhase(phase)
-//    pointer.drag = nil
+    //    pointer.drag = nil
   }
 
   private func updateActiveInteraction(with context: InteractionContext) {

@@ -117,7 +117,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
         store.updateModifiers(.init(from: modifiers))
       }
 
-      .environment(\.canvasCoordinateSpaceMapper, store.coordinateSpaceMapper(in: explicitCanvasSize))
+//      .environment(\.canvasCoordinateSpaceMapper, store.coordinateSpaceMapper(in: explicitCanvasSize))
       .environment(\.explicitCanvasSize, explicitCanvasSize)
       .environment(\.latestInteraction, store.latestInteraction)
       .environment(\.activeInteraction, store.activeInteraction)

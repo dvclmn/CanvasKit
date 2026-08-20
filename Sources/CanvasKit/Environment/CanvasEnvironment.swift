@@ -21,7 +21,7 @@ extension EnvironmentValues {
   /// This is available within the ``CanvasView`` hierarchy once the artwork
   /// frame has been resolved from SwiftUI layout. The mapper uses the captured
   /// artwork frame rather than recomputing from pan/zoom values.
-  @Entry public var canvasCoordinateSpaceMapper: CoordinateSpaceMapper?
+//  @Entry public var canvasCoordinateSpaceMapper: CoordinateSpaceMapper?
 
   @Entry var isShowingToolPalette: Bool = false
   @Entry var toolPaletteAlignment: Alignment = .topLeading
