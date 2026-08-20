@@ -15,7 +15,7 @@ struct PointerEnvironmentModifier: ViewModifier {
   func body(content: Content) -> some View {
     content
       .environment(\.pointerTap, snapshot?.pointer.tap)
-      .environment(\.pointerDrag, snapshot?.pointer.drag)
+      //      .environment(\.pointerDrag, snapshot?.pointer.drag)
       .environment(\.pointerHover, snapshot?.pointer.hover)
       .environment(\.canvasDragEvent, mappedDragEvent)
   }
@@ -30,11 +30,13 @@ extension PointerEnvironmentModifier {
     )
   }
 
+  // This is the point where an internal PointerDragSnapshot
+  // is mapped and becomes a publicly consumed CanvasDragEvent
   private var mappedDragEvent: CanvasDragEvent? {
     guard let mapper = store.coordinateSpaceMapper(in: explicitCanvasSize),
-      let event = store.pointerDragEvent
+      let eventSnapshot = store.pointer.latestDrag
     else { return nil }
 
-    return .init(event: event, mapper: mapper)
+    return .init(event: eventSnapshot, mapper: mapper)
   }
 }

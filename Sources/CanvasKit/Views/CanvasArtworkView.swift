@@ -22,6 +22,7 @@ struct CanvasArtwork<Content: View>: View {
 
     ArtworkDecomposed(
       rounding: unZoomed(rounding),
+      explicitCanvasSize: explicitCanvasSize,
       content: content,
     )
 

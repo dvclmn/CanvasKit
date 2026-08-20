@@ -36,7 +36,7 @@ public struct CanvasDragEvent: Sendable, Equatable {
 
 extension CanvasDragEvent {
   init(
-    event: PointerDragEvent<ViewportSpace>,
+    event: PointerDragSnapshot<ViewportSpace>,
     mapper: CoordinateSpaceMapper,
   ) {
     self.init(

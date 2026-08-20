@@ -71,7 +71,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       .canvasPointerStyle(store.pointerStyle)
       .modifier(ToolsPaletteViewModifier())
 
-      // Adds canvas transform and mapped pointer values to the Environment.
+      // Adds canvas transform and mapped pointer values to the Environment (for internal use only)
       .updateTransformEnvironment()
       .updatePointerEnvironment()
 

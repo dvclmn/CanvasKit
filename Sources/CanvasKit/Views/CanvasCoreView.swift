@@ -11,7 +11,6 @@ private import ViewTools
 
 struct CanvasCoreView<Content: View>: View {
   @Environment(CanvasHandler.self) private var store
-//  @Environment(\.modifierKeys) private var modifierKeys
   @Environment(\.canvasAnchor) private var canvasAnchor
   @Environment(\.zoomRange) private var zoomRange
 
@@ -19,7 +18,9 @@ struct CanvasCoreView<Content: View>: View {
 
   var body: some View {
     Color.clear
-      .overlay { CanvasArtwork(content: content) }
+      .overlay {
+        CanvasArtwork(content: content)
+      }
       .frame(
         maxWidth: .infinity,
         maxHeight: .infinity,

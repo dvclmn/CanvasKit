@@ -10,7 +10,7 @@ private import ViewTools
 import SwiftUI
 
 /// Computed from `CanvasHandler` state and geometry.
-/// Holds only already-converted/mapped, consumer-ready values
+/// Holds mapped, consumer-ready values
 struct PointerMappedSnapshot: Sendable {
   let pointer: PointerState<CanvasSpace>
   let isInsideCanvas: Bool
@@ -23,7 +23,8 @@ extension PointerMappedSnapshot {
   ) -> Self? {
     let tapMapped = pointerState.tap.map { mapper.canvasPoint(from: $0) }
     let hoverMapped = pointerState.hover.map { mapper.canvasPoint(from: $0) }
-    let dragMapped = pointerState.drag.map { mapper.canvasRect(from: $0) }
+    let dragMapped = pointerState.latestDrag.map { mapper. }
+//    let dragMapped = pointerState.drag.map { mapper.canvasRect(from: $0) }
     let isInside = hoverMapped.map { mapper.isInsideCanvas($0) } ?? false
 
     return .init(

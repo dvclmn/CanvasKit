@@ -13,10 +13,11 @@ import SwiftUI
 /// over how a View nested within `CanvasView` should be displayed outside
 /// the canvas size.
 ///
-/// Modifier `canvasSizeFrame()` is placed before
+/// Modifier `canvasFrame()` is placed before
 /// `clipShape(_:style:)`, so that clipping matches canvas size correctly.
 struct ArtworkDecomposed<Content: View>: View {
   let rounding: Double
+  let explicitCanvasSize: Size<CanvasSpace>?
   @ViewBuilder var content: () -> Content
 
   var body: some View {
@@ -28,7 +29,7 @@ struct ArtworkDecomposed<Content: View>: View {
 
     } else {
       ZStack(content: content)
-        .canvasSizeFrame()
+        .canvasFrame(explicitCanvasSize)
     }
   }
 }
@@ -42,12 +43,12 @@ extension ArtworkDecomposed {
         switch subview.containerValues.canvasClipping.resolved {
           case .clipped:
             subview
-              .canvasSizeFrame()
+              .canvasFrame(explicitCanvasSize)
               .clipShape(.rect(cornerRadius: rounding))
 
           case .dimmed:
             subview
-              .canvasSizeFrame()
+              .canvasFrame(explicitCanvasSize)
               //                            .border(Color.indigo.opacity(0.3))
               //              .overlay {
               .mask {
@@ -59,9 +60,36 @@ extension ArtworkDecomposed {
 
           case .none:
             subview
-              .canvasSizeFrame()
+              .canvasFrame(explicitCanvasSize)
         }
       }
     }
+  }
+}
+
+// MARK: -
+
+private struct CanvasSizeFrameModifier: ViewModifier {
+
+  let size: Size<CanvasSpace>?
+  //    let explicitCanvasSize: Size<CanvasSpace>?
+  //  @Environment(\.explicitCanvasSize) private var explicitCanvasSize
+
+  func body(content: Content) -> some View {
+    content
+      .frame(
+        width: size?.width,
+        height: size?.height,
+      )
+    //      .border(Color.mint.opacity(0.3))
+    //      .debugText {
+    //        Labeled("Explicit Canvas Size", value: explicitCanvasSize)
+    //      }
+
+  }
+}
+extension View {
+  fileprivate func canvasFrame(_ size: Size<CanvasSpace>?) -> some View {
+    self.modifier(CanvasSizeFrameModifier(size: size))
   }
 }

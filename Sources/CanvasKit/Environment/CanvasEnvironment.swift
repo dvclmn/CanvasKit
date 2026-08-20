@@ -14,7 +14,7 @@ extension EnvironmentValues {
   /// will be inferred via `CanvasHandler/resolvedCanvasSize(for:)`.
   @Entry var explicitCanvasSize: Size<CanvasSpace>?
 
-  @Entry public var canvasClipping: Binding<CanvasClipping> = .constant(.clipped)
+//  @Entry public var canvasClipping: Binding<CanvasClipping> = .constant(.clipped)
 
   /// Resolved mapper between the visible viewport and artwork coordinates.
   ///
@@ -34,7 +34,9 @@ extension EnvironmentValues {
   /// an internal convenience. For user access, see Canvas event
   /// modifiers like `CanvasDragModifier`.
   @Entry var pointerTap: Point<CanvasSpace>?
-  @Entry var pointerDrag: Rect<CanvasSpace>?
+  
+  // Deprecated by newer drag event types CanvasDragEvent / PointerDragSnapshot
+//  @Entry var pointerDrag: Rect<CanvasSpace>?
   @Entry var pointerHover: Point<CanvasSpace>?
   @Entry var canvasDragEvent: CanvasDragEvent?
 

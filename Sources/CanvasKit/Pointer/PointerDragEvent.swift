@@ -1,5 +1,5 @@
 //
-//  PointerDragEvent.swift
+//  PointerDragSnapshot.swift
 //  CanvasKit
 //
 //  Created by Dave Coleman on 20/8/2026.
@@ -9,13 +9,13 @@
 ///
 /// This remains internal because CanvasKit publishes marquee input only after
 /// converting it into ``CanvasSpace`` as ``CanvasDragEvent``.
-struct PointerDragEvent<Space>: Sendable, Equatable {
+struct PointerDragSnapshot<Space>: Sendable, Equatable {
   let start: Point<Space>
   let current: Point<Space>
   let phase: InteractionPhase
 }
 
-extension PointerDragEvent {
+extension PointerDragSnapshot {
   init?(
     payload: PointerDragPayload,
     phase: InteractionPhase,
