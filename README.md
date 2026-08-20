@@ -49,7 +49,7 @@ That is enough to get the default viewport interactions:
 - Swipe pans the viewport.
 - Option-swipe zooms the viewport.
 - Pinch zooms the viewport.
-- Pointer tap, drag, and hover can be routed through canvas tools.
+- Pointer tap and drag can be routed through canvas tools, while hover observation remains global.
 
 See [Usage](#Usage) for more advanced examples.
 
@@ -103,6 +103,7 @@ CanvasKit currently declares:
 - Optional external ownership of `TransformState` for document state, undo/redo, inspectors, or programmatic view controls.
 - Canvas-space pointer events via `onCanvasTap`, `onCanvasDrag`, and `onCanvasHover`.
 - A small tool system with built-in Select, Pan, and Zoom tools.
+- Optional parent ownership of committed `ToolSelection` without exposing transient overrides as durable state.
 - Optional tool palette UI and keyboard bindings.
 - Basic canvas presentation controls such as viewport background and canvas clipping.
 
@@ -149,7 +150,7 @@ CanvasView(size: documentSize) {
       selection.selectItem(at: point)
     }
     .onCanvasDrag { event in
-      selection.updateMarquee(event.rect, phase: event.phase)
+      selection.updateMarquee(event.boundingRect, phase: event.phase)
     }
     .onCanvasHover { phase in
       hoverState = phase

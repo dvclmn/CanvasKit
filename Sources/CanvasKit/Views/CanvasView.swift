@@ -16,6 +16,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   private let externalTransform: Binding<TransformState>?
   private let externalCoordinateSpaceMapper: Binding<CoordinateSpaceMapper?>?
   private let externalPointerStyle: Binding<CanvasPointerStyle?>?
+  private let externalToolSelection: Binding<ToolSelection>?
 
   /// Used only if a user passes in a canvas size value.
   /// Otherwise size is measured internally.
@@ -29,7 +30,10 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   ///   - transform: Optional external source of truth for pan, zoom, and rotation.
   ///   - coordinateSpaceMapper: Optional binding that receives the current mapper.
   ///   - pointerStyle: Optional binding that receives the style resolved by the current tool.
-  ///   - toolConfiguration: Optional custom tool catalogue and shortcut policy.
+  ///   - toolConfiguration: Optional initial tool catalogue and shortcut policy.
+  ///   - toolSelection: Optional parent-owned committed tool selection. The
+  ///     selection is normalised against `toolConfiguration`, synchronised in
+  ///     both directions, and never receives transient key-held overrides.
   ///   - content: The artwork or document view rendered inside the canvas.
   public init(
     size: CGSize? = nil,
@@ -37,15 +41,18 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
     coordinateSpaceMapper: Binding<CoordinateSpaceMapper?>? = nil,
     pointerStyle: Binding<CanvasPointerStyle?>? = nil,
     toolConfiguration: ToolConfiguration? = nil,
+    toolSelection: Binding<ToolSelection>? = nil,
     @ViewBuilder content: @escaping () -> Content,
   ) {
     self.explicitCanvasSize = size.map { Size<CanvasSpace>(fromCGSize: $0) }
     self.externalTransform = transform
     self.externalCoordinateSpaceMapper = coordinateSpaceMapper
     self.externalPointerStyle = pointerStyle
+    self.externalToolSelection = toolSelection
     self._store = State(
       initialValue: .init(
         toolConfiguration: toolConfiguration,
+        toolSelection: toolSelection?.wrappedValue,
         currentTransform: transform?.wrappedValue ?? .identity,
       )
     )
@@ -77,6 +84,23 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
         to: externalTransform,
         initially: .viewToModel,
       )
+
+      // The parent owns committed selection when a binding is supplied. The
+      // handler was seeded from that binding in init; model-to-view initial
+      // synchronisation writes any catalogue normalisation back to the parent.
+      .bindModel(
+        debounce: .noDebounce,
+        $store.committedToolSelection,
+        to: externalToolSelection,
+        initially: .modelToView,
+      ) { _ in
+        // A parent can later supply an id that is absent from the catalogue.
+        // The computed model setter repairs it; reflect that repaired value
+        // even when the normalised model value itself did not change.
+        let normalisedSelection = store.committedToolSelection
+        guard externalToolSelection?.wrappedValue != normalisedSelection else { return }
+        externalToolSelection?.wrappedValue = normalisedSelection
+      }
 
       .syncValue(
         store.coordinateSpaceMapper(in: explicitCanvasSize),

@@ -5,7 +5,11 @@
 //  Created by Dave Coleman on 9/5/2026.
 //
 
-/// Mutable user/session state.
+/// Parent-ownable committed tool state.
+///
+/// This value represents the durable user choice only. CanvasKit keeps
+/// key-held and spring-loaded effective-tool overrides in its internal runtime
+/// handler and never writes those transient ids into this selection.
 public struct ToolSelection: Sendable, Equatable {
   public var committedToolID: CanvasToolID
 

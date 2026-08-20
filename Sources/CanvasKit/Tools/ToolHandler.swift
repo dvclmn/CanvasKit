@@ -175,6 +175,20 @@ extension ToolHandler {
     overrides.removeAll()
   }
 
+  /// Synchronises a parent-owned committed selection without disturbing any
+  /// key-held override that is currently resolving input.
+  ///
+  /// If the requested id is not in the configured catalogue, the selection is
+  /// repaired to the catalogue's default. Releasing an active override then
+  /// reveals this newly committed selection.
+  func synchroniseCommittedSelection(_ selection: ToolSelection) {
+    guard let configuration else {
+      self.selection = nil
+      return
+    }
+    self.selection = Self.normalisedSelection(selection, for: configuration)
+  }
+
   @available(*, deprecated, renamed: "setCommittedTool(_:)")
   func setBaseTool(_ tool: any CanvasTool) {
     setCommittedTool(tool)

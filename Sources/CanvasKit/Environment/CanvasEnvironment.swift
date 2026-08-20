@@ -36,6 +36,7 @@ extension EnvironmentValues {
   @Entry var pointerTap: Point<CanvasSpace>?
   @Entry var pointerDrag: Rect<CanvasSpace>?
   @Entry var pointerHover: Point<CanvasSpace>?
+  @Entry var canvasDragEvent: CanvasDragEvent?
 
   @Entry var latestInteraction: InteractionSnapshot = .none
   @Entry var activeInteraction: ActiveInteraction = .none

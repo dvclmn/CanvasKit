@@ -21,7 +21,8 @@ public struct CanvasHoverModifier: ViewModifier {
   }
 }
 
-public enum CanvasHoverPhase {
+/// A global canvas-hover observation independent of the effective tool.
+public enum CanvasHoverPhase: Sendable, Equatable {
   /// The pointer's location within the CanvasView, in local CanvasSpace.
   case active(Point<CanvasSpace>)
 

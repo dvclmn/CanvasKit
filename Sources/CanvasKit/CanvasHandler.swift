@@ -13,12 +13,13 @@ final class CanvasHandler {
 
   var toolHandler: ToolHandler
   var pointer: PointerState<ViewportSpace> = .init()
+  var pointerDragEvent: PointerDragEvent<ViewportSpace>?
 
   /// Complete context for the most recent interaction that carried enough
   /// detail to be resolved by the tool pipeline.
   var lastInteractionContext: InteractionContext?
   var latestInteraction: InteractionSnapshot = .none
-  
+
   private var activeInteractionContexts: [Interaction.Kind: InteractionContext] = [:]
 
   var artworkFrame: Rect<ViewportSpace>?
@@ -28,9 +29,13 @@ final class CanvasHandler {
 
   init(
     toolConfiguration: ToolConfiguration?,
+    toolSelection: ToolSelection? = nil,
     currentTransform: TransformState = .identity,
   ) {
-    self.toolHandler = .init(configuration: toolConfiguration)
+    self.toolHandler = .init(
+      configuration: toolConfiguration,
+      selection: toolSelection,
+    )
     self.currentTransform = currentTransform
   }
 }
@@ -39,8 +44,10 @@ extension CanvasHandler {
 
   /// Entry point for all raw input events from gesture modifiers.
   ///
-  /// 1. Global gestures (swipe, pinch, hover) are handled centrally here.
-  /// Tools never see these events.
+  /// Global hover location is recorded independently of tool resolution so
+  /// public observation does not disappear when a tool claims hover. A tool
+  /// with a matching capability may still resolve that hover for its own
+  /// canvas adjustment or pointer style.
   ///
   /// Claimed interactions are forwarded to the effective tool's
   /// ``CanvasTool/resolveInteraction(context:currentTransform:)`` method.
@@ -48,7 +55,6 @@ extension CanvasHandler {
   /// Returns an optional to allow a no-op in ``InteractionModifiers``,
   /// so that interaction modifiers that don't need to touch Transform state
   /// don't inadvertently write it to `identity`.
-  //  func handleInteraction(
   func processedTransform(
     _ interaction: Interaction,
     phase: InteractionPhase,
@@ -71,20 +77,24 @@ extension CanvasHandler {
     )
 
     guard let resolvedAdjustment = resolver.resolve() else {
+      recordPublicPointerInput(from: context)
       print("No resolution for provided interaction context: \(context)")
       return nil
     }
 
-    return handleAdjustment(
+    let processedTransform = handleAdjustment(
       resolvedAdjustment,
       transform: currentTransform,
     )
+
+    recordPublicPointerInput(from: context)
+    return processedTransform
   }
 
   private func handleAdjustment(
     _ adjustment: InteractionAdjustment,
     transform: TransformState,
-  ) -> TransformState {
+  ) -> TransformState? {
     switch adjustment {
       case .transform(let adj):
         return adj.updatedState(transform)
@@ -92,12 +102,42 @@ extension CanvasHandler {
       case .pointer(let adj):
         switch adj {
           case .tap(let point): self.pointer.tap = point
-          case .drag(let rect): self.pointer.drag = rect
+          case .drag(let rect):
+            self.pointer.drag = rect
           case .hover(let point): self.pointer.hover = point
         }
-        return transform
+        return nil
 
-      case .none: return transform
+      case .none: return nil
+    }
+  }
+
+  private func recordPublicPointerInput(from context: InteractionContext) {
+    switch context.interaction {
+      case .hover(let location):
+        pointer.hover = location
+
+      case .drag(let payload):
+        recordPublishedDrag(payload, phase: context.phase)
+
+      default:
+        break
+    }
+  }
+
+  private func recordPublishedDrag(
+    _ payload: PointerDragPayload,
+    phase: InteractionPhase,
+  ) {
+    guard let event = PointerDragEvent<ViewportSpace>(
+      payload: payload,
+      phase: phase,
+    )
+    else { return }
+
+    pointerDragEvent = event
+    if phase.isTerminal {
+      pointer.drag = nil
     }
   }
 
@@ -120,6 +160,20 @@ extension CanvasHandler {
     if kind == .hover {
       pointer.hover = nil
     }
+
+    if kind == .drag {
+      finishPublishedDrag(with: phase)
+    }
+  }
+
+  private func finishPublishedDrag(with phase: InteractionPhase) {
+    guard phase.isTerminal,
+      let event = pointerDragEvent,
+      event.phase.isActive
+    else { return }
+
+    pointerDragEvent = event.withPhase(phase)
+    pointer.drag = nil
   }
 
   private func updateActiveInteraction(with context: InteractionContext) {
@@ -156,6 +210,15 @@ extension CanvasHandler {
   /// This includes transient overrides such as Space-held Pan. For the
   /// committed/base selection only, use `toolHandler.committedTool`.
   var effectiveTool: any CanvasTool { toolHandler.effectiveTool }
+
+  /// The committed selection synchronised with an optional parent binding.
+  ///
+  /// With no tool configuration, CanvasKit's fallback Select tool is the only
+  /// valid committed selection.
+  var committedToolSelection: ToolSelection {
+    get { toolHandler.selection ?? .default }
+    set { toolHandler.synchroniseCommittedSelection(newValue) }
+  }
 
 }
 

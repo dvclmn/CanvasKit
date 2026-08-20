@@ -22,7 +22,7 @@ extension View {
   ///
   /// - Parameters:
   ///   - coordinateSpace: Coordinate space for the underlying `DragGesture`.
-  ///   - behaviour: The drag mode (`.continuous`, `.marquee`, or `.none`).
+  ///   - behaviour: The drag mode (`.continuous` or `.marquee`).
   ///   - isEnabled: Whether the gesture is active.
   ///   - marqueeColour: The colour to render the marquee rectangle, if needed.
   ///   - minimumDistance: Minimum drag distance before the gesture activates.

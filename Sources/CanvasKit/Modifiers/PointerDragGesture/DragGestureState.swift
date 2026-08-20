@@ -26,6 +26,9 @@ struct DragGestureState {
   /// used to compute the frame-to-frame delta. `nil` on first frame.
   private var previousTranslation: CGSize?
 
+  /// Whether this state has accepted at least one update for the current drag.
+  private(set) var isActive = false
+
   /// Sets a default of `marquee` as the pointer drag behaviour
   init(
     behaviour: PointerDragBehaviour = .marquee
@@ -40,6 +43,8 @@ extension DragGestureState {
   mutating func update(
     _ gestureValue: DragGesture.Value
   ) -> PointerDragPayload? {
+
+    isActive = true
 
     switch behaviour {
       case .marquee:
@@ -64,7 +69,10 @@ extension DragGestureState {
   }
 
   /// Clears per-gesture tracking state. Called from `DragGesture.onEnded`.
-  mutating func end() { previousTranslation = nil }
+  mutating func end() {
+    previousTranslation = nil
+    isActive = false
+  }
 
   /// Zeroes out movement on locked axes.
   private func applyAxis(_ axes: Axis.Set, delta: CGSize) -> CGSize {

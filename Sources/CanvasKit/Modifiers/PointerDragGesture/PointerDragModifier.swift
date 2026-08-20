@@ -56,10 +56,17 @@ struct PointerDragModifier: ViewModifier {
         isEnabled: behaviour.isMarquee,
       )
       .onChange(of: behaviour, initial: true) { _, newValue in
+        cancelActiveDrag()
         // Update `DragGestureState` so it has the right behaviour.
         dragState.behaviour = newValue
-        dragState.end()
-        marqueeRect = nil
+      }
+      .onChange(of: isEnabled, initial: true) { _, isEnabled in
+        if !isEnabled {
+          cancelActiveDrag()
+        }
+      }
+      .onDisappear {
+        cancelActiveDrag()
       }
   }
 }
@@ -72,17 +79,28 @@ extension PointerDragModifier {
       coordinateSpace: coordinateSpace,
     )
     .onChanged { gestureValue in
+      let phase: InteractionPhase = dragState.isActive ? .changed : .began
       let payload = dragState.update(gestureValue)
       if case .rect(let from, let current) = payload {
         marqueeRect = Rect<ViewportSpace>(from: from, to: current)
       }
-      didUpdatePayload(payload, .changed)
+      didUpdatePayload(payload, phase)
     }
     .onEnded { gestureValue in
+      guard dragState.isActive else { return }
       let payload = dragState.update(gestureValue)
       didUpdatePayload(payload, .ended)
       dragState.end()
       marqueeRect = nil
     }
+  }
+
+  /// Cancels an active drag when CanvasKit invalidates its recogniser through
+  /// a tool-behaviour change, disablement, or view disappearance.
+  private func cancelActiveDrag() {
+    guard dragState.isActive else { return }
+    dragState.end()
+    marqueeRect = nil
+    didUpdatePayload(nil, .cancelled)
   }
 }

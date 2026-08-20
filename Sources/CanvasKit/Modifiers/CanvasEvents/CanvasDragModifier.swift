@@ -5,31 +5,18 @@
 //  Created by Dave Coleman on 23/3/2026.
 //
 
-private import CoreTools
 import SwiftUI
-private import ViewTools
 
 public struct CanvasDragModifier: ViewModifier {
-  @Environment(\.pointerDrag) private var pointerDrag
-  @Environment(\.latestInteraction) private var latestInteraction
+  @Environment(\.canvasDragEvent) private var event
 
   let action: (CanvasDragEvent) -> Void
   public func body(content: Content) -> some View {
     content
-      .onChange(of: pointerDrag) {
-        if let pointerDrag {
-          let event = CanvasDragEvent(
-            rect: pointerDrag,
-            phase: latestInteraction.phase(for: .drag) ?? .none,
-          )
+      .onChange(of: event) {
+        if let event {
           action(event)
         }
       }
   }
-}
-
-public struct CanvasDragEvent {
-  //public struct CanvasDragEvent<Space> {
-  public let rect: Rect<CanvasSpace>
-  public let phase: InteractionPhase
 }

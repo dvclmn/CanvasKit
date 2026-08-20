@@ -15,7 +15,7 @@ import SwiftUI
 /// A wildcard like `any` would be ambiguous here.
 ///
 /// For unknown or unmappable input, use `.none`.
-public enum InteractionPhase: String, Sendable, Codable {
+public enum InteractionPhase: String, Sendable, Codable, Equatable {
   case began
 
   /// An event is in progress, but hasn't moved since the previous event.
@@ -49,7 +49,13 @@ extension InteractionPhase {
     self == .began || self == .changed || self == .stationary || self == .mayBegin
   }
 
-  public var isTerminal: Bool { !isActive }
+  /// Whether the interaction finished with either completion or cancellation.
+  ///
+  /// ``none`` represents missing or unmappable phase information; it is not a
+  /// lifecycle event and must not be delivered as a terminal callback.
+  public var isTerminal: Bool {
+    self == .ended || self == .cancelled
+  }
 
   public var displayName: String {
     switch self {

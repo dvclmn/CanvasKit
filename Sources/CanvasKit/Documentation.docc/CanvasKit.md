@@ -41,6 +41,7 @@ or keyboard shortcuts.
 - ``CanvasTool``
 - ``CanvasToolID``
 - ``ToolConfiguration``
+- ``ToolSelection``
 - ``ToolBinding``
 - ``ToolCapability``
 - ``ToolResolution``
@@ -58,6 +59,7 @@ or keyboard shortcuts.
 - ``CanvasHoverModifier``
 - ``CanvasDragEvent``
 - ``CanvasHoverPhase``
+- ``InteractionPhase``
 - ``CanvasClipping``
 - ``ViewportPinchEvent``
 - ``ZoomRangeModifier``

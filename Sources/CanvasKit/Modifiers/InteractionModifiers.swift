@@ -49,7 +49,6 @@ struct InteractionModifiers: ViewModifier {
       }
 
       .onContinuousHover(coordinateSpace: .named(ViewportSpace.viewport)) { phase in
-        guard isEnabled(for: .hover) else { return }
         guard let location = phase.location else {
           store.endInteraction(
             .hover,
@@ -128,7 +127,12 @@ extension InteractionModifiers {
       case .swipe, .pinch, .rotate:
         isEnabled = true
 
-      case .tap, .drag, .hover:
+      case .hover:
+        // Hover is a global observation surface. Tools may additionally claim
+        // it in CanvasInputResolver without suppressing public delivery.
+        isEnabled = true
+
+      case .tap, .drag:
         // Returns true if any of the current tool's capabilities match this interaction.
         isEnabled = store.effectiveTool.inputCapabilities.contains { capability in
           capability.interactionKind == interaction
