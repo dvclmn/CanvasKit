@@ -15,12 +15,32 @@ final class CanvasHandler {
   var pointer: PointerState<ViewportSpace> = .init()
   //  var pointerDragEvent: PointerDragSnapshot<ViewportSpace>?
 
-  /// Complete context for the most recent interaction that carried enough
-  /// detail to be resolved by the tool pipeline.
-  var lastInteractionContext: InteractionContext?
+  /// The rich interaction context retained to resolve the current pointer style.
+  ///
+  /// This is the most recently processed context whose payload and modifiers are
+  /// useful to the effective tool. It is not an interaction history: ending a
+  /// different interaction kind does not replace this context merely to record
+  /// that lifecycle event. Use ``latestInteraction`` to observe the most recent
+  /// interaction kind and phase.
+  var pointerStyleContext: InteractionContext?
+
+  /// The most recently observed interaction lifecycle event.
+  ///
+  /// This compact, environment-facing snapshot records only the interaction kind
+  /// and phase. Unlike ``activeInteraction``, it retains terminal events such as
+  /// an ended hover or cancelled drag after that kind has ceased to be active.
+  /// Unlike ``pointerStyleContext``, it intentionally does not retain an
+  /// interaction payload or modifier state.
   var latestInteraction: InteractionSnapshot = .none
 
-  private var activeInteractionContexts: [Interaction.Kind: InteractionContext] = [:]
+  /// The current active interaction contexts, indexed by interaction kind.
+  ///
+  /// A context is present only while its phase is active. Terminal phases remove
+  /// only their matching kind, allowing overlapping interactions, such as a
+  /// pinch and hover, to remain independently represented. This is the source
+  /// for ``activeInteraction``; it cannot represent the most recent completed
+  /// interaction.
+  private var activeContextsByKind: [Interaction.Kind: InteractionContext] = [:]
 
   var artworkFrame: Rect<ViewportSpace>?
   var currentTransform: TransformState = .identity
@@ -66,7 +86,7 @@ extension CanvasHandler {
       phase: phase,
       modifiers: modifiers,
     )
-    self.lastInteractionContext = context
+    self.pointerStyleContext = context
     self.latestInteraction = .init(context: context)
     updateActiveInteraction(with: context)
 
@@ -148,12 +168,12 @@ extension CanvasHandler {
     modifiers: EventModifiers,
   ) {
     latestInteraction = .init(kind: kind, phase: phase)
-    activeInteractionContexts[kind] = nil
+    activeContextsByKind[kind] = nil
 
-    if let context = lastInteractionContext,
+    if let context = pointerStyleContext,
       context.interaction.kind == kind
     {
-      lastInteractionContext =
+      pointerStyleContext =
         context
         .withPhase(phase)
         .withModifiers(modifiers)
@@ -182,9 +202,9 @@ extension CanvasHandler {
     let kind = context.interaction.kind
 
     if context.phase.isActive {
-      activeInteractionContexts[kind] = context
+      activeContextsByKind[kind] = context
     } else {
-      activeInteractionContexts[kind] = nil
+      activeContextsByKind[kind] = nil
     }
   }
 }
@@ -203,8 +223,8 @@ extension CanvasHandler {
   }
 
   var activeInteraction: ActiveInteraction {
-    guard !activeInteractionContexts.isEmpty else { return .none }
-    return .init(contextsByKind: activeInteractionContexts)
+    guard !activeContextsByKind.isEmpty else { return .none }
+    return .init(contextsByKind: activeContextsByKind)
   }
 
   /// The runtime tool used to resolve canvas input right now.
@@ -227,18 +247,18 @@ extension CanvasHandler {
 extension CanvasHandler {
   func updateModifiers(_ modifiers: EventModifiers) {
     toolHandler.updateModifiers(modifiers)
-    lastInteractionContext = lastInteractionContext?.withModifiers(modifiers)
-    activeInteractionContexts = activeInteractionContexts.mapValues { context in
+    pointerStyleContext = pointerStyleContext?.withModifiers(modifiers)
+    activeContextsByKind = activeContextsByKind.mapValues { context in
       context.withModifiers(modifiers)
     }
   }
 
-  // TODO: Change how interactionContext is updated, as this pointer style
-  // is possibly not being updated at the right cadence. interactionContext
+  // TODO: Change how pointerStyleContext is updated, as this pointer style
+  // is possibly not being updated at the right cadence. pointerStyleContext
   // is currently only updated when processedTransform() is run.
   var pointerStyle: CanvasPointerStyle? {
-    guard let lastInteractionContext else { return nil }
-    return effectiveTool.resolvePointerStyle(context: lastInteractionContext)
+    guard let pointerStyleContext else { return nil }
+    return effectiveTool.resolvePointerStyle(context: pointerStyleContext)
   }
 
 }
