@@ -137,9 +137,9 @@ extension CanvasHandler {
     else { return }
 
     pointer.latestDrag = event
-    if phase.isTerminal {
-      pointer.latestDrag = nil
-    }
+//    if phase.isTerminal {
+//      pointer.latestDrag = nil
+//    }
   }
 
   func endInteraction(

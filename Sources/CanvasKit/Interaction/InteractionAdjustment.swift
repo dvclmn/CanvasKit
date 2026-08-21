@@ -16,10 +16,10 @@ public enum InteractionAdjustment: Sendable {
 
 extension InteractionAdjustment {
 
-  static func pointerAdjustment(from drag: PointerDragPayload) -> Self {
-    guard let rect = drag.boundingRect else { return .none }
-    return .pointer(.drag(rect))
-  }
+//  static func pointerAdjustment(from drag: PointerDragPayload) -> Self {
+//    guard let rect = drag.boundingRect else { return .none }
+//    return .pointer(.drag(rect))
+//  }
 }
 
 extension InteractionAdjustment: CustomStringConvertible {

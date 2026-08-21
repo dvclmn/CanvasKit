@@ -9,7 +9,7 @@
 public enum PointerAdjustment: Sendable {
   case tap(Point<ViewportSpace>)
   case hover(Point<ViewportSpace>)
-  case drag(Rect<ViewportSpace>)
+//  case drag(Rect<ViewportSpace>)
 }
 
 extension PointerAdjustment: CustomStringConvertible {
@@ -17,7 +17,7 @@ extension PointerAdjustment: CustomStringConvertible {
     switch self {
       case .tap(let point): "Tap \(point)"
       case .hover(let point): "Hover \(point)"
-      case .drag(let rect): "Drag \(rect)"
+//      case .drag(let rect): "Drag \(rect)"
     }
   }
 }
