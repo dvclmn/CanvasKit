@@ -22,11 +22,10 @@ struct InteractionModifiers: ViewModifier {
         isEnabled: isEnabled(for: .swipe)
       ) { event in
 
-        let adjustment = store.processedTransform(
+        let adjustment = store.processInteraction(
           .swipe(delta: event.delta),
           phase: event.phase,
           modifiers: event.modifiers,
-          //          modifiers: modifierKeys.canvasEventModifiers,
         )
         apply(adjustment)
       }
@@ -36,7 +35,7 @@ struct InteractionModifiers: ViewModifier {
         isEnabled: isEnabled(for: .pinch),
       ) { proposal in
 
-        let adjustment = store.processedTransform(
+        let adjustment = store.processInteraction(
           .pinch(scale: proposal.proposedZoom),
           phase: proposal.phase,
           modifiers: modifiers,
@@ -58,7 +57,7 @@ struct InteractionModifiers: ViewModifier {
           return
         }
 
-        let adjustment = store.processedTransform(
+        let adjustment = store.processInteraction(
           .hover(location.viewportPoint),
           phase: phase.interactionPhase,
           modifiers: modifiers,
@@ -68,9 +67,8 @@ struct InteractionModifiers: ViewModifier {
       }
 
       .onTapGesture(coordinateSpace: .named(ViewportSpace.viewport)) { location in
-        //        printTimestamped("Called `onTapGesture`")
         guard isEnabled(for: .tap) else { return }
-        let adjustment = store.processedTransform(
+        let adjustment = store.processInteraction(
           .tap(location: location.viewportPoint),
           phase: .ended,
           modifiers: modifiers,
@@ -85,7 +83,6 @@ struct InteractionModifiers: ViewModifier {
         minimumDistance: store.effectiveTool.dragConfiguration.minimumDistance,
       ) { payload, phase in
 
-        //        printTimestamped("Called `onPointerDragGesture`")
         guard let payload else {
           if phase.isTerminal {
             store.endInteraction(
@@ -97,7 +94,7 @@ struct InteractionModifiers: ViewModifier {
           return
         }
 
-        let adjustment = store.processedTransform(
+        let adjustment = store.processInteraction(
           .drag(payload),
           phase: phase,
           modifiers: modifiers,
@@ -133,7 +130,9 @@ extension InteractionModifiers {
         isEnabled = true
 
       case .tap, .drag:
-        // Returns true if any of the current tool's capabilities match this interaction.
+        // Keep the recogniser installed for the tool's interaction kind.
+        // CanvasHandler performs event-time modifier matching so a capability
+        // can require modifiers without publishing unmatched pointer input.
         isEnabled = store.effectiveTool.inputCapabilities.contains { capability in
           capability.interactionKind == interaction
         }

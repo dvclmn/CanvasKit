@@ -17,13 +17,8 @@ public struct CanvasTapModifier: ViewModifier {
     content
       .onChange(of: pointerTap) {
         if let pointerTap {
-          action(pointerTap)
+          action(pointerTap.location)
         }
-        //        guard let pointerTap else {
-        //          printMissing("pointerTap", for: "CanvasTapModifier")
-        //          return
-        //        }
-        //        action(pointerTap)
       }
   }
 }

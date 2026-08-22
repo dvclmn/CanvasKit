@@ -1,5 +1,5 @@
 //
-//  InteractionSource.swift
+//  Interaction.swift
 //  CanvasKit
 //
 //  Created by Dave Coleman on 16/3/2026.

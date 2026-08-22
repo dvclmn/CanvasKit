@@ -1,26 +1,16 @@
 //
-//  CanvasSnapshot.swift
+//  PointerMappedSnapshot.swift
 //  CanvasKit
 //
 //  Created by Dave Coleman on 17/3/2026.
 //
 
 private import CoreTools
-import SwiftUI
-private import ViewTools
-
-/// Computed from `CanvasHandler` state and geometry.
-/// Holds mapped, consumer-ready values
+/// Consumer-ready pointer observations mapped into ``CanvasSpace``.
 struct PointerMappedSnapshot: Sendable {
-  //  let pointer: PointerState<CanvasSpace>
-
-  let tap: Point<CanvasSpace>?
+  let tap: PointerTapSnapshot<CanvasSpace>?
   let hover: Point<CanvasSpace>?
-  
-  // This is the point where an internal PointerDragSnapshot
-  // is mapped and becomes a publicly consumed CanvasDragEvent
   let drag: CanvasDragEvent?
-
   let isInsideCanvas: Bool
 }
 
@@ -28,8 +18,13 @@ extension PointerMappedSnapshot {
   static func createMapped(
     mapper: CoordinateSpaceMapper,
     pointerState: PointerState<ViewportSpace>,
-  ) -> Self? {
-    let tapMapped = pointerState.tap.map { mapper.canvasPoint(from: $0) }
+  ) -> Self {
+    let tapMapped = pointerState.tap.map {
+      PointerTapSnapshot<CanvasSpace>(
+        location: mapper.canvasPoint(from: $0.location),
+        sequence: $0.sequence,
+      )
+    }
     let hoverMapped = pointerState.hover.map { mapper.canvasPoint(from: $0) }
     let dragMapped = pointerState.latestDrag.map {
       CanvasDragEvent(
@@ -37,7 +32,6 @@ extension PointerMappedSnapshot {
         mapper: mapper,
       )
     }
-    //    let dragMapped = pointerState.drag.map { mapper.canvasRect(from: $0) }
     let isInside = hoverMapped.map { mapper.isInsideCanvas($0) } ?? false
 
     return .init(
@@ -47,5 +41,4 @@ extension PointerMappedSnapshot {
       isInsideCanvas: isInside,
     )
   }
-
 }

@@ -9,21 +9,11 @@ import Foundation
 
 public enum PointerDragPayload: Sendable, Equatable {
 
-  /// For panning/continuous
+  /// Frame-to-frame movement for continuous tools such as Pan and Zoom.
   case delta(Size<ViewportSpace>, location: Point<ViewportSpace>)
 
-  /// For marquee/select
+  /// Ordered anchor/current locations for marquee-style tools.
   case rect(from: Point<ViewportSpace>, current: Point<ViewportSpace>)
-}
-
-extension PointerDragPayload {
-
-  public var boundingRect: Rect<ViewportSpace>? {
-    switch self {
-      case .delta: nil
-      case .rect(let from, let current): Rect<ViewportSpace>(from: from, to: current)
-    }
-  }
 }
 
 extension PointerDragPayload: CustomStringConvertible {

@@ -5,27 +5,12 @@
 //  Created by Dave Coleman on 7/3/2026.
 //
 
-import CoreGraphics
-
-/// Raw locations/geometry in screen space, no
-/// coordinate space mapping applied.
+/// Pointer observations before coordinate-space mapping.
+///
+/// `CanvasHandler` stores this as `PointerState<ViewportSpace>`. Public callback
+/// modifiers receive separately mapped values in ``CanvasSpace``.
 struct PointerState<Space>: Sendable, Equatable {
-  var tap: Point<Space>?
+  var tap: PointerTapSnapshot<Space>?
   var hover: Point<Space>?
   var latestDrag: PointerDragSnapshot<Space>?
-//  public var drag: Rect<Space>?
-
-//  public init(
-//    tap: Point<Space>? = nil,
-//    hover: Point<Space>? = nil,
-//    drag: Rect<Space>? = nil,
-//  ) {
-//    self.tap = tap
-//    self.hover = hover
-//    self.drag = drag
-//  }
 }
-
-//extension PointerState {
-//  public static let initial = PointerState()
-//}

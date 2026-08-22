@@ -30,18 +30,10 @@ extension EnvironmentValues {
   @Entry var canvasAnchor: UnitPoint = .center
 //  @Entry var canvasBackground: Color = Color(white: 0.04)
 
-  /// Pointer Tap, Drag and Hover are added to the environment as
-  /// an internal convenience. For user access, see Canvas event
-  /// modifiers like `CanvasDragModifier`.
-  @Entry var pointerTap: Point<CanvasSpace>?
-  
-  // Deprecated by newer drag event types CanvasDragEvent / PointerDragSnapshot
-//  @Entry var pointerDrag: Rect<CanvasSpace>?
+  /// Mapped pointer observations used internally by Canvas event modifiers.
+  @Entry var pointerTap: PointerTapSnapshot<CanvasSpace>?
   @Entry var pointerHover: Point<CanvasSpace>?
   @Entry var canvasDragEvent: CanvasDragEvent?
-
-  @Entry var latestInteraction: InteractionSnapshot = .none
-  @Entry var activeInteraction: ActiveInteraction = .none
 
   @Entry public var panOffset: CGSize = .zero
   @Entry public var rotation: Angle = .zero

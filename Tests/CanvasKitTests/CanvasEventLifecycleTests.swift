@@ -20,7 +20,7 @@ struct CanvasEventLifecycleTests {
       toolSelection: .init(id: toolID),
     )
 
-    _ = handler.processedTransform(
+    _ = handler.processInteraction(
       .hover(location),
       phase: .changed,
       modifiers: [],
@@ -44,7 +44,7 @@ struct CanvasEventLifecycleTests {
     )
     let handler = CanvasHandler(toolConfiguration: configuration)
 
-    let adjustment = handler.processedTransform(
+    let adjustment = handler.processInteraction(
       .hover(location),
       phase: .changed,
       modifiers: [],
@@ -65,7 +65,7 @@ struct CanvasEventLifecycleTests {
       current: .init(x: 30, y: 40),
     )
 
-    _ = handler.processedTransform(
+    _ = handler.processInteraction(
       .drag(payload),
       phase: .began,
       modifiers: [],
@@ -75,7 +75,72 @@ struct CanvasEventLifecycleTests {
     #expect(event.start == Point<ViewportSpace>(x: 10, y: 20))
     #expect(event.current == Point<ViewportSpace>(x: 30, y: 40))
     #expect(event.phase == .began)
-//    #expect(handler.pointer.drag == nil)
+  }
+
+  @Test func modifierMismatchedMarqueeIsNeitherActiveNorPublished() {
+    let handler = CanvasHandler(
+      toolConfiguration: .init(tools: [ModifierMarqueeTool()], bindings: []),
+    )
+    let payload = PointerDragPayload.rect(
+      from: .init(x: 10, y: 20),
+      current: .init(x: 30, y: 40),
+    )
+
+    _ = handler.processInteraction(
+      .drag(payload),
+      phase: .began,
+      modifiers: [],
+    )
+
+    #expect(handler.pointer.latestDrag == nil)
+    #expect(!handler.activeInteraction.contains(.drag))
+  }
+
+  @Test func repeatedTapAtSameLocationProducesDistinctSnapshots() throws {
+    let handler = CanvasHandler(toolConfiguration: nil)
+    let location = Point<ViewportSpace>(x: 25, y: 35)
+
+    _ = handler.processInteraction(
+      .tap(location: location),
+      phase: .ended,
+      modifiers: [],
+    )
+    let first = try #require(handler.pointer.tap)
+
+    _ = handler.processInteraction(
+      .tap(location: location),
+      phase: .ended,
+      modifiers: [],
+    )
+    let second = try #require(handler.pointer.tap)
+
+    #expect(first.location == second.location)
+    #expect(first.sequence != second.sequence)
+    #expect(first != second)
+  }
+
+  @Test func activeDragTakesPointerStylePrecedenceOverHover() {
+    let handler = CanvasHandler(
+      toolConfiguration: .default,
+      toolSelection: .init(id: .pan),
+    )
+
+    _ = handler.processInteraction(
+      .drag(.delta(.init(width: 4, height: 6), location: .init(x: 30, y: 40))),
+      phase: .began,
+      modifiers: [],
+    )
+    #expect(handler.pointerStyle == .grabActive)
+
+    _ = handler.processInteraction(
+      .hover(.init(x: 32, y: 42)),
+      phase: .changed,
+      modifiers: [],
+    )
+    #expect(handler.pointerStyle == .grabActive)
+
+    handler.endInteraction(.drag, phase: .ended, modifiers: [])
+    #expect(handler.pointerStyle == .grabIdle)
   }
 
   @Test func continuousToolDragDoesNotPublishMarqueeEvent() {
@@ -84,7 +149,7 @@ struct CanvasEventLifecycleTests {
       toolSelection: .init(id: .pan),
     )
 
-    _ = handler.processedTransform(
+    _ = handler.processInteraction(
       .drag(
         .delta(
           .init(width: 4, height: 6),
@@ -138,14 +203,14 @@ struct CanvasEventLifecycleTests {
       current: .init(x: 20, y: 10),
     )
 
-    _ = handler.processedTransform(
+    _ = handler.processInteraction(
       .drag(payload),
       phase: .changed,
       modifiers: [],
     )
     let changed = try #require(handler.pointer.latestDrag)
 
-    _ = handler.processedTransform(
+    _ = handler.processInteraction(
       .drag(payload),
       phase: .ended,
       modifiers: [],
@@ -157,7 +222,6 @@ struct CanvasEventLifecycleTests {
     #expect(changed.phase == .changed)
     #expect(ended.phase == .ended)
     #expect(changed != ended)
-//    #expect(handler.pointer.drag == nil)
     #expect(!handler.activeInteraction.contains(.drag))
   }
 
@@ -171,7 +235,7 @@ struct CanvasEventLifecycleTests {
       current: .init(x: 25, y: 35),
     )
 
-    _ = handler.processedTransform(
+    _ = handler.processInteraction(
       .drag(payload),
       phase: .began,
       modifiers: [],
@@ -184,7 +248,6 @@ struct CanvasEventLifecycleTests {
     #expect(cancelled.start == active.start)
     #expect(cancelled.current == active.current)
     #expect(cancelled.phase == .cancelled)
-//    #expect(handler.pointer.drag == nil)
     #expect(!handler.activeInteraction.contains(.drag))
 
     handler.endInteraction(.drag, phase: .cancelled, modifiers: [])
@@ -217,7 +280,7 @@ private struct HoverClaimingTool: CanvasTool {
     context: InteractionContext,
     currentTransform: TransformState,
   ) -> ToolResolution {
-    .handled(.none)
+    .consumed
   }
 }
 
@@ -239,6 +302,28 @@ private struct MarqueeObservingTool: CanvasTool {
     context: InteractionContext,
     currentTransform: TransformState,
   ) -> ToolResolution {
-    .handled(.none)
+    .consumed
+  }
+}
+
+private struct ModifierMarqueeTool: CanvasTool {
+  let id: CanvasToolID = "modifier-marquee"
+  let name = "Modifier Marquee"
+  let icon = "rectangle.dashed"
+
+  var dragConfiguration: PointerDragConfiguration { .marquee }
+  var inputCapabilities: [ToolCapability] {
+    [ToolCapability(interaction: .drag, intent: .drawMarquee, modifiers: [.option])]
+  }
+
+  func resolvePointerStyle(context: InteractionContext) -> CanvasPointerStyle {
+    .default
+  }
+
+  func resolveInteraction(
+    context: InteractionContext,
+    currentTransform: TransformState,
+  ) -> ToolResolution {
+    .consumed
   }
 }

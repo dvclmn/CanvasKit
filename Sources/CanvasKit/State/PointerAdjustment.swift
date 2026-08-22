@@ -5,11 +5,13 @@
 //  Created by Dave Coleman on 8/4/2026.
 //
 
-/// Updates pointer-derived canvas state such as tap, hover, and drag values.
+/// Requests a CanvasKit-owned pointer-state update.
+///
+/// Marquee drag observation is recorded directly from ``PointerDragPayload``
+/// and published as ``CanvasDragEvent`` rather than passing through this type.
 public enum PointerAdjustment: Sendable {
   case tap(Point<ViewportSpace>)
   case hover(Point<ViewportSpace>)
-//  case drag(Rect<ViewportSpace>)
 }
 
 extension PointerAdjustment: CustomStringConvertible {
@@ -17,7 +19,6 @@ extension PointerAdjustment: CustomStringConvertible {
     switch self {
       case .tap(let point): "Tap \(point)"
       case .hover(let point): "Hover \(point)"
-//      case .drag(let rect): "Drag \(rect)"
     }
   }
 }

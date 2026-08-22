@@ -14,9 +14,8 @@ struct ViewportPinchEventTests {
   @Test func firstEventRetainsDeltaFromIdentity() throws {
     var accumulator = ViewportPinchEventAccumulator()
 
-    let event = try #require(
-      accumulator.changed(magnification: 1.25)
-    )
+    let emittedEvent = accumulator.changed(magnification: 1.25)
+    let event = try #require(emittedEvent)
 
     #expect(event.magnification == 1.25)
     #expect(event.magnificationDelta == 1.25)
@@ -27,9 +26,8 @@ struct ViewportPinchEventTests {
     var accumulator = ViewportPinchEventAccumulator()
     _ = accumulator.changed(magnification: 1.25)
 
-    let event = try #require(
-      accumulator.changed(magnification: 1.5)
-    )
+    let emittedEvent = accumulator.changed(magnification: 1.5)
+    let event = try #require(emittedEvent)
 
     #expect(event.magnification == 1.5)
     #expect(isNear(event.magnificationDelta, 1.2))
@@ -40,12 +38,10 @@ struct ViewportPinchEventTests {
     var outwardAccumulator = ViewportPinchEventAccumulator()
     var inwardAccumulator = ViewportPinchEventAccumulator()
 
-    let outward = try #require(
-      outwardAccumulator.changed(magnification: 1.25)
-    )
-    let inward = try #require(
-      inwardAccumulator.changed(magnification: 0.8)
-    )
+    let emittedOutward = outwardAccumulator.changed(magnification: 1.25)
+    let outward = try #require(emittedOutward)
+    let emittedInward = inwardAccumulator.changed(magnification: 0.8)
+    let inward = try #require(emittedInward)
 
     #expect(isNear(outward.magnificationDelta * inward.magnificationDelta, 1))
   }
@@ -55,9 +51,8 @@ struct ViewportPinchEventTests {
     _ = accumulator.changed(magnification: 1.5)
     _ = accumulator.ended(magnification: 1.5)
 
-    let event = try #require(
-      accumulator.changed(magnification: 0.75)
-    )
+    let emittedEvent = accumulator.changed(magnification: 0.75)
+    let event = try #require(emittedEvent)
 
     #expect(event.magnificationDelta == 0.75)
     #expect(event.phase == .began)
@@ -71,9 +66,8 @@ struct ViewportPinchEventTests {
     #expect(accumulator.changed(magnification: 0) == nil)
     #expect(accumulator.changed(magnification: -1) == nil)
 
-    let event = try #require(
-      accumulator.changed(magnification: 1.2)
-    )
+    let emittedEvent = accumulator.changed(magnification: 1.2)
+    let event = try #require(emittedEvent)
 
     #expect(event.magnificationDelta == 1.2)
     #expect(event.phase == .began)
@@ -95,9 +89,8 @@ struct ViewportPinchEventTests {
     var accumulator = ViewportPinchEventAccumulator()
     _ = accumulator.changed(magnification: 1.2)
 
-    let event = try #require(
-      accumulator.ended(magnification: .nan)
-    )
+    let emittedEvent = accumulator.ended(magnification: .nan)
+    let event = try #require(emittedEvent)
 
     #expect(event.magnification == 1.2)
     #expect(event.magnificationDelta == 1)
@@ -108,16 +101,14 @@ struct ViewportPinchEventTests {
     var accumulator = ViewportPinchEventAccumulator()
     _ = accumulator.changed(magnification: 1.2)
 
-    let unchanged = try #require(
-      accumulator.ended(magnification: 1.2)
-    )
+    let emittedUnchanged = accumulator.ended(magnification: 1.2)
+    let unchanged = try #require(emittedUnchanged)
 
     #expect(unchanged.magnificationDelta == 1)
 
     _ = accumulator.changed(magnification: 1.2)
-    let changed = try #require(
-      accumulator.ended(magnification: 1.5)
-    )
+    let emittedChanged = accumulator.ended(magnification: 1.5)
+    let changed = try #require(emittedChanged)
 
     #expect(isNear(changed.magnificationDelta, 1.25))
   }
@@ -131,9 +122,8 @@ struct ViewportPinchEventTests {
     #expect(!accumulator.isActive)
     #expect(accumulator.previousMagnification == 1)
 
-    let event = try #require(
-      accumulator.changed(magnification: 1.1)
-    )
+    let emittedEvent = accumulator.changed(magnification: 1.1)
+    let event = try #require(emittedEvent)
     #expect(event.magnificationDelta == 1.1)
     #expect(event.phase == .began)
   }

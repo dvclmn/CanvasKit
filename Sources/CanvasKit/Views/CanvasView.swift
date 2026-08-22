@@ -117,10 +117,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
         store.updateModifiers(.init(from: modifiers))
       }
 
-//      .environment(\.canvasCoordinateSpaceMapper, store.coordinateSpaceMapper(in: explicitCanvasSize))
       .environment(\.explicitCanvasSize, explicitCanvasSize)
-      .environment(\.latestInteraction, store.latestInteraction)
-      .environment(\.activeInteraction, store.activeInteraction)
       .environment(store)
 
       .onDisappear {
@@ -129,9 +126,4 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       }
 
   }
-}
-
-// MARK: - Inits
-extension CanvasView {
-
 }

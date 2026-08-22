@@ -27,7 +27,8 @@ where ID == CanvasToolID {
   /// The drag input policy active when this tool is selected.
   var dragConfiguration: PointerDragConfiguration { get }
 
-  /// The interaction kinds this tool can resolve.
+  /// The physical interactions, semantic intents, and modifier requirements
+  /// this tool can resolve.
   var inputCapabilities: [ToolCapability] { get }
 
   /// Resolve the pointer style for the current interaction context.
@@ -35,8 +36,13 @@ where ID == CanvasToolID {
 
   /// Resolves an interaction into a canvas adjustment.
   ///
-  /// Only called for sources the tool opted into via `inputCapabilities`.
-  /// Return `.passthrough` to let CanvasKit fall back to its default behaviour.
+  /// Only called after CanvasKit selects a capability from
+  /// ``inputCapabilities``. The selected declaration is available through
+  /// ``InteractionContext/matchedCapability`` and its semantic meaning through
+  /// ``InteractionContext/intent``.
+  ///
+  /// Return ``ToolResolution/consumed`` to claim input without a CanvasKit-owned
+  /// mutation, or ``ToolResolution/passthrough`` to allow a canvas default.
   func resolveInteraction(
     context: InteractionContext,
     currentTransform: TransformState,
@@ -44,15 +50,12 @@ where ID == CanvasToolID {
 }
 
 extension CanvasTool {
-//  public var id: CanvasToolID { kind }
-
   public var description: String {
     """
     Name: \(name)
     Capabilities: \(inputCapabilities)
     """
   }
-
 }
 
 extension CanvasTool where Self == SelectTool {

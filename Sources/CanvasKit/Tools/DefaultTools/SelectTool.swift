@@ -35,13 +35,18 @@ public struct SelectTool: CanvasTool {
     currentTransform: TransformState,
   ) -> ToolResolution {
 
-    let adjustment: InteractionAdjustment =
-      switch context.interaction {
-        case .tap(let location): .pointer(.tap(location))
-        case .drag(let payload): .pointerAdjustment(from: payload)
-        default: .none
-      }
+    switch context.interaction {
+      case .tap(let location):
+        return .handled(.pointer(.tap(location)))
 
-    return .handled(adjustment)
+      case .drag:
+        // CanvasHandler records the richer marquee snapshot independently of
+        // tool-owned state mutation. Select consumes the drag so no canvas
+        // default is applied.
+        return .consumed
+
+      default:
+        return .passthrough
+    }
   }
 }

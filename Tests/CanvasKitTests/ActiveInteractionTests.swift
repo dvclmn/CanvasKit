@@ -14,7 +14,7 @@ struct ActiveInteractionTests {
   @Test func terminalPhaseClearsActiveInteraction() {
     let handler = CanvasHandler(toolConfiguration: nil)
 
-    _ = handler.processedTransform(
+    _ = handler.processInteraction(
       .pinch(scale: 1.2),
       phase: .began,
       modifiers: [],
@@ -23,7 +23,7 @@ struct ActiveInteractionTests {
     #expect(handler.activeInteraction.contains(.pinch))
     #expect(handler.activeInteraction.phase(for: .pinch) == .began)
 
-    _ = handler.processedTransform(
+    _ = handler.processInteraction(
       .pinch(scale: 1.0),
       phase: .ended,
       modifiers: [],
@@ -36,13 +36,13 @@ struct ActiveInteractionTests {
   @Test func endingOneInteractionKindPreservesOtherActiveKinds() {
     let handler = CanvasHandler(toolConfiguration: nil)
 
-    _ = handler.processedTransform(
+    _ = handler.processInteraction(
       .pinch(scale: 1.2),
       phase: .changed,
       modifiers: [],
     )
 
-    _ = handler.processedTransform(
+    _ = handler.processInteraction(
       .hover(.init(x: 20, y: 30)),
       phase: .changed,
       modifiers: [],

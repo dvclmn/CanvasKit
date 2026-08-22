@@ -13,7 +13,7 @@ final class CanvasHandler {
 
   var toolHandler: ToolHandler
   var pointer: PointerState<ViewportSpace> = .init()
-  //  var pointerDragEvent: PointerDragSnapshot<ViewportSpace>?
+  private var tapSequence: UInt64 = 0
 
   /// The rich interaction context retained to resolve the current pointer style.
   ///
@@ -24,10 +24,10 @@ final class CanvasHandler {
   /// interaction kind and phase.
   var pointerStyleContext: InteractionContext?
 
-  /// The most recently observed interaction lifecycle event.
+  /// The most recently observed accepted interaction lifecycle event.
   ///
-  /// This compact, environment-facing snapshot records only the interaction kind
-  /// and phase. Unlike ``activeInteraction``, it retains terminal events such as
+  /// This compact diagnostic snapshot records only the interaction kind and
+  /// phase. Unlike ``activeInteraction``, it retains terminal events such as
   /// an ended hover or cancelled drag after that kind has ceased to be active.
   /// Unlike ``pointerStyleContext``, it intentionally does not retain an
   /// interaction payload or modifier state.
@@ -62,7 +62,7 @@ final class CanvasHandler {
 
 extension CanvasHandler {
 
-  /// Entry point for all raw input events from gesture modifiers.
+  /// Processes one raw input update from CanvasKit's gesture modifiers.
   ///
   /// Global hover location is recorded independently of tool resolution so
   /// public observation does not disappear when a tool claims hover. A tool
@@ -72,20 +72,25 @@ extension CanvasHandler {
   /// Claimed interactions are forwarded to the effective tool's
   /// ``CanvasTool/resolveInteraction(context:currentTransform:)`` method.
   ///
-  /// Returns an optional to allow a no-op in ``InteractionModifiers``,
-  /// so that interaction modifiers that don't need to touch Transform state
-  /// don't inadvertently write it to `identity`.
-  func processedTransform(
+  /// Returns the proposed transform only when resolution produced a transform
+  /// adjustment. Pointer observations and consumed interactions return `nil`,
+  /// preventing ``InteractionModifiers`` from writing an identity transform.
+  func processInteraction(
     _ interaction: Interaction,
     phase: InteractionPhase,
     modifiers: EventModifiers,
   ) -> TransformState? {
 
-    let context = InteractionContext(
+    let unresolvedContext = InteractionContext(
       interaction: interaction,
       phase: phase,
       modifiers: modifiers,
     )
+
+    guard let context = routedContext(for: unresolvedContext) else {
+      return nil
+    }
+
     self.pointerStyleContext = context
     self.latestInteraction = .init(context: context)
     updateActiveInteraction(with: context)
@@ -98,17 +103,16 @@ extension CanvasHandler {
 
     guard let resolvedAdjustment = resolver.resolve() else {
       recordPublicPointerInput(from: context)
-      print("No resolution for provided interaction context: \(context)")
       return nil
     }
 
-    let processedTransform = handleAdjustment(
+    let updatedTransform = handleAdjustment(
       resolvedAdjustment,
       transform: currentTransform,
     )
 
     recordPublicPointerInput(from: context)
-    return processedTransform
+    return updatedTransform
   }
 
   private func handleAdjustment(
@@ -121,9 +125,7 @@ extension CanvasHandler {
 
       case .pointer(let adj):
         switch adj {
-          case .tap(let point): self.pointer.tap = point
-          case .drag(let rect):
-            self.pointer.drag = rect
+          case .tap(let point): recordTap(at: point)
           case .hover(let point): self.pointer.hover = point
         }
         return nil
@@ -157,9 +159,43 @@ extension CanvasHandler {
     else { return }
 
     pointer.latestDrag = event
-//    if phase.isTerminal {
-//      pointer.latestDrag = nil
-//    }
+  }
+
+  private func recordTap(at location: Point<ViewportSpace>) {
+    tapSequence &+= 1
+    pointer.tap = .init(location: location, sequence: tapSequence)
+  }
+
+  /// Resolves tool meaning before state or public events are recorded.
+  ///
+  /// Tap and drag are admitted only when the effective tool has a matching
+  /// capability. An active drag retains its initially matched capability so a
+  /// modifier change cannot silently reinterpret the gesture halfway through.
+  /// Global interactions remain eligible for CanvasKit default handling even
+  /// when no tool capability matches.
+  private func routedContext(
+    for context: InteractionContext
+  ) -> InteractionContext? {
+    if context.interaction.kind == .drag,
+      let activeCapability = activeContextsByKind[.drag]?.matchedCapability
+    {
+      return context.matching(activeCapability)
+    }
+
+    let resolvedContext = CanvasInputResolver(
+      context: context,
+      effectiveTool: effectiveTool,
+      transform: currentTransform,
+    ).resolvedContext()
+
+    switch context.interaction.kind {
+      case .tap, .drag:
+        guard resolvedContext.matchedCapability != nil else { return nil }
+      case .swipe, .pinch, .rotate, .hover:
+        break
+    }
+
+    return resolvedContext
   }
 
   func endInteraction(
@@ -195,7 +231,6 @@ extension CanvasHandler {
     else { return }
 
     pointer.latestDrag = event.withPhase(phase)
-    //    pointer.drag = nil
   }
 
   private func updateActiveInteraction(with context: InteractionContext) {
@@ -253,12 +288,17 @@ extension CanvasHandler {
     }
   }
 
-  // TODO: Change how pointerStyleContext is updated, as this pointer style
-  // is possibly not being updated at the right cadence. pointerStyleContext
-  // is currently only updated when processedTransform() is run.
   var pointerStyle: CanvasPointerStyle? {
-    guard let pointerStyleContext else { return nil }
-    return effectiveTool.resolvePointerStyle(context: pointerStyleContext)
+    let context = activeContextsByKind[.drag] ?? pointerStyleContext
+    guard let context else { return nil }
+
+    let resolvedContext = CanvasInputResolver(
+      context: context,
+      effectiveTool: effectiveTool,
+      transform: currentTransform,
+    ).resolvedContext()
+
+    return effectiveTool.resolvePointerStyle(context: resolvedContext)
   }
 
 }

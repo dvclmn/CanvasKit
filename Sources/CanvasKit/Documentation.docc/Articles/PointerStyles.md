@@ -62,8 +62,7 @@ var body: some View {
 }
 ```
 
-The binding receives `nil` when CanvasKit has no active interaction context, and
-a ``CanvasPointerStyle`` once the current tool has resolved a style.
+The binding receives `nil` before CanvasKit has a pointer-relevant interaction context, and a ``CanvasPointerStyle`` once the current tool has resolved a style. While a drag is active, its context takes precedence over incidental hover updates so a grab cursor does not revert to its idle appearance halfway through the gesture. After the drag terminates, the most recent hover or pointer context resumes.
 
 ## Rationale
 

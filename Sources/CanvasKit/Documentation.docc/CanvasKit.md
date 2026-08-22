@@ -44,6 +44,8 @@ or keyboard shortcuts.
 - ``ToolSelection``
 - ``ToolBinding``
 - ``ToolCapability``
+- ``InteractionContext``
+- ``InteractionIntent``
 - ``ToolResolution``
 
 ### Built-In Tools

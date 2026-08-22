@@ -18,14 +18,11 @@ struct CanvasInputResolver {
 extension CanvasInputResolver {
 
   func resolve() -> InteractionAdjustment? {
-
-    // 1. Does the effective tool declare a matching capability?
     if let tool = effectiveTool,
-      tool.inputCapabilities.contains(where: { $0.matches(context) })
+      let toolContext = resolvedToolContext(for: tool)
     {
-
       let resolution = tool.resolveInteraction(
-        context: context,
+        context: toolContext,
         currentTransform: transform,
       )
 
@@ -44,6 +41,28 @@ extension CanvasInputResolver {
       for: context,
       currentTransform: transform,
     )
+  }
+
+  func resolvedContext() -> InteractionContext {
+    guard context.matchedCapability == nil else { return context }
+    guard let effectiveTool,
+      let capability = effectiveTool.inputCapabilities.bestMatch(for: context)
+    else { return context }
+
+    return context.matching(capability)
+  }
+
+  private func resolvedToolContext(
+    for tool: any CanvasTool
+  ) -> InteractionContext? {
+    if context.matchedCapability != nil {
+      return context
+    }
+
+    guard let capability = tool.inputCapabilities.bestMatch(for: context) else {
+      return nil
+    }
+    return context.matching(capability)
   }
 
 }

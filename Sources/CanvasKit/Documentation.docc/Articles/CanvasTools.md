@@ -1,6 +1,6 @@
 # Canvas Tools
 
-Tools describe how CanvasKit should interpret selected interactions. They are not an exclusive mode machine: global viewport gestures and hover observation remain available, while tap and drag input are routed through the effective tool when that tool declares a matching ``ToolCapability``.
+Tools describe how CanvasKit should interpret selected interactions. They are not an exclusive mode machine: global viewport gestures and hover observation remain available, while tap and drag input are admitted only when the effective tool declares a matching ``ToolCapability``. See <doc:InputInteractions> for the full capture, routing, resolution, and observation pipeline.
 
 CanvasKit includes three tools:
 
@@ -81,7 +81,7 @@ struct BrushTool: CanvasTool {
     context: InteractionContext,
     currentTransform: TransformState
   ) -> ToolResolution {
-    .passthrough
+    .consumed
   }
 }
 ```
@@ -106,7 +106,19 @@ let configuration = ToolConfiguration(
 )
 ```
 
-Return `.handled(...)` when the tool has resolved the interaction. Return `.passthrough` when CanvasKit should continue to its default behaviour.
+## Capabilities and resolved intent
+
+Each capability combines a physical ``Interaction.Kind``, an ``InteractionIntent``, and optional required modifiers. CanvasKit selects the most specific matching capability and exposes it as ``InteractionContext/matchedCapability`` when it calls the tool. Read ``InteractionContext/intent`` when one physical interaction can mean several things.
+
+Capability modifiers are requirements, not an exact modifier set. An Option capability matches Option+Shift, while an Option+Shift capability is more specific and wins when both are declared. Declaration order breaks ties between equally specific capabilities.
+
+For an active drag, CanvasKit retains the capability chosen at the start. The context’s current modifiers can still change, but the drag does not switch intent halfway through.
+
+## Resolution results
+
+Return `.handled(...)` when the tool requests a CanvasKit-owned pointer or transform adjustment. Return ``ToolResolution/consumed`` when the tool claims the interaction without requesting such a mutation. Return ``ToolResolution/passthrough`` when CanvasKit should continue to its default behaviour.
+
+`.consumed` is especially useful for event-oriented tools. ``SelectTool`` consumes marquee drag input without storing a rectangle through ``PointerAdjustment`` because CanvasKit independently publishes the richer ``CanvasDragEvent`` lifecycle.
 
 ## Pointer style
 
