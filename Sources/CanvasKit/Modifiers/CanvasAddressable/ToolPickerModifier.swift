@@ -19,13 +19,12 @@ public struct ToolsPaletteEnvironmentModifier: ViewModifier {
 }
 
 extension View where Self: CanvasAddressable {
-
   public func toolPalette(
-    _ isShowing: Bool = true,
+    isEnabled: Bool = true,
     alignment: Alignment = .topLeading,
   ) -> ModifiedContent<Self, ToolsPaletteEnvironmentModifier> {
     self.modifier(
-      ToolsPaletteEnvironmentModifier(isShowing: isShowing, alignment: alignment)
+      ToolsPaletteEnvironmentModifier(isShowing: isEnabled, alignment: alignment)
     )
   }
 }
