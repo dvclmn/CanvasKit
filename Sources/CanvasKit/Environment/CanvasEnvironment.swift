@@ -47,7 +47,7 @@ extension EnvironmentValues {
 
   /// Returns `1.0` if `zoomLevel` is less than zero or NaN/infinite
   public var zoomClamped: Double {
-    guard zoomLevel.isFiniteAndGreaterThanZero else { return 1.0 }
+    guard zoomLevel.isFiniteAndPositive else { return 1.0 }
     return zoomLevel.clamped(to: zoomRange)
   }
 

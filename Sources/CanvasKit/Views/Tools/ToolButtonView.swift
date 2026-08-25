@@ -25,14 +25,16 @@ struct ToolButtonView: View {
         .symbolRenderingMode(.hierarchical)
         //              .opacity(isToolActive(tool) ? 1 : 0.5)
         .frame(width: toolbarWidth, height: toolbarWidth)
-        .contentShape(Rectangle())
-        //        .tint(.blue)
+      //        .tint(.blue)
         .background {
           if isToolActive(tool) {
             RoundedRectangle(cornerRadius: 5)
               .fill(.quaternary)
           }
         }
+        .padding(.horizontal, 6)
+        .contentShape(Rectangle())
+        .border(Color.green.opacity(0.05))
       //                    .background(.white.opacity(isToolActive(tool) ? 0.06 : 0))
     }
 

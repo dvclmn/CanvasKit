@@ -6,6 +6,7 @@
 //
 
 import Foundation
+private import CoreTools
 
 /// A neutral magnification input sample from a pinch gesture.
 ///
@@ -94,21 +95,15 @@ struct ViewportPinchEventAccumulator {
     magnification: Double,
     phase: InteractionPhase,
   ) -> ViewportPinchEvent? {
-    guard magnification.isFiniteAndGreaterThanZero else { return nil }
+    guard magnification.isFiniteAndPositive else { return nil }
 
     let delta = magnification / previousMagnification
-    guard delta.isFiniteAndGreaterThanZero else { return nil }
+    guard delta.isFiniteAndPositive else { return nil }
 
     return ViewportPinchEvent(
       magnification: magnification,
       magnificationDelta: delta,
       phase: phase,
     )
-  }
-}
-
-private extension Double {
-  var isFiniteAndGreaterThanZero: Bool {
-    isFinite && self > 0
   }
 }

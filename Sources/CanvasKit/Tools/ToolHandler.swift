@@ -65,8 +65,7 @@ extension ToolHandler {
   /// The registered tool for the committed selection, if any.
   ///
   /// This returns `nil` only if selection has somehow drifted away from the
-  /// current catalogue. Normal configuration mutations repair selection
-  /// automatically.
+  /// current catalogue.
   public var committedTool: (any CanvasTool)? {
     guard let committedToolID else { return nil }
     return registeredTool(for: committedToolID)
@@ -321,11 +320,6 @@ extension ToolHandler {
       return .init(id: configuration.defaultToolID)
     }
     return selection
-  }
-
-  func repairSelection(for newConfiguration: ToolConfiguration) {
-    selection = Self.normalisedSelection(selection, for: newConfiguration)
-    overrides.removeAll { !newConfiguration.containsTool($0.binding.target) }
   }
 
   var keysToWatch: Set<KeyEquivalent> {

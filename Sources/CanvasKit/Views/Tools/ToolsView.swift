@@ -41,7 +41,6 @@ struct ToolsView: View {
     }  // END main vstack
     .buttonStyle(.plain)
     .labelStyle(.iconOnly)
-    .padding(6)
     .glassEffectCompatible(in: .capsule)
     //    .depthShadow(
     //      opacity: 0.3,

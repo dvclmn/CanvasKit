@@ -145,7 +145,7 @@ enum PinchZoomComputation {
     magnification: Double,
     sensitivity: Double = defaultSensitivity,
   ) -> Double {
-    let safeStartZoom = startZoom.isFiniteAndGreaterThanZero ? startZoom : 1
+    let safeStartZoom = startZoom.isFiniteAndPositive ? startZoom : 1
     return safeStartZoom
       * responseFactor(
         magnification,
@@ -169,7 +169,7 @@ enum PinchZoomComputation {
 
     let normalisedMagnification = max(magnification, 0)
     let responseStrength = responseStrength(for: sensitivity)
-    guard responseStrength.isFiniteAndGreaterThanZero else {
+    guard responseStrength.isFiniteAndPositive else {
       return normalisedMagnification
     }
     return exp((normalisedMagnification - 1) * responseStrength)
