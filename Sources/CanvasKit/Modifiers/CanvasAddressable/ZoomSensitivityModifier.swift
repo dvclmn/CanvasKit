@@ -17,13 +17,14 @@ public struct ZoomSensitivityModifier: ViewModifier {
   }
 }
 
-extension View where Self: CanvasAddressable {
+extension View {
+//extension View where Self: CanvasAddressable {
 
   /// Controls pinch zoom response on a `0...1` scale.
   ///
   /// The default is `0.5`, matching CanvasKit's standard pinch response.
   /// Lower values are gentler; higher values cover more zoom range per gesture.
-  public func zoomSensitivity(_ sensitivity: Double) -> ModifiedContent<Self, ZoomSensitivityModifier> {
+  public func canvasZoomSensitivity(_ sensitivity: Double) -> ModifiedContent<Self, ZoomSensitivityModifier> {
     self.modifier(
       ZoomSensitivityModifier(
         sensitivity: sensitivity.clamped(to: 0...1)

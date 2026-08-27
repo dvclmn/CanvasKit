@@ -16,11 +16,12 @@ public struct ZoomRangeModifier: ViewModifier {
   }
 }
 
-extension View where Self: CanvasAddressable {
+extension View {
+//extension View where Self: CanvasAddressable {
 
   /// The minimum zoom range lower bound is `0.05`;
   /// values less than this will be clamped.
-  public func zoomRange(_ range: ClosedRange<Double>) -> ModifiedContent<Self, ZoomRangeModifier> {
+  public func canvasZoomRange(_ range: ClosedRange<Double>) -> ModifiedContent<Self, ZoomRangeModifier> {
     self.modifier(
       ZoomRangeModifier(
         range: range.clamped(to: CanvasHandler.Constants.zoomRangeConstrained)
