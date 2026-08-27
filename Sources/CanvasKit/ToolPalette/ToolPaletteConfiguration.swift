@@ -33,6 +33,6 @@ public struct ToolPaletteConfiguration: Sendable, Equatable {
 
 extension ToolPaletteConfiguration {
   public static let defaultAlignment: Alignment = .topLeading
-  public static let defaultWidth: CGFloat = 36
-  public static let defaultPaddingH: CGFloat = 6
+  public static let defaultWidth: CGFloat = 44
+  public static let defaultPaddingH: CGFloat = 5
 }

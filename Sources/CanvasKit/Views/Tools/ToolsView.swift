@@ -11,19 +11,19 @@ private import ViewTools
 struct ToolsView: View {
   @Environment(CanvasHandler.self) private var store
   @Environment(\.toolPaletteConfiguration) private var configuration
-//  let toolbarWidth: Double = 36
-//  private let toolbarPadding: Double = 6
-  
+  //  let toolbarWidth: Double = 36
+  //  private let toolbarPadding: Double = 6
+
   var body: some View {
 
-    VStack(spacing: 6) {
+    VStack(spacing: 4) {
 
       if let configuration = store.toolHandler.configuration {
         MainTools(configuration)
       }
 
       Divider()
-        .frame(width: configuration.width * 0.7)
+//        .frame(width: configuration.width * 0.7)
 
       Button {
         store.currentTransform.scale = 1.0
@@ -33,15 +33,16 @@ struct ToolsView: View {
         Label("Re-centre artwork", systemImage: "viewfinder")
           .opacity(0.7)
       }
-//      .buttonStyle(.toolButton(width: effectiveWidth))
+      //      .buttonStyle(.toolButton(width: effectiveWidth))
 
     }  // END main vstack
-//    .buttonStyle(.plain)
-//    .tint(.gray)
-    .buttonStyle(.toolButton(width: configuration.width))
+    //    .buttonStyle(.plain)
+    //    .tint(.gray)
+    .buttonStyle(.toolButton(width: effectiveWidth))
     .labelStyle(.iconOnly)
-    .padding(.vertical, Styles.sizeSmall)
-    .padding(.horizontal, Styles.sizeSmall)
+    .padding(.vertical, configuration.paddingH)
+    .padding(.horizontal, configuration.paddingH)
+    .frame(width: configuration.width)
     .glassEffectCompatible(in: .capsule)
     //    .depthShadow(
     //      opacity: 0.3,
@@ -65,7 +66,8 @@ extension ToolsView {
   @ViewBuilder
   private func MainTools(_ configuration: ToolConfiguration) -> some View {
 
-    VStack(alignment: .leading, spacing: 0) {
+    //    ControlGroup {
+    VStack(spacing: 0) {
 
       if !configuration.tools.isEmpty {
         ForEach(configuration.tools, id: \.id) { tool in
