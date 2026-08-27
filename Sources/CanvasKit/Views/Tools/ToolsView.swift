@@ -10,9 +10,9 @@ private import ViewTools
 
 struct ToolsView: View {
   @Environment(CanvasHandler.self) private var store
-
-  let toolbarWidth: Double = 36
-  private let toolbarPadding: Double = 6
+  @Environment(\.toolPaletteConfiguration) private var configuration
+//  let toolbarWidth: Double = 36
+//  private let toolbarPadding: Double = 6
   
   var body: some View {
 
@@ -23,7 +23,7 @@ struct ToolsView: View {
       }
 
       Divider()
-        .frame(width: toolbarWidth * 0.7)
+        .frame(width: configuration.width * 0.7)
 
       Button {
         store.currentTransform.scale = 1.0
@@ -38,7 +38,7 @@ struct ToolsView: View {
     }  // END main vstack
 //    .buttonStyle(.plain)
 //    .tint(.gray)
-    .buttonStyle(.toolButton(width: toolbarWidth))
+    .buttonStyle(.toolButton(width: configuration.width))
     .labelStyle(.iconOnly)
     .padding(.vertical, Styles.sizeSmall)
     .padding(.horizontal, Styles.sizeSmall)
@@ -59,7 +59,7 @@ struct ToolsView: View {
 extension ToolsView {
 
   private var effectiveWidth: CGFloat {
-    toolbarWidth - (toolbarPadding * 2)
+    configuration.width - (configuration.paddingH * 2)
   }
 
   @ViewBuilder

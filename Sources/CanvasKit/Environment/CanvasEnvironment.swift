@@ -24,7 +24,7 @@ extension EnvironmentValues {
 //  @Entry public var canvasCoordinateSpaceMapper: CoordinateSpaceMapper?
 
   @Entry var isShowingToolPalette: Bool = false
-  @Entry var toolPaletteAlignment: Alignment = .topLeading
+//  @Entry var toolPaletteAlignment: Alignment = .topLeading
 
   /// Anchor point used to lay out artwork within the viewport.
   @Entry var canvasAnchor: UnitPoint = .center

@@ -69,7 +69,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       // don't sit above the tool picker.
       .modifier(InteractionModifiers())
       .canvasPointerStyle(store.pointerStyle)
-      .modifier(ToolsPaletteViewModifier())
+      .modifier(ToolPaletteModifier())
 
       // Adds canvas transform and mapped pointer values to the Environment (for internal use only)
       .updateTransformEnvironment()
