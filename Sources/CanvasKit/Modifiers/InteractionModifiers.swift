@@ -56,14 +56,12 @@ struct InteractionModifiers: ViewModifier {
           )
           return
         }
-
         let adjustment = store.processInteraction(
           .hover(location.viewportPoint),
           phase: phase.interactionPhase,
           modifiers: modifiers,
         )
         apply(adjustment)
-
       }
 
       .onTapGesture(coordinateSpace: .named(ViewportSpace.viewport)) { location in
@@ -74,7 +72,6 @@ struct InteractionModifiers: ViewModifier {
           modifiers: modifiers,
         )
         apply(adjustment)
-
       }
 
       .onPointerDragGesture(
@@ -121,12 +118,7 @@ extension InteractionModifiers {
     let isEnabled: Bool
 
     switch interaction {
-      case .swipe, .pinch, .rotate:
-        isEnabled = true
-
-      case .hover:
-        // Hover is a global observation surface. Tools may additionally claim
-        // it in CanvasInputResolver without suppressing public delivery.
+      case .swipe, .pinch, .rotate, .hover:
         isEnabled = true
 
       case .tap, .drag:

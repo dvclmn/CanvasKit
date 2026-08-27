@@ -14,14 +14,14 @@ struct PointerEnvironmentModifier: ViewModifier {
 
   func body(content: Content) -> some View {
     content
-      .environment(\.pointerTap, snapshot?.tap)
-      .environment(\.pointerHover, snapshot?.hover)
-      .environment(\.canvasDragEvent, snapshot?.drag)
+      .environment(\.pointerTap, mappedSnapshot?.tap)
+      .environment(\.pointerHover, mappedSnapshot?.hover)
+      .environment(\.canvasDragEvent, mappedSnapshot?.drag)
   }
 }
 
 extension PointerEnvironmentModifier {
-  private var snapshot: PointerMappedSnapshot? {
+  private var mappedSnapshot: PointerMappedSnapshot? {
     guard let mapper = store.coordinateSpaceMapper(in: explicitCanvasSize) else { return nil }
     return .createMapped(
       mapper: mapper,

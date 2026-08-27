@@ -1,5 +1,5 @@
 //
-//  ToolsView.swift
+//  ToolPaletteView.swift
 //  CanvasKit
 //
 //  Created by Dave Coleman on 24/4/2026.
@@ -8,7 +8,7 @@
 import SwiftUI
 private import ViewTools
 
-struct ToolsView: View {
+struct ToolPaletteView: View {
   @Environment(CanvasHandler.self) private var store
   @Environment(\.toolPaletteConfiguration) private var configuration
   //  let toolbarWidth: Double = 36
@@ -23,7 +23,7 @@ struct ToolsView: View {
       }
 
       Divider()
-//        .frame(width: configuration.width * 0.7)
+      //        .frame(width: configuration.width * 0.7)
 
       Button {
         store.currentTransform.scale = 1.0
@@ -57,7 +57,7 @@ struct ToolsView: View {
   }
 }
 
-extension ToolsView {
+extension ToolPaletteView {
 
   private var effectiveWidth: CGFloat {
     configuration.width - (configuration.paddingH * 2)
@@ -76,7 +76,6 @@ extension ToolsView {
             tool: tool,
             toolbarWidth: effectiveWidth,
           )
-          //          ToolButton(for: tool)
         }
 
       } else {
