@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+private import ViewTools
 
 struct ToolsView: View {
   @Environment(CanvasHandler.self) private var store
 
-  private let toolbarWidth: Double = 36
-
+  let toolbarWidth: Double = 36
+  private let toolbarPadding: Double = 6
+  
   var body: some View {
 
     VStack(spacing: 6) {
@@ -23,24 +25,23 @@ struct ToolsView: View {
       Divider()
         .frame(width: toolbarWidth * 0.7)
 
-      VStack(alignment: .leading) {
-        Group {
-          Button {
-            store.currentTransform.scale = 1.0
-            store.currentTransform.translation = .zero
+      Button {
+        store.currentTransform.scale = 1.0
+        store.currentTransform.translation = .zero
 
-          } label: {
-            Label("Re-centre artwork", systemImage: "viewfinder")
-              .opacity(0.7)
-          }
-        }
-        .frame(width: toolbarWidth, height: toolbarWidth)
-
-      }  // END main vstack
+      } label: {
+        Label("Re-centre artwork", systemImage: "viewfinder")
+          .opacity(0.7)
+      }
+//      .buttonStyle(.toolButton(width: effectiveWidth))
 
     }  // END main vstack
-    .buttonStyle(.plain)
+//    .buttonStyle(.plain)
+//    .tint(.gray)
+    .buttonStyle(.toolButton(width: toolbarWidth))
     .labelStyle(.iconOnly)
+    .padding(.vertical, Styles.sizeSmall)
+    .padding(.horizontal, Styles.sizeSmall)
     .glassEffectCompatible(in: .capsule)
     //    .depthShadow(
     //      opacity: 0.3,
@@ -48,13 +49,18 @@ struct ToolsView: View {
     //      distanceY: 10,
     //      depthIntensity: 0,
     //    )
+
+    // Padding seperating Tools from edge of the app window
     .padding()
     .font(.title2)
-
   }
 }
 
 extension ToolsView {
+
+  private var effectiveWidth: CGFloat {
+    toolbarWidth - (toolbarPadding * 2)
+  }
 
   @ViewBuilder
   private func MainTools(_ configuration: ToolConfiguration) -> some View {
@@ -66,7 +72,7 @@ extension ToolsView {
           ToolButtonView(
             toolHandler: store.toolHandler,
             tool: tool,
-            toolbarWidth: toolbarWidth,
+            toolbarWidth: effectiveWidth,
           )
           //          ToolButton(for: tool)
         }
@@ -76,7 +82,6 @@ extension ToolsView {
           .foregroundStyle(.tertiary)
       }
     }  // END vstack
-
   }
 
 }

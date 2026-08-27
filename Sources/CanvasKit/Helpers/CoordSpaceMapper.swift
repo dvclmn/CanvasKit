@@ -50,13 +50,25 @@ extension CoordinateSpaceMapper {
     let validWidth = widthZoom.isFinite && widthZoom > 0
     let validHeight = heightZoom.isFinite && heightZoom > 0
 
-    // Use minimum valid zoom, fallback to 1.0 if both are invalid.
+    // The mapper supports uniform scale only. Use the smaller inferred scale
+    // when both axes are valid, and fall back to 1.0 if neither is valid.
     if validWidth && validHeight {
-      // If they differ significantly:
-      if abs(widthZoom - heightZoom) > 0.001 {
+      let resolvedZoom = min(widthZoom, heightZoom)
+      let scaleDifference = abs(widthZoom - heightZoom)
+
+      if scaleDifference > 0.001 {
         print("Warning: Zoom level is showing non-uniform scaling.")
+//        print(
+//          """
+//          CanvasKit CoordinateSpaceMapper warning: inferred non-uniform viewport scale.
+//          The mapper requires one uniform zoom, but the measured artwork frame implies x: \(widthZoom), y: \(heightZoom) (difference: \(scaleDifference)).
+//          Artwork frame in ViewportSpace: origin: (\(artworkFrame.minX), \(artworkFrame.minY)), size: (\(artworkFrame.width), \(artworkFrame.height)); logical canvas size: (\(canvasSize.width), \(canvasSize.height)).
+//          CanvasKit will use the smaller scale, \(resolvedZoom), for both axes, so mapped input remains isotropic but may be inaccurate on the other axis.
+//          Check for non-uniform scale effects, transform effects, or rotation (whose axis-aligned frame changes both inferred scales). A one-off warning during a canvas-size or layout update can also be a transient frame/size mismatch. Grid-based callers should pass a logical canvas size derived from their untransformed unit size; integer coordinates do not themselves introduce non-uniform scaling.
+//          """
+//        )
       }
-      return min(widthZoom, heightZoom)
+      return resolvedZoom
 
     } else if validWidth {
       return widthZoom

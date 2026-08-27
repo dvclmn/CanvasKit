@@ -21,33 +21,30 @@ struct ToolButtonView: View {
     } label: {
       Label(tool.name, systemImage: tool.icon)
         .foregroundStyle(toolForegroundColour(for: tool))
-        .symbolVariant(.fill)
-        .symbolRenderingMode(.hierarchical)
-        //              .opacity(isToolActive(tool) ? 1 : 0.5)
-        .frame(width: toolbarWidth, height: toolbarWidth)
+
+      //              .opacity(isToolActive(tool) ? 1 : 0.5)
+      //        .frame(width: toolbarWidth, height: toolbarWidth)
       //        .tint(.blue)
-        .background {
-          if isToolActive(tool) {
-            RoundedRectangle(cornerRadius: 5)
-              .fill(.quaternary)
-          }
-        }
-        .padding(.horizontal, 6)
-        .contentShape(Rectangle())
-        .border(Color.green.opacity(0.05))
+
+      //        .padding(.horizontal, 6)
+
+      //        .border(Color.green.opacity(0.05))
       //                    .background(.white.opacity(isToolActive(tool) ? 0.06 : 0))
     }
-
-    .foregroundStyle(.blue)
+    .environment(\.isEmphasised, isActive)
+    
+    //    .foregroundStyle(.blue)
     .help(tool.name)
     //    .buttonStyle(.glassProminent)
+    //    .pointerStyleCompatible(.default)
 
   }
 }
 
 extension ToolButtonView {
-  func isToolActive(_ tool: any CanvasTool) -> Bool {
-    toolHandler.effectiveToolID == tool.id
+  var isActive: Bool {
+    //  func isToolActive(_ tool: any CanvasTool) -> Bool {
+    toolHandler.isActive(id: tool.id)
   }
 
   func toolForegroundColour(for tool: any CanvasTool) -> Color {
@@ -62,7 +59,7 @@ extension ToolButtonView {
         return .green
 
       case nil:
-        return isToolActive(tool) ? .primary : .secondary
+        return isActive ? .primary : .secondary
     }
   }
 }

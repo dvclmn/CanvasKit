@@ -83,6 +83,9 @@ extension ToolHandler {
 
 extension ToolHandler {
 
+  func isActive(id toolID: CanvasToolID) -> Bool {
+    effectiveToolID == toolID
+  }
   /// The tool used to resolve canvas input right now.
   ///
   /// This includes pending sticky shortcuts and armed spring-loads. If no
