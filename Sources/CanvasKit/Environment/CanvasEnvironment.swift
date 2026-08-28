@@ -23,6 +23,8 @@ extension EnvironmentValues {
 // MARK: - Canvas Events
 extension EnvironmentValues {
 
+  @Entry public var canvasInteractionActivity: CanvasInteractionActivity = .none
+
   /// Mapped pointer observations used internally by Canvas event modifiers.
   @Entry var pointerTap: PointerTapSnapshot<CanvasSpace>?
   @Entry var pointerHover: Point<CanvasSpace>?
