@@ -82,11 +82,12 @@ extension CanvasHandler {
   /// Returns the proposed transform only when resolution produced a transform
   /// adjustment. Pointer observations and consumed interactions return `nil`,
   /// preventing ``InteractionModifiers`` from writing an identity transform.
+  @discardableResult
   func processInteraction(
     _ interaction: Interaction,
     phase: InteractionPhase,
     modifiers: EventModifiers,
-    zoomRange: ClosedRange<Double>
+    zoomRange: ClosedRange<Double>,
   ) -> TransformState? {
 
     let unresolvedContext = InteractionContext(
@@ -99,46 +100,71 @@ extension CanvasHandler {
       return nil
     }
 
-    self.pointerStyleContext = context
-    self.latestInteraction = .init(context: context)
-    updateActiveInteraction(with: context)
+    recordAcceptedInteraction(context)
 
-    let resolver = CanvasInputResolver(
-      context: context,
-      effectiveTool: effectiveTool,
-      transform: currentTransform,
-    )
-
-    guard let resolvedAdjustment = resolver.resolve() else {
-      recordPublicPointerInput(from: context)
-      return nil
-    }
-
-    let updatedTransform = handleAdjustment(
-      resolvedAdjustment,
-      transform: currentTransform,
+    let adjustment = resolvedAdjustment(for: context)
+    let committedTransform = applyResolvedAdjustment(
+      adjustment,
+      zoomRange: zoomRange,
     )
 
     recordPublicPointerInput(from: context)
-    return updatedTransform
+    return committedTransform
+
+  }
+}
+
+extension CanvasHandler {
+  private func recordAcceptedInteraction(
+    _ context: InteractionContext
+  ) {
+    pointerStyleContext = context
+    latestInteraction = .init(context: context)
+    updateActiveInteraction(with: context)
   }
 
-  private func handleAdjustment(
-    _ adjustment: InteractionAdjustment,
-    transform: TransformState,
-  ) -> TransformState? {
-    switch adjustment {
-      case .transform(let adj):
-        return adj.updatedState(transform)
+  private func resolvedAdjustment(
+    for context: InteractionContext
+  ) -> InteractionAdjustment? {
+    CanvasInputResolver(
+      context: context,
+      effectiveTool: effectiveTool,
+      transform: currentTransform,
+    ).resolve()
+  }
 
-      case .pointer(let adj):
-        switch adj {
-          case .tap(let point): recordTap(at: point)
-          case .hover(let point): self.pointer.hover = point
-        }
+  private func applyResolvedAdjustment(
+    _ adjustment: InteractionAdjustment?,
+    zoomRange: ClosedRange<Double>,
+  ) -> TransformState? {
+    guard let adjustment else { return nil }
+
+    switch adjustment {
+      case .transform(let adjustment):
+        var nextTransform = adjustment.updatedState(currentTransform)
+        nextTransform.scale = nextTransform.scale.clamped(to: zoomRange)
+
+        currentTransform = nextTransform
+        return nextTransform
+
+      case .pointer(let adjustment):
+        applyPointerAdjustment(adjustment)
         return nil
 
-      case .none: return nil
+      case .none:
+        return nil
+    }
+  }
+
+  private func applyPointerAdjustment(
+    _ adjustment: PointerAdjustment
+  ) {
+    switch adjustment {
+      case .tap(let point):
+        recordTap(at: point)
+
+      case .hover(let point):
+        pointer.hover = point
     }
   }
 

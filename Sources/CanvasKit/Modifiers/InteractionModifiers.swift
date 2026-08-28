@@ -21,13 +21,12 @@ struct InteractionModifiers: ViewModifier {
       .onSwipeGesture(
         isEnabled: isEnabled(for: .swipe)
       ) { event in
-
-        let adjustment = store.processInteraction(
+        store.processInteraction(
           .swipe(delta: event.delta),
           phase: event.phase,
           modifiers: event.modifiers,
+          zoomRange: zoomRange,
         )
-        apply(adjustment)
       }
 
       .onPinchGesture(
@@ -35,16 +34,23 @@ struct InteractionModifiers: ViewModifier {
         isEnabled: isEnabled(for: .pinch),
       ) { proposal in
 
-        let adjustment = store.processInteraction(
+        //        let adjustment = store.processInteraction(
+        //          .pinch(scale: proposal.proposedZoom),
+        //          phase: proposal.phase,
+        //          modifiers: modifiers,
+        //          zoomRange: zoomRange
+        //        )
+
+        let transform = store.processInteraction(
           .pinch(scale: proposal.proposedZoom),
           phase: proposal.phase,
           modifiers: modifiers,
+          zoomRange: zoomRange,
         )
 
         // Resolve to the processed transform so the modifier's working zoom
         // stays aligned with any tool-specific transform policy.
-        apply(adjustment)
-        return adjustment?.scale ?? proposal.proposedZoom
+        return transform?.scale ?? proposal.proposedZoom
       }
 
       .onContinuousHover(coordinateSpace: .named(ViewportSpace.viewport)) { phase in
@@ -56,22 +62,24 @@ struct InteractionModifiers: ViewModifier {
           )
           return
         }
-        let adjustment = store.processInteraction(
+        store.processInteraction(
           .hover(location.viewportPoint),
           phase: phase.interactionPhase,
           modifiers: modifiers,
+          zoomRange: zoomRange,
         )
-        apply(adjustment)
+        //        apply(adjustment)
       }
 
       .onTapGesture(coordinateSpace: .named(ViewportSpace.viewport)) { location in
         guard isEnabled(for: .tap) else { return }
-        let adjustment = store.processInteraction(
+        store.processInteraction(
           .tap(location: location.viewportPoint),
           phase: .ended,
           modifiers: modifiers,
+          zoomRange: zoomRange,
         )
-        apply(adjustment)
+        //        apply(adjustment)
       }
 
       .onPointerDragGesture(
@@ -91,12 +99,13 @@ struct InteractionModifiers: ViewModifier {
           return
         }
 
-        let adjustment = store.processInteraction(
+        store.processInteraction(
           .drag(payload),
           phase: phase,
           modifiers: modifiers,
+          zoomRange: zoomRange,
         )
-        apply(adjustment)
+        //        apply(adjustment)
       }
   }
 }
@@ -106,12 +115,12 @@ extension InteractionModifiers {
     guard let modifierKeys else { return [] }
     return .init(from: modifierKeys)
   }
-  
-  private func apply(_ adjustment: TransformState?) {
-    guard var adjustment else { return }
-    adjustment.scale = adjustment.scale.clamped(to: zoomRange)
-    store.currentTransform = adjustment
-  }
+
+  //  private func apply(_ adjustment: TransformState?) {
+  //    guard var adjustment else { return }
+  //    adjustment.scale = adjustment.scale.clamped(to: zoomRange)
+  //    store.currentTransform = adjustment
+  //  }
 
   private func isEnabled(
     for interaction: Interaction.Kind
