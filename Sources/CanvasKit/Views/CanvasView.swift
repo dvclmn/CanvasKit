@@ -9,7 +9,8 @@ private import CoreTools
 import SwiftUI
 private import ViewTools
 
-public struct CanvasView<Content: View>: View, CanvasAddressable {
+public struct CanvasView<Content, ViewportOverlay>: View, CanvasAddressable
+where Content: View, ViewportOverlay: View {
   @State private var store: CanvasHandler
 
   /// Populated when the caller owns transform state externally.
@@ -22,6 +23,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
   /// Otherwise size is measured internally.
   let explicitCanvasSize: Size<CanvasSpace>?
   let content: () -> Content
+  let viewportOverlay: () -> ViewportOverlay
 
   /// Creates an interactive canvas around SwiftUI content.
   ///
@@ -43,6 +45,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
     toolConfiguration: ToolConfiguration? = nil,
     toolSelection: Binding<ToolSelection>? = nil,
     @ViewBuilder content: @escaping () -> Content,
+    @ViewBuilder viewportOverlay: @escaping () -> ViewportOverlay,
   ) {
     self.explicitCanvasSize = size.map { Size<CanvasSpace>(fromCGSize: $0) }
     self.externalTransform = transform
@@ -57,6 +60,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       )
     )
     self.content = content
+    self.viewportOverlay = viewportOverlay
   }
 
   public var body: some View {
@@ -126,5 +130,32 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
         externalPointerStyle?.wrappedValue = nil
       }
 
+  }
+}
+
+extension CanvasView {
+  public init(
+    size: CGSize? = nil,
+    transform: Binding<TransformState>? = nil,
+    coordinateSpaceMapper: Binding<CoordinateSpaceMapper?>? = nil,
+    pointerStyle: Binding<CanvasPointerStyle?>? = nil,
+    toolConfiguration: ToolConfiguration? = nil,
+    toolSelection: Binding<ToolSelection>? = nil,
+    @ViewBuilder content: @escaping () -> Content,
+  ) where ViewportOverlay == EmptyView {
+    self.explicitCanvasSize = size.map { Size<CanvasSpace>(fromCGSize: $0) }
+    self.externalTransform = transform
+    self.externalCoordinateSpaceMapper = coordinateSpaceMapper
+    self.externalPointerStyle = pointerStyle
+    self.externalToolSelection = toolSelection
+    self._store = State(
+      initialValue: .init(
+        toolConfiguration: toolConfiguration,
+        toolSelection: toolSelection?.wrappedValue,
+        currentTransform: transform?.wrappedValue ?? .identity,
+      )
+    )
+    self.content = content
+    self.viewportOverlay = { EmptyView() }
   }
 }
