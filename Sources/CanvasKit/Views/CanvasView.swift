@@ -67,6 +67,7 @@ where Content: View, ViewportOverlay: View {
     @Bindable var store = store
 
     CanvasCoreView(content: content)
+      .overlay { viewportOverlay() }
 
       // User input modifiers, `onSwipeGesture`, `onTapGesture`, etc.
       // These wrap the canvas only, so their invisible event-capture overlays

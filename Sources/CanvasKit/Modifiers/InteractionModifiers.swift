@@ -106,6 +106,7 @@ extension InteractionModifiers {
     guard let modifierKeys else { return [] }
     return .init(from: modifierKeys)
   }
+  
   private func apply(_ adjustment: TransformState?) {
     guard var adjustment else { return }
     adjustment.scale = adjustment.scale.clamped(to: zoomRange)

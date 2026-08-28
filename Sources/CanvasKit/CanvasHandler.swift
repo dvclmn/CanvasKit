@@ -86,6 +86,7 @@ extension CanvasHandler {
     _ interaction: Interaction,
     phase: InteractionPhase,
     modifiers: EventModifiers,
+    zoomRange: ClosedRange<Double>
   ) -> TransformState? {
 
     let unresolvedContext = InteractionContext(
