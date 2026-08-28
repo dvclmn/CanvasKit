@@ -85,6 +85,21 @@ Continuous Pan and Zoom drags mutate viewport transforms and do not publish `onC
 
 The latest event and current activity answer different questions. CanvasKit retains terminal drag snapshots so observers receive `.ended` or `.cancelled`; it separately removes that interaction kind from active state. A retained terminal event must not be cleared merely because the interaction is no longer active.
 
+Views inside a ``CanvasView`` can read ``SwiftUI/EnvironmentValues/canvasInteractionActivity`` for a lightweight snapshot of current interaction activity. The snapshot contains active kinds only, so ``CanvasInteractionActivity/isSwipeActive`` returns to `false` when the swipe ends even though CanvasKit retains that terminal event internally.
+
+```swift
+@Environment(\.canvasInteractionActivity)
+private var interactionActivity
+
+var body: some View {
+  if !interactionActivity.isSwipeActive {
+    CharacterPreview()
+  }
+}
+```
+
+The published activity value changes only when active-kind membership changes. Continuous payload updates for an already-active swipe or drag remain in CanvasKit's internal interaction context rather than invalidating Environment consumers on every event.
+
 ## Coordinate spaces
 
 Raw pointer input is captured in ``ViewportSpace``. CanvasKit maps pointer observations into ``CanvasSpace`` using ``CoordinateSpaceMapper`` before publishing `onCanvasTap`, `onCanvasDrag`, and `onCanvasHover` callbacks.

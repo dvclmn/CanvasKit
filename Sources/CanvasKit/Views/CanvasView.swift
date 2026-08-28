@@ -118,7 +118,7 @@ public struct CanvasView<Content: View>: View, CanvasAddressable {
       }
 
       .environment(\.explicitCanvasSize, explicitCanvasSize)
-      .environment(\.canvasInteractionActivity, store.can)
+      .environment(\.canvasInteractionActivity, store.canvasInteractionActivity)
       .environment(store)
 
       .onDisappear {

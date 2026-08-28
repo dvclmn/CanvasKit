@@ -23,6 +23,10 @@ extension EnvironmentValues {
 // MARK: - Canvas Events
 extension EnvironmentValues {
 
+  /// The interaction kinds currently active in the nearest ``CanvasView``.
+  ///
+  /// The value is ``CanvasInteractionActivity/none`` outside a canvas and after
+  /// all interactions have ended or been cancelled.
   @Entry public var canvasInteractionActivity: CanvasInteractionActivity = .none
 
   /// Mapped pointer observations used internally by Canvas event modifiers.

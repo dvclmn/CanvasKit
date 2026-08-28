@@ -42,6 +42,13 @@ final class CanvasHandler {
   /// interaction.
   private var activeContextsByKind: [Interaction.Kind: InteractionContext] = [:]
 
+  /// Consumer-facing projection of the kinds currently active in the canvas.
+  ///
+  /// This stored value changes only when membership in ``activeContextsByKind``
+  /// changes. Updates to an already-active context therefore do not republish
+  /// per-event payload changes through the SwiftUI Environment.
+  private(set) var canvasInteractionActivity: CanvasInteractionActivity = .none
+
   var artworkFrame: Rect<ViewportSpace>?
   var currentTransform: TransformState = .identity
 
@@ -204,7 +211,7 @@ extension CanvasHandler {
     modifiers: EventModifiers,
   ) {
     latestInteraction = .init(kind: kind, phase: phase)
-    activeContextsByKind[kind] = nil
+    setActiveContext(nil, for: kind)
 
     if let context = pointerStyleContext,
       context.interaction.kind == kind
@@ -235,12 +242,20 @@ extension CanvasHandler {
 
   private func updateActiveInteraction(with context: InteractionContext) {
     let kind = context.interaction.kind
+    setActiveContext(context.phase.isActive ? context : nil, for: kind)
+  }
 
-    if context.phase.isActive {
-      activeContextsByKind[kind] = context
-    } else {
-      activeContextsByKind[kind] = nil
-    }
+  private func setActiveContext(
+    _ context: InteractionContext?,
+    for kind: Interaction.Kind,
+  ) {
+    let wasActive = activeContextsByKind[kind] != nil
+    activeContextsByKind[kind] = context
+
+    guard wasActive != (context != nil) else { return }
+    canvasInteractionActivity = .init(
+      activeKinds: Set(activeContextsByKind.keys)
+    )
   }
 }
 
