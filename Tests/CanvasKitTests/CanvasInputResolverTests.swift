@@ -96,6 +96,7 @@ struct CanvasInputResolverTests {
       marqueeInteraction,
       phase: .began,
       modifiers: [.option],
+      zoomRange: Constants.zoomRange
     )
     #expect(handler.pointerStyleContext?.intent == .zoom)
 
@@ -103,6 +104,7 @@ struct CanvasInputResolverTests {
       marqueeInteraction,
       phase: .changed,
       modifiers: [],
+      zoomRange: Constants.zoomRange
     )
     #expect(handler.pointerStyleContext?.intent == .zoom)
   }

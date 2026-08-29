@@ -24,6 +24,7 @@ struct CanvasEventLifecycleTests {
       .hover(location),
       phase: .changed,
       modifiers: [],
+      zoomRange: Constants.zoomRange
     )
 
     #expect(handler.pointer.hover == location)
@@ -48,6 +49,7 @@ struct CanvasEventLifecycleTests {
       .hover(location),
       phase: .changed,
       modifiers: [],
+      zoomRange: Constants.zoomRange
     )
 
     #expect(adjustment == nil)
@@ -69,6 +71,7 @@ struct CanvasEventLifecycleTests {
       .drag(payload),
       phase: .began,
       modifiers: [],
+      zoomRange: Constants.zoomRange
     )
 
     let event = try #require(handler.pointer.latestDrag)
@@ -90,6 +93,7 @@ struct CanvasEventLifecycleTests {
       .drag(payload),
       phase: .began,
       modifiers: [],
+      zoomRange: Constants.zoomRange
     )
 
     #expect(handler.pointer.latestDrag == nil)
@@ -104,6 +108,7 @@ struct CanvasEventLifecycleTests {
       .tap(location: location),
       phase: .ended,
       modifiers: [],
+      zoomRange: Constants.zoomRange
     )
     let first = try #require(handler.pointer.tap)
 
@@ -111,6 +116,7 @@ struct CanvasEventLifecycleTests {
       .tap(location: location),
       phase: .ended,
       modifiers: [],
+      zoomRange: Constants.zoomRange
     )
     let second = try #require(handler.pointer.tap)
 
@@ -129,6 +135,7 @@ struct CanvasEventLifecycleTests {
       .drag(.delta(.init(width: 4, height: 6), location: .init(x: 30, y: 40))),
       phase: .began,
       modifiers: [],
+      zoomRange: Constants.zoomRange
     )
     #expect(handler.pointerStyle == .grabActive)
 
@@ -136,6 +143,7 @@ struct CanvasEventLifecycleTests {
       .hover(.init(x: 32, y: 42)),
       phase: .changed,
       modifiers: [],
+      zoomRange: Constants.zoomRange
     )
     #expect(handler.pointerStyle == .grabActive)
 
@@ -158,6 +166,7 @@ struct CanvasEventLifecycleTests {
       ),
       phase: .began,
       modifiers: [],
+      zoomRange: Constants.zoomRange
     )
 
     #expect(handler.pointer.latestDrag == nil)
@@ -207,6 +216,7 @@ struct CanvasEventLifecycleTests {
       .drag(payload),
       phase: .changed,
       modifiers: [],
+      zoomRange: Constants.zoomRange
     )
     let changed = try #require(handler.pointer.latestDrag)
 
@@ -214,6 +224,7 @@ struct CanvasEventLifecycleTests {
       .drag(payload),
       phase: .ended,
       modifiers: [],
+      zoomRange: Constants.zoomRange
     )
     let ended = try #require(handler.pointer.latestDrag)
 
@@ -239,6 +250,7 @@ struct CanvasEventLifecycleTests {
       .drag(payload),
       phase: .began,
       modifiers: [],
+      zoomRange: Constants.zoomRange
     )
     let active = try #require(handler.pointer.latestDrag)
 
