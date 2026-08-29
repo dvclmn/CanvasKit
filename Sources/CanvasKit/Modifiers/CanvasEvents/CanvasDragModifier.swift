@@ -8,14 +8,16 @@
 import SwiftUI
 
 public struct CanvasDragModifier: ViewModifier {
-  @Environment(\.canvasDragEvent) private var event
+  @Environment(\.canvasDragDelivery) private var delivery
 
   let action: (CanvasDragEvent) -> Void
   public func body(content: Content) -> some View {
     content
-      .onChange(of: event) {
-        if let event {
-          action(event)
+      // A retained marquee can map to different CanvasSpace coordinates after
+      // pan/zoom. Only a new physical lifecycle update is a new callback event.
+      .onChange(of: delivery?.deliveryID) {
+        if let delivery {
+          action(delivery.value)
         }
       }
   }

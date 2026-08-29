@@ -9,15 +9,17 @@ private import CoreTools
 import SwiftUI
 
 public struct CanvasTapModifier: ViewModifier {
-  @Environment(\.pointerTap) private var pointerTap
+  @Environment(\.pointerTapDelivery) private var delivery
 
   let action: (Point<CanvasSpace>) -> Void
 
   public func body(content: Content) -> some View {
     content
-      .onChange(of: pointerTap) {
-        if let pointerTap {
-          action(pointerTap.location)
+      // Observe physical delivery identity, not mapped location. The location
+      // can change when an old viewport-space tap is reprojected after pan/zoom.
+      .onChange(of: delivery?.deliveryID) {
+        if let delivery {
+          action(delivery.value)
         }
       }
   }

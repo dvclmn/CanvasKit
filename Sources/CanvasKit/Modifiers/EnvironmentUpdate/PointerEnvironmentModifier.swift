@@ -14,9 +14,9 @@ struct PointerEnvironmentModifier: ViewModifier {
 
   func body(content: Content) -> some View {
     content
-      .environment(\.pointerTap, mappedSnapshot?.tap)
+      .environment(\.pointerTapDelivery, mappedSnapshot?.tap)
       .environment(\.pointerHover, mappedSnapshot?.hover)
-      .environment(\.canvasDragEvent, mappedSnapshot?.drag)
+      .environment(\.canvasDragDelivery, mappedSnapshot?.drag)
   }
 }
 

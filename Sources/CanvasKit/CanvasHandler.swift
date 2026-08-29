@@ -13,7 +13,7 @@ final class CanvasHandler {
 
   var toolHandler: ToolHandler
   var pointer: PointerState<ViewportSpace> = .init()
-  private var tapSequence: UInt64 = 0
+  private var pointerEventSequence: UInt64 = 0
 
   /// The rich interaction context retained to resolve the current pointer style.
   ///
@@ -185,10 +185,13 @@ extension CanvasHandler {
     _ payload: PointerDragPayload,
     phase: InteractionPhase,
   ) {
+    guard case .rect = payload else { return }
+
     guard
       let event = PointerDragSnapshot<ViewportSpace>(
         payload: payload,
         phase: phase,
+        deliveryID: nextPointerEventDeliveryID(),
       )
     else { return }
 
@@ -196,8 +199,15 @@ extension CanvasHandler {
   }
 
   private func recordTap(at location: Point<ViewportSpace>) {
-    tapSequence &+= 1
-    pointer.tap = .init(location: location, sequence: tapSequence)
+    pointer.tap = .init(
+      location: location,
+      deliveryID: nextPointerEventDeliveryID(),
+    )
+  }
+
+  private func nextPointerEventDeliveryID() -> PointerEventDeliveryID {
+    pointerEventSequence &+= 1
+    return .init(sequence: pointerEventSequence)
   }
 
   /// Resolves tool meaning before state or public events are recorded.
@@ -264,7 +274,10 @@ extension CanvasHandler {
       event.phase.isActive
     else { return }
 
-    pointer.latestDrag = event.withPhase(phase)
+    pointer.latestDrag = event.withPhase(
+      phase,
+      deliveryID: nextPointerEventDeliveryID(),
+    )
   }
 
   private func updateActiveInteraction(with context: InteractionContext) {

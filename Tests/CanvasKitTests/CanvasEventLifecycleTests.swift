@@ -121,7 +121,7 @@ struct CanvasEventLifecycleTests {
     let second = try #require(handler.pointer.tap)
 
     #expect(first.location == second.location)
-    #expect(first.sequence != second.sequence)
+    #expect(first.deliveryID != second.deliveryID)
     #expect(first != second)
   }
 
@@ -193,6 +193,7 @@ struct CanvasEventLifecycleTests {
       start: .init(x: 180, y: 260),
       current: .init(x: 140, y: 220),
       phase: .changed,
+      deliveryID: .init(sequence: 1),
     )
 
     let event = CanvasDragEvent(event: viewportEvent, mapper: mapper)
@@ -216,7 +217,7 @@ struct CanvasEventLifecycleTests {
       .drag(payload),
       phase: .changed,
       modifiers: [],
-      zoomRange: Constants.zoomRange
+      zoomRange: Constants.zoomRange,
     )
     let changed = try #require(handler.pointer.latestDrag)
 
@@ -232,8 +233,41 @@ struct CanvasEventLifecycleTests {
     #expect(changed.current == ended.current)
     #expect(changed.phase == .changed)
     #expect(ended.phase == .ended)
+    #expect(changed.deliveryID != ended.deliveryID)
     #expect(changed != ended)
     #expect(!handler.activeInteraction.contains(.drag))
+  }
+
+  @Test func repeatedMarqueeSampleAtSameGeometryHasDistinctDeliveryIdentity() throws {
+    let handler = CanvasHandler(
+      toolConfiguration: .default,
+      toolSelection: .init(id: .select),
+    )
+    let payload = PointerDragPayload.rect(
+      from: .init(x: 60, y: 50),
+      current: .init(x: 20, y: 10),
+    )
+
+    _ = handler.processInteraction(
+      .drag(payload),
+      phase: .changed,
+      modifiers: [],
+      zoomRange: Constants.zoomRange,
+    )
+    let first = try #require(handler.pointer.latestDrag)
+
+    _ = handler.processInteraction(
+      .drag(payload),
+      phase: .changed,
+      modifiers: [],
+      zoomRange: Constants.zoomRange,
+    )
+    let second = try #require(handler.pointer.latestDrag)
+
+    #expect(first.start == second.start)
+    #expect(first.current == second.current)
+    #expect(first.phase == second.phase)
+    #expect(first.deliveryID != second.deliveryID)
   }
 
   @Test func cancellationTerminatesThePublishedDragWithoutLosingEndpoints() throws {
@@ -260,6 +294,7 @@ struct CanvasEventLifecycleTests {
     #expect(cancelled.start == active.start)
     #expect(cancelled.current == active.current)
     #expect(cancelled.phase == .cancelled)
+    #expect(cancelled.deliveryID != active.deliveryID)
     #expect(!handler.activeInteraction.contains(.drag))
 
     handler.endInteraction(.drag, phase: .cancelled, modifiers: [])
@@ -271,6 +306,53 @@ struct CanvasEventLifecycleTests {
     #expect(!InteractionPhase.none.isTerminal)
     #expect(InteractionPhase.ended.isTerminal)
     #expect(InteractionPhase.cancelled.isTerminal)
+  }
+
+  @Test func mapperChangesReprojectRetainedEventsWithoutChangingDeliveryIdentity() throws {
+    let tapDeliveryID = PointerEventDeliveryID(sequence: 41)
+    let dragDeliveryID = PointerEventDeliveryID(sequence: 42)
+    let pointerState = PointerState<ViewportSpace>(
+      tap: .init(
+        location: .init(x: 180, y: 260),
+        deliveryID: tapDeliveryID,
+      ),
+      hover: nil,
+      latestDrag: .init(
+        start: .init(x: 180, y: 260),
+        current: .init(x: 140, y: 220),
+        phase: .ended,
+        deliveryID: dragDeliveryID,
+      ),
+    )
+    let initialMapper = CoordinateSpaceMapper(
+      frame: .init(x: 100, y: 200, width: 400, height: 200),
+      canvasSize: .init(width: 200, height: 100),
+    )
+    let pannedMapper = CoordinateSpaceMapper(
+      frame: .init(x: 140, y: 220, width: 400, height: 200),
+      canvasSize: .init(width: 200, height: 100),
+    )
+
+    let initial = PointerMappedSnapshot.createMapped(
+      mapper: initialMapper,
+      pointerState: pointerState,
+    )
+    let panned = PointerMappedSnapshot.createMapped(
+      mapper: pannedMapper,
+      pointerState: pointerState,
+    )
+
+    let initialTap = try #require(initial.tap)
+    let pannedTap = try #require(panned.tap)
+    #expect(initialTap.value != pannedTap.value)
+    #expect(initialTap.deliveryID == pannedTap.deliveryID)
+    #expect(initialTap == pannedTap)
+
+    let initialDrag = try #require(initial.drag)
+    let pannedDrag = try #require(panned.drag)
+    #expect(initialDrag.value != pannedDrag.value)
+    #expect(initialDrag.deliveryID == pannedDrag.deliveryID)
+    #expect(initialDrag == pannedDrag)
   }
 }
 

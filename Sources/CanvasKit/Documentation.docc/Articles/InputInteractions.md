@@ -66,7 +66,7 @@ Use `.handled(...)` when the tool requests a transform or pointer adjustment. Us
 Drag data has three forms with separate responsibilities:
 
 - ``PointerDragPayload`` is the immediate viewport-space recogniser payload. Continuous tools receive frame deltas; marquee tools receive ordered anchor/current points.
-- `PointerDragSnapshot` is CanvasKit’s internal retained marquee event. It combines ordered points with lifecycle phase.
+- `PointerDragSnapshot` is CanvasKit’s internal retained marquee event. It combines ordered points, lifecycle phase, and discrete delivery identity.
 - ``CanvasDragEvent`` is the public snapshot after both points have been mapped independently into ``CanvasSpace``.
 
 ``CanvasDragEvent/start`` remains the original anchor and ``CanvasDragEvent/current`` remains the latest pointer location, including for reverse-direction drags. ``CanvasDragEvent/boundingRect`` is derived normalised geometry rather than the source of truth.
@@ -80,6 +80,16 @@ Drag data has three forms with separate responsibilities:
 CanvasKit emits cancellation when an active drag recogniser is invalidated by a tool behaviour change or disablement, and clears active drag state when the view disappears. SwiftUI’s `DragGesture` does not expose a separate system-cancellation callback; an ordinary delivered `onEnded` remains `.ended`. Both terminal phases retain the last ordered endpoints, so an unchanged final location still produces a distinct terminal event.
 
 Continuous Pan and Zoom drags mutate viewport transforms and do not publish `onCanvasDrag`; that public modifier describes anchored marquee input rather than frame-to-frame deltas.
+
+## Retained state versus event delivery
+
+Tap and marquee snapshots remain stored long enough for SwiftUI descendants to observe terminal or repeated input. Retention does not make every later change to their derived presentation a new event. In particular, changing the viewport transform changes the artwork frame, so the same retained ``ViewportSpace`` coordinates can map to different ``CanvasSpace`` coordinates without any new pointer input.
+
+CanvasKit therefore wraps each mapped tap or marquee value in an internal delivery carrying a stable identity. `onCanvasTap` and `onCanvasDrag` observe that identity rather than the mapped payload. A callback runs only when CanvasKit accepts a new physical tap or drag lifecycle update; mapper changes alone may reproject the retained value but cannot redeliver it.
+
+Hover intentionally follows different semantics. It describes what the pointer currently addresses, so moving artwork beneath a stationary pointer should publish the newly addressed canvas location.
+
+> Important: For discrete callback APIs, observe input identity rather than equality of geometry derived from mutable layout. For continuous state APIs, observe the derived value when layout changes are semantically meaningful.
 
 ## Latest event versus active state
 
@@ -102,7 +112,7 @@ The published activity value changes only when active-kind membership changes. C
 
 ## Coordinate spaces
 
-Raw pointer input is captured in ``ViewportSpace``. CanvasKit maps pointer observations into ``CanvasSpace`` using ``CoordinateSpaceMapper`` before publishing `onCanvasTap`, `onCanvasDrag`, and `onCanvasHover` callbacks.
+Raw pointer input is captured in ``ViewportSpace``. CanvasKit maps pointer observations into ``CanvasSpace`` using ``CoordinateSpaceMapper`` before publishing `onCanvasTap`, `onCanvasDrag`, and `onCanvasHover` callbacks. Discrete tap and drag delivery identity remains stable across mapper changes; hover remains continuously mapped.
 
 ## Standalone viewport input
 
