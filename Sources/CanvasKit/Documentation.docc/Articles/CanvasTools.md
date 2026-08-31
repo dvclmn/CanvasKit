@@ -106,19 +106,19 @@ let configuration = ToolConfiguration(
 )
 ```
 
-To keep Select's drag lifecycle while hiding CanvasKit's transient outline, replace the default Select tool with a configured instance:
+When extending or customising the default catalogue, use ``ToolConfiguration/defaults(registering:)``. It retains CanvasKit's default tools, bindings, and spring-load delay; a matching tool id replaces the built-in tool in place.
+
+To keep Select's drag lifecycle while hiding CanvasKit's transient outline, replace only the default Select tool with a configured instance:
 
 ```swift
-let configuration = ToolConfiguration(
-  tools: [
+let configuration = ToolConfiguration.defaults(
+  registering: [
     SelectTool(showsMarquee: false),
-    PanTool(),
-    ZoomTool(),
   ]
 )
 ```
 
-The drag still has a ``InteractionIntent/select`` intent and still publishes `onCanvasDrag`; only CanvasKit's overlay is disabled.
+Pan and Zoom remain registered, and the drag still has a ``InteractionIntent/select`` intent and still publishes `onCanvasDrag`; only CanvasKit's overlay is disabled.
 
 ## Capabilities and resolved intent
 

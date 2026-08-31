@@ -9,9 +9,9 @@ private import CoreTools
 import SwiftUI
 private import ViewTools
 
-/// Maps a key input to a tool activation with a given mode.
+/// Maps a keyboard shortcut to a tool activation with a given mode.
 ///
-/// Bindings are the single source of truth for "which key activates which tool".
+/// Bindings are the single source of truth for "which keyboard shortcut activates which tool".
 /// `CanvasTool` intentionally does not store shortcut keys — that's this type's job.
 ///
 /// A single tool can have multiple bindings. For example, Pan can have both

@@ -54,6 +54,20 @@ extension ToolConfiguration {
 
   public static var `default`: Self { .init() }
 
+  /// Creates the default configuration while registering additional tools.
+  ///
+  /// This preserves CanvasKit's default tools, keyboard bindings, and
+  /// spring-load delay. A supplied tool whose ``CanvasTool/id`` matches a
+  /// default tool replaces it in its existing position; a new tool is
+  /// appended to the catalogue.
+  ///
+  /// Use this when customising or extending the default tool set. Use
+  /// ``init(tools:bindings:springLoadDelay:)`` when supplying the complete
+  /// tool catalogue intentionally.
+  public static func defaults(registering tools: [any CanvasTool]) -> Self {
+    .init(tools: .defaultTools + tools)
+  }
+
   /// The first registered tool id
   public var defaultToolID: CanvasToolID? {
     tools.first?.id
