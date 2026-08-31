@@ -26,6 +26,7 @@ import SwiftUI
 public struct ToolConfiguration: Sendable {
 
   /// The registered tools, ordered by the app's chosen preference.
+  /// The first tool in the list is treated as the default tool.
   public var tools: [any CanvasTool]
 
   /// The key-to-tool mapping list.
@@ -53,9 +54,9 @@ extension ToolConfiguration {
 
   public static var `default`: Self { .init() }
 
-  /// The first registered tool id, or `select` if the catalogue is empty.
-  public var defaultToolID: CanvasToolID {
-    tools.first?.id ?? .select
+  /// The first registered tool id
+  public var defaultToolID: CanvasToolID? {
+    tools.first?.id
   }
 
   /// Returns the registered tool for the given id, if any.

@@ -13,11 +13,13 @@
 public struct ToolSelection: Sendable, Equatable, Hashable {
   public var committedToolID: CanvasToolID
 
-  public init(id committedToolID: CanvasToolID = .select) {
+  public init(id committedToolID: CanvasToolID) {
     self.committedToolID = committedToolID
   }
 }
 
 extension ToolSelection {
-  public static var `default`: Self { .init() }
+  
+  /// The default tool selection is the Select Tool
+  public static var `default`: Self { .init(id: .select) }
 }

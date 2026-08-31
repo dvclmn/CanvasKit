@@ -19,9 +19,6 @@ private import ViewTools
 final class ToolHandler {
 
   var configuration: ToolConfiguration?
-  //  var configuration: ToolConfiguration {
-  //    didSet { repairSelectionForCurrentConfiguration() }
-  //  }
   var selection: ToolSelection?
 
   /// Active key-held overrides, most recent last.
@@ -40,10 +37,9 @@ final class ToolHandler {
   ) {
     self.configuration = configuration
 
-    if let configuration {
+    if let configuration, let defaultToolID = configuration.defaultToolID {
+      let initialSelection: ToolSelection = selection ?? .init(id: defaultToolID)
 
-      let initialSelection: ToolSelection = selection ?? .init(id: configuration.defaultToolID)
-      //      let initialSelection: ToolSelection? = selection ?? configuration.map {  }
       self.selection = Self.normalisedSelection(initialSelection, for: configuration)
 
     } else {
@@ -316,11 +312,15 @@ extension ToolHandler {
   private static func normalisedSelection(
     _ selection: ToolSelection?,
     for configuration: ToolConfiguration,
-  ) -> ToolSelection {
+  ) -> ToolSelection? {
+
     guard let selection,
       configuration.containsTool(selection.committedToolID)
     else {
-      return .init(id: configuration.defaultToolID)
+      // If the configuration has a default tool, use that
+      return configuration.defaultToolID.map {
+        .init(id: $0)
+      }
     }
     return selection
   }

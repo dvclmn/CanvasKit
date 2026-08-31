@@ -55,3 +55,4 @@ public struct SelectTool: CanvasTool {
     }
   }
 }
+
