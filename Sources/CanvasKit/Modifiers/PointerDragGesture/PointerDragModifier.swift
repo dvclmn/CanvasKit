@@ -27,8 +27,9 @@ public typealias DragEventUpdate = (PointerDragPayload?, InteractionPhase) -> Vo
 /// because deltas are always relative, never absolute.
 ///
 /// ## Marquee mode
-/// Each callback delivers the rect from drag origin to current pointer.
-/// The modifier draws a marquee overlay. State is cleared on gesture end.
+/// Each callback delivers the rect from drag origin to current pointer. The
+/// optional marquee overlay is presentation only and does not affect delivery.
+/// State is cleared on gesture end.
 struct PointerDragModifier: ViewModifier {
 
   @State private var dragState = DragGestureState()
@@ -42,6 +43,7 @@ struct PointerDragModifier: ViewModifier {
   /// `onChange(of: behaviour)` to detect tool switches.
   let behaviour: PointerDragBehaviour
   let isEnabled: Bool
+  let showsMarquee: Bool
   let marqueeColour: Color
   let coordinateSpace: CoordinateSpace
   let minimumDistance: CGFloat
@@ -53,7 +55,7 @@ struct PointerDragModifier: ViewModifier {
       .drawMarqueeRect(
         marqueeRect?.cgRect,
         colour: marqueeColour,
-        isEnabled: behaviour.isMarquee,
+        isEnabled: behaviour.isMarquee && showsMarquee,
       )
       .onChange(of: behaviour, initial: true) { _, newValue in
         cancelActiveDrag()
@@ -63,6 +65,11 @@ struct PointerDragModifier: ViewModifier {
       .onChange(of: isEnabled, initial: true) { _, isEnabled in
         if !isEnabled {
           cancelActiveDrag()
+        }
+      }
+      .onChange(of: showsMarquee, initial: true) { _, showsMarquee in
+        if !showsMarquee {
+          marqueeRect = nil
         }
       }
       .onDisappear {
@@ -81,7 +88,7 @@ extension PointerDragModifier {
     .onChanged { gestureValue in
       let phase: InteractionPhase = dragState.isActive ? .changed : .began
       let payload = dragState.update(gestureValue)
-      if case .rect(let from, let current) = payload {
+      if showsMarquee, case .rect(let from, let current) = payload {
         marqueeRect = Rect<ViewportSpace>(from: from, to: current)
       }
       didUpdatePayload(payload, phase)

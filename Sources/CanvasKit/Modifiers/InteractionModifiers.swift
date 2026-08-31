@@ -16,6 +16,7 @@ struct InteractionModifiers: ViewModifier {
 
   func body(content: Content) -> some View {
     @Bindable var store = store
+    let dragConfiguration = store.effectiveTool.dragConfiguration
 
     content
       .onSwipeGesture(
@@ -33,14 +34,6 @@ struct InteractionModifiers: ViewModifier {
         zoom: $store.currentTransform.scale,
         isEnabled: isEnabled(for: .pinch),
       ) { proposal in
-
-        //        let adjustment = store.processInteraction(
-        //          .pinch(scale: proposal.proposedZoom),
-        //          phase: proposal.phase,
-        //          modifiers: modifiers,
-        //          zoomRange: zoomRange
-        //        )
-
         let transform = store.processInteraction(
           .pinch(scale: proposal.proposedZoom),
           phase: proposal.phase,
@@ -68,7 +61,6 @@ struct InteractionModifiers: ViewModifier {
           modifiers: modifiers,
           zoomRange: zoomRange,
         )
-        //        apply(adjustment)
       }
 
       .onTapGesture(coordinateSpace: .named(ViewportSpace.viewport)) { location in
@@ -79,13 +71,13 @@ struct InteractionModifiers: ViewModifier {
           modifiers: modifiers,
           zoomRange: zoomRange,
         )
-        //        apply(adjustment)
       }
 
       .onPointerDragGesture(
-        behaviour: store.effectiveTool.dragConfiguration.behaviour,
+        behaviour: dragConfiguration.behaviour,
         isEnabled: isEnabled(for: .drag),
-        minimumDistance: store.effectiveTool.dragConfiguration.minimumDistance,
+        showsMarquee: dragConfiguration.showsMarquee,
+        minimumDistance: dragConfiguration.minimumDistance,
       ) { payload, phase in
 
         guard let payload else {
@@ -105,7 +97,6 @@ struct InteractionModifiers: ViewModifier {
           modifiers: modifiers,
           zoomRange: zoomRange,
         )
-        //        apply(adjustment)
       }
   }
 }
@@ -115,12 +106,6 @@ extension InteractionModifiers {
     guard let modifierKeys else { return [] }
     return .init(from: modifierKeys)
   }
-
-  //  private func apply(_ adjustment: TransformState?) {
-  //    guard var adjustment else { return }
-  //    adjustment.scale = adjustment.scale.clamped(to: zoomRange)
-  //    store.currentTransform = adjustment
-  //  }
 
   private func isEnabled(
     for interaction: Interaction.Kind

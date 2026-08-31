@@ -7,31 +7,14 @@
 
 import SwiftUI
 
-public struct PointerDragConfiguration: Sendable {
-  let behaviour: PointerDragBehaviour
-  let minimumDistance: CGFloat
-
-  public init(
-    behaviour: PointerDragBehaviour = .marquee,
-    minimumDistance: CGFloat = 5,
-  ) {
-    self.behaviour = behaviour
-    self.minimumDistance = minimumDistance
-  }
-}
-
-extension PointerDragConfiguration {
-  public static let marquee: Self = .init(behaviour: .marquee)
-  public static let continuous: Self = .init(behaviour: .continuous(axes: .both))
-}
-
 /// Defines the drag interaction mode applied by `PointerDragModifier`.
 public enum PointerDragBehaviour: Equatable, Sendable {
 
-  /// A transient selection rectangle drawn from the drag origin to the current
-  /// pointer position. All state is cleared on drag end.
+  /// An anchored drag from the origin to the current pointer position.
   ///
-  /// Typical use: lasso/marquee selection over a canvas or list.
+  /// This produces ordered rectangle endpoints suitable for lasso or marquee
+  /// selection. Whether CanvasKit also draws a visible rectangle is configured
+  /// independently by ``PointerDragConfiguration/showsMarquee``.
   case marquee
 
   /// Frame-to-frame drag deltas, optionally constrained to an axis.

@@ -35,7 +35,7 @@ var inputCapabilities: [ToolCapability] {
     ToolCapability(interaction: .drag, intent: .zoom, modifiers: [.option]),
     ToolCapability(
       interaction: .drag,
-      intent: .drawMarquee,
+      intent: .select,
       modifiers: [.option, .shift]
     ),
   ]
@@ -59,13 +59,15 @@ For each accepted input update, CanvasKit:
 
 Use ``ToolResolution/consumed`` when the tool claims an interaction without requesting CanvasKit-owned mutation. Select’s marquee drag is the canonical example: the tool consumes the drag, while `CanvasHandler` independently retains the ordered marquee snapshot for `onCanvasDrag`.
 
+Intent and presentation are separate. ``SelectTool`` assigns ``InteractionIntent/select`` to both taps and anchored drags. Its ``PointerDragConfiguration`` decides separately whether CanvasKit draws a transient marquee outline; hiding that outline does not change capability matching, tool resolution, or `onCanvasDrag` delivery.
+
 Use `.handled(...)` when the tool requests a transform or pointer adjustment. Use ``ToolResolution/passthrough`` when CanvasKit should continue to a viewport default.
 
 ## Drag representations
 
 Drag data has three forms with separate responsibilities:
 
-- ``PointerDragPayload`` is the immediate viewport-space recogniser payload. Continuous tools receive frame deltas; marquee tools receive ordered anchor/current points.
+- ``PointerDragPayload`` is the immediate viewport-space recogniser payload. Continuous tools receive frame deltas; marquee-behaviour tools receive ordered anchor/current points.
 - `PointerDragSnapshot` is CanvasKit’s internal retained marquee event. It combines ordered points, lifecycle phase, and discrete delivery identity.
 - ``CanvasDragEvent`` is the public snapshot after both points have been mapped independently into ``CanvasSpace``.
 

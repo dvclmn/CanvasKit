@@ -129,7 +129,7 @@ private struct IntentRoutingTool: CanvasTool {
       ToolCapability(interaction: .drag, intent: .zoom, modifiers: [.option]),
       ToolCapability(
         interaction: .drag,
-        intent: .drawMarquee,
+        intent: .select,
         modifiers: [.option, .shift],
       ),
     ]
@@ -146,7 +146,7 @@ private struct IntentRoutingTool: CanvasTool {
     let scale = switch context.intent {
       case .pan: 1.0
       case .zoom: 2.0
-      case .drawMarquee: 3.0
+      case .select: 3.0
       default: 0.0
     }
     return .handled(.transform(.scale(scale)))
@@ -160,7 +160,7 @@ private struct OptionMarqueeTool: CanvasTool {
 
   var dragConfiguration: PointerDragConfiguration { .marquee }
   var inputCapabilities: [ToolCapability] {
-    [ToolCapability(interaction: .drag, intent: .drawMarquee, modifiers: [.option])]
+    [ToolCapability(interaction: .drag, intent: .select, modifiers: [.option])]
   }
 
   func resolvePointerStyle(context: InteractionContext) -> CanvasPointerStyle {

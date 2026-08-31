@@ -4,7 +4,7 @@ Tools describe how CanvasKit should interpret selected interactions. They are no
 
 CanvasKit includes three tools:
 
-- ``SelectTool`` records taps and draws marquee rectangles.
+- ``SelectTool`` records selection taps and anchored drags, with an optional marquee outline.
 - ``PanTool`` pans the viewport with pointer drag.
 - ``ZoomTool`` zooms with pointer tap or vertical drag.
 
@@ -105,6 +105,20 @@ let configuration = ToolConfiguration(
   ]
 )
 ```
+
+To keep Select's drag lifecycle while hiding CanvasKit's transient outline, replace the default Select tool with a configured instance:
+
+```swift
+let configuration = ToolConfiguration(
+  tools: [
+    SelectTool(showsMarquee: false),
+    PanTool(),
+    ZoomTool(),
+  ]
+)
+```
+
+The drag still has a ``InteractionIntent/select`` intent and still publishes `onCanvasDrag`; only CanvasKit's overlay is disabled.
 
 ## Capabilities and resolved intent
 

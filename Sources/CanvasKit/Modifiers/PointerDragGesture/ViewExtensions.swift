@@ -9,7 +9,6 @@ import SwiftUI
 
 extension View {
 
-  // TODO: Manage marqueeColour so it's only exposed where relevant
   /// Event-driven pointer drag gesture.
   ///
   /// The modifier handles gesture mechanics internally:
@@ -17,13 +16,14 @@ extension View {
   ///   External state changes (e.g. swipe pan) between drags are transparent
   ///   because deltas are always relative, never absolute.
   /// - **Marquee mode**: each callback delivers the rect from drag origin to
-  ///   current pointer. The modifier draws the marquee overlay. State is
-  ///   cleared on gesture end.
+  ///   current pointer. The optional marquee overlay is independent of event
+  ///   delivery. State is cleared on gesture end.
   ///
   /// - Parameters:
   ///   - coordinateSpace: Coordinate space for the underlying `DragGesture`.
   ///   - behaviour: The drag mode (`.continuous` or `.marquee`).
   ///   - isEnabled: Whether the gesture is active.
+  ///   - showsMarquee: Whether to draw the transient marquee rectangle.
   ///   - marqueeColour: The colour to render the marquee rectangle, if needed.
   ///   - minimumDistance: Minimum drag distance before the gesture activates.
   ///   - didUpdatePayload: Callback receiving the drag payload and phase.
@@ -31,6 +31,7 @@ extension View {
     behaviour: PointerDragBehaviour,
     isEnabled: Bool = true,
     coordinateSpace: CoordinateSpace = .local,
+    showsMarquee: Bool = true,
     marqueeColour: Color = .accentColor,
     minimumDistance: CGFloat = 5,
     didUpdatePayload: @escaping DragEventUpdate,
@@ -39,6 +40,7 @@ extension View {
       PointerDragModifier(
         behaviour: behaviour,
         isEnabled: isEnabled,
+        showsMarquee: showsMarquee,
         marqueeColour: marqueeColour,
         coordinateSpace: coordinateSpace,
         minimumDistance: minimumDistance,

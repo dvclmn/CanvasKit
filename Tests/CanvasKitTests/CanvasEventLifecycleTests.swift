@@ -407,7 +407,7 @@ private struct ModifierMarqueeTool: CanvasTool {
 
   var dragConfiguration: PointerDragConfiguration { .marquee }
   var inputCapabilities: [ToolCapability] {
-    [ToolCapability(interaction: .drag, intent: .drawMarquee, modifiers: [.option])]
+    [ToolCapability(interaction: .drag, intent: .select, modifiers: [.option])]
   }
 
   func resolvePointerStyle(context: InteractionContext) -> CanvasPointerStyle {

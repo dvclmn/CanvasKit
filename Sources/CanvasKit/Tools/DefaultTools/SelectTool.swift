@@ -9,22 +9,27 @@ import SwiftUI
 
 // MARK: - Select Tool
 
-/// The default selection tool. Pointer drag produces a marquee rectangle;
-/// taps register tap locations.
+/// The default selection tool. Taps and anchored drags publish selection input.
+/// The drag's transient marquee presentation can be hidden independently.
 public struct SelectTool: CanvasTool {
   public let id: CanvasToolID = .select
   public let name = "Select"
   public let icon = "cursorarrow"
+  public let showsMarquee: Bool
 
-  public var dragConfiguration: PointerDragConfiguration { .marquee }
+  public var dragConfiguration: PointerDragConfiguration {
+    .init(behaviour: .marquee, showsMarquee: showsMarquee)
+  }
   public var inputCapabilities: [ToolCapability] {
     [
       ToolCapability(interaction: .tap, intent: .select),
-      ToolCapability(interaction: .drag, intent: .drawMarquee),
+      ToolCapability(interaction: .drag, intent: .select),
     ]
   }
 
-  public init() {}
+  public init(showsMarquee: Bool = true) {
+    self.showsMarquee = showsMarquee
+  }
 
   public func resolvePointerStyle(
     context: InteractionContext

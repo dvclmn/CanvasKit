@@ -1,6 +1,6 @@
 //
 //  DrawMarqueeModifier.swift
-//  BaseComponents
+//  CanvasKit
 //
 //  Created by Dave Coleman on 13/7/2025.
 //
