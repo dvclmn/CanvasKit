@@ -10,6 +10,29 @@ CanvasKit has three current zoom paths:
 
 All committed zoom values are clamped to the current `zoomRange`.
 
+## Programmatic transforms
+
+``ZoomOperation`` resolves fit and fill scales from known canvas and viewport measurements without reading or changing canvas state. ``TransformState/fitted(canvasSize:in:padding:zoomRange:)`` turns that scale into a reset transform: its translation and rotation are zero. Use it for an explicit command such as Fit to View, rather than as a scale-only adjustment to the user's current viewport.
+
+CanvasKit supplies the calculation only. Your app decides when fitting is appropriate, owns the transform binding, and provides both visual padding and zoom-range policy.
+
+```swift
+@State private var transform = TransformState()
+
+Button("Fit to View") {
+  guard let fitted = TransformState.fitted(
+    canvasSize: documentCanvasSize,
+    in: viewportSize,
+    padding: 24,
+    zoomRange: 0.1...10,
+  ) else { return }
+
+  transform = fitted
+}
+```
+
+Here `documentCanvasSize` is a ``Size`` in ``CanvasSpace`` and `viewportSize` is a ``Size`` in ``ViewportSpace``. The resolver returns `nil` when its geometry, padding, or zoom range is unusable, so a command can remain unavailable until measurements are valid.
+
 ## Pinch zoom
 
 Pinch gestures are backed by SwiftUI `MagnifyGesture`. CanvasKit tracks the gesture start zoom, converts magnification into a proposed absolute zoom, then commits the resolved value.

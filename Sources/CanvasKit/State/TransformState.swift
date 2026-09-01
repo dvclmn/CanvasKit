@@ -30,6 +30,53 @@ public struct TransformState: Sendable, Equatable {
 extension TransformState {
   public mutating func reset() { self = Self.identity }
 
+  /// Resolves a programmatic zoom operation into a reset transform.
+  ///
+  /// The result deliberately has zero translation and rotation. It is suited
+  /// to explicit commands such as Fit to View, not to incrementally changing
+  /// the scale of an existing transform.
+  ///
+  /// The caller owns when to apply the result and supplies its zoom-range and
+  /// padding policy.
+  public static func resolved(
+    _ operation: ZoomOperation,
+    canvasSize: Size<CanvasSpace>,
+    in viewportSize: Size<ViewportSpace>,
+    padding: CGFloat = 0,
+    zoomRange: ClosedRange<Double>,
+  ) -> Self? {
+    guard zoomRange.lowerBound.isFinite,
+      zoomRange.upperBound.isFinite,
+      zoomRange.lowerBound > 0,
+      zoomRange.lowerBound <= zoomRange.upperBound,
+      let scale = operation.resolvedScale(
+        canvasSize: canvasSize,
+        in: viewportSize,
+        padding: padding,
+      )
+    else { return nil }
+
+    return .init(scale: min(max(scale, zoomRange.lowerBound), zoomRange.upperBound))
+  }
+
+  /// Resolves a fit-to-view transform with zero translation and rotation.
+  ///
+  /// This convenience wrapper is equivalent to calling
+  /// ``resolved(_:canvasSize:in:padding:zoomRange:)`` with ``ZoomOperation/fit``.
+  public static func fitted(
+    canvasSize: Size<CanvasSpace>,
+    in viewportSize: Size<ViewportSpace>,
+    padding: CGFloat = 0,
+    zoomRange: ClosedRange<Double>,
+  ) -> Self? {
+    resolved(
+      .fit,
+      canvasSize: canvasSize,
+      in: viewportSize,
+      padding: padding,
+      zoomRange: zoomRange,
+    )
+  }
 }
 
 extension TransformState: CustomStringConvertible {
