@@ -11,8 +11,6 @@ private import ViewTools
 struct ToolPaletteView: View {
   @Environment(CanvasHandler.self) private var store
   @Environment(\.toolPaletteConfiguration) private var configuration
-  //  let toolbarWidth: Double = 36
-  //  private let toolbarPadding: Double = 6
 
   var body: some View {
 
@@ -23,7 +21,6 @@ struct ToolPaletteView: View {
       }
 
       Divider()
-      //        .frame(width: configuration.width * 0.7)
 
       Button {
         store.currentTransform.scale = 1.0
@@ -33,11 +30,8 @@ struct ToolPaletteView: View {
         Label("Re-centre artwork", systemImage: "viewfinder")
           .opacity(0.7)
       }
-      //      .buttonStyle(.toolButton(width: effectiveWidth))
 
     }  // END main vstack
-    //    .buttonStyle(.plain)
-    //    .tint(.gray)
     .buttonStyle(.toolButton(width: effectiveWidth))
     .labelStyle(.iconOnly)
     .padding(.vertical, configuration.paddingH)
@@ -65,24 +59,14 @@ extension ToolPaletteView {
 
   @ViewBuilder
   private func MainTools(_ configuration: ToolConfiguration) -> some View {
-
-    //    ControlGroup {
     VStack(spacing: 0) {
-
-      if !configuration.tools.isEmpty {
-        ForEach(configuration.tools, id: \.id) { tool in
-          ToolButtonView(
-            toolHandler: store.toolHandler,
-            tool: tool,
-            toolbarWidth: effectiveWidth,
-          )
-        }
-
-      } else {
-        Text("No Tools registered")
-          .foregroundStyle(.tertiary)
+      ForEach(configuration.tools, id: \.id) { tool in
+        ToolButtonView(
+          toolHandler: store.toolHandler,
+          tool: tool,
+          toolbarWidth: effectiveWidth,
+        )
       }
     }  // END vstack
   }
-
 }

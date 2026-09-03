@@ -331,6 +331,13 @@ extension CanvasHandler {
     get { toolHandler.selection ?? .default }
     set { toolHandler.synchroniseCommittedSelection(newValue) }
   }
+  
+  var hasTools: Bool {
+    guard let config = toolHandler.configuration else {
+      return false
+    }
+    return !config.tools.isEmpty
+  }
 
 }
 

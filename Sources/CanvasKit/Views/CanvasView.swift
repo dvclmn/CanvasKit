@@ -74,7 +74,7 @@ where Content: View, ViewportOverlay: View {
       // don't sit above the tool picker.
       .modifier(InteractionModifiers())
       .canvasPointerStyle(store.pointerStyle)
-      .modifier(ToolPaletteOverlayModifier())
+      .modifier(ToolPaletteOverlayModifier(hasTools: store.hasTools))
 
       // Adds canvas transform and mapped pointer values to the Environment (for internal use only)
       .updateTransformEnvironment()
