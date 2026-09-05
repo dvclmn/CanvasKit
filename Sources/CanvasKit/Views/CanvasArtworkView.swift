@@ -26,13 +26,16 @@ struct CanvasArtwork<Content: View>: View {
       content: content,
     )
 
-    .onGeometryChange(for: CGSize.self) { proxy in
-      proxy.size
-    } action: { newValue in
-      // If an explicit size is provided by user, then there's
-      // No need to measure the geometry manually
-      guard explicitCanvasSize == nil else { return }
-      store.measuredCanvasSize = Size<CanvasSpace>(fromCGSize: newValue)
+    // Even an explicit document size can be rounded by layout. Measure both
+    // spaces together so the mapper compares the same bounds before/after zoom.
+    .onGeometryChange(for: ArtworkGeometry.self) { proxy in
+      ArtworkGeometry(
+        frame: .init(fromRect: proxy.frame(in: .named(ViewportSpace.viewport))),
+        layoutSize: .init(fromCGSize: proxy.size),
+        explicitCanvasSize: explicitCanvasSize,
+      )
+    } action: { geometry in
+      store.updateArtworkGeometry(geometry)
     }
 
     // Visual indication of Canvas artwork bounds.
@@ -40,9 +43,6 @@ struct CanvasArtwork<Content: View>: View {
 
     // `CanvasSpace` namespace declared before pan/zoom applied.
     .coordinateSpace(.named(CanvasSpace.canvas))
-
-    // Artwork bounds captured here.
-    .anchorPreference(key: ArtworkBoundsAnchorKey.self, value: .bounds) { $0 }
 
     // Important: For transforms the order needs to be 1. Scale, 2. Rotation, 3. Offset.
     .scaleEffect(store.currentTransform.scale.clamped(to: zoomRange))

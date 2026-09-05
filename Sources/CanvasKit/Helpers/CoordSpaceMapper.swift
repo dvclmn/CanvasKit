@@ -6,8 +6,12 @@
 //
 
 import Foundation
-@_spi(Internal) private import CoreTools
 
+/// Maps points using a uniform scale and the artwork's measured viewport origin.
+///
+/// ``CanvasView`` measures the local layout size and viewport frame together so that
+/// pixel rounding of a requested document size is not mistaken for scaling.
+/// Rotation and non-uniform transforms are not supported by this mapper.
 public struct CoordinateSpaceMapper: Equatable {
 
   /// The canvas artwork as positioned in viewport coordinates.
@@ -15,72 +19,83 @@ public struct CoordinateSpaceMapper: Equatable {
   /// `origin`: Expresses the offset from the viewport origin (top-left)
   /// to the top left corner of the artwork.
   ///
-  /// `size`: Expresses the canvas size after zoom has been applied.
+  /// `size`: Expresses the measured layout size after zoom has been applied.
   public let artworkFrame: Rect<ViewportSpace>
+
+  /// The logical document extent, which remains independent of layout rounding.
   public let canvasSize: Size<CanvasSpace>
 
+  /// The unscaled layout extent corresponding to `artworkFrame`.
+  let layoutSize: Size<CanvasSpace>
+
+  /// Creates a mapper when `frame` is the uniformly scaled form of `canvasSize`.
   public init(
     frame: Rect<ViewportSpace>,
     canvasSize: Size<CanvasSpace>,
   ) {
+    self.init(frame: frame, canvasSize: canvasSize, layoutSize: canvasSize)
+  }
+
+  init(
+    frame: Rect<ViewportSpace>,
+    canvasSize: Size<CanvasSpace>,
+    layoutSize: Size<CanvasSpace>,
+  ) {
     self.artworkFrame = frame
     self.canvasSize = canvasSize
+    self.layoutSize = layoutSize
   }
 }
 
 extension CoordinateSpaceMapper {
 
-//  @inlinable
   var zoom: CGFloat {
-    let widthZoom: CGFloat
-    let heightZoom: CGFloat
-
-    if canvasSize.width != 0 {
-      widthZoom = artworkFrame.width / canvasSize.width
-    } else {
-      widthZoom = 1.0
+    switch (widthZoom, heightZoom) {
+      case (.some(let width), .some(let height)): min(width, height)
+      case (.some(let width), .none): width
+      case (.none, .some(let height)): height
+      case (.none, .none): 1
     }
+  }
 
-    if canvasSize.height != 0 {
-      heightZoom = artworkFrame.height / canvasSize.height
-    } else {
-      heightZoom = 1.0
-    }
+  /// A dimensionless comparison, with the same meaning at every zoom level.
+  var relativeScaleDifference: CGFloat? {
+    guard let widthZoom, let heightZoom else { return nil }
+    return abs(widthZoom - heightZoom) / max(widthZoom, heightZoom)
+  }
 
-    // Check for NaN, Inf, or negative scales as well.
-    let validWidth = widthZoom.isFinite && widthZoom > 0
-    let validHeight = heightZoom.isFinite && heightZoom > 0
+  var hasNonUniformScale: Bool {
+    relativeScaleDifference.map { $0 > 0.001 } ?? false
+  }
 
-    // The mapper supports uniform scale only. Use the smaller inferred scale
-    // when both axes are valid, and fall back to 1.0 if neither is valid.
-    if validWidth && validHeight {
-      let resolvedZoom = min(widthZoom, heightZoom)
-      let scaleDifference = abs(widthZoom - heightZoom)
+  /// Read only when geometry enters a non-uniform state, never per pointer event.
+  var nonUniformScaleDiagnostic: String? {
+    guard hasNonUniformScale,
+      let widthZoom, let heightZoom, let relativeScaleDifference
+    else { return nil }
 
-      if scaleDifference > 0.001 {
-        printTimestamped("Warning: Zoom level is showing non-uniform scaling.", timestampPosition: .leading)
+    return """
+      CanvasKit warning: measured artwork geometry implies non-uniform scaling.
+      Inferred x: \(widthZoom), y: \(heightZoom); relative difference: \(relativeScaleDifference * 100)% (tolerance: 0.1%).
+      Viewport frame: \(artworkFrame.cgRect); unscaled layout size: \(layoutSize.cgSize); logical canvas size: \(canvasSize.cgSize).
+      The mapper uses the smaller scale, \(zoom), for both axes. Check for rotation or non-uniform transforms; mapped input may be inaccurate. This warning is reported once until uniform geometry resumes.
+      """
+  }
 
-//        print(
-//          """
-//          CanvasKit CoordinateSpaceMapper warning: inferred non-uniform viewport scale.
-//          The mapper requires one uniform zoom, but the measured artwork frame implies x: \(widthZoom), y: \(heightZoom) (difference: \(scaleDifference)).
-//          Artwork frame in ViewportSpace: origin: (\(artworkFrame.minX), \(artworkFrame.minY)), size: (\(artworkFrame.width), \(artworkFrame.height)); logical canvas size: (\(canvasSize.width), \(canvasSize.height)).
-//          CanvasKit will use the smaller scale, \(resolvedZoom), for both axes, so mapped input remains isotropic but may be inaccurate on the other axis.
-//          Check for non-uniform scale effects, transform effects, or rotation (whose axis-aligned frame changes both inferred scales). A one-off warning during a canvas-size or layout update can also be a transient frame/size mismatch. Grid-based callers should pass a logical canvas size derived from their untransformed unit size; integer coordinates do not themselves introduce non-uniform scaling.
-//          """
-//        )
-      }
-      return resolvedZoom
+  private var widthZoom: CGFloat? {
+    inferredZoom(viewportExtent: artworkFrame.width, layoutExtent: layoutSize.width)
+  }
 
-    } else if validWidth {
-      return widthZoom
+  private var heightZoom: CGFloat? {
+    inferredZoom(viewportExtent: artworkFrame.height, layoutExtent: layoutSize.height)
+  }
 
-    } else if validHeight {
-      return heightZoom
-
-    } else {
-      return 1.0
-    }
+  private func inferredZoom(viewportExtent: CGFloat, layoutExtent: CGFloat) -> CGFloat? {
+    guard viewportExtent.isFinite, viewportExtent > 0,
+      layoutExtent.isFinite, layoutExtent > 0
+    else { return nil }
+    let scale = viewportExtent / layoutExtent
+    return scale.isFinite && scale > 0 ? scale : nil
   }
 
   /// ```

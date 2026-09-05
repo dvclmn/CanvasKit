@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 8/3/2026.
 //
 
-private import CoreTools
+@_spi(Internal) private import CoreTools
 import SwiftUI
 
 @Observable
@@ -49,10 +49,8 @@ final class CanvasHandler {
   /// per-event payload changes through the SwiftUI Environment.
   private(set) var canvasInteractionActivity: CanvasInteractionActivity = .none
 
-  var artworkFrame: Rect<ViewportSpace>?
+  private(set) var artworkGeometry: ArtworkGeometry?
   var currentTransform: TransformState = .identity
-
-  var measuredCanvasSize: Size<CanvasSpace>?
 
   init(
     toolConfiguration: ToolConfiguration?,
@@ -302,14 +300,15 @@ extension CanvasHandler {
 extension CanvasHandler {
 
   func coordinateSpaceMapper(in size: Size<CanvasSpace>?) -> CoordinateSpaceMapper? {
-    guard let artworkFrame,
-      let resolvedSize = resolvedCanvasSize(for: size)
-    else { return nil }
-    return .init(frame: artworkFrame, canvasSize: resolvedSize)
+    artworkGeometry?.coordinateSpaceMapper(for: size)
   }
 
-  func resolvedCanvasSize(for size: Size<CanvasSpace>?) -> Size<CanvasSpace>? {
-    size ?? measuredCanvasSize
+  func updateArtworkGeometry(_ geometry: ArtworkGeometry) {
+    let wasNonUniform = artworkGeometry?.mapper.hasNonUniformScale ?? false
+    artworkGeometry = geometry
+
+    guard !wasNonUniform, let diagnostic = geometry.mapper.nonUniformScaleDiagnostic else { return }
+    printTimestamped(diagnostic, timestampPosition: .leading)
   }
 
   var activeInteraction: ActiveInteraction {

@@ -9,8 +9,8 @@ private import CoreTools
 import SwiftUI
 
 extension EnvironmentValues {
-  /// A concrete canvas size, if passed by the caller. If value is nil, canvas size
-  /// will be inferred via `CanvasHandler/resolvedCanvasSize(for:)`.
+  /// A concrete canvas size, if passed by the caller. Otherwise the canvas size
+  /// comes from the artwork's measured local layout extent.
   @Entry var explicitCanvasSize: Size<CanvasSpace>?
 
   @Entry var isShowingToolPalette: Bool = false

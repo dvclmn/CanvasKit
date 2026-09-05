@@ -13,10 +13,11 @@ struct PointerEnvironmentModifier: ViewModifier {
   @Environment(\.explicitCanvasSize) private var explicitCanvasSize
 
   func body(content: Content) -> some View {
+    let snapshot = mappedSnapshot
     content
-      .environment(\.pointerTapDelivery, mappedSnapshot?.tap)
-      .environment(\.pointerHover, mappedSnapshot?.hover)
-      .environment(\.canvasDragDelivery, mappedSnapshot?.drag)
+      .environment(\.pointerTapDelivery, snapshot?.tap)
+      .environment(\.pointerHover, snapshot?.hover)
+      .environment(\.canvasDragDelivery, snapshot?.drag)
   }
 }
 

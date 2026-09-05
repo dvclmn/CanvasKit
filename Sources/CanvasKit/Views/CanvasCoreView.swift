@@ -5,14 +5,10 @@
 //  Created by Dave Coleman on 6/8/2025.
 //
 
-private import CoreTools
 import SwiftUI
-private import ViewTools
 
 struct CanvasCoreView<Content: View>: View {
-  @Environment(CanvasHandler.self) private var store
   @Environment(\.canvasAnchor) private var canvasAnchor
-  @Environment(\.zoomRange) private var zoomRange
 
   @ViewBuilder var content: () -> Content
 
@@ -32,25 +28,5 @@ struct CanvasCoreView<Content: View>: View {
       // View now covers full width/height provided to it, no longer
       // cares about pan zoom etc, so is considered `ViewportSpace`.
       .coordinateSpace(.named(ViewportSpace.viewport))
-
-      // This resolves the `CanvasSpace`.
-      .overlayPreferenceValue(
-        ArtworkBoundsAnchorKey.self,
-        alignment: canvasAnchor.toAlignment,
-      ) { FrameCaptureView($0) }
-  }
-}
-
-extension CanvasCoreView {
-  @ViewBuilder
-  private func FrameCaptureView(_ anchor: Anchor<CGRect>?) -> some View {
-    Color.clear
-      .allowsHitTesting(false)
-      .onGeometryChange(for: CGRect?.self) { proxy in
-        anchor.map { proxy[$0] }
-      } action: { frame in
-        let frameResult = frame.map { Rect<ViewportSpace>(fromRect: $0) }
-        store.artworkFrame = frameResult
-      }
   }
 }
