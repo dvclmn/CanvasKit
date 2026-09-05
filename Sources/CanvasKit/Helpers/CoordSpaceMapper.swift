@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(Internal) private import CoreTools
 
 public struct CoordinateSpaceMapper: Equatable {
 
@@ -29,7 +30,7 @@ public struct CoordinateSpaceMapper: Equatable {
 
 extension CoordinateSpaceMapper {
 
-  @inlinable
+//  @inlinable
   var zoom: CGFloat {
     let widthZoom: CGFloat
     let heightZoom: CGFloat
@@ -57,7 +58,8 @@ extension CoordinateSpaceMapper {
       let scaleDifference = abs(widthZoom - heightZoom)
 
       if scaleDifference > 0.001 {
-        print("Warning: Zoom level is showing non-uniform scaling.")
+        printTimestamped("Warning: Zoom level is showing non-uniform scaling.", timestampPosition: .leading)
+
 //        print(
 //          """
 //          CanvasKit CoordinateSpaceMapper warning: inferred non-uniform viewport scale.
