@@ -12,7 +12,7 @@ public enum ViewportSpace {
   public static let viewport: String = "canvasScreen"
 }
 
-public enum CanvasSpace {
+public enum CanvasSpace: Sendable {
 
   /// Named coordinate space for the untransformed artwork/document container.
   public static let canvas: String = "canvasArtwork"

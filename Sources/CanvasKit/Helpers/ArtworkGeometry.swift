@@ -7,7 +7,7 @@
 
 /// One layout observation, keeping both coordinate spaces and the size request
 /// together. A new document size must not be paired with the previous frame.
-struct ArtworkGeometry: Equatable {
+struct ArtworkGeometry: Equatable, Sendable {
   let frame: Rect<ViewportSpace>
   let layoutSize: Size<CanvasSpace>
   let explicitCanvasSize: Size<CanvasSpace>?
