@@ -39,7 +39,9 @@ extension ArtworkDecomposed {
   @ViewBuilder
   private func SubViews(_ subviews: SubviewsCollection) -> some View {
     ZStack {
-      ForEach(subviews: subviews) { subview in
+      // These subviews are already resolved by Group. Resolving them again
+      // introduces another container boundary and loses their clipping values.
+      ForEach(subviews) { subview in
         switch subview.containerValues.canvasClipping.resolved {
           case .clipped:
             subview
@@ -93,3 +95,33 @@ extension View {
     self.modifier(CanvasSizeFrameModifier(size: size))
   }
 }
+
+#if DEBUG
+@available(macOS 15.0, iOS 18.0, *)
+#Preview("Artwork clipping and overflow") {
+  @Previewable @State var clipping: CanvasClipping = .dimmed(0.5)
+
+  VStack(spacing: 16) {
+    CanvasClippingControls($clipping)
+      .padding(.horizontal)
+
+    CanvasView(size: CGSize(width: 200, height: 140)) {
+      // An unmodified layer keeps the default clipping policy.
+      Color.gray.opacity(0.2)
+
+      // Ordinary SwiftUI content deliberately overflows the artwork bounds,
+      // independently of any client's Canvas or bitmap rendering behaviour.
+      Color.clear
+        .overlay {
+          Rectangle()
+            .fill(.orange)
+            .frame(width: 300, height: 60)
+            .rotationEffect(.degrees(-25))
+        }
+        .canvasClipping(clipping)
+    }
+    .frame(width: 380, height: 280)
+  }
+  .padding(.vertical)
+}
+#endif

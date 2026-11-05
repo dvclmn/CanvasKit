@@ -19,7 +19,8 @@ public struct ToolPaletteEnvironmentModifier: ViewModifier {
   }
 }
 
-extension View where Self: CanvasAddressable {
+extension View {
+//extension View where Self: CanvasAddressable {
   public func toolPalette(
     isEnabled: Bool = true,
     alignment: Alignment = .topLeading,
