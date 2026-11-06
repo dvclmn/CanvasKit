@@ -1,17 +1,15 @@
 //
-//  CanvasContentView.swift
-//  CanvasKit
+//  VectorShapes.swift
+//  CanvasDemo
 //
-//  Created by Dave Coleman on 23/4/2026.
+//  Created by Dave Coleman on 6/11/2026.
 //
 
 import SwiftUI
 
-struct CanvasContentView: View {
+struct VectorShapes: View {
   var body: some View {
-    Canvas {
-      context,
-      size in
+    Canvas { context, size in
       let width = size.width
       let height = size.height
 
