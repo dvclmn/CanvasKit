@@ -8,10 +8,6 @@
 import SwiftUI
 internal import ViewTools
 
-extension EnvironmentValues {
-  @Entry var toolPaletteConfiguration: ToolPaletteConfiguration = .init()
-}
-
 public struct ToolPaletteConfiguration: Sendable, Equatable {
 
   let alignment: Alignment

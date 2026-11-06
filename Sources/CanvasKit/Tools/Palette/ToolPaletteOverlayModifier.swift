@@ -16,7 +16,7 @@ struct ToolPaletteOverlayModifier: ViewModifier {
     content
       .overlay(alignment: configuration.alignment) {
         if isShowingToolPalette && hasTools {
-          ToolPaletteView()
+          CanvasToolPalette()
         }
       }
   }

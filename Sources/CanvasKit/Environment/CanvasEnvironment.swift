@@ -54,3 +54,7 @@ extension EnvironmentValues {
   }
 
 }
+
+extension EnvironmentValues {
+  @Entry var toolPaletteConfiguration: ToolPaletteConfiguration = .init()
+}

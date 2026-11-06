@@ -1,5 +1,5 @@
 //
-//  ToolPaletteView.swift
+//  CanvasToolPalette.swift
 //  CanvasKit
 //
 //  Created by Dave Coleman on 24/4/2026.
@@ -8,7 +8,7 @@
 import SwiftUI
 private import ViewTools
 
-struct ToolPaletteView: View {
+struct CanvasToolPalette: View {
   @Environment(CanvasHandler.self) private var store
   @Environment(\.toolPaletteConfiguration) private var configuration
 
@@ -37,7 +37,7 @@ struct ToolPaletteView: View {
     .padding(.vertical, configuration.paddingH)
     .padding(.horizontal, configuration.paddingH)
     .frame(width: configuration.width)
-    .glassEffectCompatible(configuration., in: .capsule)
+    .glassEffectCompatible(configuration.glass, in: .capsule)
     //    .depthShadow(
     //      opacity: 0.3,
     //      radius: 20,
@@ -51,7 +51,7 @@ struct ToolPaletteView: View {
   }
 }
 
-extension ToolPaletteView {
+extension CanvasToolPalette {
 
   private var effectiveWidth: CGFloat {
     configuration.width - (configuration.paddingH * 2)
@@ -68,12 +68,5 @@ extension ToolPaletteView {
         )
       }
     }  // END vstack
-  }
-}
-
-@available(anyAppleOS 26.0, *)
-extension ToolPaletteView {
-  public init(glass: Glass = .regular) {
-    self.glass = GlassTypeCompatible(glass: glass)
   }
 }
