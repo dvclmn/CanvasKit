@@ -29,26 +29,28 @@ struct ContentView: View {
 
   var body: some View {
 
-    CanvasView {
-      Text("Hello")
-    }
-    //    CanvasView(
-    //      //      size: Constants.canvasSize,
-    //      transform: $transform,
-    //      toolConfiguration: toolConfiguration,
-    //    ) {
-    //
-    //      //      SunflowerImage()
-    //      CanvasContentView()
-    //    }
-    //    .zoomRange(0.1...20)
-    //    .toolPicker()
-    //
-    //    .overlay(alignment: .bottomTrailing) {
-    //      SunflowerAttributionView()
-    //    }
+    CanvasView(
+      size: Constants.canvasSize,
+      transform: $transform,
+      toolConfiguration: toolConfiguration,
+    ) {
 
-//    .debugTextOverlay(isEnabled: false)
+      SunflowerImage()
+      //                CanvasContentView()
+    }
+    .canvasZoomRange(0.1...20)
+
+    .toolPalette(
+      isEnabled: true,
+      alignment: .topLeading,
+      width: nil,
+      horizontalPadding: nil,
+    )
+
+    .overlay(alignment: .bottomTrailing) {
+      SunflowerAttributionView()
+    }
+
   }
 }
 
