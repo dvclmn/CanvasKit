@@ -18,8 +18,8 @@ private import ViewTools
 @Observable
 final class ToolHandler {
 
-  var configuration: ToolConfiguration?
-  var selection: ToolSelection?
+  var configuration: ToolConfiguration
+  var selection: ToolSelection
 
   /// Active key-held overrides, most recent last.
   ///
@@ -32,19 +32,19 @@ final class ToolHandler {
   private var modifiers: EventModifiers = []
 
   init(
-    configuration: ToolConfiguration?,
-    selection: ToolSelection? = nil,
+    configuration: ToolConfiguration,
+    selection: ToolSelection = .default,
   ) {
     self.configuration = configuration
 
-    if let configuration, let defaultToolID = configuration.defaultToolID {
-      let initialSelection: ToolSelection = selection ?? .init(id: defaultToolID)
-
-      self.selection = Self.normalisedSelection(initialSelection, for: configuration)
-
-    } else {
-      self.selection = nil
+    let initialSelection: ToolSelection? = configuration.defaultToolID.map { ToolSelection(id: $0)
     }
+
+    self.selection = Self.normalisedSelection(
+      initialSelection,
+      for: configuration
+    ) ?? .default
+
   }
 }
 

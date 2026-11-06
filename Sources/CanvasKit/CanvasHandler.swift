@@ -11,7 +11,7 @@ import SwiftUI
 @Observable
 final class CanvasHandler {
 
-  var toolHandler: ToolHandler
+  var toolHandler: ToolHandler?
   var pointer: PointerState<ViewportSpace> = .init()
   private var pointerEventSequence: UInt64 = 0
 
@@ -318,19 +318,19 @@ extension CanvasHandler {
   ///
   /// This includes transient overrides such as Space-held Pan. For the
   /// committed/base selection only, use `toolHandler.committedTool`.
-  var effectiveTool: any CanvasTool { toolHandler.effectiveTool }
+  var effectiveTool: any CanvasTool { toolHandler?.effectiveTool ?? SelectTool() }
 
   /// The committed selection synchronised with an optional parent binding.
   ///
   /// With no tool configuration, CanvasKit's fallback Select tool is the only
   /// valid committed selection.
   var committedToolSelection: ToolSelection {
-    get { toolHandler.selection ?? .default }
-    set { toolHandler.synchroniseCommittedSelection(newValue) }
+    get { toolHandler?.selection ?? .default }
+    set { toolHandler?.synchroniseCommittedSelection(newValue) }
   }
   
   var hasTools: Bool {
-    guard let config = toolHandler.configuration else {
+    guard let config = toolHandler?.configuration else {
       return false
     }
     return !config.tools.isEmpty
@@ -340,7 +340,7 @@ extension CanvasHandler {
 
 extension CanvasHandler {
   func updateModifiers(_ modifiers: EventModifiers) {
-    toolHandler.updateModifiers(modifiers)
+    toolHandler?.updateModifiers(modifiers)
     pointerStyleContext = pointerStyleContext?.withModifiers(modifiers)
     activeContextsByKind = activeContextsByKind.mapValues { context in
       context.withModifiers(modifiers)
