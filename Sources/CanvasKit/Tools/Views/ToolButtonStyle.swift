@@ -26,7 +26,7 @@ struct ToolButton: ButtonStyle {
   let width: CGFloat
   
   func makeBody(configuration: Configuration) -> some View {
-    
+
     configuration.label
       .symbolVariant(.fill)
       .symbolRenderingMode(.hierarchical)

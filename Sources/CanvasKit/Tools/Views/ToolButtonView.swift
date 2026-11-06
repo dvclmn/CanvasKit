@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct ToolButtonView: View {
-  // @Environment(AppHandler.self) private var store
 
   let toolHandler: ToolHandler
   let tool: any CanvasTool
@@ -47,19 +46,13 @@ extension ToolButtonView {
     toolHandler.isActive(id: tool.id)
   }
 
+  // TODO: These feel like debug colours, need attention
   func toolForegroundColour(for tool: any CanvasTool) -> Color {
     switch toolHandler.activationStatus(for: tool.id) {
-      case .nonCommittingHold:
-        return .blue
-
-      case .heldPendingCommitOrRelease:
-        return .orange
-
-      case .springLoaded:
-        return .green
-
-      case nil:
-        return isActive ? .primary : .secondary
+      case .nonCommittingHold: .blue
+      case .heldPendingCommitOrRelease: .orange
+      case .springLoaded: .green
+      case nil: isActive ? .primary : .secondary
     }
   }
 }
