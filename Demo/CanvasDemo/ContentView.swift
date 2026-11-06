@@ -13,9 +13,10 @@ enum Constants {
 }
 
 struct ContentView: View {
+  @State private var store: AppHandler = .init()
   @State private var transform: TransformState
-  private let toolConfiguration: ToolConfiguration
   @State private var clipping: CanvasClipping
+  private let toolConfiguration: ToolConfiguration
 
   init(
     transform: TransformState = .init(),
@@ -34,9 +35,18 @@ struct ContentView: View {
       transform: $transform,
       toolConfiguration: toolConfiguration,
     ) {
+      switch store.sampleContent {
+        case .image(let sampleImg): SampleImageView(sampleImage: sampleImg)
+        case .vectorShapes: VectorShapes()
+        case .drawing: Text("Not yet")
+      }
 
-      SunflowerImage()
-      //                CanvasContentView()
+    } viewportOverlay: {
+
+      switch store.sampleContent {
+        case .image(let img): ImageAttributionView(image: img)
+        default: EmptyView()
+      }
     }
     .canvasZoomRange(0.1...20)
 
@@ -47,20 +57,6 @@ struct ContentView: View {
       horizontalPadding: nil,
     )
 
-    .overlay(alignment: .bottomTrailing) {
-      SunflowerAttributionView()
-    }
-
-  }
-}
-
-extension ContentView {
-  @ViewBuilder
-  private func SunflowerImage() -> some View {
-    Image(.sunflower)
-      .resizable()
-      .scaledToFill()
-      .canvasClipping(clipping)
   }
 }
 

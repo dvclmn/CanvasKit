@@ -37,7 +37,7 @@ struct ToolPaletteView: View {
     .padding(.vertical, configuration.paddingH)
     .padding(.horizontal, configuration.paddingH)
     .frame(width: configuration.width)
-    .glassEffectCompatible(in: .capsule)
+    .glassEffectCompatible(configuration., in: .capsule)
     //    .depthShadow(
     //      opacity: 0.3,
     //      radius: 20,
@@ -68,5 +68,12 @@ extension ToolPaletteView {
         )
       }
     }  // END vstack
+  }
+}
+
+@available(anyAppleOS 26.0, *)
+extension ToolPaletteView {
+  public init(glass: Glass = .regular) {
+    self.glass = GlassTypeCompatible(glass: glass)
   }
 }

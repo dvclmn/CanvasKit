@@ -1,5 +1,5 @@
 //
-//  CanvasContentView.swift
+//  CanvasCoreView.swift
 //  BaseComponents
 //
 //  Created by Dave Coleman on 6/8/2025.
