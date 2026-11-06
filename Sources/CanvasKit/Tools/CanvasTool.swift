@@ -34,15 +34,17 @@ where ID == CanvasToolID {
   /// Resolve the pointer style for the current interaction context.
   func resolvePointerStyle(context: InteractionContext) -> CanvasPointerStyle
 
-  /// Resolves an interaction into a canvas adjustment.
+  /// Decides whether the tool consumes an interaction or yields to a canvas default.
   ///
   /// Only called after CanvasKit selects a capability from
   /// ``inputCapabilities``. The selected declaration is available through
   /// ``InteractionContext/matchedCapability`` and its semantic meaning through
   /// ``InteractionContext/intent``.
   ///
-  /// Return ``ToolResolution/consumed`` to claim input without a CanvasKit-owned
-  /// mutation, or ``ToolResolution/passthrough`` to allow a canvas default.
+  /// Return `.handled(...)` to consume the input and apply an adjustment, or
+  /// ``ToolResolution/consumed`` to consume it without an adjustment. Both skip
+  /// the default behaviour. Return ``ToolResolution/passthrough`` to let
+  /// CanvasKit try its default.
   func resolveInteraction(
     context: InteractionContext,
     currentTransform: TransformState,

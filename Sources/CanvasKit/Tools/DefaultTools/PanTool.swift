@@ -34,17 +34,17 @@ public struct PanTool: CanvasTool {
     currentTransform: TransformState,
   ) -> ToolResolution {
 
-    let adjustment: InteractionAdjustment =
+    let adjustment: InteractionAdjustment? =
       switch context.interaction {
         case .drag(let payload):
           switch payload {
             case .delta(let delta, _):
               .transform(.panAdjustment(for: currentTransform, delta: delta))
 
-            case .rect(_, _): .none
+            case .rect(_, _): nil
           }
 
-        default: .none
+        default: nil
       }
     return .handled(adjustment)
   }

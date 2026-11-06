@@ -90,14 +90,11 @@ extension CanvasInputResolver {
       case .rotation(let angle):
         return .transform(.rotation(angle))
 
-      case .hover:
+      case .tap, .drag, .hover:
+        // No tool claimed these — no default behaviour for pointer events.
         // Hover location is recorded globally by CanvasHandler so public
         // observation is independent of the effective tool. Returning no
         // adjustment here still allows a capable tool to claim hover above.
-        return .none
-
-      case .tap, .drag:
-        // No tool claimed these — no default behaviour for pointer events.
         return nil
     }
   }

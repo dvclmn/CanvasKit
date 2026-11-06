@@ -11,7 +11,6 @@
 public enum InteractionAdjustment: Sendable {
   case transform(TransformAdjustment)
   case pointer(PointerAdjustment)
-  case none
 }
 
 extension InteractionAdjustment: CustomStringConvertible {
@@ -19,7 +18,6 @@ extension InteractionAdjustment: CustomStringConvertible {
     switch self {
       case .transform(let adj): "Transform: \(adj)"
       case .pointer(let adj): "Pointer: \(adj)"
-      case .none: "None"
     }
   }
 }

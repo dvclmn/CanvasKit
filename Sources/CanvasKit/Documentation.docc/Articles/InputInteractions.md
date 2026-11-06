@@ -8,7 +8,7 @@ An interaction passes through four independent decisions:
 
 1. **Capture:** Is a recogniser installed for this interaction kind?
 2. **Routing:** Does the effective tool have a matching ``ToolCapability``?
-3. **Resolution:** Does the tool consume the interaction, request an ``InteractionAdjustment``, or yield to a CanvasKit default?
+3. **Resolution:** Does the tool consume the interaction or yield to a CanvasKit default? If it consumes the input, does it request an ``InteractionAdjustment``?
 4. **Observation:** Does CanvasKit publish a mapped callback independently of that adjustment?
 
 “Global” therefore does not mean “tools never see this interaction.” It means CanvasKit keeps capture, a default, or public observation available independently of the selected tool.
@@ -57,11 +57,17 @@ For each accepted input update, CanvasKit:
 5. Falls through to CanvasKit’s default only when the tool returns ``ToolResolution/passthrough`` or no capability matched a global interaction.
 6. Records any independently observable pointer event.
 
-Use ``ToolResolution/consumed`` when the tool claims an interaction without requesting CanvasKit-owned mutation. Select’s marquee drag is the canonical example: the tool consumes the drag, while `CanvasHandler` independently retains the ordered marquee snapshot for `onCanvasDrag`.
+Consumption controls whether CanvasKit tries its default. An adjustment tells CanvasKit which transform or pointer change to apply.
+
+| Tool result | Tries the CanvasKit default | Applies a tool adjustment |
+| --- | --- | --- |
+| `.handled(adjustment)` | No | Yes |
+| ``ToolResolution/consumed`` | No | No |
+| ``ToolResolution/passthrough`` | Yes, if one is available | No |
+
+For a pinch, a tool can return `.consumed` to claim the input without zooming, or `.passthrough` to let CanvasKit apply its default zoom. For a Select marquee drag, `.consumed` skips the default path while CanvasKit independently publishes the drag through `onCanvasDrag`.
 
 Intent and presentation are separate. ``SelectTool`` assigns ``InteractionIntent/select`` to both taps and anchored drags. Its ``PointerDragConfiguration`` decides separately whether CanvasKit draws a transient marquee outline; hiding that outline does not change capability matching, tool resolution, or `onCanvasDrag` delivery.
-
-Use `.handled(...)` when the tool requests a transform or pointer adjustment. Use ``ToolResolution/passthrough`` when CanvasKit should continue to a viewport default.
 
 ## Drag representations
 

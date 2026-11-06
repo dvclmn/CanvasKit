@@ -39,7 +39,7 @@ public struct ZoomTool: CanvasTool {
     currentTransform: TransformState,
   ) -> ToolResolution {
 
-    let adjustment: InteractionAdjustment =
+    let adjustment: InteractionAdjustment? =
       switch context.interaction {
         case .drag(let payload):
           switch payload {
@@ -62,7 +62,7 @@ public struct ZoomTool: CanvasTool {
             )
           )
 
-        default: .none  // shouldn't be reached, given capabilities
+        default: nil  // shouldn't be reached, given capabilities
       }
     return .handled(adjustment)
   }

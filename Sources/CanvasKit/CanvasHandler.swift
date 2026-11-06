@@ -149,8 +149,6 @@ extension CanvasHandler {
         applyPointerAdjustment(adjustment)
         return nil
 
-      case .none:
-        return nil
     }
   }
 

@@ -28,7 +28,7 @@ struct CanvasArtwork<Content: View>: View {
 
     // Even an explicit document size can be rounded by layout. Measure both
     // spaces together so the mapper compares the same bounds before/after zoom.
-    .onGeometryChange(for: ArtworkGeometry.self) { proxy in
+    .onGeometryChange(for: ArtworkGeometry.self) { [explicitCanvasSize] proxy in
       ArtworkGeometry(
         frame: .init(fromRect: proxy.frame(in: .named(ViewportSpace.viewport))),
         layoutSize: .init(fromCGSize: proxy.size),
